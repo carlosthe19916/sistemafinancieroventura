@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="cajaApp">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=8,9">
+        <title>S.Financiero</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css">
+        <link rel="stylesheet" href="bower_components/ladda-bootstrap-master/dist/ladda-themeless.css">
+        <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css">
+        <link rel="stylesheet" href="bower_components/ngProgress/ngProgress.css">
+
+        <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular-sanitize.js"></script>
+        <script type="text/javascript" src="bower_components/angular-ui-router/angular-ui-router.js"></script>
+        <script type="text/javascript" src="bower_components/restangular/restangular.js"></script>
+        <script type="text/javascript" src="bower_components/restangular/underscore-min.js"></script>
+        <script type="text/javascript" src="bower_components/ui-bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+        <script type="text/javascript" src="bower_components/angular-strap/angular-strap.js"></script>
+        <script type="text/javascript" src="bower_components/angular-strap/angular-strap.tpl.js"></script>
+        <script type="text/javascript" src="bower_components/ng-grid/ng-grid.js"></script>
+        <script type="text/javascript" src="bower_components/ladda-bootstrap-master/dist/spin.js"></script>
+        <script type="text/javascript" src="bower_components/ladda-bootstrap-master/dist/ladda.js"></script>
+        <script type="text/javascript" src="bower_components/ngProgress/ngProgress.min.js"></script>
+        <script type="text/javascript" src="bower_components/ui-utils-0.1.1/ui-utils.js"></script>
+        <script type="text/javascript" src="bower_components/ui-utils-0.1.1/ui-utils-ieshiv.js"></script>
+        <script type="text/javascript" src="bower_components/angular-dialog-service/dialogs.js"></script>
+
+        <script type="text/javascript" src="modules/common/scripts/controller.js"></script>
+        <script type="text/javascript" src="modules/common/scripts/services.js"></script>
+        <script type="text/javascript" src="modules/caja/scripts/controller.js"></script>
+        <script type="text/javascript" src="modules/caja/scripts/services.js"></script>
+        <script type="text/javascript" src="modules/common/scripts/common.js"></script>
+        <script type="text/javascript" src="modules/caja/scripts/caja.js"></script>
+
+    </head>
+    <body style="padding-top: 70px;" ng-controller="cajaStatusController">
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img alt="Google AdSense" src="//www.google.com/images/logos/adsense_logo_sm.png">
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li ui-sref-active="active" class="active">
+                        <a href="#" ui-sref="index">Página principal</a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a href="#contact" ui-sref="app.caja">Caja</a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a href="#about" ui-sref="app.transacciones">Transacciones</a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a href="#contact" ui-sref="app.cuentasPersonales">Cuentas personales</a>
+                    </li>
+                    <li ui-sref-active="active" ng-class="{active: $state.includes('app.administracion.*')}">
+                        <a href="#contact" ui-sref="app.administracion">Administracion</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-controller="menuController" style="height: 50px;">
+
+                        <a ng-click="changeStatePopover()" style="color: #333;">
+                            <strong>{{caja.denominacion}}</strong>
+                            <span ng-hide="caja.congelado" class="label label-warning">Congelado</span>
+                            &nbsp;||&nbsp;
+                            {{persona.nombres}} {{persona.apellidopaterno}}
+                        </a>
+                        <div ng-show="popover.state" class="popover bottom fade in" style="top: 30px; left: -5.5px;; display: block; max-width: 400px; width: 350px;height: 196px; padding: 0px; border: 0px solid rgba(0, 0, 0, .2);">
+                            <div class="arrow"></div>
+                            <div class="popover-inner">
+                                <div class='panel panel-default' >
+                                    <div class='panel-body'>
+                                        <div class='row'>
+                                            <div class='col-xs-4'>
+                                                <a>
+                                                    <img src='styles/img/photo.png' class='img-thumbnail' style='height: 80px; width: 100px;'>
+                                                </a>
+                                            </div>
+                                            <div class='col-xs-8'>
+                                                <p style='margin: 0px;'><strong>Carlos Esteban Feria Vila</strong> </p>
+                                                <p style='margin: 0 0 5px'>carlosfv</p>
+                                                <p>
+                                                    <a>Cuenta</a> - <a>Privacidad</a>
+                                                </p>
+                                                <button class='btn btn-primary' type='submit'>Ver perfil</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='panel-footer'>
+                                        <div style='text-align: right;'>
+                                            <form action="/SistCoop-web/logout">
+                                                <button class='btn btn-default' type='submit'>Salir</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="gwt-Anchor  sf-notification-image" style="padding-right: 30px"></a>
+                    </li>
+                    <li>
+                        <a class="gwt-Anchor  sf-config-image" style="padding-right: 30px"></a>
+                    </li>
+                    <li>
+                        <a class="gwt-Anchor  sf-alert-image" style="padding-right: 30px"></a>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+
+    </div>
+    <div ng-hide="caja.abierto" class="alert alert-danger" style="margin-top: -19px; border-radius: 0px;margin-bottom: 5px;">
+        <strong>Advertencia:</strong>
+        La caja esta cerrada, debe de abrirla para poder realizar operaciones correctamente.
+        Puede <strong>Abrir </strong>la caja haciendo <strong>click</strong>
+        <strong><a>Aqui</a></strong>
+    </div>
+
+    <div class="container">
+
+
+
+        <div class="row" ui-view>
+
+        </div>
+    </div>
+
+    </body>
+</html>

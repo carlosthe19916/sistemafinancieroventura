@@ -1,0 +1,66 @@
+<div ng-controller="AbrirCajaController">
+    <fieldset>
+        <legend>Abrir caja</legend>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && formCrearPersonanatural.submitted}">
+                    <label>Agencia</label>
+                    <p>Ayacucho</p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.numerodocumento.$invalid && formCrearPersonanatural.submitted}">
+                    <label>Caja</label>
+                    <p>Caja 005 - C005</p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.numerodocumento.$invalid && formCrearPersonanatural.submitted}">
+                    <label>Estado</label>
+                    <p>Cerrado</p>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Detalle Caja</legend>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Ocultar ceros
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-9">
+                <accordion close-others="false">
+                    <accordion-group ng-repeat="detalle in detalleCaja" heading="Moneda: {{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}}" is-open="true">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div ng-grid="getTemplate(detalle.moneda, detalle.calculadora,$index)" style="border: 1px solid rgb(212,212,212); height: 335px;">
+                                    </div>
+                                    <div>
+                                        <div class="ngFooterPanel ng-scope" style="border: 1px solid rgb(212,212,212); width: 100%; height: 55px;">
+                                            <div class="ngTotalSelectContainer">
+                                                <div class="ngFooterTotalItems ngNoMultiSelect">
+                                                    <span class="ngLabel ng-binding">Total: {{total[$index]}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-group>
+                </accordion>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState">Guardar</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+
+    </fieldset>
+</div>

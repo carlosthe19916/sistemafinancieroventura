@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=8,9">
+
+		<link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
+        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-ui-router/angular-ui-router.js"></script>
+        <script type="text/javascript" src="bower_components/restangular/restangular.js"></script>
+        <script type="text/javascript" src="bower_components/restangular/underscore-min.js"></script>
+        <script type="text/javascript" src="bower_components/ui-bootstrap/ui-bootstrap-0.10.0.js"></script>
+    </head>
+    <body class="syn-asfe-body" style="cursor: default;">
+        <div id="header" class="header">
+            <header>
+                <div class="sf-nav-bar" style="min-width: 100%;">
+                    <div class="sf-nav-bar-theme">
+                        <div class="sf-nav-bar-block">
+                            <img class="gwt-Image logo" alt="Google AdSense" src="//www.google.com/images/logos/adsense_logo_sm.png">
+                        </div>
+                        <div class="sf-nav-bar-block" style="">
+                            <a class="gwt-Anchor sf-nav-bar-menu sf-nav-bar-menu-align"
+                               ui-sref-active="sf-nav-bar-menu-selected"
+                               ui-sref="index">
+                                Página principal
+                            </a>
+                            <a class="gwt-Anchor sf-nav-bar-menu sf-nav-bar-menu-align "
+                               ui-sref-active="sf-nav-bar-menu-selected"
+                               ui-sref="sucursal">
+                                Sucursal
+                            </a>
+                            <a class="gwt-Anchor sf-nav-bar-menu sf-nav-bar-menu-align"
+                               ui-sref-active="sf-nav-bar-menu-selected"
+                               ui-sref="otro">
+                                Otro
+                            </a>
+                        </div>
+                        <div class="sf-nav-bar-block sf-nav-bar-separator"></div>
+                        <div class="sf-nav-bar-config">
+                            <div class="sf-nav-bar-config-account">
+                                <a>
+                                    <div>
+                                        <span>carlosthe19916@gmail.com</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a class="gwt-Anchor sf-nav-bar-menu-align sf-config-image"></a>
+                            </div>
+                            <div>
+                                <a class="gwt-Anchor sf-nav-bar-menu-align sf-notification-image"></a>
+                            </div>
+                            <div>
+                                <a class="gwt-Anchor sf-nav-bar-menu-align sf-alert-image"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </header>
+        </div>
+        <div id="content" class="content" style="padding: 0; margin: 0;" ui-view>
+            <table class="syn-SideBarLayout" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td class="layout-sidebar-widget wide-layout-sidebar-widget">
+                            <div style="width: 100%;">
+                                <div class="sf-nav-bar-left" style="top: 54px;">
+                                    <div class="sf-nav-bar-left-separator">
+                                    </div>
+                                    <div class="sf-nav-bar-left-content" style="bottom: 0px;" ui-view="viewMenu">
+
+                                    </div>
+                                </div>
+                            </div></td>
+                        <td class="layout-main-widget">
+                            <div style="width: 100%;">
+                                <div class="container" ui-view="viewContent" style="padding-left: 40px;">
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="footer syn-Footer">
+            Ver en: <b>Clásico</b> | <a href="/adsense/lb/mobileui">Ancho de
+                banda de baja velocidad</a>
+        </div>
+        <div id="footer" class="footer">
+            <div class="syn-Footer">
+                <div class="links">
+                    <span class="copy">© 2014 SoftGreen</span><span class="separator">-</span><a
+                        class="gwt-Anchor"
+                        href="https://www.google.com/adsense/localized-terms"
+                        target="_blank">Términos y condiciones</a>
+                </div>
+            </div>
+        </div>
+
+
+
+    </body>
+</html>
