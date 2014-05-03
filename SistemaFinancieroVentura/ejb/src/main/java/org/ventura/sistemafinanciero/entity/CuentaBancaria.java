@@ -120,7 +120,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.tipoCuentaBancaria = tipoCuentaBancaria;
 	}
 
-	@Column(name = "NUMERO_CUENTA", nullable = false, length = 40)
+	@Column(name = "NUMERO_CUENTA", nullable = false, length = 40,columnDefinition = "nvarchar2")
 	public String getNumeroCuenta() {
 		return this.numeroCuenta;
 	}
@@ -176,7 +176,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "ESTADO_CUENTA", nullable = false, length = 30)
+	@Column(name = "ESTADO_CUENTA", nullable = false, length = 30,columnDefinition = "nvarchar2")
 	public String getEstadoCuenta() {
 		return this.estadoCuenta;
 	}

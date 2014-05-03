@@ -59,7 +59,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.idTipoDocumento = idTipoDocumento;
 	}
 
-	@Column(name = "DENOMINACION", length = 60)
+	@Column(name = "DENOMINACION", length = 60,columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}
@@ -68,7 +68,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
-	@Column(name = "ABREVIATURA", length = 40)
+	@Column(name = "ABREVIATURA", length = 40,columnDefinition = "nvarchar2")
 	public String getAbreviatura() {
 		return this.abreviatura;
 	}
@@ -77,7 +77,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.abreviatura = abreviatura;
 	}
 
-	@Column(name = "TIPO_PERSONA", length = 40)
+	@Column(name = "TIPO_PERSONA", length = 40,columnDefinition = "nvarchar2")
 	public String getTipoPersona() {
 		return this.tipoPersona;
 	}

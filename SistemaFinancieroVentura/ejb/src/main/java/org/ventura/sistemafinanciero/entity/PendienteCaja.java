@@ -28,7 +28,7 @@ public class PendienteCaja implements java.io.Serializable {
 	private BigDecimal monto;
 	private String observacion;
 	private Date fecha;
-	private Serializable hora;
+	private Date hora;
 	private String tipoPendiente;
 
 	public PendienteCaja() {
@@ -36,7 +36,7 @@ public class PendienteCaja implements java.io.Serializable {
 
 	public PendienteCaja(BigDecimal idPendienteCaja,
 			HistorialCaja historialCaja, Moneda moneda, BigDecimal monto,
-			Date fecha, Serializable hora, String tipoPendiente) {
+			Date fecha, Date hora, String tipoPendiente) {
 		this.idPendienteCaja = idPendienteCaja;
 		this.historialCaja = historialCaja;
 		this.moneda = moneda;
@@ -48,7 +48,7 @@ public class PendienteCaja implements java.io.Serializable {
 
 	public PendienteCaja(BigDecimal idPendienteCaja,
 			HistorialCaja historialCaja, Moneda moneda, BigDecimal monto,
-			String observacion, Date fecha, Serializable hora,
+			String observacion, Date fecha, Date hora,
 			String tipoPendiente) {
 		this.idPendienteCaja = idPendienteCaja;
 		this.historialCaja = historialCaja;
@@ -99,7 +99,7 @@ public class PendienteCaja implements java.io.Serializable {
 		this.monto = monto;
 	}
 
-	@Column(name = "OBSERVACION", length = 40)
+	@Column(name = "OBSERVACION", length = 40,columnDefinition="nvarchar2")
 	public String getObservacion() {
 		return this.observacion;
 	}
@@ -119,15 +119,15 @@ public class PendienteCaja implements java.io.Serializable {
 	}
 
 	@Column(name = "HORA", nullable = false)
-	public Serializable getHora() {
+	public Date getHora() {
 		return this.hora;
 	}
 
-	public void setHora(Serializable hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 
-	@Column(name = "TIPO_PENDIENTE", nullable = false, length = 40)
+	@Column(name = "TIPO_PENDIENTE", nullable = false, length = 40,columnDefinition = "nvarchar2")
 	public String getTipoPendiente() {
 		return this.tipoPendiente;
 	}

@@ -68,7 +68,7 @@ public class Moneda implements java.io.Serializable {
 		this.idMoneda = idMoneda;
 	}
 
-	@Column(name = "DENOMINACION", nullable = false, length = 40)
+	@Column(name = "DENOMINACION", nullable = false, length = 40,columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}
@@ -77,7 +77,7 @@ public class Moneda implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
-	@Column(name = "SIMBOLO", nullable = false, length = 10)
+	@Column(name = "SIMBOLO", nullable = false, length = 10, columnDefinition="nvarchar2")
 	public String getSimbolo() {
 		return this.simbolo;
 	}

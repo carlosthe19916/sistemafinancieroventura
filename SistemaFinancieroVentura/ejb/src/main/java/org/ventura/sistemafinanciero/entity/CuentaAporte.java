@@ -61,7 +61,7 @@ public class CuentaAporte implements java.io.Serializable {
 		this.saldo = saldo;
 	}
 
-	@Column(name = "ESTADO_CUENTA", nullable = false, length = 24)
+	@Column(name = "ESTADO_CUENTA", nullable = false, length = 24,columnDefinition = "nvarchar2")
 	public String getEstadoCuenta() {
 		return this.estadoCuenta;
 	}

@@ -66,7 +66,7 @@ public class Caja implements java.io.Serializable {
 		this.idCaja = idCaja;
 	}
 
-	@Column(name = "DENOMINACION", nullable = false, length = 40)
+	@Column(name = "DENOMINACION", nullable = false, length = 40,columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}
@@ -75,7 +75,7 @@ public class Caja implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
-	@Column(name = "ABREVIATURA", nullable = false, length = 20)
+	@Column(name = "ABREVIATURA", nullable = false, length = 20,columnDefinition = "nvarchar2")
 	public String getAbreviatura() {
 		return this.abreviatura;
 	}

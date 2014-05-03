@@ -2,7 +2,6 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
@@ -27,7 +26,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 	private CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen;
 	private CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino;
 	private Date fecha;
-	private Serializable hora;
+	private Date hora;
 	private BigDecimal numeroOperacion;
 	private BigDecimal monto;
 	private String referencia;
@@ -43,7 +42,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 			HistorialCaja historialCaja,
 			CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen,
 			CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino, Date fecha,
-			Serializable hora, BigDecimal numeroOperacion, BigDecimal monto,
+			Date hora, BigDecimal numeroOperacion, BigDecimal monto,
 			BigDecimal saldoDisponibleOrigen,
 			BigDecimal saldoDisponibleDestino, BigDecimal estado) {
 		this.idTransferenciaBancaria = idTransferenciaBancaria;
@@ -63,7 +62,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 			HistorialCaja historialCaja,
 			CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen,
 			CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino, Date fecha,
-			Serializable hora, BigDecimal numeroOperacion, BigDecimal monto,
+			Date hora, BigDecimal numeroOperacion, BigDecimal monto,
 			String referencia, BigDecimal saldoDisponibleOrigen,
 			BigDecimal saldoDisponibleDestino, BigDecimal estado,
 			String observacion) {
@@ -135,11 +134,11 @@ public class TransferenciaBancaria implements java.io.Serializable {
 	}
 
 	@Column(name = "HORA", nullable = false)
-	public Serializable getHora() {
+	public Date getHora() {
 		return this.hora;
 	}
 
-	public void setHora(Serializable hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 
@@ -161,7 +160,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 		this.monto = monto;
 	}
 
-	@Column(name = "REFERENCIA", length = 100)
+	@Column(name = "REFERENCIA", length = 100,columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
 	}
@@ -197,7 +196,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "OBSERVACION", length = 100)
+	@Column(name = "OBSERVACION", length = 100,columnDefinition = "nvarchar2")
 	public String getObservacion() {
 		return this.observacion;
 	}

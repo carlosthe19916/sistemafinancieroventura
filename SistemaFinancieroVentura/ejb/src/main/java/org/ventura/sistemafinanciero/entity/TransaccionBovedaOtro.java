@@ -2,7 +2,7 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
-import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class TransaccionBovedaOtro implements java.io.Serializable {
 	private Entidad entidad;
 	private HistorialBoveda historialBoveda;
 	private Date fecha;
-	private Serializable hora;
+	private Date hora;
 	private BigDecimal saldoDisponible;
 	private String observacion;
 	private BigDecimal estado;
@@ -41,7 +41,7 @@ public class TransaccionBovedaOtro implements java.io.Serializable {
 
 	public TransaccionBovedaOtro(BigDecimal idTransaccionBovedaOtro,
 			Entidad entidad, HistorialBoveda historialBoveda, Date fecha,
-			Serializable hora, BigDecimal saldoDisponible, BigDecimal estado,
+			Date hora, BigDecimal saldoDisponible, BigDecimal estado,
 			String tipoTransaccion) {
 		this.idTransaccionBovedaOtro = idTransaccionBovedaOtro;
 		this.entidad = entidad;
@@ -55,7 +55,7 @@ public class TransaccionBovedaOtro implements java.io.Serializable {
 
 	public TransaccionBovedaOtro(BigDecimal idTransaccionBovedaOtro,
 			Entidad entidad, HistorialBoveda historialBoveda, Date fecha,
-			Serializable hora, BigDecimal saldoDisponible, String observacion,
+			Date hora, BigDecimal saldoDisponible, String observacion,
 			BigDecimal estado, String tipoTransaccion,
 			Set transaccionBovedaOtroDetalls) {
 		this.idTransaccionBovedaOtro = idTransaccionBovedaOtro;
@@ -111,11 +111,11 @@ public class TransaccionBovedaOtro implements java.io.Serializable {
 	}
 
 	@Column(name = "HORA", nullable = false)
-	public Serializable getHora() {
+	public Date getHora() {
 		return this.hora;
 	}
 
-	public void setHora(Serializable hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 
@@ -128,7 +128,7 @@ public class TransaccionBovedaOtro implements java.io.Serializable {
 		this.saldoDisponible = saldoDisponible;
 	}
 
-	@Column(name = "OBSERVACION", length = 140)
+	@Column(name = "OBSERVACION", length = 140,columnDefinition = "nvarchar2")
 	public String getObservacion() {
 		return this.observacion;
 	}
@@ -146,7 +146,7 @@ public class TransaccionBovedaOtro implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "TIPO_TRANSACCION", nullable = false, length = 40)
+	@Column(name = "TIPO_TRANSACCION", nullable = false, length = 40,columnDefinition="nvarchar2")
 	public String getTipoTransaccion() {
 		return this.tipoTransaccion;
 	}

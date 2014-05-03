@@ -55,7 +55,7 @@ public class Rol implements java.io.Serializable {
 		this.idRol = idRol;
 	}
 
-	@Column(name = "DENOMINACION", nullable = false, length = 60)
+	@Column(name = "DENOMINACION", nullable = false, length = 60,columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}
@@ -64,7 +64,7 @@ public class Rol implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
-	@Column(name = "DESCRIPCION", nullable = false, length = 140)
+	@Column(name = "DESCRIPCION", nullable = false, length = 140,columnDefinition = "nvarchar2")
 	public String getDescripcion() {
 		return this.descripcion;
 	}

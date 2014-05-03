@@ -108,7 +108,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.personaNatural = personaNatural;
 	}
 
-	@Column(name = "NUMERO_DOCUMENTO", length = 40)
+	@Column(name = "NUMERO_DOCUMENTO", length = 40,columnDefinition = "nchar")
 	public String getNumeroDocumento() {
 		return this.numeroDocumento;
 	}
@@ -117,7 +117,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.numeroDocumento = numeroDocumento;
 	}
 
-	@Column(name = "RAZON_SOCIAL", length = 40)
+	@Column(name = "RAZON_SOCIAL", length = 40,columnDefinition = "nvarchar2")
 	public String getRazonSocial() {
 		return this.razonSocial;
 	}
@@ -126,7 +126,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.razonSocial = razonSocial;
 	}
 
-	@Column(name = "NOMBRE_COMERCIAL", length = 40)
+	@Column(name = "NOMBRE_COMERCIAL", length = 40,columnDefinition = "nvarchar2")
 	public String getNombreComercial() {
 		return this.nombreComercial;
 	}
@@ -145,7 +145,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.fechaConstitucion = fechaConstitucion;
 	}
 
-	@Column(name = "DIRECCION", length = 140)
+	@Column(name = "DIRECCION", length = 140,columnDefinition = "nvarchar2")
 	public String getDireccion() {
 		return this.direccion;
 	}
@@ -154,7 +154,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.direccion = direccion;
 	}
 
-	@Column(name = "REFERENCIA", length = 140)
+	@Column(name = "REFERENCIA", length = 140,columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
 	}
@@ -163,7 +163,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.referencia = referencia;
 	}
 
-	@Column(name = "TELEFONO", length = 40)
+	@Column(name = "TELEFONO", length = 40,columnDefinition = "nvarchar2")
 	public String getTelefono() {
 		return this.telefono;
 	}
@@ -172,7 +172,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.telefono = telefono;
 	}
 
-	@Column(name = "CELULAR", length = 40)
+	@Column(name = "CELULAR", length = 40,columnDefinition = "nvarchar2")
 	public String getCelular() {
 		return this.celular;
 	}
@@ -181,7 +181,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.celular = celular;
 	}
 
-	@Column(name = "EMAIL", length = 40)
+	@Column(name = "EMAIL", length = 40,columnDefinition = "nvarchar2")
 	public String getEmail() {
 		return this.email;
 	}
@@ -190,7 +190,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "TIPO_EMPRESA", nullable = false, length = 60)
+	@Column(name = "TIPO_EMPRESA", nullable = false, length = 60,columnDefinition = "nvarchar2")
 	public String getTipoEmpresa() {
 		return this.tipoEmpresa;
 	}
@@ -208,7 +208,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.finLucro = finLucro;
 	}
 
-	@Column(name = "UBIGEO", length = 12)
+	@Column(name = "UBIGEO", length = 12,columnDefinition = "nvarchar2")
 	public String getUbigeo() {
 		return this.ubigeo;
 	}

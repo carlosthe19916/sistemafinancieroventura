@@ -2,7 +2,6 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,7 +28,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 	private HistorialBoveda historialBoveda;
 	private HistorialCaja historialCaja;
 	private Date fecha;
-	private Serializable hora;
+	private Date hora;
 	private BigDecimal saldoDisponibleOrigen;
 	private String observacion;
 	private BigDecimal estadoSolicitud;
@@ -43,7 +42,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 
 	public TransaccionBovedaCaja(BigDecimal idTransaccionBovedaCaja,
 			HistorialBoveda historialBoveda, HistorialCaja historialCaja,
-			Date fecha, Serializable hora, BigDecimal saldoDisponibleOrigen,
+			Date fecha, Date hora, BigDecimal saldoDisponibleOrigen,
 			BigDecimal estadoSolicitud, BigDecimal estadoConfirmacion,
 			BigDecimal saldoDisponibleDestino) {
 		this.idTransaccionBovedaCaja = idTransaccionBovedaCaja;
@@ -59,7 +58,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 
 	public TransaccionBovedaCaja(BigDecimal idTransaccionBovedaCaja,
 			HistorialBoveda historialBoveda, HistorialCaja historialCaja,
-			Date fecha, Serializable hora, BigDecimal saldoDisponibleOrigen,
+			Date fecha, Date hora, BigDecimal saldoDisponibleOrigen,
 			String observacion, BigDecimal estadoSolicitud,
 			BigDecimal estadoConfirmacion, String origen,
 			BigDecimal saldoDisponibleDestino, Set transaccionBovedaCajaDetalls) {
@@ -118,11 +117,11 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 	}
 
 	@Column(name = "HORA", nullable = false)
-	public Serializable getHora() {
+	public Date getHora() {
 		return this.hora;
 	}
 
-	public void setHora(Serializable hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 
@@ -135,7 +134,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.saldoDisponibleOrigen = saldoDisponibleOrigen;
 	}
 
-	@Column(name = "OBSERVACION", length = 140)
+	@Column(name = "OBSERVACION", length = 140,columnDefinition = "nvarchar2")
 	public String getObservacion() {
 		return this.observacion;
 	}
@@ -162,7 +161,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.estadoConfirmacion = estadoConfirmacion;
 	}
 
-	@Column(name = "ORIGEN", length = 12)
+	@Column(name = "ORIGEN", length = 12,columnDefinition="nvarchar2")
 	public String getOrigen() {
 		return this.origen;
 	}

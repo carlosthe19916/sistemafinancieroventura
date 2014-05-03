@@ -29,8 +29,8 @@ public class HistorialBoveda implements java.io.Serializable {
 	private Boveda boveda;
 	private Date fechaApertura;
 	private Date fechaCierre;
-	private Serializable horaApertura;
-	private Serializable horaCierre;
+	private Date horaApertura;
+	private Date horaCierre;
 	private BigDecimal estado;
 	private Set transaccionBovedaCajas = new HashSet(0);
 	private Set detalleHistorialBovedas = new HashSet(0);
@@ -40,7 +40,7 @@ public class HistorialBoveda implements java.io.Serializable {
 	}
 
 	public HistorialBoveda(BigDecimal idHistorialBoveda, Boveda boveda,
-			Date fechaApertura, Serializable horaApertura, BigDecimal estado) {
+			Date fechaApertura, Date horaApertura, BigDecimal estado) {
 		this.idHistorialBoveda = idHistorialBoveda;
 		this.boveda = boveda;
 		this.fechaApertura = fechaApertura;
@@ -49,8 +49,8 @@ public class HistorialBoveda implements java.io.Serializable {
 	}
 
 	public HistorialBoveda(BigDecimal idHistorialBoveda, Boveda boveda,
-			Date fechaApertura, Date fechaCierre, Serializable horaApertura,
-			Serializable horaCierre, BigDecimal estado,
+			Date fechaApertura, Date fechaCierre, Date horaApertura,
+			Date horaCierre, BigDecimal estado,
 			Set transaccionBovedaCajas, Set detalleHistorialBovedas,
 			Set transaccionBovedaOtros) {
 		this.idHistorialBoveda = idHistorialBoveda;
@@ -106,20 +106,20 @@ public class HistorialBoveda implements java.io.Serializable {
 	}
 
 	@Column(name = "HORA_APERTURA", nullable = false)
-	public Serializable getHoraApertura() {
+	public Date getHoraApertura() {
 		return this.horaApertura;
 	}
 
-	public void setHoraApertura(Serializable horaApertura) {
+	public void setHoraApertura(Date horaApertura) {
 		this.horaApertura = horaApertura;
 	}
 
 	@Column(name = "HORA_CIERRE")
-	public Serializable getHoraCierre() {
+	public Date getHoraCierre() {
 		return this.horaCierre;
 	}
 
-	public void setHoraCierre(Serializable horaCierre) {
+	public void setHoraCierre(Date horaCierre) {
 		this.horaCierre = horaCierre;
 	}
 

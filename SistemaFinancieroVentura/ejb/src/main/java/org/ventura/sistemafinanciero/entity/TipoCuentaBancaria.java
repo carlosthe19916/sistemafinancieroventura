@@ -55,7 +55,7 @@ public class TipoCuentaBancaria implements java.io.Serializable {
 		this.idTipoCuentaBancaria = idTipoCuentaBancaria;
 	}
 
-	@Column(name = "DENOMINACION", nullable = false, length = 60)
+	@Column(name = "DENOMINACION", nullable = false, length = 60,columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}
@@ -64,7 +64,7 @@ public class TipoCuentaBancaria implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
-	@Column(name = "ABREVIATURA", length = 20)
+	@Column(name = "ABREVIATURA", length = 20,columnDefinition = "nvarchar2")
 	public String getAbreviatura() {
 		return this.abreviatura;
 	}

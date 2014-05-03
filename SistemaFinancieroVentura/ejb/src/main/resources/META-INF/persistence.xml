@@ -10,9 +10,11 @@
 		<jta-data-source>java:jboss/datasources/OracleDS</jta-data-source>
 		<properties>
 			<!-- Properties for Hibernate -->
+			
 			<property name="hibernate.show_sql" value="false" />			
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
-			<property name="hibernate.use_nationalized_character_data" value="true"></property>
+			<property name="hibernate.hbm2ddl.auto" value="validate"/>
+			
 		</properties>
 	</persistence-unit>
 </persistence>

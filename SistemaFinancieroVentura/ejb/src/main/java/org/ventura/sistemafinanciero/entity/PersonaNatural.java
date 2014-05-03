@@ -137,7 +137,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "NUMERO_DOCUMENTO", nullable = false, length = 40)
+	@Column(name = "NUMERO_DOCUMENTO", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumeroDocumento() {
 		return this.numeroDocumento;
 	}
@@ -147,7 +147,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "APELLIDO_PATERNO", nullable = false, length = 120)
+	@Column(name = "APELLIDO_PATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoPaterno() {
 		return this.apellidoPaterno;
 	}
@@ -157,7 +157,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "APELLIDO_MATERNO", nullable = false, length = 120)
+	@Column(name = "APELLIDO_MATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoMaterno() {
 		return this.apellidoMaterno;
 	}
@@ -167,7 +167,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "NOMBRES", nullable = false, length = 140)
+	@Column(name = "NOMBRES", nullable = false, length = 140, columnDefinition = "nvarchar2")
 	public String getNombres() {
 		return this.nombres;
 	}
@@ -188,7 +188,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "SEXO", nullable = false, length = 20)
+	@Column(name = "SEXO", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	public String getSexo() {
 		return this.sexo;
 	}
@@ -198,7 +198,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "ESTADO_CIVIL", length = 20)
+	@Column(name = "ESTADO_CIVIL", length = 20, columnDefinition = "nvarchar2")
 	public String getEstadoCivil() {
 		return this.estadoCivil;
 	}
@@ -208,7 +208,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "OCUPACION", length = 60)
+	@Column(name = "OCUPACION", length = 60, columnDefinition = "nvarchar2")
 	public String getOcupacion() {
 		return this.ocupacion;
 	}
@@ -218,7 +218,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "DIRECCION", length = 140)
+	@Column(name = "DIRECCION", length = 140, columnDefinition = "nvarchar2")
 	public String getDireccion() {
 		return this.direccion;
 	}
@@ -228,7 +228,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "REFERENCIA", length = 100)
+	@Column(name = "REFERENCIA", length = 100, columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
 	}
@@ -238,7 +238,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "TELEFONO", length = 40)
+	@Column(name = "TELEFONO", length = 40, columnDefinition = "nvarchar2")
 	public String getTelefono() {
 		return this.telefono;
 	}
@@ -248,7 +248,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "CELULAR", length = 40)
+	@Column(name = "CELULAR", length = 40, columnDefinition = "nvarchar2")
 	public String getCelular() {
 		return this.celular;
 	}
@@ -258,7 +258,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "EMAIL", length = 140)
+	@Column(name = "EMAIL", length = 140, columnDefinition = "nvarchar2")
 	public String getEmail() {
 		return this.email;
 	}
@@ -267,7 +267,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "UBIGEO", length = 12)
+	@Column(name = "UBIGEO", length = 12, columnDefinition = "nvarchar2")
 	public String getUbigeo() {
 		return this.ubigeo;
 	}
@@ -276,7 +276,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.ubigeo = ubigeo;
 	}
 
-	@Column(name = "CODIGO_PAIS", length = 6)
+	@Column(name = "CODIGO_PAIS", length = 6, columnDefinition = "nvarchar2")
 	public String getCodigoPais() {
 		return this.codigoPais;
 	}

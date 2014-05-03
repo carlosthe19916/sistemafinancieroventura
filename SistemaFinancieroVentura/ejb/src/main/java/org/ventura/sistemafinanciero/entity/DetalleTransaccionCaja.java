@@ -66,7 +66,7 @@ public class DetalleTransaccionCaja implements java.io.Serializable {
 		this.valorMoneda = valorMoneda;
 	}
 
-	@Column(name = "ORIGEN_DETALLE", length = 40)
+	@Column(name = "ORIGEN_DETALLE", length = 40,columnDefinition = "nvarchar2")
 	public String getOrigenDetalle() {
 		return this.origenDetalle;
 	}

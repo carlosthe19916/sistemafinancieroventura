@@ -90,7 +90,7 @@ public class Boveda implements java.io.Serializable {
 		this.agencia = agencia;
 	}
 
-	@Column(name = "DENOMINACION", nullable = false, length = 100)
+	@Column(name = "DENOMINACION", nullable = false, length = 100, columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}

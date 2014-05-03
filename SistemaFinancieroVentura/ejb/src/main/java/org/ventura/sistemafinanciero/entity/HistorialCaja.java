@@ -36,8 +36,8 @@ public class HistorialCaja implements java.io.Serializable {
 	private Caja caja;
 	private Date fechaApertura;
 	private Date fechaCierre;
-	private Serializable horaApertura;
-	private Serializable horaCierre;
+	private Date horaApertura;
+	private Date horaCierre;
 	private BigDecimal estado;
 	private Set transaccionCajaCajasForIdCajaHistorialDestino = new HashSet(0);
 	private Set transaccionCuentaAportes = new HashSet(0);
@@ -53,7 +53,7 @@ public class HistorialCaja implements java.io.Serializable {
 	}
 
 	public HistorialCaja(BigDecimal idHistorialCaja, Caja caja,
-			Date fechaApertura, Serializable horaApertura, BigDecimal estado) {
+			Date fechaApertura, Date horaApertura, BigDecimal estado) {
 		this.idHistorialCaja = idHistorialCaja;
 		this.caja = caja;
 		this.fechaApertura = fechaApertura;
@@ -62,8 +62,8 @@ public class HistorialCaja implements java.io.Serializable {
 	}
 
 	public HistorialCaja(BigDecimal idHistorialCaja, Caja caja,
-			Date fechaApertura, Date fechaCierre, Serializable horaApertura,
-			Serializable horaCierre, BigDecimal estado,
+			Date fechaApertura, Date fechaCierre, Date horaApertura,
+			Date horaCierre, BigDecimal estado,
 			Set transaccionCajaCajasForIdCajaHistorialDestino,
 			Set transaccionCuentaAportes, Set transaccionCompraVentas,
 			Set pendienteCajas,
@@ -129,20 +129,20 @@ public class HistorialCaja implements java.io.Serializable {
 	}
 
 	@Column(name = "HORA_APERTURA", nullable = false)
-	public Serializable getHoraApertura() {
+	public Date getHoraApertura() {
 		return this.horaApertura;
 	}
 
-	public void setHoraApertura(Serializable horaApertura) {
+	public void setHoraApertura(Date horaApertura) {
 		this.horaApertura = horaApertura;
 	}
 
 	@Column(name = "HORA_CIERRE")
-	public Serializable getHoraCierre() {
+	public Date getHoraCierre() {
 		return this.horaCierre;
 	}
 
-	public void setHoraCierre(Serializable horaCierre) {
+	public void setHoraCierre(Date horaCierre) {
 		this.horaCierre = horaCierre;
 	}
 
