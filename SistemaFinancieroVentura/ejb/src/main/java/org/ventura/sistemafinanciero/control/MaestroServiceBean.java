@@ -34,7 +34,7 @@ public class MaestroServiceBean implements MaestroService {
 		List<TipoDocumento> list = null;
 		try {
 			QueryParameter queryParameter = QueryParameter.with("tipopersona", tipopersona);		
-			//list = tipodocumentoDAO.findByNamedQuery(TipoDocumento.findByTipopersona,queryParameter.parameters());		
+			list = tipodocumentoDAO.findByNamedQuery(TipoDocumento.findByTipopersona,queryParameter.parameters());		
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e.getCause(),e.getLocalizedMessage());
 		}

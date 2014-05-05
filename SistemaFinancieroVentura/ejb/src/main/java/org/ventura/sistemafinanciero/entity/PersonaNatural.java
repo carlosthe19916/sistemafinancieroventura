@@ -42,7 +42,7 @@ public class PersonaNatural implements java.io.Serializable {
 	public final static String FindByFilterText = "FindByFilterText";
 	public final static String FindAll = "FindAll";
 
-	private BigDecimal idPersonaNatural;
+	private int idPersonaNatural;
 	private TipoDocumento tipoDocumento;
 	private String numeroDocumento;
 	private String apellidoPaterno;
@@ -68,7 +68,7 @@ public class PersonaNatural implements java.io.Serializable {
 	public PersonaNatural() {
 	}
 
-	public PersonaNatural(BigDecimal idPersonaNatural,
+	public PersonaNatural(int idPersonaNatural,
 			TipoDocumento tipoDocumento, String numeroDocumento,
 			String apellidoPaterno, String apellidoMaterno, String nombres,
 			Date fechaNacimiento, String sexo) {
@@ -82,7 +82,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.sexo = sexo;
 	}
 
-	public PersonaNatural(BigDecimal idPersonaNatural,
+	public PersonaNatural(int idPersonaNatural,
 			TipoDocumento tipoDocumento, String numeroDocumento,
 			String apellidoPaterno, String apellidoMaterno, String nombres,
 			Date fechaNacimiento, String sexo, String estadoCivil,
@@ -117,11 +117,11 @@ public class PersonaNatural implements java.io.Serializable {
 	@XmlElement
 	@Id
 	@Column(name = "ID_PERSONA_NATURAL", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdPersonaNatural() {
+	public int getIdPersonaNatural() {
 		return this.idPersonaNatural;
 	}
 
-	public void setIdPersonaNatural(BigDecimal idPersonaNatural) {
+	public void setIdPersonaNatural(int idPersonaNatural) {
 		this.idPersonaNatural = idPersonaNatural;
 	}
 

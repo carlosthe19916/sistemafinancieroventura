@@ -9,4 +9,34 @@
 		<welcome-file>/index.jefecaja.html</welcome-file>
 	</welcome-file-list>
 
+	<security-constraint>
+		<display-name>Solo el usuario caja puede tener acceso a esta página</display-name>
+		<web-resource-collection>
+			<web-resource-name>CAJA</web-resource-name>
+			<description></description>
+			<url-pattern>/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>PUT</http-method>
+			<http-method>POST</http-method>
+			<http-method>DELETE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Tiene acceso a todo el sistema</description>
+			<role-name>CAJA</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-role>
+		<description>Acesso a caja</description>
+		<role-name>CAJA</role-name>
+	</security-role>
+
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>file</realm-name>
+		<form-login-config>
+			<form-login-page>/login.html</form-login-page>
+			<form-error-page>/unauthorized.html</form-error-page>
+		</form-login-config>
+	</login-config>
 </web-app>

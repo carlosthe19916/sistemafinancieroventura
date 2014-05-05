@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,19 +17,19 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "DETALLE_HISTORIAL_CAJA", schema = "BDSISTEMAFINANCIERO")
-public class DetalleHistorialCaja implements java.io.Serializable {
+public class DetalleHistorialCaja implements java.io.Serializable,Comparable<DetalleHistorialCaja> {
 
 	private BigDecimal idDetalleHistorialCaja;
 	private MonedaDenominacion monedaDenominacion;
 	private HistorialCaja historialCaja;
-	private BigDecimal cantidad;
+	private int cantidad;
 
 	public DetalleHistorialCaja() {
 	}
 
 	public DetalleHistorialCaja(BigDecimal idDetalleHistorialCaja,
 			MonedaDenominacion monedaDenominacion, HistorialCaja historialCaja,
-			BigDecimal cantidad) {
+			int cantidad) {
 		this.idDetalleHistorialCaja = idDetalleHistorialCaja;
 		this.monedaDenominacion = monedaDenominacion;
 		this.historialCaja = historialCaja;
@@ -66,12 +67,17 @@ public class DetalleHistorialCaja implements java.io.Serializable {
 	}
 
 	@Column(name = "CANTIDAD", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getCantidad() {
+	public int getCantidad() {
 		return this.cantidad;
 	}
 
-	public void setCantidad(BigDecimal cantidad) {
+	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
+	}
+
+	@Override
+	public int compareTo(DetalleHistorialCaja o) {
+		return this.monedaDenominacion.getValor().compareTo(o.getMonedaDenominacion().getValor());
 	}
 
 }

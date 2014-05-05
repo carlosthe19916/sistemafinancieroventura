@@ -16,18 +16,35 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
+import org.ventura.sistemafinanciero.dto.Calculadora;
+import org.ventura.sistemafinanciero.dto.MonedaCalculadora;
 //import org.softgreen.sistcoop.entity.dto.MonedaCalculadora;
 import org.ventura.sistemafinanciero.entity.Caja;
+import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
+import org.ventura.sistemafinanciero.entity.Moneda;
+import org.ventura.sistemafinanciero.entity.Trabajador;
+import org.ventura.sistemafinanciero.entity.Usuario;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
@@ -44,32 +61,69 @@ public class CajaRESTService {
     @EJB CajaService cajaService;
     @EJB UsuarioService usuarioService;
     @EJB TrabajadorService trabajadorService;
-    
-   
-    
+     
     @GET
 	@Path("/currentSession")
 	@Produces({ "application/xml", "application/json" })
 	public Caja getCajaOfAuthenticateSession() {	
-    	/*Caja caja = null;
+    	Caja caja = null;
+    	Response.ResponseBuilder builder = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
 			Usuario currentUser = usuarioService.findByUsername(username);
 
 			Trabajador trabajador;
 			if (currentUser != null)
-				trabajador = trabajadorService.findByUsuario(currentUser.getId());
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
 			else
 				throw new NotFoundException();
-
-			caja = cajaService.findByTrabajador(trabajador.getId());
-
+			if(trabajador != null)
+				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+			else
+				throw new NotFoundException();			
 		} catch (NonexistentEntityException e) {
 			throw new InternalServerErrorException();
-		} 
-		if(caja != null)
-			return caja;
-		else
-			throw new NotFoundException();*/ return null;
+		} 	
+		return caja;
 	}
+    
+    @GET
+    @Path("/detalle")
+    @Produces({ "application/xml", "application/json" })
+    public List<MonedaCalculadora> getCajaHistorialDetalle() {
+    	List<MonedaCalculadora> result = null;
+    	try {
+    		String username = context.getCallerPrincipal().getName();
+        	Usuario usuario = usuarioService.findByUsername(username);
+        	Trabajador trabajador = trabajadorService.findByUsuario(usuario.getIdUsuario());
+        	Caja caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+        	Map<Moneda, Set<DetalleHistorialCaja>> detalle =  cajaService.getDetalleCaja(caja.getIdCaja());
+        	
+        	result = new ArrayList<MonedaCalculadora>();
+        	for (Moneda key : detalle.keySet()) {
+        		Set<DetalleHistorialCaja> cajaHistorialDetalle = detalle.get(key);        		
+        		MonedaCalculadora monedaCalculadora = new MonedaCalculadora();
+        		monedaCalculadora.setMoneda(key);
+        		List<Calculadora> list = new ArrayList<Calculadora>();
+        		monedaCalculadora.setCalculadora(list);
+        		for (DetalleHistorialCaja historialdetalle : cajaHistorialDetalle) {
+        			Calculadora calculadora = new Calculadora();
+            		
+            		calculadora.setIddenominacion(historialdetalle.getMonedaDenominacion().getIdMonedaDenominacion());
+            		calculadora.setDenominacion(historialdetalle.getMonedaDenominacion().getDenominacion());        		
+            		calculadora.setValor(historialdetalle.getMonedaDenominacion().getValor());
+            		calculadora.setCantidad(historialdetalle.getCantidad());
+            		
+            		list.add(calculadora);
+				}
+        		result.add(monedaCalculadora);	
+			}
+		} catch (NullPointerException e) {
+			log.log(Level.SEVERE, e.getMessage());
+		} catch (NonexistentEntityException e) {
+			log.log(Level.SEVERE, e.getMessage());
+			throw new BadRequestException();
+		}
+		return result;	
+    }
 }

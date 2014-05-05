@@ -3,9 +3,7 @@ angular.module('cajaApp.service', []);
 angular.module("cajaApp.service", ["restangular"])
     .factory("CajaService",["Restangular",
         function(Restangular){
-
             var _cajaService = Restangular.all("caja");
-
             return {
                 create: function(caja){
                     return _cajaService.post(caja);
@@ -18,7 +16,7 @@ angular.module("cajaApp.service", ["restangular"])
                     return Restangular.all("caja/detalle").getList();
                 },
                 getCurrentCaja: function(){
-                    return Restangular.one("caja/currentSession").get().$object;
+                    return Restangular.one("caja/currentSession").get();
                 }
             }
         }]);

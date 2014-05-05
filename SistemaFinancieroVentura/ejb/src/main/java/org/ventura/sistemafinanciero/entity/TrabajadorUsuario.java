@@ -55,7 +55,7 @@ public class TrabajadorUsuario implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "ID_TRABAJADOR", nullable = false, insertable = false, updatable = false)
 	public Trabajador getTrabajador() {
 		return this.trabajador;

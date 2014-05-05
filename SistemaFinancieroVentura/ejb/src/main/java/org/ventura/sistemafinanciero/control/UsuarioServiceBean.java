@@ -28,25 +28,19 @@ public class UsuarioServiceBean extends AbstractServiceBean<Usuario> implements 
 
 	@Override
 	public Usuario findByUsername(String username) {
-		/*Usuario usuario = null;
+		Usuario usuario = null;
 		try {
 			QueryParameter queryParameter = QueryParameter.with("username", username);
 			List<Usuario> result = usuarioDAO.findByNamedQuery(Usuario.findByUsername, queryParameter.parameters());
-			int count = 0;
+			if(result.size() > 1)
+				throw new Exception();
 			for (Usuario u : result) {
-				if(u.getEstado() == true)
-					count++;
-				if(count > 1)
-					break;
-			}
-			if(count == 1)
-				usuario = result.get(0);
-			else
-				throw new Exception("Mas de un usuario activo encontrado");
+				usuario = u;
+			}			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-		return usuario;*/return null;
+		return usuario;
 	}
 
 	@Override

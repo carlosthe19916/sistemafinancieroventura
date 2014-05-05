@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.hibernate.Hibernate;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
@@ -31,6 +32,7 @@ public class MonedaServiceBean extends AbstractServiceBean<Moneda> implements Mo
 		if (moneda == null)
 			throw new NonexistentEntityException("Moneda no encontrada");
 		Set<MonedaDenominacion> denominaciones = moneda.getMonedaDenominacions();
+		Hibernate.initialize(denominaciones);
 		return denominaciones;
 	}
 

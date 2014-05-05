@@ -26,7 +26,7 @@ public class Boveda implements java.io.Serializable {
 	private Agencia agencia;
 	private String denominacion;
 	private BigDecimal estado;
-	private BigDecimal abierto;
+	private int abierto;
 	private BigDecimal congelado;
 	private Set bovedaCajas = new HashSet(0);
 	private Set historialBovedas = new HashSet(0);
@@ -35,26 +35,26 @@ public class Boveda implements java.io.Serializable {
 	}
 
 	public Boveda(BigDecimal idBoveda, Moneda moneda, Agencia agencia,
-			String denominacion, BigDecimal estado, BigDecimal abierto,
+			String denominacion, BigDecimal estado, boolean abierto,
 			BigDecimal congelado) {
 		this.idBoveda = idBoveda;
 		this.moneda = moneda;
 		this.agencia = agencia;
 		this.denominacion = denominacion;
 		this.estado = estado;
-		this.abierto = abierto;
+		this.abierto = (abierto ? 1 : 0);
 		this.congelado = congelado;
 	}
 
 	public Boveda(BigDecimal idBoveda, Moneda moneda, Agencia agencia,
-			String denominacion, BigDecimal estado, BigDecimal abierto,
+			String denominacion, BigDecimal estado, boolean abierto,
 			BigDecimal congelado, Set bovedaCajas, Set historialBovedas) {
 		this.idBoveda = idBoveda;
 		this.moneda = moneda;
 		this.agencia = agencia;
 		this.denominacion = denominacion;
 		this.estado = estado;
-		this.abierto = abierto;
+		this.abierto = (abierto ? 1 : 0);
 		this.congelado = congelado;
 		this.bovedaCajas = bovedaCajas;
 		this.historialBovedas = historialBovedas;
@@ -109,12 +109,12 @@ public class Boveda implements java.io.Serializable {
 	}
 
 	@Column(name = "ABIERTO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getAbierto() {
-		return this.abierto;
+	public boolean getAbierto() {
+		return (this.abierto == 1 ? true : false);
 	}
 
-	public void setAbierto(BigDecimal abierto) {
-		this.abierto = abierto;
+	public void setAbierto(boolean abierto) {
+		this.abierto = (abierto ? 1 : 0);;
 	}
 
 	@Column(name = "CONGELADO", nullable = false, precision = 22, scale = 0)

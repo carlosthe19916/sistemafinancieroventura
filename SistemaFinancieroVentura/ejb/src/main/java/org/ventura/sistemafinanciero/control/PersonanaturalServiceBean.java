@@ -32,20 +32,20 @@ import org.ventura.sistemafinanciero.service.PersonanaturalService;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PersonanaturalServiceBean extends AbstractServiceBean<PersonaNatural> implements PersonanaturalService {
 
-	//private static Logger LOGGER = LoggerFactory.getLogger(PersonanaturalServiceBean.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PersonanaturalServiceBean.class);
 
 	@Inject
 	private DAO<Object, PersonaNatural> personanaturalDAO;
 
-	//@Inject
-	//private DAO<Object, Trabajador> trabajadorDAO;
+	@Inject
+	private DAO<Object, Trabajador> trabajadorDAO;
 	
-	//@Inject
-   // private Validator validator;
+	@Inject
+    private Validator validator;
 
 	@Override
 	public void create(PersonaNatural personanatural) throws PreexistingEntityException {	
-		/*Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(personanatural);
+		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(personanatural);
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
 		}
@@ -57,13 +57,13 @@ public class PersonanaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		if (obj == null)
 			personanaturalDAO.create(personanatural);
 		else
-			throw new PreexistingEntityException("La persona con el Tipo y Numero de documento ya existe");*/
+			throw new PreexistingEntityException("La persona con el Tipo y Numero de documento ya existe");
 		
 	}
 	
 	@Override
 	public void update(int idPersona, PersonaNatural persona) throws NonexistentEntityException, PreexistingEntityException {
-	/*	Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(persona);
+		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(persona);
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
 		}		
@@ -74,11 +74,11 @@ public class PersonanaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		TipoDocumento tipoDocumento = persona.getTipoDocumento();
 		PersonaNatural p = this.findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), persona.getNumeroDocumento());
 		if(p != null)
-			if(p.getId() != idPersona)
+			if(p.getIdPersonaNatural() != idPersona)
 				throw new PreexistingEntityException("Tipo y numero de documento ya existente");
 				
 		persona.setIdPersonaNatural(idPersona);
-		personanaturalDAO.update(persona);*/	
+		personanaturalDAO.update(persona);
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class PersonanaturalServiceBean extends AbstractServiceBean<PersonaNatura
 					result = personaNatural;
 				}
 		} catch (IllegalResultException e) {
-		//	LOGGER.error(e.getMessage(), e.getLocalizedMessage(), e.getCause());
+			LOGGER.error(e.getMessage(), e.getLocalizedMessage(), e.getCause());
 		}
 		return result;
 	}
@@ -118,12 +118,11 @@ public class PersonanaturalServiceBean extends AbstractServiceBean<PersonaNatura
 	
 	@Override
 	public PersonaNatural findByTrabajador(int idTrabajador) {
-		//Trabajador trabajador = trabajadorDAO.find(idTrabajador);
-		/*if(trabajador == null)
+		Trabajador trabajador = trabajadorDAO.find(idTrabajador);
+		if(trabajador == null)
 			return null;
 		else
-			return trabajador.getPersonaNatural();*/
-		return null;
+			return trabajador.getPersonaNatural();
 	}
 
 	@Override

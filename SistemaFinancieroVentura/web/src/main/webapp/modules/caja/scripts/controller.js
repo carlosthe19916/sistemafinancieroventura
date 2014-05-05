@@ -1,35 +1,12 @@
 angular.module('cajaApp.controller', []);
 
 angular.module('cajaApp.controller')
-    .controller('menuController', ['$scope', "PersonanaturalService",
-        function($scope, PersonanaturalService) {
-
-            $scope.persona = PersonanaturalService.currentSession();
-
-            $scope.popover = {
-                state: false
-            };
-
-            $scope.changeStatePopover = function(){
-                $scope.popover.state = !$scope.popover.state;
-            }
-
-            $scope.showPopover = function(){
-                $scope.popover.state = true;
-            }
-
-            $scope.hidePopover = function(){
-                $scope.popover.state = false;
-            }
-
-        }])
     .controller('cajaStatusController', ['$scope', "CajaService",
         function($scope, CajaService) {
 
             $scope.caja = CajaService.getCurrentCaja();
 
         }])
-
 
     .controller('AbrirCajaController', ['$scope', '$filter', "CajaService",
         function($scope, $filter, CajaService) {

@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Table(name = "TRABAJADOR", schema = "BDSISTEMAFINANCIERO")
 public class Trabajador implements java.io.Serializable {
 
-	private BigDecimal idTrabajador;
+	private int idTrabajador;
 	private PersonaNatural personaNatural;
 	private Agencia agencia;
 	private BigDecimal estado;
@@ -31,7 +31,7 @@ public class Trabajador implements java.io.Serializable {
 	public Trabajador() {
 	}
 
-	public Trabajador(BigDecimal idTrabajador, PersonaNatural personaNatural,
+	public Trabajador(int idTrabajador, PersonaNatural personaNatural,
 			Agencia agencia, BigDecimal estado) {
 		this.idTrabajador = idTrabajador;
 		this.personaNatural = personaNatural;
@@ -39,7 +39,7 @@ public class Trabajador implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Trabajador(BigDecimal idTrabajador, PersonaNatural personaNatural,
+	public Trabajador(int idTrabajador, PersonaNatural personaNatural,
 			Agencia agencia, BigDecimal estado, Set trabajadorUsuarios,
 			Set trabajadorCajas) {
 		this.idTrabajador = idTrabajador;
@@ -52,11 +52,11 @@ public class Trabajador implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_TRABAJADOR", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdTrabajador() {
+	public int getIdTrabajador() {
 		return this.idTrabajador;
 	}
 
-	public void setIdTrabajador(BigDecimal idTrabajador) {
+	public void setIdTrabajador(int idTrabajador) {
 		this.idTrabajador = idTrabajador;
 	}
 

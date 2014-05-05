@@ -4,6 +4,7 @@ package org.ventura.sistemafinanciero.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,18 +28,18 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "HISTORIAL_CAJA", schema = "BDSISTEMAFINANCIERO")
-@NamedQueries({ @NamedQuery(name = HistorialCaja.findByHistorialActivo, query = "SELECT c FROM HistorialCaja c WHERE c.caja.idCaja = :idcaja AND c.estado = 1") })
+@NamedQueries({ @NamedQuery(name = HistorialCaja.findByHistorialActivo, query = "SELECT c FROM HistorialCaja c WHERE c.caja.idCaja = :idcaja AND c.estado = true") })
 public class HistorialCaja implements java.io.Serializable {
 
 	public final static String findByHistorialActivo = "findByHistorialActivo";
 
-	private BigDecimal idHistorialCaja;
+	private int idHistorialCaja;
 	private Caja caja;
 	private Date fechaApertura;
 	private Date fechaCierre;
 	private Date horaApertura;
 	private Date horaCierre;
-	private BigDecimal estado;
+	private int estado;
 	private Set transaccionCajaCajasForIdCajaHistorialDestino = new HashSet(0);
 	private Set transaccionCuentaAportes = new HashSet(0);
 	private Set transaccionCompraVentas = new HashSet(0);
@@ -52,18 +53,18 @@ public class HistorialCaja implements java.io.Serializable {
 	public HistorialCaja() {
 	}
 
-	public HistorialCaja(BigDecimal idHistorialCaja, Caja caja,
-			Date fechaApertura, Date horaApertura, BigDecimal estado) {
+	public HistorialCaja(int idHistorialCaja, Caja caja,
+			Date fechaApertura, Date horaApertura, boolean estado) {
 		this.idHistorialCaja = idHistorialCaja;
 		this.caja = caja;
 		this.fechaApertura = fechaApertura;
 		this.horaApertura = horaApertura;
-		this.estado = estado;
+		this.estado = (estado ? 1:0 );
 	}
 
-	public HistorialCaja(BigDecimal idHistorialCaja, Caja caja,
+	public HistorialCaja(int idHistorialCaja, Caja caja,
 			Date fechaApertura, Date fechaCierre, Date horaApertura,
-			Date horaCierre, BigDecimal estado,
+			Date horaCierre, boolean estado,
 			Set transaccionCajaCajasForIdCajaHistorialDestino,
 			Set transaccionCuentaAportes, Set transaccionCompraVentas,
 			Set pendienteCajas,
@@ -76,7 +77,7 @@ public class HistorialCaja implements java.io.Serializable {
 		this.fechaCierre = fechaCierre;
 		this.horaApertura = horaApertura;
 		this.horaCierre = horaCierre;
-		this.estado = estado;
+		this.estado = (estado ? 1:0 );
 		this.transaccionCajaCajasForIdCajaHistorialDestino = transaccionCajaCajasForIdCajaHistorialDestino;
 		this.transaccionCuentaAportes = transaccionCuentaAportes;
 		this.transaccionCompraVentas = transaccionCompraVentas;
@@ -90,11 +91,11 @@ public class HistorialCaja implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_HISTORIAL_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdHistorialCaja() {
+	public int getIdHistorialCaja() {
 		return this.idHistorialCaja;
 	}
 
-	public void setIdHistorialCaja(BigDecimal idHistorialCaja) {
+	public void setIdHistorialCaja(int idHistorialCaja) {
 		this.idHistorialCaja = idHistorialCaja;
 	}
 
@@ -147,12 +148,12 @@ public class HistorialCaja implements java.io.Serializable {
 	}
 
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "historialCajaByIdCajaHistorialDestino")

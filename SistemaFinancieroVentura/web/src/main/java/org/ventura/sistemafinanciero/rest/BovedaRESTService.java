@@ -47,7 +47,7 @@ import org.ventura.sistemafinanciero.service.UsuarioService;
 
 @Path("/boveda")
 @RequestScoped
-public class BovedaRESTService1 {
+public class BovedaRESTService {
     
     private Logger log;
 

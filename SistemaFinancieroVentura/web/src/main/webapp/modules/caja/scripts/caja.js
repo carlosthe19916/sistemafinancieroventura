@@ -2,19 +2,22 @@ var cajaApp = angular.module('cajaApp',[
     "ui.router",
     "restangular",
     "ui.bootstrap",
-    //"mgcrea.ngStrap",
     "dialogs",
     "ngGrid",
     "ui.keypress",
-    "commonApp",
     "cajaApp.controller",
     "cajaApp.service"
 ]);
 
+cajaApp.config(function(RestangularProvider) {
+    RestangularProvider.setBaseUrl("http://localhost:8080/SistemaFinancieroVentura-web/services");
+});
+
 cajaApp.config(function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.when('', '/index')
-        .when("/app/administracion", "/app/administracion/persona/buscar");
+        .when("/app/administracion", "/app/administracion/persona/buscar")
+        .when("/errorCaja", "/modules/caja/views/error.html");
 
     $urlRouterProvider.otherwise('/index');
 
@@ -168,4 +171,15 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
+cajaApp.run(["$rootScope", "$state", "CajaService", function($rootScope, $location, CajaService){
+    $rootScope.$on('$stateChangeStart', function(event, next) {
+        CajaService.getCurrentCaja().then(
+            function(caja){
 
+            },
+            function error(error){
+                alert("No se pudo cargar la caja para el usuario ingresado");
+            }
+        );
+    });
+}]);

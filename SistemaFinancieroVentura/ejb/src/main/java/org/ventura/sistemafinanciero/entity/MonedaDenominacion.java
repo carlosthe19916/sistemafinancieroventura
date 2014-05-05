@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Table(name = "MONEDA_DENOMINACION", schema = "BDSISTEMAFINANCIERO")
 public class MonedaDenominacion implements java.io.Serializable {
 
-	private BigDecimal idMonedaDenominacion;
+	private int idMonedaDenominacion;
 	private Moneda moneda;
 	private String denominacion;
 	private BigDecimal valor;
@@ -34,7 +34,7 @@ public class MonedaDenominacion implements java.io.Serializable {
 	public MonedaDenominacion() {
 	}
 
-	public MonedaDenominacion(BigDecimal idMonedaDenominacion, Moneda moneda,
+	public MonedaDenominacion(int idMonedaDenominacion, Moneda moneda,
 			String denominacion, BigDecimal valor, BigDecimal estado) {
 		this.idMonedaDenominacion = idMonedaDenominacion;
 		this.moneda = moneda;
@@ -43,7 +43,7 @@ public class MonedaDenominacion implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public MonedaDenominacion(BigDecimal idMonedaDenominacion, Moneda moneda,
+	public MonedaDenominacion(int idMonedaDenominacion, Moneda moneda,
 			String denominacion, BigDecimal valor, BigDecimal estado,
 			Set transaccionBovedaCajaDetalls, Set detalleHistorialBovedas,
 			Set transaccionBovedaOtroDetalls, Set detalleHistorialCajas) {
@@ -60,11 +60,11 @@ public class MonedaDenominacion implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_MONEDA_DENOMINACION", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdMonedaDenominacion() {
+	public int getIdMonedaDenominacion() {
 		return this.idMonedaDenominacion;
 	}
 
-	public void setIdMonedaDenominacion(BigDecimal idMonedaDenominacion) {
+	public void setIdMonedaDenominacion(int idMonedaDenominacion) {
 		this.idMonedaDenominacion = idMonedaDenominacion;
 	}
 

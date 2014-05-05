@@ -65,12 +65,12 @@ public class PersonanaturalRESTService {
 	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
 	public Response create(PersonaNatural personanatural) {
-		/*Response.ResponseBuilder builder = null;
+		Response.ResponseBuilder builder = null;
 		try {
 			validatePersonaNatural(personanatural);						
 			TipoDocumento tipoDocumento = personanatural.getTipoDocumento();
 			String numerodocumento = personanatural.getNumeroDocumento();
-			Object obj = personanaturalService.findByTipoNumeroDocumento(tipoDocumento.getId(), numerodocumento);
+			Object obj = personanaturalService.findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), numerodocumento);
 			if(obj == null) {
 				personanaturalService.create(personanatural);
 				builder = Response.ok();
@@ -94,7 +94,7 @@ public class PersonanaturalRESTService {
 			responseObj.put("error", e.getMessage());
 			builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
 		}
-		return builder.build();*/ return null;
+		return builder.build();
 	}
 	
 	@PUT
@@ -102,13 +102,13 @@ public class PersonanaturalRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") @DefaultValue("-1") int id, PersonaNatural personanatural) {
-		/*Response.ResponseBuilder builder = null;
+		Response.ResponseBuilder builder = null;
 		try {
 			if(id == -1)
 				throw new BadRequestException();
-			personanatural.setId(id);
+			personanatural.setIdPersonaNatural(id);;
 			validatePersonaNatural(personanatural);
-			personanatural.setId(id);
+			personanatural.setIdPersonaNatural(id);
 			personanaturalService.update(id, personanatural);
 			builder = Response.ok();						
 		} catch (ConstraintViolationException ce) {
@@ -126,7 +126,7 @@ public class PersonanaturalRESTService {
 			responseObj.put("error", e.getMessage());
 			builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
 		}
-		return builder.build();*/ return null;
+		return builder.build();
 	}
 	
 	@DELETE
@@ -164,17 +164,17 @@ public class PersonanaturalRESTService {
 	@Path("/{idtipodocumento}/{numerodocumento}")
 	@Produces({ "application/xml", "application/json" })
 	public PersonaNatural findByTipoNumeroDocumento(@PathParam("idtipodocumento") @DefaultValue("-1") int idtipodocumento ,@PathParam("numerodocumento") @DefaultValue("") String numerodocumento) {
-		/*TipoDocumento tipoDocumento = new TipoDocumento();
-		tipoDocumento.setId(idtipodocumento);
+		TipoDocumento tipoDocumento = new TipoDocumento();
+		tipoDocumento.setIdTipoDocumento(idtipodocumento);
 		PersonaNatural personanatural = null;
 		try {
-			personanatural = personanaturalService.findByTipoNumeroDocumento(tipoDocumento.getId(), numerodocumento);
+			personanatural = personanaturalService.findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), numerodocumento);
 			if(personanatural == null)
 				throw new NotFoundException();
 		} catch (IllegalArgumentException e) {
 			throw new javax.ws.rs.BadRequestException();
 		}
-		return personanatural;*/ return null;
+		return personanatural;
 	}
 	
 	@GET
@@ -196,26 +196,24 @@ public class PersonanaturalRESTService {
 	@Path("/currentSession")
 	@Produces({ "application/xml", "application/json" })
 	public PersonaNatural getPersonaOfAuthenticateSession() {	
-		/*PersonaNatural personaNatural = null;
+		PersonaNatural personaNatural = null;
 		try {
 			String username = principal.getCallerPrincipal().getName();
 			Usuario currentUser = usuarioService.findByUsername(username);
 
 			Trabajador trabajador;
 			if (currentUser != null)
-				trabajador = trabajadorService.findByUsuario(currentUser.getId());
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
 			else
 				throw new NotFoundException();
-
-			personaNatural = personanaturalService.findByTrabajador(trabajador.getId());
-
+			if(trabajador != null)
+				personaNatural = personanaturalService.findByTrabajador(trabajador.getIdTrabajador());
+			else
+				personaNatural = null;
 		} catch (IllegalArgumentException e) {
 			throw new InternalServerErrorException();
 		} 
-		if(personaNatural != null)
-			return personaNatural;
-		else
-			throw new NotFoundException();*/ return null;
+		return personaNatural;
 	}
 
 	private void validatePersonaNatural(PersonaNatural personanatural) throws ConstraintViolationException {		
