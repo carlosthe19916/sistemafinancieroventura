@@ -3,7 +3,6 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -27,7 +27,7 @@ public class Accionista implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private BigInteger idAccionista;
+	private int idAccionista;
 	private PersonaNatural personaNatural;
 	private PersonaJuridica personaJuridica;
 	private BigDecimal porcentajeParticipacion;
@@ -35,7 +35,7 @@ public class Accionista implements java.io.Serializable {
 	public Accionista() {
 	}
 
-	public Accionista(BigInteger idAccionista, PersonaNatural personaNatural,
+	public Accionista(int idAccionista, PersonaNatural personaNatural,
 			PersonaJuridica personaJuridica, BigDecimal porcentajeParticipacion) {
 		this.idAccionista = idAccionista;
 		this.personaNatural = personaNatural;
@@ -43,16 +43,18 @@ public class Accionista implements java.io.Serializable {
 		this.porcentajeParticipacion = porcentajeParticipacion;
 	}
 
+	@XmlElement(name = "id")
 	@Id
 	@Column(name = "ID_ACCIONISTA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigInteger getIdAccionista() {
+	public int getIdAccionista() {
 		return this.idAccionista;
 	}
 
-	public void setIdAccionista(BigInteger idAccionista) {
+	public void setIdAccionista(int idAccionista) {
 		this.idAccionista = idAccionista;
 	}
 
+	@XmlElement(name = "personanatural")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_NATURAL", nullable = false)
 	public PersonaNatural getPersonaNatural() {
@@ -63,6 +65,7 @@ public class Accionista implements java.io.Serializable {
 		this.personaNatural = personaNatural;
 	}
 
+	@XmlElement(name = "personajuridica")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_JURIDICA", nullable = false)
 	public PersonaJuridica getPersonaJuridica() {
@@ -73,6 +76,7 @@ public class Accionista implements java.io.Serializable {
 		this.personaJuridica = personaJuridica;
 	}
 
+	@XmlElement(name = "porcentajeparticipacion")
 	@Column(name = "PORCENTAJE_PARTICIPACION", nullable = false, precision = 5)
 	public BigDecimal getPorcentajeParticipacion() {
 		return this.porcentajeParticipacion;
