@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.control;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,12 +10,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -30,8 +34,10 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
+import org.ventura.sistemafinanciero.entity.dto.MonedaCalculadora;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.MonedaService;
 
@@ -43,9 +49,12 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 
 	private Logger LOGGER = LoggerFactory.getLogger(CajaService.class);
 
+	@PersistenceContext
+	private EntityManager em;
+	
 	@Inject private DAO<Object, Caja> cajaDAO;
 	@Inject private DAO<Object, HistorialCaja> historialCajaDAO;
-	//@Inject private DAO<Object, Deta> historialCajaDAO;
+	@Inject private DAO<Object, DetalleHistorialCaja> detalleHistorialCajaDAO;
 	@Inject private DAO<Object, Trabajador> trabajadorDAO;
 	
 	@EJB private MonedaService monedaService;
@@ -61,13 +70,13 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 			if(cajas.size() >= 2)
 				throw new IllegalResultException("Trabajador tiene " + cajas.size() + " asignadas");
 			for (TrabajadorCaja trabajadorCaja : cajas) {
-				result = trabajadorCaja.getCaja();				
+				result = trabajadorCaja.getCaja();	
+				Hibernate.initialize(result);
 				break;
 			}
 		} catch (IllegalResultException e) {
 			LOGGER.error(e.getMessage(), e.getLocalizedMessage(), e.getCause());
-		}	
-		Hibernate.initialize(result);
+		}			
 		return result;
 	}
 
@@ -77,8 +86,7 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 		try {
 			Caja caja = cajaDAO.find(idCaja);
 			if(caja == null)
-				throw new NonexistentEntityException("Caja no encontrada");
-			
+				throw new NonexistentEntityException("Caja no encontrada");			
 			QueryParameter queryParameter = QueryParameter.with("idcaja", idCaja);
 			List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialActivo, queryParameter.parameters());
 			if(list.size() >= 2){
@@ -123,7 +131,7 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 					detalle.setCantidad(h.getCantidad());
 					detalle.setMonedaDenominacion(monedaDenominacion);
 				} else {
-					detalle.setCantidad(0);
+					detalle.setCantidad(BigDecimal.ZERO);
 					detalle.setMonedaDenominacion(monedaDenominacion);
 				}
 				denominacionesCantidad.add(detalle);
@@ -163,48 +171,88 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 	}
 
 	@Override
-	public void abrirCaja(int idCaja) {
-		/*Caja caja = cajaDAO.find(idCaja);
-		if(!caja.getAbierto()){
-			//throw 
+	public void abrirCaja(int idCaja) throws NonexistentEntityException, RollbackFailureException {
+		Caja caja = cajaDAO.find(idCaja);
+		if(caja.getAbierto()){
+			throw new RollbackFailureException("Caja abierta, imposible abrirla nuevamente");
 		}
 		Set<BovedaCaja> bovedaCajas = caja.getBovedaCajas();
 		for (BovedaCaja bovedaCaja : bovedaCajas) {
 			Boveda boveda = bovedaCaja.getBoveda();
 			if(!boveda.getAbierto())
-				throw new Exception();
+				throw new RollbackFailureException("Debe de abrir las bovedas asociadas a la caja("+boveda.getDenominacion()+")");
 		}
 		
-		HistorialCaja historialCaja = this.getHistorialActivo(caja.getIdCaja());		
-		if(historialCaja != null){
-			//detalleHistorialCaja = historialCaja.getDetalleHistorialCajas();
-		} else {
-			Calendar calendar = Calendar.getInstance();
+		try {
+			//abriendo caja
+			caja.setAbierto(true);
+			caja.setEstadoMovimiento(true);
+			cajaDAO.update(caja);
 			
-			historialCaja = new HistorialCaja();
-			historialCaja.setCaja(caja);
-			historialCaja.setFechaApertura(calendar.getTime());
-			historialCaja.setHoraApertura(calendar.getTime());
-			historialCaja.setEstado(true);			
-			historialCajaDAO.create(historialCaja);
+			HistorialCaja historialCajaOld = this.getHistorialActivo(caja.getIdCaja());
+			if(historialCajaOld != null) {
+				historialCajaOld.setEstado(false);
+				historialCajaDAO.update(historialCajaOld);				
+			}
 			
-			for (BovedaCaja bovedaCaja : bovedaCajas) {
-				Moneda moneda = bovedaCaja.getBoveda().getMoneda();
-				Set<MonedaDenominacion> denominaciones = monedaService.getDenominaciones(moneda.getIdMoneda());
-				for (MonedaDenominacion monedaDenominacion : denominaciones) {
-					DetalleHistorialCaja detalleHistorialCaja = new DetalleHistorialCaja();
-					detalleHistorialCaja.setCantidad(0);
-					detalleHistorialCaja.setHistorialCaja(historialCaja);
-					detalleHistorialCaja.setMonedaDenominacion(monedaDenominacion);
-					
+			Calendar calendar = Calendar.getInstance();	
+			HistorialCaja historialCajaNew = new HistorialCaja();
+			historialCajaNew.setCaja(caja);
+			historialCajaNew.setFechaApertura(calendar.getTime());
+			historialCajaNew.setHoraApertura(calendar.getTime());
+			historialCajaNew.setEstado(true);			
+			historialCajaDAO.create(historialCajaNew);
+			
+			if(historialCajaOld != null){
+				Set<DetalleHistorialCaja> detalleHistorialCajas = historialCajaNew.getDetalleHistorialCajas();
+				for (DetalleHistorialCaja detalleHistorialCaja : detalleHistorialCajas) {
+					em.detach(detalleHistorialCaja);
+					detalleHistorialCaja.setHistorialCaja(historialCajaNew);
+					detalleHistorialCajaDAO.create(detalleHistorialCaja);
+				}
+			} else {
+				for (BovedaCaja bovedaCaja : bovedaCajas) {
+					Moneda moneda = bovedaCaja.getBoveda().getMoneda();
+					Set<MonedaDenominacion> denominaciones = monedaService.getDenominaciones(moneda.getIdMoneda());
+					for (MonedaDenominacion monedaDenominacion : denominaciones) {
+						DetalleHistorialCaja detalleHistorialCaja = new DetalleHistorialCaja();						
+						detalleHistorialCaja.setCantidad(BigDecimal.ZERO);
+						detalleHistorialCaja.setHistorialCaja(historialCajaNew);
+						detalleHistorialCaja.setMonedaDenominacion(monedaDenominacion);
+						detalleHistorialCajaDAO.create(detalleHistorialCaja);
+					}
 				}
 			}
-		}*/
+		} catch (Exception e) {
+			throw new EJBException();
+		}		
 	}
+
 	
 	@Override
 	protected DAO<Object, Caja> getDAO() {
 		return this.cajaDAO;
+	}
+
+	@Override
+	public void cerrarCaja(int idCaja, List<MonedaCalculadora> detalleCaja) throws NonexistentEntityException, RollbackFailureException {
+		Caja caja = cajaDAO.find(idCaja);
+		try {
+			//abriendo caja
+			caja.setAbierto(false);
+			caja.setEstadoMovimiento(false);
+			cajaDAO.update(caja);
+			
+			Calendar calendar = Calendar.getInstance();
+			HistorialCaja historialCajaOld = this.getHistorialActivo(caja.getIdCaja());			
+			historialCajaOld.setEstado(true);
+			historialCajaOld.setFechaCierre(calendar.getTime());
+			historialCajaOld.setHoraCierre(calendar.getTime());
+			historialCajaDAO.update(historialCajaOld);				
+									
+		} catch (Exception e) {
+			throw new EJBException();
+		}	
 	}
 
 }

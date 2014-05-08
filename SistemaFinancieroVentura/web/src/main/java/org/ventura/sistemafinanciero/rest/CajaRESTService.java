@@ -17,6 +17,7 @@
 package org.ventura.sistemafinanciero.rest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,26 +26,34 @@ import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.ventura.sistemafinanciero.dto.Calculadora;
-import org.ventura.sistemafinanciero.dto.MonedaCalculadora;
-//import org.softgreen.sistcoop.entity.dto.MonedaCalculadora;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
+import org.ventura.sistemafinanciero.entity.PersonaNatural;
+import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
+import org.ventura.sistemafinanciero.entity.dto.Calculadora;
+import org.ventura.sistemafinanciero.entity.dto.MonedaCalculadora;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
+import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
@@ -62,12 +71,19 @@ public class CajaRESTService {
     @EJB UsuarioService usuarioService;
     @EJB TrabajadorService trabajadorService;
      
+    @POST
+	@Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+	public Response create(Moneda moneda) {		
+		System.out.println(moneda);
+		return null;
+	}
+    
     @GET
 	@Path("/currentSession")
 	@Produces({ "application/xml", "application/json" })
 	public Caja getCajaOfAuthenticateSession() {	
     	Caja caja = null;
-    	Response.ResponseBuilder builder = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
 			Usuario currentUser = usuarioService.findByUsername(username);
@@ -80,7 +96,7 @@ public class CajaRESTService {
 			if(trabajador != null)
 				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
 			else
-				throw new NotFoundException();			
+				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");			
 		} catch (NonexistentEntityException e) {
 			throw new InternalServerErrorException();
 		} 	
@@ -91,7 +107,7 @@ public class CajaRESTService {
     @Path("/detalle")
     @Produces({ "application/xml", "application/json" })
     public List<MonedaCalculadora> getCajaHistorialDetalle() {
-    	List<MonedaCalculadora> result = null;
+    	List<MonedaCalculadora> result = null;    	    	   
     	try {
     		String username = context.getCallerPrincipal().getName();
         	Usuario usuario = usuarioService.findByUsername(username);
@@ -125,5 +141,74 @@ public class CajaRESTService {
 			throw new BadRequestException();
 		}
 		return result;	
+    }
+    
+    @PUT
+    @Path("/abrir")    
+    public Response abrirCaja() {
+    	Response.ResponseBuilder builder = null;
+    	Caja caja = null;    	
+		try {
+			String username = context.getCallerPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				throw new NotFoundException();
+			if(trabajador != null)
+				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+			else
+				caja = null;	
+			if(caja != null) {
+				cajaService.abrirCaja(caja.getIdCaja());
+				builder = Response.ok();
+			} else {
+				throw new NotFoundException("Caja no encontrada");
+			}			
+		} catch (NonexistentEntityException e) {
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());					
+		} catch (RollbackFailureException e) {
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());	
+		} catch (EJBException e) {
+			builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e);	
+		} 	
+		return builder.build();
+    }
+            
+    
+    @POST
+    @Path("/cerrar") 
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+    public Response cerrarCaja(List<MonedaCalculadora> detalleCaja) {
+    	Response.ResponseBuilder builder = null;    	
+    	Caja caja = null;    	
+		try {
+			String username = context.getCallerPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				throw new NotFoundException();
+			if(trabajador != null)
+				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+			else
+				caja = null;	
+			if(caja != null) {
+				cajaService.cerrarCaja(caja.getIdCaja(), detalleCaja);
+				builder = Response.ok();
+			} else {
+				throw new NotFoundException("Caja no encontrada");
+			}			
+		} catch (NonexistentEntityException e) {
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());					
+		} catch (RollbackFailureException e) {
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());	
+		} catch (EJBException e) {
+			builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e);	
+		} 	
+		return builder.build();
     }
 }

@@ -9,13 +9,16 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorUsuario;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 
 @Named
@@ -54,6 +57,20 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 	@Override
 	protected DAO<Object, Trabajador> getDAO() {
 		return trabajadorDAO;
+	}
+
+
+	@Override
+	public Agencia getAgencia(int idTrabajador) throws NonexistentEntityException {
+		Agencia result= null;
+		Trabajador trabajador = super.findById(idTrabajador);
+		if(trabajador != null){
+			result = trabajador.getAgencia();
+			Hibernate.initialize(result);
+		} else {
+			throw new NonexistentEntityException("trabajador no encontrado");
+		}
+		return result;
 	}
 
 	

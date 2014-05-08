@@ -12,6 +12,19 @@ angular.module("cajaApp.service", ["restangular"])
                     var copy = Restangular.copy(caja);
                     return copy.put();
                 },
+                abrir: function(){
+                    return Restangular.one("caja/abrir").put();
+                },
+                cerrar: function(detalle){
+                    var copy = Restangular.copy(detalle);
+                    return Restangular.all("caja/cerrar").post(copy);
+                    //return Restangular.all("caja/cerrar").post(detalle, {}, {'Accept': 'multipart/mixed;','Accept-Encoding': 'multipart/mixed;','Content-Type': 'multipart/mixed;',})
+                    //return Restangular.all("caja/cerrar").post(null, detalle, [{}, [{'Accept-Encoding': 'multipart/mixed;'},{'Content-Type': 'multipart/mixed;'}]])
+                    //return Restangular.all("caja/cerrar").post(detalle,{}, {'Content-Type': 'multipart/mixed;'});
+           // 'Accept-Encoding': 'multipart/mixed;'
+
+                    //return Restangular.all("caja/cerrar").post(copy);
+                },
                 getDetalle: function(){
                     return Restangular.all("caja/detalle").getList();
                 },

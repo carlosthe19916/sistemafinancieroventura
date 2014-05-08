@@ -14,26 +14,28 @@
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css">
-        <link rel="stylesheet" href="bower_components/ladda-bootstrap-master/dist/ladda-themeless.css">
         <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css">
         <link rel="stylesheet" href="bower_components/ngProgress/ngProgress.css">
+        <link rel="stylesheet" href="bower_components/angular-block-ui/angular-block-ui.css">
 
         <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
         <script type="text/javascript" src="bower_components/angular/angular.js"></script>
         <script type="text/javascript" src="bower_components/angular/angular-sanitize.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular-cookies.js"></script>
         <script type="text/javascript" src="bower_components/angular-ui-router/angular-ui-router.js"></script>
         <script type="text/javascript" src="bower_components/restangular/restangular.js"></script>
         <script type="text/javascript" src="bower_components/restangular/underscore-min.js"></script>
         <script type="text/javascript" src="bower_components/ui-bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
-        <script type="text/javascript" src="bower_components/angular-strap/angular-strap.js"></script>
-        <script type="text/javascript" src="bower_components/angular-strap/angular-strap.tpl.js"></script>
         <script type="text/javascript" src="bower_components/ng-grid/ng-grid.js"></script>
-        <script type="text/javascript" src="bower_components/ladda-bootstrap-master/dist/spin.js"></script>
-        <script type="text/javascript" src="bower_components/ladda-bootstrap-master/dist/ladda.js"></script>
         <script type="text/javascript" src="bower_components/ngProgress/ngProgress.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-block-ui/angular-block-ui.js"></script>
         <script type="text/javascript" src="bower_components/ui-utils-0.1.1/ui-utils.js"></script>
         <script type="text/javascript" src="bower_components/ui-utils-0.1.1/ui-utils-ieshiv.js"></script>
         <script type="text/javascript" src="bower_components/angular-dialog-service/dialogs.js"></script>
+
+        <script type="text/javascript" src="modules/common/scripts/services.js"></script>
+        <script type="text/javascript" src="modules/common/scripts/controller.js"></script>
+        <script type="text/javascript" src="modules/common/scripts/common.js"></script>
 
         <script type="text/javascript" src="modules/caja/scripts/controller.js"></script>
         <script type="text/javascript" src="modules/caja/scripts/services.js"></script>
@@ -73,14 +75,18 @@
                         <a href="#contact" ui-sref="app.administracion">Administracion</a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" ng-controller="cajaNavbarController">
                     <li style="height: 50px;">
-                        <a ng-click="changeStatePopover()" style="color: #333;">
+                        <a style="color: #333;">
+                            <span ng-hide="caja.estadoMovimiento" class="label label-warning">Congelado</span>
                             <strong>{{caja.denominacion}}</strong>
-                            <span ng-hide="caja.congelado" class="label label-warning">Congelado</span>
-                            &nbsp;||&nbsp;
-                            {{persona.nombres}} {{persona.apellidopaterno}}
                         </a>
+                    </li>
+                    <li>
+                        <a>||</a>
+                    </li>
+                    <li>
+                        <a>{{usuario}}</a>
                     </li>
                     <li>
                         <a class="gwt-Anchor  sf-notification-image" style="padding-right: 30px"></a>

@@ -1,5 +1,27 @@
 
 angular.module("commonApp.service", ["restangular"])
+    .factory("UsuarioService",["Restangular",
+        function(Restangular){
+
+            var _usuarioService = Restangular.all("usuario");
+
+            return {
+                getCurrentUsuario: function(){
+                    return Restangular.one("usuario/currentSession").get();
+                }
+            }
+        }])
+    .factory("AgenciaService",["Restangular",
+        function(Restangular){
+
+            var _agenciaService = Restangular.all("agencia");
+
+            return {
+                getCurrentAgencia: function(){
+                    return Restangular.one("agencia/currentSession").get();
+                }
+            }
+        }])
     .factory("PersonanaturalService",["Restangular",
         function(Restangular){
 

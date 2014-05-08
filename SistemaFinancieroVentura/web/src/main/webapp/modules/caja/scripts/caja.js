@@ -1,17 +1,38 @@
 var cajaApp = angular.module('cajaApp',[
     "ui.router",
     "restangular",
+    "ngCookies",
     "ui.bootstrap",
     "dialogs",
     "ngGrid",
     "ui.keypress",
+    "blockUI",
     "cajaApp.controller",
-    "cajaApp.service"
+    "cajaApp.service",
+    "commonApp"
 ]);
 
-cajaApp.config(function(RestangularProvider) {
-    RestangularProvider.setBaseUrl("http://localhost:8080/SistemaFinancieroVentura-web/services");
-});
+cajaApp.config(["RestangularProvider", "$cookiesProvider",
+    function (RestangularProvider, $cookies) {
+
+        RestangularProvider.setBaseUrl("http://localhost:8080/SistemaFinancieroVentura-web/services");
+
+        /*
+        RestangularProvider.addRequestInterceptor(
+            function(element, operation, what, url) {
+                var caja = $cookies.caja;
+                if(caja != null && caja !== undefined){
+                    return element;
+                } else {
+                    if (operation === "get" || operation === "getList") {
+                        return element;
+                    } else {
+                        alert("No se encontró caja en sesion, no puede realizar ninguna transaccion");
+                        return null;
+                    }
+                }
+            });*/
+    }] );
 
 cajaApp.config(function($stateProvider, $urlRouterProvider) {
 
@@ -64,7 +85,7 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.menus = [{
                             'name':'Abrir / cerrar', submenus:[
                                 { 'name':'Abrir caja' , 'state':'app.caja.abrirCaja'},
-                                { 'name':'Cerrar caja' , 'state':'app.administracion.personanaturalBuscar'}
+                                { 'name':'Cerrar caja' , 'state':'app.caja.cerrarCaja'}
                             ]},{
                             'name':'Transacciones con clientes', submenus:[
                                 { 'name':'Buscar' , 'state':'app.administracion.personajuridicaCreate'}
@@ -87,6 +108,23 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 "viewContent":{
                     templateUrl: "modules/caja/views/caja/abrir.html"
+                }
+            }
+        })
+        .state('app.caja.cerrarCaja', {
+            url: "/cerrar",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/cerrar.html"
+                }
+            }
+        })
+
+        .state('app.caja.voucherAbrirCaja', {
+            url: "/voucherAbrirCaja",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/voucher/abrirCaja.html"
                 }
             }
         })
@@ -171,15 +209,24 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
-cajaApp.run(["$rootScope", "$state", "CajaService", function($rootScope, $location, CajaService){
-    $rootScope.$on('$stateChangeStart', function(event, next) {
+cajaApp.run(["$rootScope", "$location", "$cookieStore", "$dialogs", "CajaService", "UsuarioService", "AgenciaService",
+    function ($rootScope, $location, $cookieStore, $dialogs, CajaService, UsuarioService, AgenciaService) {
         CajaService.getCurrentCaja().then(
             function(caja){
-
+                $cookieStore.put("caja", caja);
             },
             function error(error){
-                alert("No se pudo cargar la caja para el usuario ingresado");
+                $dialogs.error("Error no podrá realizar transacciones de ningun tipo","Error al cargar caja:\n"+JSON.stringify(error.data));;
             }
         );
-    });
-}]);
+        UsuarioService.getCurrentUsuario().then(
+            function(usuario){
+                $cookieStore.put("usuario", usuario);
+            }
+        );
+        AgenciaService.getCurrentAgencia().then(
+            function(agencia){
+                $cookieStore.put("agencia", agencia);
+            }
+        );
+    }] );

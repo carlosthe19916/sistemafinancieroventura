@@ -125,7 +125,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.idPersonaNatural = idPersonaNatural;
 	}
 
-	@XmlTransient
+	@XmlElement(name="tipodocumento")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TIPO_DOCUMENTO", nullable = false)
 	public TipoDocumento getTipoDocumento() {
@@ -136,7 +136,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.tipoDocumento = tipoDocumento;
 	}
 
-	@XmlElement
+	@XmlElement(name="numerodocumento")
 	@Column(name = "NUMERO_DOCUMENTO", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumeroDocumento() {
 		return this.numeroDocumento;
@@ -146,7 +146,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.numeroDocumento = numeroDocumento;
 	}
 
-	@XmlElement
+	@XmlElement(name="apellidopaterno")
 	@Column(name = "APELLIDO_PATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoPaterno() {
 		return this.apellidoPaterno;
@@ -156,7 +156,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.apellidoPaterno = apellidoPaterno;
 	}
 
-	@XmlElement
+	@XmlElement(name="apellidomaterno")
 	@Column(name = "APELLIDO_MATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoMaterno() {
 		return this.apellidoMaterno;
@@ -176,7 +176,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.nombres = nombres;
 	}
 
-	@XmlElement
+	@XmlElement(name="fechanacimiento")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_NACIMIENTO", nullable = false, length = 7)
 	public Date getFechaNacimiento() {
@@ -197,7 +197,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.sexo = sexo;
 	}
 
-	@XmlElement
+	@XmlElement(name="estadocivil")
 	@Column(name = "ESTADO_CIVIL", length = 20, columnDefinition = "nvarchar2")
 	public String getEstadoCivil() {
 		return this.estadoCivil;

@@ -27,16 +27,46 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Moneda implements java.io.Serializable {
 
+	@XmlElement
+	@Id
+	@Column(name = "ID_MONEDA", unique = true, nullable = false, precision = 22, scale = 0)
 	private int idMoneda;
+	
+	@XmlElement
+	@Column(name = "DENOMINACION", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	private String denominacion;
+	
+	@XmlElement
+	@Column(name = "SIMBOLO", nullable = false, length = 10, columnDefinition = "nvarchar2")
 	private String simbolo;
+	
+	@XmlElement
+	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
 	private BigDecimal estado;
-	private Set transaccionCompraVentasForIdMonedaRecibido = new HashSet(0);
-	private Set bovedas = new HashSet(0);
-	private Set transaccionCompraVentasForIdMonedaEntregado = new HashSet(0);
-	private Set monedaDenominacions = new HashSet(0);
-	private Set pendienteCajas = new HashSet(0);
-	private Set transaccionCajaCajas = new HashSet(0);
+	
+	@XmlTransient
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaRecibido")
+	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaRecibido = new HashSet(0);
+	
+	@XmlTransient
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
+	private Set<Boveda> bovedas = new HashSet(0);
+	
+	@XmlTransient
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaEntregado")
+	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaEntregado = new HashSet(0);
+	
+	@XmlTransient
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
+	private Set<MonedaDenominacion> monedaDenominacions = new HashSet(0);
+	
+	@XmlTransient
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
+	private Set<PendienteCaja> pendienteCajas = new HashSet(0);
+	
+	@XmlTransient
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
+	private Set<TransaccionCajaCaja> transaccionCajaCajas = new HashSet(0);
 
 	public Moneda() {
 	}
@@ -66,9 +96,6 @@ public class Moneda implements java.io.Serializable {
 		this.transaccionCajaCajas = transaccionCajaCajas;
 	}
 
-	@XmlElement(name = "id")
-	@Id
-	@Column(name = "ID_MONEDA", unique = true, nullable = false, precision = 22, scale = 0)
 	public int getIdMoneda() {
 		return this.idMoneda;
 	}
@@ -77,8 +104,6 @@ public class Moneda implements java.io.Serializable {
 		this.idMoneda = idMoneda;
 	}
 
-	@XmlElement
-	@Column(name = "DENOMINACION", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}
@@ -87,8 +112,6 @@ public class Moneda implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
-	@XmlElement
-	@Column(name = "SIMBOLO", nullable = false, length = 10, columnDefinition = "nvarchar2")
 	public String getSimbolo() {
 		return this.simbolo;
 	}
@@ -97,8 +120,6 @@ public class Moneda implements java.io.Serializable {
 		this.simbolo = simbolo;
 	}
 
-	@XmlElement
-	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
 	public BigDecimal getEstado() {
 		return this.estado;
 	}
@@ -107,8 +128,6 @@ public class Moneda implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaRecibido")
 	public Set<TransaccionCompraVenta> getTransaccionCompraVentasForIdMonedaRecibido() {
 		return this.transaccionCompraVentasForIdMonedaRecibido;
 	}
@@ -118,8 +137,6 @@ public class Moneda implements java.io.Serializable {
 		this.transaccionCompraVentasForIdMonedaRecibido = transaccionCompraVentasForIdMonedaRecibido;
 	}
 
-	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	public Set<Boveda> getBovedas() {
 		return this.bovedas;
 	}
@@ -128,8 +145,6 @@ public class Moneda implements java.io.Serializable {
 		this.bovedas = bovedas;
 	}
 
-	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaEntregado")
 	public Set<TransaccionCompraVenta> getTransaccionCompraVentasForIdMonedaEntregado() {
 		return this.transaccionCompraVentasForIdMonedaEntregado;
 	}
@@ -139,8 +154,6 @@ public class Moneda implements java.io.Serializable {
 		this.transaccionCompraVentasForIdMonedaEntregado = transaccionCompraVentasForIdMonedaEntregado;
 	}
 
-	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	public Set<MonedaDenominacion> getMonedaDenominacions() {
 		return this.monedaDenominacions;
 	}
@@ -149,8 +162,6 @@ public class Moneda implements java.io.Serializable {
 		this.monedaDenominacions = monedaDenominacions;
 	}
 
-	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	public Set<PendienteCaja> getPendienteCajas() {
 		return this.pendienteCajas;
 	}
@@ -159,8 +170,6 @@ public class Moneda implements java.io.Serializable {
 		this.pendienteCajas = pendienteCajas;
 	}
 
-	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	public Set<TransaccionCajaCaja> getTransaccionCajaCajas() {
 		return this.transaccionCajaCajas;
 	}

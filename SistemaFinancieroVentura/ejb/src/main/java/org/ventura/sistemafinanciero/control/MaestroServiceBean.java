@@ -33,7 +33,7 @@ public class MaestroServiceBean implements MaestroService {
 	public List<TipoDocumento> getAll(Tipopersona tipopersona) {
 		List<TipoDocumento> list = null;
 		try {
-			QueryParameter queryParameter = QueryParameter.with("tipopersona", tipopersona);		
+			QueryParameter queryParameter = QueryParameter.with("tipopersona", "PN");		
 			list = tipodocumentoDAO.findByNamedQuery(TipoDocumento.findByTipopersona,queryParameter.parameters());		
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(),e.getCause(),e.getLocalizedMessage());

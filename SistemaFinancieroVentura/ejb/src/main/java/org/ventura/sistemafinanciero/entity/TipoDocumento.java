@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -60,6 +61,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.personaJuridicas = personaJuridicas;
 	}
 
+	@XmlElement(name="id")
 	@Id
 	@Column(name = "ID_TIPO_DOCUMENTO", unique = true, nullable = false, precision = 22, scale = 0)
 	public int getIdTipoDocumento() {
@@ -70,6 +72,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.idTipoDocumento = idTipoDocumento;
 	}
 
+	@XmlElement
 	@Column(name = "DENOMINACION", length = 60, columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
@@ -79,6 +82,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.denominacion = denominacion;
 	}
 
+	@XmlElement
 	@Column(name = "ABREVIATURA", length = 40, columnDefinition = "nvarchar2")
 	public String getAbreviatura() {
 		return this.abreviatura;
@@ -88,6 +92,7 @@ public class TipoDocumento implements java.io.Serializable {
 		this.abreviatura = abreviatura;
 	}
 
+	@XmlElement
 	@Column(name = "TIPO_PERSONA", length = 40, columnDefinition = "nvarchar2")
 	public String getTipoPersona() {
 		return this.tipoPersona;

@@ -19,6 +19,7 @@ package org.ventura.sistemafinanciero.rest;
 import java.security.Principal;
 
 import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -29,13 +30,13 @@ import javax.ws.rs.Path;
 public class UsuarioRESTService {
 
 	@Resource
-	private Principal principal;
+	private SessionContext context;
 
 	@GET
-	@Path("/username")
+	@Path("/currentSession")
 	public String getUsernameOfAuthenticateSession() {
-		if (principal != null)
-			return principal.getName();
+		if (context != null)
+			return context.getCallerPrincipal().getName();
 		else
 			throw new NotFoundException();
 	}

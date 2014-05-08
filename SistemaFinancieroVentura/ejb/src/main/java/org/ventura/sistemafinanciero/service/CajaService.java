@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,8 +10,9 @@ import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
-import org.ventura.sistemafinanciero.entity.Socio;
+import org.ventura.sistemafinanciero.entity.dto.MonedaCalculadora;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
 @Remote
 public interface CajaService extends AbstractService<Caja> {
@@ -24,6 +26,8 @@ public interface CajaService extends AbstractService<Caja> {
 	public Set<DetalleHistorialCaja> getDetalleCajaByMoneda(int idHistorial, int idMoneda) throws NonexistentEntityException;
 
 	
-	public void abrirCaja(int idCaja);
+	public void abrirCaja(int idCaja) throws NonexistentEntityException, RollbackFailureException;
+
+	public void cerrarCaja(int idCaja, List<MonedaCalculadora> detalleCaja) throws NonexistentEntityException, RollbackFailureException;
 	
 }

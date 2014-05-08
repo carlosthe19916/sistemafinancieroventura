@@ -33,7 +33,7 @@ public class MonedaServiceBean extends AbstractServiceBean<Moneda> implements Mo
 			throw new NonexistentEntityException("Moneda no encontrada");
 		Set<MonedaDenominacion> denominaciones = moneda.getMonedaDenominacions();
 		Hibernate.initialize(denominaciones);
-		return denominaciones;
+		return denominaciones;		
 	}
 
 	@Override
