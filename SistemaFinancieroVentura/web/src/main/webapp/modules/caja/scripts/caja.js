@@ -128,6 +128,14 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('app.caja.voucherCerrarCaja', {
+            url: "/voucherAbrirCaja",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/voucher/cerrarCaja.html"
+                }
+            }
+        })
 
         .state('app.transacciones', {
             url: "/transacciones",

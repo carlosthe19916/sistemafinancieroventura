@@ -14,15 +14,13 @@ public class BovedaCajaId implements java.io.Serializable {
 
 	private BigDecimal idBoveda;
 	private BigDecimal idCaja;
-	private BigDecimal saldo;
 
 	public BovedaCajaId() {
 	}
 
-	public BovedaCajaId(BigDecimal idBoveda, BigDecimal idCaja, BigDecimal saldo) {
+	public BovedaCajaId(BigDecimal idBoveda, BigDecimal idCaja) {
 		this.idBoveda = idBoveda;
 		this.idCaja = idCaja;
-		this.saldo = saldo;
 	}
 
 	@Column(name = "ID_BOVEDA", nullable = false, precision = 22, scale = 0)
@@ -43,15 +41,6 @@ public class BovedaCajaId implements java.io.Serializable {
 		this.idCaja = idCaja;
 	}
 
-	@Column(name = "SALDO", nullable = false, precision = 18)
-	public BigDecimal getSaldo() {
-		return this.saldo;
-	}
-
-	public void setSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
-	}
-
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -66,10 +55,7 @@ public class BovedaCajaId implements java.io.Serializable {
 				.getIdBoveda().equals(castOther.getIdBoveda())))
 				&& ((this.getIdCaja() == castOther.getIdCaja()) || (this
 						.getIdCaja() != null && castOther.getIdCaja() != null && this
-						.getIdCaja().equals(castOther.getIdCaja())))
-				&& ((this.getSaldo() == castOther.getSaldo()) || (this
-						.getSaldo() != null && castOther.getSaldo() != null && this
-						.getSaldo().equals(castOther.getSaldo())));
+						.getIdCaja().equals(castOther.getIdCaja())));
 	}
 
 	public int hashCode() {
@@ -79,8 +65,6 @@ public class BovedaCajaId implements java.io.Serializable {
 				+ (getIdBoveda() == null ? 0 : this.getIdBoveda().hashCode());
 		result = 37 * result
 				+ (getIdCaja() == null ? 0 : this.getIdCaja().hashCode());
-		result = 37 * result
-				+ (getSaldo() == null ? 0 : this.getSaldo().hashCode());
 		return result;
 	}
 

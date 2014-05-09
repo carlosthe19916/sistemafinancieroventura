@@ -27,43 +27,50 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Moneda implements java.io.Serializable {
 
-	@XmlElement
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@XmlTransient
 	@Id
 	@Column(name = "ID_MONEDA", unique = true, nullable = false, precision = 22, scale = 0)
 	private int idMoneda;
-	
+
 	@XmlElement
 	@Column(name = "DENOMINACION", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	private String denominacion;
-	
+
 	@XmlElement
 	@Column(name = "SIMBOLO", nullable = false, length = 10, columnDefinition = "nvarchar2")
 	private String simbolo;
-	
-	@XmlElement
+
+	@XmlTransient
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
 	private BigDecimal estado;
-	
+
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaRecibido")
-	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaRecibido = new HashSet(0);
-	
+	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaRecibido = new HashSet(
+			0);
+
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	private Set<Boveda> bovedas = new HashSet(0);
-	
+
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaEntregado")
-	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaEntregado = new HashSet(0);
-	
+	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaEntregado = new HashSet(
+			0);
+
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	private Set<MonedaDenominacion> monedaDenominacions = new HashSet(0);
-	
+
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	private Set<PendienteCaja> pendienteCajas = new HashSet(0);
-	
+
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "moneda")
 	private Set<TransaccionCajaCaja> transaccionCajaCajas = new HashSet(0);
@@ -178,4 +185,22 @@ public class Moneda implements java.io.Serializable {
 		this.transaccionCajaCajas = transaccionCajaCajas;
 	}
 
+	@Override
+	public String toString() {
+		return this.denominacion;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof Moneda)) {
+			return false;
+		}
+		final Moneda other = (Moneda) obj;
+		return other.simbolo.equalsIgnoreCase(this.simbolo);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.denominacion.hashCode() * this.simbolo.hashCode();
+	}
 }

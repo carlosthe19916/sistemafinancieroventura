@@ -16,10 +16,8 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,8 +27,6 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -43,16 +39,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Caja;
-import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
-import org.ventura.sistemafinanciero.entity.PersonaNatural;
-import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
-import org.ventura.sistemafinanciero.entity.dto.Calculadora;
-import org.ventura.sistemafinanciero.entity.dto.MonedaCalculadora;
+import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
-import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
@@ -106,34 +97,16 @@ public class CajaRESTService {
     @GET
     @Path("/detalle")
     @Produces({ "application/xml", "application/json" })
-    public List<MonedaCalculadora> getCajaHistorialDetalle() {
-    	List<MonedaCalculadora> result = null;    	    	   
+    public Set<GenericMonedaDetalle> getCajaHistorialDetalle() {
+    	Set<GenericMonedaDetalle> result = null;    	    	   
     	try {
     		String username = context.getCallerPrincipal().getName();
         	Usuario usuario = usuarioService.findByUsername(username);
         	Trabajador trabajador = trabajadorService.findByUsuario(usuario.getIdUsuario());
         	Caja caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
-        	Map<Moneda, Set<DetalleHistorialCaja>> detalle =  cajaService.getDetalleCaja(caja.getIdCaja());
         	
-        	result = new ArrayList<MonedaCalculadora>();
-        	for (Moneda key : detalle.keySet()) {
-        		Set<DetalleHistorialCaja> cajaHistorialDetalle = detalle.get(key);        		
-        		MonedaCalculadora monedaCalculadora = new MonedaCalculadora();
-        		monedaCalculadora.setMoneda(key);
-        		List<Calculadora> list = new ArrayList<Calculadora>();
-        		monedaCalculadora.setCalculadora(list);
-        		for (DetalleHistorialCaja historialdetalle : cajaHistorialDetalle) {
-        			Calculadora calculadora = new Calculadora();
-            		
-            		calculadora.setIddenominacion(historialdetalle.getMonedaDenominacion().getIdMonedaDenominacion());
-            		calculadora.setDenominacion(historialdetalle.getMonedaDenominacion().getDenominacion());        		
-            		calculadora.setValor(historialdetalle.getMonedaDenominacion().getValor());
-            		calculadora.setCantidad(historialdetalle.getCantidad());
-            		
-            		list.add(calculadora);
-				}
-        		result.add(monedaCalculadora);	
-			}
+        	result =  cajaService.getDetalleCaja(caja.getIdCaja());
+        	        	
 		} catch (NullPointerException e) {
 			log.log(Level.SEVERE, e.getMessage());
 		} catch (NonexistentEntityException e) {
@@ -180,8 +153,7 @@ public class CajaRESTService {
     @POST
     @Path("/cerrar") 
     @Consumes({ "application/xml", "application/json" })
-	@Produces({ "application/xml", "application/json" })
-    public Response cerrarCaja(List<MonedaCalculadora> detalleCaja) {
+    public Response cerrarCaja(List<GenericMonedaDetalle> detalleCaja) {
     	Response.ResponseBuilder builder = null;    	
     	Caja caja = null;    	
 		try {
@@ -197,7 +169,7 @@ public class CajaRESTService {
 			else
 				caja = null;	
 			if(caja != null) {
-				cajaService.cerrarCaja(caja.getIdCaja(), detalleCaja);
+				cajaService.cerrarCaja(caja.getIdCaja(), new HashSet<GenericMonedaDetalle>(detalleCaja));
 				builder = Response.ok();
 			} else {
 				throw new NotFoundException("Caja no encontrada");

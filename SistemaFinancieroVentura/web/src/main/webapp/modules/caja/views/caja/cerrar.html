@@ -1,7 +1,7 @@
 <div ng-controller="CerrarCajaController">
 
-    <div class="alert alert-warning" ng-hide="alertMonedasDisableState()">
-        La caja no tiene monedas asignadas
+    <div class="alert alert-info" ng-show="!currentCaja.abierto">
+        <p><strong>Info:</strong>La caja ya esta cerrada, no se puede cerrar nuevamente</p>
     </div>
 
     <fieldset>
@@ -34,7 +34,7 @@
                 <div class="col-sm-4">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox"> Ocultar ceros
+                            <input type="checkbox" ng-disabled="buttonDisableState()"> Ocultar ceros
                         </label>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <accordion close-others="false">
-                        <accordion-group ng-repeat="detalle in detalleCajaInicial" heading="Moneda: {{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} || Total saldo cierre: {{totalFinal[$index]()}}" is-open="true">
+                        <accordion-group ng-repeat="detalle in detalleCajaInicial" heading="Moneda:{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}}  ------ Total:{{totalFinal[$index]()}}" is-open="true">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
