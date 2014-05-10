@@ -82,13 +82,14 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 "viewMenu":{
                     controller: function($scope){
-                        $scope.menus = [{
-                            'name':'Abrir / cerrar', submenus:[
+                        $scope.menus = [
+                            {'name':'Panel control', submenus:[
+                                { 'name':'Panel control' , 'state':'app.caja.panelControl'}
+                            ]},
+                            {'name':'Abrir / cerrar', submenus:[
                                 { 'name':'Abrir caja' , 'state':'app.caja.abrirCaja'},
-                                { 'name':'Cerrar caja' , 'state':'app.caja.cerrarCaja'}
-                            ]},{
-                            'name':'Transacciones con clientes', submenus:[
-                                { 'name':'Buscar' , 'state':'app.administracion.personajuridicaCreate'}
+                                { 'name':'Cerrar caja' , 'state':'app.caja.cerrarCaja'},
+                                { 'name':'Historial' , 'state':'app.caja.historial'}
                             ]},
                             {
                                 'name':'Transacciones internas', submenus:[
@@ -100,6 +101,14 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 },
                 "viewContent":{
                     template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                }
+            }
+        })
+        .state('app.caja.panelControl', {
+            url: "/panelControl",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/abrir.html"
                 }
             }
         })
@@ -119,20 +128,22 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-
-        .state('app.caja.voucherAbrirCaja', {
-            url: "/voucherAbrirCaja",
+        .state('app.caja.historial', {
+            url: "/historial",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/caja/views/voucher/abrirCaja.html"
+                    templateUrl: "modules/caja/views/caja/historial.html"
                 }
             }
         })
         .state('app.caja.voucherCerrarCaja', {
-            url: "/voucherAbrirCaja",
+            url: "/voucherCerrarCaja?fechaApertura",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/caja/views/voucher/cerrarCaja.html"
+                    templateUrl: "modules/caja/views/voucher/cerrarCaja.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.fechaApertura = $stateParams.fechaApertura;
+                    }
                 }
             }
         })

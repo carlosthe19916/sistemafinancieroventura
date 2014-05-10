@@ -3,6 +3,8 @@ package org.ventura.sistemafinanciero.control;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
@@ -31,8 +34,13 @@ import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
+import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
+import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
+import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
+import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
@@ -159,6 +167,32 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 	}
 
 	@Override
+	public List<HistorialCaja> getHistorialCaja(int idCaja, Date desde, Date hasta) throws NonexistentEntityException {
+		Caja caja = cajaDAO.find(idCaja);
+		if(caja == null)
+			throw new NonexistentEntityException("Caja no encontrada");
+		QueryParameter queryParameter = null;
+		if(desde == null && hasta == null){
+			Calendar begin = new GregorianCalendar(2000, Calendar.JANUARY, 1, 0, 0, 0);
+			Calendar end = Calendar.getInstance();
+			queryParameter = QueryParameter.with("idcaja", idCaja).and("desde", begin.getTime()).and("hasta", end.getTime());
+		} 
+		if(desde == null && hasta !=null){
+			Calendar begin = new GregorianCalendar(2000, Calendar.JANUARY, 1, 0, 0, 0);
+			queryParameter = QueryParameter.with("idcaja", idCaja).and("desde", begin.getTime()).and("hasta", hasta);
+		}
+		if(desde != null && hasta == null){			
+			Calendar end = Calendar.getInstance();
+			queryParameter = QueryParameter.with("idcaja", idCaja).and("desde", desde).and("hasta", end.getTime());
+		} 
+		if(desde != null && hasta !=null){
+			queryParameter = QueryParameter.with("idcaja", idCaja).and("desde", desde).and("hasta", hasta);
+		}			
+		List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRange, queryParameter.parameters());		
+		return list;
+	}
+	
+	@Override
 	public void abrirCaja(int idCaja) throws NonexistentEntityException, RollbackFailureException {
 		Caja caja = cajaDAO.find(idCaja);
 		if(caja.getAbierto()){
@@ -280,6 +314,180 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 	@Override
 	protected DAO<Object, Caja> getDAO() {
 		return this.cajaDAO;
+	}
+
+	@Override
+	public Set<CajaCierreMoneda> getVoucherCierreCaja(int idCaja, Date fechaApertura) throws NonexistentEntityException, IllegalResultException {
+		Caja caja = cajaDAO.find(idCaja);
+		if(caja == null)
+			throw new NonexistentEntityException("Caja no encontrada");
+		
+		Set<CajaCierreMoneda> result;
+		
+		Agencia agencia = null;
+		HistorialCaja historialCaja = null;
+		
+		Set<Moneda> monedasCierre;
+		
+		//recuperando agencia
+		Set<BovedaCaja> bovedaCajas = caja.getBovedaCajas();
+		for (BovedaCaja bovedaCaja : bovedaCajas) {
+			agencia = bovedaCaja.getBoveda().getAgencia();
+			break;
+		}
+		if(agencia == null)
+			throw new NonexistentEntityException("La caja no tiene una agencia asignada");
+		
+		//recuperando el historial
+		if(fechaApertura != null){
+			QueryParameter queryParameter = QueryParameter.with("idcaja", idCaja).and("desde", fechaApertura).and("hasta", fechaApertura);
+			List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRange, queryParameter.parameters());
+			if(list.size() > 1)
+				throw new IllegalResultException("Existe mas de un historial para la fecha dada");
+			else
+				for (HistorialCaja hist : list) {
+					historialCaja = hist;
+				}			
+			if(historialCaja == null)
+				throw new NonexistentEntityException("No existe un historial de caja para la fecha dada");
+		} else {
+			historialCaja = getHistorialActivo(idCaja);
+		}		
+		
+		//recuperando el historial del dia anterior
+		HistorialCaja historialAyer = null;
+		QueryParameter queryParameter2;
+		if(fechaApertura != null){
+			queryParameter2 = QueryParameter.with("idcaja", idCaja).and("fecha", fechaApertura);			
+		} else {
+			queryParameter2 = QueryParameter.with("idcaja", idCaja).and("fecha", historialCaja.getFechaApertura());
+		}
+		List<HistorialCaja> list2 = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialActivo, queryParameter2.parameters(), 1);
+		if(list2.size() > 1) {
+			throw new IllegalResultException("Existe mas de un historial en el dia pasado");
+		}			
+		else {
+			for (HistorialCaja hist : list2) {
+				historialAyer = hist;
+			}
+		}
+									
+		//recuperando las monedas de la trasaccion
+		Set<DetalleHistorialCaja> detalleHistorial = historialCaja.getDetalleHistorialCajas();	
+		Set<Moneda> monedasTransaccion = new HashSet<Moneda>();
+		for (DetalleHistorialCaja detHistcaja : detalleHistorial) {
+			Moneda moneda = detHistcaja.getMonedaDenominacion().getMoneda();
+			if(!monedasTransaccion.contains(moneda)){
+				monedasTransaccion.add(moneda);
+			}
+		}
+			
+		//poniendo los datos por moneda
+		result = new HashSet<CajaCierreMoneda>();
+		for (Moneda moneda : monedasTransaccion) {
+			CajaCierreMoneda cajaCierreMoneda = new CajaCierreMoneda();
+			cajaCierreMoneda.setAgencia(agencia.getDenominacion());
+			cajaCierreMoneda.setCaja(caja.getDenominacion());			
+			cajaCierreMoneda.setFechaApertura(historialCaja.getFechaApertura());
+			cajaCierreMoneda.setFechaCierre(historialCaja.getFechaCierre());
+			cajaCierreMoneda.setHoraApertura(historialCaja.getHoraApertura());
+			cajaCierreMoneda.setHoraCierre(historialCaja.getHoraCierre());
+			cajaCierreMoneda.setMoneda(moneda);
+			cajaCierreMoneda.setTrabajador(historialCaja.getTrabajador());
+			
+			BigDecimal saldoAyer = BigDecimal.ZERO;								
+			BigDecimal entradas = BigDecimal.ZERO;
+			BigDecimal salidas = BigDecimal.ZERO;
+			BigDecimal porDevolver = BigDecimal.ZERO;
+			BigDecimal sobrante = BigDecimal.ZERO;
+			BigDecimal faltante = BigDecimal.ZERO;
+			
+			cajaCierreMoneda.setSaldoAyer(saldoAyer);
+			cajaCierreMoneda.setEntradas(entradas);
+			cajaCierreMoneda.setSalidas(salidas);
+			cajaCierreMoneda.setPorDevolver(porDevolver);
+			cajaCierreMoneda.setSobrante(sobrante);
+			cajaCierreMoneda.setFaltante(faltante);
+			
+			/***********Añadiendo el detalle de una moneda***************/
+			result.add(cajaCierreMoneda);
+			
+			//poniendo el detalle
+			Set<GenericDetalle> detalle = new TreeSet<GenericDetalle>();		
+			cajaCierreMoneda.setDetalle(detalle);
+			for (DetalleHistorialCaja detHistcaja : detalleHistorial) {
+				MonedaDenominacion denominacion = detHistcaja.getMonedaDenominacion();
+				Moneda moneda2 = denominacion.getMoneda();
+				BigInteger cantidad = detHistcaja.getCantidad();
+				if(moneda.equals(moneda2)){
+					if(cantidad.compareTo(BigInteger.ZERO) > 0){
+						detalle.add(new GenericDetalle(denominacion.getValor(), detHistcaja.getCantidad()));
+					}	
+				}							
+			}
+			
+			//recuperando saldo del dia anterior			
+			if(historialAyer == null) {
+				saldoAyer = BigDecimal.ZERO;
+			}			
+			else {
+				for (DetalleHistorialCaja detHistCaja : historialAyer.getDetalleHistorialCajas()) {
+					MonedaDenominacion denominacion = detHistCaja.getMonedaDenominacion();
+					Moneda moneda2 = denominacion.getMoneda();
+					if(moneda.equals(moneda2)){
+						BigDecimal subTotal = denominacion.getValor().multiply(new BigDecimal(detHistCaja.getCantidad()));
+						saldoAyer = saldoAyer.add(subTotal);
+					}					
+				}
+			}
+						
+			//recuperando las operaciones del dia						
+			Set<TransaccionBancaria> transBancarias = historialCaja.getTransaccionBancarias();
+			Set<TransaccionCompraVenta> transComVent = historialCaja.getTransaccionCompraVentas();
+			Set<TransaccionCuentaAporte> transCtaAport = historialCaja.getTransaccionCuentaAportes();
+			for (TransaccionBancaria transBanc : transBancarias) {
+				Moneda moneda2 = transBanc.getCuentaBancaria().getMoneda();
+				if(moneda.equals(moneda2)){
+					if(transBanc.getMonto().compareTo(BigDecimal.ZERO) >= 0)
+						entradas = entradas.add(transBanc.getMonto());
+					else
+						salidas = salidas.add(transBanc.getMonto());
+				}				
+			}
+			for (TransaccionCompraVenta transCompVent : transComVent) {
+				Moneda monedaRecibida = transCompVent.getMonedaByIdMonedaRecibido();
+				Moneda monedaEntregada = transCompVent.getMonedaByIdMonedaEntregado();
+				if(moneda.equals(monedaRecibida)){
+					entradas = entradas.add(transCompVent.getMontoRecibido());
+				}
+				if(moneda.equals(monedaEntregada)){
+					salidas = salidas.add(transCompVent.getMontoEntregado());
+				}
+			}
+			for (TransaccionCuentaAporte transAport : transCtaAport) {
+				Moneda moneda2 = transAport.getCuentaAporte().getMoneda();
+				if(moneda.equals(moneda2)){
+					if(transAport.getMonto().compareTo(BigDecimal.ZERO) >= 0)
+						entradas = entradas.add(transAport.getMonto());
+					else
+						salidas = salidas.add(transAport.getMonto());
+				}				
+			}
+			
+			//recuperando faltantes y sobrantes
+			Set<PendienteCaja> listPendientes = historialCaja.getPendienteCajas();
+			for (PendienteCaja pendiente : listPendientes) {
+				Moneda moneda2 = pendiente.getMoneda();
+				if(moneda.equals(moneda2)){
+					if(pendiente.getMonto().compareTo(BigDecimal.ZERO) >= 0)
+						sobrante = sobrante.add(pendiente.getMonto());
+					else
+						faltante = faltante.add(pendiente.getMonto());
+				}
+			}
+		}
+		
+		return result;
 	}
 
 }

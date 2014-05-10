@@ -1,3 +1,283 @@
-<div>
-    La caja se cerro correctamenete
+<div ng-controller="VoucherCerrarCajaController">
+fecha::::::::::::{{fechaApertura}}
+<div class="row">
+<div class="col-md-6">
+    <div>
+        <fieldset>
+            <legend>Resumen de operaciones</legend>
+        </fieldset>
+    </div>
+    <div class="panel panel-default">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>AGENCIA:</td>
+                <td>AYACUCHO</td>
+            </tr>
+            <tr>
+                <td>CAJA:</td>
+                <td>CAJA001</td>
+            </tr>
+            <tr>
+                <td>FECHA:</td>
+                <td>12/12/1991</td>
+                <td>HORA:</td>
+                <td>12:23:25</td>
+            </tr>
+            <tr>
+                <td>TRABAJADOR:</td>
+                <td colspan="3">FLORE HUERTAS, JHON WILBER</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="center-block" style="width: 98%;">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">DEPOSITOS(TOTAL): 0</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>C. Aporte</td>
+                    <td>0</td>
+                    <td>C. Ahorro</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>C. Plazo fijo</td>
+                    <td>0</td>
+                    <td>C. Corriente</td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">RETIROS(TOTAL): 0</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>C. Aporte</td>
+                    <td>0</td>
+                    <td>C. Ahorro</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>C. Plazo fijo</td>
+                    <td>0</td>
+                    <td>C. Corriente</td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">COMPRA/VENTA(TOTAL): 0</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Compra</td>
+                    <td>0</td>
+                    <td>Venta</td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">MAYOR CUANTIA(TOTAL): 0</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Depositos</td>
+                    <td>0</td>
+                    <td>Retiro</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Compra/venta:</td>
+                    <td colspan="3">0</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">TRANS. CAJA-CAJA(TOTAL): 0</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Enviados:</td>
+                    <td>0</td>
+                    <td>Recibidos:</td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">TRANS. CAJA-BOVEDA(TOTAL): 0</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Enviados:</td>
+                    <td>0</td>
+                    <td>Recibidos:</td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th colspan="4">CIERRE CAJA(PENDIENTE)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Sobrantes:</td>
+                    <td>0</td>
+                    <td>Faltantes:</td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary">Imprimir</button>
+</div>
+
+
+<div class="col-md-6">
+    <tabset justified="true">
+        <tab heading="Nuevos soles S/.">
+            <div>
+                <fieldset>
+                    <legend>Cierre caja</legend>
+                </fieldset>
+            </div>
+            <div class="panel panel-default">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>AGENCIA:</td>
+                        <td>AYACUCHO</td>
+                    </tr>
+                    <tr>
+                        <td>CAJA:</td>
+                        <td>CAJA001</td>
+                    </tr>
+                    <tr>
+                        <td>FECHA APERTURA:</td>
+                        <td>12/12/1991</td>
+                        <td>HORA APERTURA:</td>
+                        <td>12:23:25</td>
+                    </tr>
+                    <tr>
+                        <td>FECHA CIERRE:</td>
+                        <td>12/12/1991</td>
+                        <td>HORA CIERRE:</td>
+                        <td>12:23:25</td>
+                    </tr>
+                    <tr>
+                        <td>TRABAJADOR:</td>
+                        <td colspan="3">FLORE HUERTAS, JHON WILBER</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="center-block" style="width: 98%;">
+                    <table class="table table-striped table-bordered table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Denominacion</th>
+                            <th>cantidad</th>
+                            <th>Subtotal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        <tr>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        <tr>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        <tr>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="3"><p><strong>Total:</strong></p></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>Saldo Ayer:</td>
+                        <td>S/.25875156</td>
+                    </tr>
+                    <tr>
+                        <td>Entradas:</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Salidas:</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Sobrantes de caja:</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Faltantes de caja:</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Saldo por devolver:</td>
+                        <td>0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary">Imprimir</button>
+        </tab>
+        <tab heading="SJ">Short Labeled Justified content</tab>
+        <tab heading="Long Justified">Long Labeled Justified content</tab>
+    </tabset>
+</div>
+</div>
 </div>

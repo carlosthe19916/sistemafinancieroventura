@@ -26,4 +26,16 @@ angular.module("cajaApp.service", ["restangular"])
                     return Restangular.one("caja/currentSession").get();
                 }
             }
+        }])
+    .factory("HistorialCajaService",["Restangular",
+        function(Restangular){
+            var _historialCajaService = Restangular.all("historialcaja");
+            return {
+                buscar: function(desde, hasta){
+                    return Restangular.all("historialcaja/currentSession").getList({"desde":desde,"hasta":hasta},{});
+                },
+                getVoucherCierreCaja: function(fechaAperturaCaja){
+                    return Restangular.all("historialcaja/voucherCierreCaja").getList({"fechaApertura":fechaAperturaCaja},{});
+                }
+            }
         }]);

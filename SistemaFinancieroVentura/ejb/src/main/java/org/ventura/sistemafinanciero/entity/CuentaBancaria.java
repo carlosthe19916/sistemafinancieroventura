@@ -28,6 +28,7 @@ public class CuentaBancaria implements java.io.Serializable {
 	private Socio socio;
 	private TipoCuentaBancaria tipoCuentaBancaria;
 	private String numeroCuenta;
+	private Moneda moneda;
 	private Date fechaApertura;
 	private Date fechaCierre;
 	private BigDecimal saldo;
@@ -118,6 +119,16 @@ public class CuentaBancaria implements java.io.Serializable {
 
 	public void setTipoCuentaBancaria(TipoCuentaBancaria tipoCuentaBancaria) {
 		this.tipoCuentaBancaria = tipoCuentaBancaria;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_MONEDA", nullable = false)
+	public Moneda getMoneda() {
+		return this.moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
 	}
 
 	@Column(name = "NUMERO_CUENTA", nullable = false, length = 40,columnDefinition = "nvarchar2")

@@ -1,0 +1,38 @@
+<div ng-controller="HistorialCajaController">
+    <fieldset>
+        <legend>Historial de cierres de caja</legend>
+        <form ng-submit="buscar()">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">Desde</span>
+                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="desde" is-open="openedDesde" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openDesde($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">Hasta</span>
+                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="hasta" is-open="openedHasta" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openHasta($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+    <br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div ng-grid="gridOptions" style="border: 1px solid rgb(212,212,212); height: 393px;"></div>
+            </div>
+        </div>
+    </div>
+</div>

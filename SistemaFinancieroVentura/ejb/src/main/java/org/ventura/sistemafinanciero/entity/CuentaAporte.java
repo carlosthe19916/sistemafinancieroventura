@@ -5,10 +5,13 @@ package org.ventura.sistemafinanciero.entity;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,6 +24,7 @@ public class CuentaAporte implements java.io.Serializable {
 
 	private BigDecimal idCuentaaporte;
 	private BigDecimal saldo;
+	private Moneda moneda;
 	private String estadoCuenta;
 	private Set socios = new HashSet(0);
 
@@ -59,6 +63,16 @@ public class CuentaAporte implements java.io.Serializable {
 
 	public void setSaldo(BigDecimal saldo) {
 		this.saldo = saldo;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_MONEDA", nullable = false)
+	public Moneda getMoneda() {
+		return this.moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
 	}
 
 	@Column(name = "ESTADO_CUENTA", nullable = false, length = 24,columnDefinition = "nvarchar2")

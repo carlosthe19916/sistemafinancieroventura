@@ -23,6 +23,7 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 
 	private BigDecimal idTransaccionCuentaAporte;
 	private HistorialCaja historialCaja;
+	private CuentaAporte cuentaAporte;
 	private Date fecha;
 	private Date hora;
 	private BigDecimal numeroOperacion;
@@ -95,6 +96,16 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 
 	public void setHistorialCaja(HistorialCaja historialCaja) {
 		this.historialCaja = historialCaja;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_CUENTAAPORTE", nullable = false)
+	public CuentaAporte getCuentaAporte() {
+		return this.cuentaAporte;
+	}
+
+	public void setCuentaAporte(CuentaAporte cuentaAporte) {
+		this.cuentaAporte = cuentaAporte;
 	}
 
 	@Temporal(TemporalType.DATE)
