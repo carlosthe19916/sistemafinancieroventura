@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -28,8 +29,12 @@ public class Accionista implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idAccionista;
+
+	@NotNull(message = "Persona natural is null")
 	private PersonaNatural personaNatural;
+	@NotNull(message = "Persona juridica is null")
 	private PersonaJuridica personaJuridica;
+	@NotNull(message = "Porcentaje participacion is null")
 	private BigDecimal porcentajeParticipacion;
 
 	public Accionista() {
@@ -43,7 +48,7 @@ public class Accionista implements java.io.Serializable {
 		this.porcentajeParticipacion = porcentajeParticipacion;
 	}
 
-	@XmlElement(name = "id")
+	@XmlElement
 	@Id
 	@Column(name = "ID_ACCIONISTA", unique = true, nullable = false, precision = 22, scale = 0)
 	public int getIdAccionista() {
@@ -54,7 +59,7 @@ public class Accionista implements java.io.Serializable {
 		this.idAccionista = idAccionista;
 	}
 
-	@XmlElement(name = "personanatural")
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_NATURAL", nullable = false)
 	public PersonaNatural getPersonaNatural() {
@@ -65,7 +70,7 @@ public class Accionista implements java.io.Serializable {
 		this.personaNatural = personaNatural;
 	}
 
-	@XmlElement(name = "personajuridica")
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_JURIDICA", nullable = false)
 	public PersonaJuridica getPersonaJuridica() {
@@ -76,7 +81,7 @@ public class Accionista implements java.io.Serializable {
 		this.personaJuridica = personaJuridica;
 	}
 
-	@XmlElement(name = "porcentajeparticipacion")
+	@XmlElement
 	@Column(name = "PORCENTAJE_PARTICIPACION", nullable = false, precision = 5)
 	public BigDecimal getPorcentajeParticipacion() {
 		return this.porcentajeParticipacion;
