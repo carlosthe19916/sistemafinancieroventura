@@ -234,7 +234,7 @@ angular.module('cajaApp.controller')
                             //redireccion
                             $state.go("app.caja.voucherCerrarCaja")
                         },
-                        function error(error){
+                        function (error){
                             $dialogs.error("Error al cerrar caja",JSON.stringify(error).message);
                             $scope.progressTransaction = false;
                         }
@@ -340,6 +340,11 @@ angular.module('cajaApp.controller')
             HistorialCajaService.getVoucherCierreCaja($filter('date')($scope.fechaApertura, "dd/MM/yyyy")).then(
                 function(voucher){
                     $scope.voucherByMoneda = voucher;
+                }
+            );
+            HistorialCajaService.getResumenCierreCaja($filter('date')($scope.fechaApertura, "dd/MM/yyyy")).then(
+                function(resumen){
+                    $scope.resumenCaja = resumen;
                 }
             );
 

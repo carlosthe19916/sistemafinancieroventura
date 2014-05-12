@@ -94,6 +94,12 @@ public class ResumenOperacionesCaja implements java.io.Serializable{
 	
 	@XmlElement
 	private int faltante;
+	
+	@XmlElement
+	private int pendienteSobrante;
+	
+	@XmlElement
+	private int pendienteFaltante;
 
 	public String getAgencia() {
 		return agencia;
@@ -301,6 +307,22 @@ public class ResumenOperacionesCaja implements java.io.Serializable{
 
 	public void setFaltante(int faltante) {
 		this.faltante = faltante;
+	}
+
+	public int getPendienteSobrante() {
+		return pendienteSobrante;
+	}
+
+	public void setPendienteSobrante(int pendienteSobrante) {
+		this.pendienteSobrante = pendienteSobrante;
+	}
+
+	public int getPendienteFaltante() {
+		return pendienteFaltante;
+	}
+
+	public void setPendienteFaltante(int pendienteFaltante) {
+		this.pendienteFaltante = pendienteFaltante;
 	}
 
 	

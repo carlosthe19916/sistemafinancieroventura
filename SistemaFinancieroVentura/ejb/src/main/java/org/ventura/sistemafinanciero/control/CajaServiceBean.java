@@ -40,18 +40,27 @@ import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
+import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
 import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
+import org.ventura.sistemafinanciero.entity.VariableSistema;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
+import org.ventura.sistemafinanciero.entity.type.TipoPendiente;
+import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
+import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
+import org.ventura.sistemafinanciero.entity.type.TransaccionBovedaCajaOrigen;
+import org.ventura.sistemafinanciero.entity.type.Variable;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.MonedaService;
+import org.ventura.sistemafinanciero.service.VariableSistemaService;
 
 @Named
 @Stateless
@@ -69,6 +78,8 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 	@Inject private DAO<Object, DetalleHistorialCaja> detalleHistorialCajaDAO;
 	@Inject private DAO<Object, Trabajador> trabajadorDAO;
 	
+	
+	@EJB private VariableSistemaService variableSistemaService;
 	@EJB private MonedaService monedaService;
 
 	@Override
@@ -239,9 +250,10 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 			historialCajaDAO.create(historialCajaNew);
 			
 			if(historialCajaOld != null){
-				Set<DetalleHistorialCaja> detalleHistorialCajas = historialCajaNew.getDetalleHistorialCajas();
+				Set<DetalleHistorialCaja> detalleHistorialCajas = historialCajaOld.getDetalleHistorialCajas();
 				for (DetalleHistorialCaja detalleHistorialCaja : detalleHistorialCajas) {
 					em.detach(detalleHistorialCaja);
+					detalleHistorialCaja.setIdDetalleHistorialCaja(null);
 					detalleHistorialCaja.setHistorialCaja(historialCajaNew);
 					detalleHistorialCajaDAO.create(detalleHistorialCaja);
 				}
@@ -250,7 +262,7 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 					Moneda moneda = bovedaCaja.getBoveda().getMoneda();
 					Set<MonedaDenominacion> denominaciones = monedaService.getDenominaciones(moneda.getIdMoneda());
 					for (MonedaDenominacion monedaDenominacion : denominaciones) {
-						DetalleHistorialCaja detalleHistorialCaja = new DetalleHistorialCaja();						
+						DetalleHistorialCaja detalleHistorialCaja = new DetalleHistorialCaja();								
 						detalleHistorialCaja.setCantidad(BigInteger.ZERO);
 						detalleHistorialCaja.setHistorialCaja(historialCajaNew);
 						detalleHistorialCaja.setMonedaDenominacion(monedaDenominacion);
@@ -536,18 +548,154 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 		
 		ResumenOperacionesCaja result = new ResumenOperacionesCaja();
 		
-		/*
+		int depositosAhorro = 0;
+		int retirosAhorro = 0;
+		int depositosCorriente= 0;
+		int retirosCorriente = 0;
+		int depositosPlazoFijo= 0;
+		int retirosPlazoFijo = 0;
+		int depositosAporte= 0;
+		int retirosAporte = 0;
+		
+		int compra = 0;
+		int venta = 0;
+		
+		int depositosMayorCuantia = 0;
+		int retirosMayorCuantia = 0;
+		int compraVentaMayorCuantia = 0;
+		
+		int transCajaCajaRecibido = 0;
+		int transCajaCajaEnviado = 0;
+		int transBovedaCajaRecibido = 0;
+		int transBovedaCajaEnviado = 0;
+		
+		int pendienteFaltante = 0;
+		int pendienteSobrante = 0;
+		
 		//recuperando las operaciones del dia						
 		Set<TransaccionBancaria> transBancarias = historialCaja.getTransaccionBancarias();
 		Set<TransaccionCompraVenta> transComVent = historialCaja.getTransaccionCompraVentas();
 		Set<TransaccionCuentaAporte> transCtaAport = historialCaja.getTransaccionCuentaAportes();
-		for (TransaccionBancaria transBanc : transBancarias) {
-			TipoCuentaBancaria tipoCuenta = transBanc.getCuentaBancaria().getTipoCuentaBancaria();
-			if(tipoCuenta.getDenominacion().equalsIgnoreCase(TipoCuentaBancariaType.AHORRO.toString())){
-				
-			}
-		}*/
 		
+		Set<TransaccionCajaCaja> transCajaCajaEnviados = historialCaja.getTransaccionCajaCajasForIdCajaHistorialOrigen();
+		Set<TransaccionCajaCaja> transCajaCajaRecibidos = historialCaja.getTransaccionCajaCajasForIdCajaHistorialDestino();
+		Set<TransaccionBovedaCaja> transBovedaCaja = historialCaja.getTransaccionBovedaCajas();
+		
+		Set<PendienteCaja> transPendiente = historialCaja.getPendienteCajas();
+		
+		VariableSistema varSoles = variableSistemaService.find(Variable.TRANSACCION_MAYOR_CUANTIA_NUEVOS_SOLES);
+		VariableSistema varDolares = variableSistemaService.find(Variable.TRANSACCION_MAYOR_CUANTIA_DOLARES);
+		VariableSistema varEuros = variableSistemaService.find(Variable.TRANSACCION_MAYOR_CUANTIA_EUROS);
+		
+		for (TransaccionBancaria transBanc : transBancarias) {			
+			TipoCuentaBancaria tipoCuenta = transBanc.getCuentaBancaria().getTipoCuentaBancaria();
+			if(tipoCuenta.equals(TipoCuentaBancaria.AHORRO)){
+				if(transBanc.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+					depositosAhorro++;
+				else
+					retirosAhorro++;
+			}
+			if(tipoCuenta.equals(TipoCuentaBancaria.CORRIENTE)){
+				if(transBanc.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+					depositosCorriente++;
+				else
+					retirosCorriente++;
+			}
+			if(tipoCuenta.equals(TipoCuentaBancaria.PLAZO_FIJO)){
+				if(transBanc.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+					depositosPlazoFijo++;
+				else
+					retirosPlazoFijo++;
+			}
+			
+			//mayor cuantia
+			if(transBanc.getCuentaBancaria().getMoneda().getIdMoneda() == 1){
+				if(transBanc.getMonto().abs().compareTo(varSoles.getValor()) >= 0)
+					if(transBanc.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+						depositosMayorCuantia++;
+					else
+						retirosMayorCuantia++;				
+			}
+			if(transBanc.getCuentaBancaria().getMoneda().getIdMoneda() == 2){
+				if(transBanc.getMonto().abs().compareTo(varDolares.getValor()) >= 0)
+					if(transBanc.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+						depositosMayorCuantia++;
+					else
+						retirosMayorCuantia++;				
+			}
+			if(transBanc.getCuentaBancaria().getMoneda().getIdMoneda() == 3){
+				if(transBanc.getMonto().abs().compareTo(varEuros.getValor()) >= 0)
+					if(transBanc.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+						depositosMayorCuantia++;
+					else
+						retirosMayorCuantia++;				
+			}
+			
+		}
+		for (TransaccionCompraVenta transCompraVenta : transComVent) {			
+			if(transCompraVenta.equals(Tipotransaccioncompraventa.COMPRA))
+				compra++;
+			else
+				venta++;
+		}
+		for (TransaccionCuentaAporte trans : transCtaAport) {			
+			if(trans.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+				depositosAporte++;
+			else
+				retirosAporte++;
+		}
+		
+		
+		transCajaCajaEnviado = transCajaCajaEnviados.size();
+		transCajaCajaRecibido = transCajaCajaRecibidos.size();
+		
+		for (TransaccionBovedaCaja transBovCaj : transBovedaCaja) {
+			if(transBovCaj.getEstadoSolicitud() && transBovCaj.getEstadoConfirmacion()){
+				if(transBovCaj.getOrigen().equals(TransaccionBovedaCajaOrigen.CAJA))
+					transBovedaCajaEnviado++;
+				else
+					transBovedaCajaRecibido++;
+			}
+		}
+		
+		for (PendienteCaja pendiente : transPendiente) {
+			if(pendiente.getTipoPendiente().equals(TipoPendiente.FALTANTE))
+				pendienteFaltante++;
+			else
+				pendienteSobrante++;
+		}
+		
+		result.setAgencia(agencia.getDenominacion());
+		result.setCaja(caja.getDenominacion());
+		result.setFechaApertura(historialCaja.getFechaApertura());
+		result.setHoraApertura(historialCaja.getHoraApertura());
+		result.setFechaCierre(historialCaja.getFechaCierre());
+		result.setHoraCierre(historialCaja.getHoraCierre());
+		result.setTrabajador(historialCaja.getTrabajador());
+		
+		result.setDepositosAhorro(depositosAhorro);
+		result.setRetirosAhorro(retirosAhorro);
+		result.setDepositosCorriente(depositosCorriente);
+		result.setRetirosCorriente(retirosCorriente);
+		result.setDepositosPlazoFijo(depositosPlazoFijo);
+		result.setRetirosPlazoFijo(retirosPlazoFijo);
+		result.setDepositosAporte(depositosAporte);
+		result.setRetirosAporte(retirosAporte);
+		
+		result.setCompra(compra);
+		result.setVenta(venta);
+		
+		result.setDepositoMayorCuantia(depositosMayorCuantia);
+		result.setRetiroMayorCuantia(retirosMayorCuantia);
+		result.setCompraVentaMayorCuantia(compraVentaMayorCuantia);
+		
+		result.setEnviadoCajaCaja(transCajaCajaEnviado);
+		result.setRecibidoCajaCaja(transCajaCajaRecibido);
+		result.setEnviadoBovedaCaja(transBovedaCajaEnviado);
+		result.setRecibidoBovedaCaja(transBovedaCajaRecibido);
+		
+		result.setPendienteFaltante(pendienteFaltante);
+		result.setPendienteSobrante(pendienteSobrante);
 		
 		return result;
 	}

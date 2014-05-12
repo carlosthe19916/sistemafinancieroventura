@@ -36,6 +36,9 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 getVoucherCierreCaja: function(fechaAperturaCaja){
                     return Restangular.all("historialcaja/voucherCierreCaja").getList({"fechaApertura":fechaAperturaCaja},{});
+                },
+                getResumenCierreCaja: function(fechaAperturaCaja){
+                    return Restangular.one("historialcaja/resumenCierreCaja").get({"fechaApertura":fechaAperturaCaja},{});
                 }
             }
         }]);

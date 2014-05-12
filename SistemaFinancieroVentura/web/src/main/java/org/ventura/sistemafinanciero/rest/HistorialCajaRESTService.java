@@ -33,12 +33,14 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
+import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.service.CajaService;
@@ -115,6 +117,43 @@ public class HistorialCajaRESTService {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			Date fechaApertura = (fecha != null ? formatter.parse(fecha) : null);
 			return cajaService.getVoucherCierreCaja(caja.getIdCaja(), fechaApertura);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NonexistentEntityException e) {
+			throw new InternalServerErrorException();
+		} catch (IllegalResultException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   		
+    	return null;
+    }
+    
+    @GET
+    @Path("/resumenCierreCaja")  
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+    public Response getResumenCierreCaja(@QueryParam("fechaApertura") String fecha){
+    	Caja caja = null;
+		try {
+			String username = context.getCallerPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				throw new NotFoundException();
+			if(trabajador != null)
+				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+			else
+				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date fechaApertura = (fecha != null ? formatter.parse(fecha) : null);
+			
+			ResumenOperacionesCaja result = cajaService.getResumenOperacionesCaja(caja.getIdCaja(), fechaApertura);
+			return Response.status(Response.Status.OK).entity(result).build(); 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
