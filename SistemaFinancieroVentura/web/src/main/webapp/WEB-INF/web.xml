@@ -22,13 +22,13 @@
 		</web-resource-collection>
 		<auth-constraint>
 			<description>Tiene acceso a todo el sistema</description>
-			<role-name>CAJA</role-name>
+			<role-name>CAJERO</role-name>
 		</auth-constraint>
 	</security-constraint>
 
 	<security-role>
 		<description>Acesso a caja</description>
-		<role-name>CAJA</role-name>
+		<role-name>CAJERO</role-name>
 	</security-role>
 
 	<login-config>
