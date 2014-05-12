@@ -26,7 +26,7 @@ public class CuentaBancaria implements java.io.Serializable {
 
 	private BigDecimal idCuentaBancaria;
 	private Socio socio;
-	private TipoCuentaBancaria tipoCuentaBancaria;
+	private String tipoCuentaBancaria;
 	private String numeroCuenta;
 	private Moneda moneda;
 	private Date fechaApertura;
@@ -48,7 +48,7 @@ public class CuentaBancaria implements java.io.Serializable {
 	}
 
 	public CuentaBancaria(BigDecimal idCuentaBancaria, Socio socio,
-			TipoCuentaBancaria tipoCuentaBancaria, String numeroCuenta,
+			String tipoCuentaBancaria, String numeroCuenta,
 			Date fechaApertura, BigDecimal saldo,
 			BigDecimal cantidadRetirantes, BigDecimal estado,
 			String estadoCuenta) {
@@ -64,7 +64,7 @@ public class CuentaBancaria implements java.io.Serializable {
 	}
 
 	public CuentaBancaria(BigDecimal idCuentaBancaria, Socio socio,
-			TipoCuentaBancaria tipoCuentaBancaria, String numeroCuenta,
+			String tipoCuentaBancaria, String numeroCuenta,
 			Date fechaApertura, Date fechaCierre, BigDecimal saldo,
 			BigDecimal cantidadRetirantes, BigDecimal estado,
 			String estadoCuenta, Set cuentaBancariaTasas, Set titulars,
@@ -111,13 +111,12 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.socio = socio;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_TIPO_CUENTA_BANCARIA", nullable = false)
-	public TipoCuentaBancaria getTipoCuentaBancaria() {
+	@Column(name = "TIPO_CUENTA_BANCARIA", nullable = false, length = 10,columnDefinition = "nvarchar2")
+	public String getTipoCuentaBancaria() {
 		return this.tipoCuentaBancaria;
 	}
 
-	public void setTipoCuentaBancaria(TipoCuentaBancaria tipoCuentaBancaria) {
+	public void setTipoCuentaBancaria(String tipoCuentaBancaria) {
 		this.tipoCuentaBancaria = tipoCuentaBancaria;
 	}
 	

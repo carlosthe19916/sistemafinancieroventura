@@ -196,7 +196,7 @@ public class Moneda implements java.io.Serializable {
 			return false;
 		}
 		final Moneda other = (Moneda) obj;
-		return other.simbolo.equalsIgnoreCase(this.simbolo);
+		return other.getSimbolo().equalsIgnoreCase(this.simbolo);
 	}
 
 	@Override

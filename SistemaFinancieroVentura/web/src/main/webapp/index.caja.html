@@ -79,7 +79,9 @@
                 <ul class="nav navbar-nav navbar-right" ng-controller="cajaNavbarController">
                     <li style="height: 50px;">
                         <a style="color: #333;">
-                            <span ng-hide="caja.estadoMovimiento" class="label label-warning">Congelado</span>
+                            <span ng-show="caja.abierto && caja.estadoMovimiento" class="label label-info">Abierto</span>
+                            <span ng-show="caja.abierto && !caja.estadoMovimiento" class="label label-warning">Congelado</span>
+                            <span ng-show="!caja.abierto" class="label label-danger">Cerrado</span>
                             <strong>{{caja.denominacion}}</strong>
                         </a>
                     </li>

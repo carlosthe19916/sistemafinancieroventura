@@ -61,19 +61,11 @@ public class CajaRESTService {
     @EJB CajaService cajaService;
     @EJB UsuarioService usuarioService;
     @EJB TrabajadorService trabajadorService;
-     
-    @POST
-	@Consumes({ "application/xml", "application/json" })
-	@Produces({ "application/xml", "application/json" })
-	public Response create(Moneda moneda) {		
-		System.out.println(moneda);
-		return null;
-	}
     
     @GET
 	@Path("/currentSession")
 	@Produces({ "application/xml", "application/json" })
-	public Caja getCajaOfAuthenticateSession() {	
+	public Response getCajaOfAuthenticateSession() {	
     	Caja caja = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
@@ -83,21 +75,21 @@ public class CajaRESTService {
 			if (currentUser != null)
 				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
 			else
-				throw new NotFoundException();
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
 			if(trabajador != null)
 				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
 			else
-				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");			
+				return Response.status(Response.Status.NOT_FOUND).entity("El usuario no tiene cajas asignadas").build();		
 		} catch (NonexistentEntityException e) {
 			throw new InternalServerErrorException();
 		} 	
-		return caja;
+		return Response.status(Response.Status.OK).entity(caja).build();
 	}
     
     @GET
     @Path("/detalle")
     @Produces({ "application/xml", "application/json" })
-    public Set<GenericMonedaDetalle> getCajaHistorialDetalle() {
+    public Response getCajaHistorialDetalle() {
     	Set<GenericMonedaDetalle> result = null;    	    	   
     	try {
     		String username = context.getCallerPrincipal().getName();
@@ -106,14 +98,14 @@ public class CajaRESTService {
         	Caja caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
         	
         	result =  cajaService.getDetalleCaja(caja.getIdCaja());
-        	        	
+        	return Response.status(Response.Status.OK).entity(result).build();        	
 		} catch (NullPointerException e) {
 			log.log(Level.SEVERE, e.getMessage());
 		} catch (NonexistentEntityException e) {
 			log.log(Level.SEVERE, e.getMessage());
 			throw new BadRequestException();
 		}
-		return result;	
+    	return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();   
     }
     
     @PUT
@@ -135,7 +127,7 @@ public class CajaRESTService {
 				caja = null;	
 			if(caja != null) {
 				cajaService.abrirCaja(caja.getIdCaja());
-				builder = Response.ok();
+				builder = Response.status(Response.Status.OK).entity("Caja abierta correctamente"); 
 			} else {
 				throw new NotFoundException("Caja no encontrada");
 			}			

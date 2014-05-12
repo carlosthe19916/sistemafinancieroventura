@@ -11,6 +11,7 @@ import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
+import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
@@ -28,7 +29,9 @@ public interface CajaService extends AbstractService<Caja> {
 	public Set<DetalleHistorialCaja> getDetalleCajaByMoneda(int idHistorial, int idMoneda) throws NonexistentEntityException;
 
 	//voucher caja
-	public Set<CajaCierreMoneda> getVoucherCierreCaja(int caja, Date fechaApertura) throws NonexistentEntityException, IllegalResultException; 
+	public Set<CajaCierreMoneda> getVoucherCierreCaja(int caja, Date fechaApertura) throws NonexistentEntityException, IllegalResultException;
+	
+	public ResumenOperacionesCaja getResumenOperacionesCaja(int caja, Date fechaApertura) throws NonexistentEntityException, IllegalResultException;
 	
 	//historial caja
 	public List<HistorialCaja> getHistorialCaja(int idCaja, Date desde, Date hasta) throws NonexistentEntityException;

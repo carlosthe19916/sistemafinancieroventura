@@ -8,8 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class GenericDetalle implements java.io.Serializable, Comparable<GenericDetalle>{

@@ -16,8 +16,6 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
-import java.security.Principal;
-
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;

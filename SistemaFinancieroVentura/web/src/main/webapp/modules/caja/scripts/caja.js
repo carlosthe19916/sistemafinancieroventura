@@ -227,7 +227,7 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             }
         });
 });
-
+/*
 cajaApp.run(["$rootScope", "$location", "$cookieStore", "$dialogs", "CajaService", "UsuarioService", "AgenciaService",
     function ($rootScope, $location, $cookieStore, $dialogs, CajaService, UsuarioService, AgenciaService) {
         CajaService.getCurrentCaja().then(
@@ -248,4 +248,4 @@ cajaApp.run(["$rootScope", "$location", "$cookieStore", "$dialogs", "CajaService
                 $cookieStore.put("agencia", agencia);
             }
         );
-    }] );
+    }] );*/

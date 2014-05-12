@@ -1,5 +1,4 @@
 <div ng-controller="VoucherCerrarCajaController">
-fecha::::::::::::{{fechaApertura}}
 <div class="row">
 <div class="col-md-6">
     <div>
@@ -160,7 +159,7 @@ fecha::::::::::::{{fechaApertura}}
 
 <div class="col-md-6">
     <tabset justified="true">
-        <tab heading="Nuevos soles S/.">
+        <tab ng-repeat="voucher in voucherByMoneda" heading="{{voucher.moneda.simbolo}} {{voucher.moneda.denominacion}}">
             <div>
                 <fieldset>
                     <legend>Cierre caja</legend>
@@ -171,27 +170,27 @@ fecha::::::::::::{{fechaApertura}}
                     <tbody>
                     <tr>
                         <td>AGENCIA:</td>
-                        <td>AYACUCHO</td>
+                        <td>{{voucher.caja}}</td>
                     </tr>
                     <tr>
                         <td>CAJA:</td>
-                        <td>CAJA001</td>
+                        <td>{{voucher.caja}}</td>
                     </tr>
                     <tr>
                         <td>FECHA APERTURA:</td>
-                        <td>12/12/1991</td>
+                        <td>{{voucher.fechaApertura | date:"dd/MM/yyyy"}}</td>
                         <td>HORA APERTURA:</td>
-                        <td>12:23:25</td>
+                        <td>{{voucher.horaApertura | date:"hh:mm:ss"}}</td>
                     </tr>
                     <tr>
                         <td>FECHA CIERRE:</td>
-                        <td>12/12/1991</td>
+                        <td>{{voucher.fechaCierre | date:"dd/MM/yyyy"}}</td>
                         <td>HORA CIERRE:</td>
-                        <td>12:23:25</td>
+                        <td>{{voucher.horaCierre | date:"hh:mm:ss"}}</td>
                     </tr>
                     <tr>
                         <td>TRABAJADOR:</td>
-                        <td colspan="3">FLORE HUERTAS, JHON WILBER</td>
+                        <td colspan="3">{{voucher.trabajador}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -205,40 +204,20 @@ fecha::::::::::::{{fechaApertura}}
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                        <tr>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                        <tr>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                        <tr>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
+                        <tr ng-repeat="detalle in voucher.detalle">
+                            <td>{{detalle.valor}}</td>
+                            <td>{{detalle.cantidad}}</td>
+                            <td>{{(detalle.valor*detalle.cantidad) | currency : ""}}</td>
                         </tr>
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colspan="3"><p><strong>Total:</strong></p></td>
+                            <td colspan="3">
+                                <p>
+                                    <strong>Total:</strong>
+                                    {{total(voucher.detalle)}}
+                                </p>
+                            </td>
                         </tr>
                         </tfoot>
                     </table>
@@ -248,35 +227,33 @@ fecha::::::::::::{{fechaApertura}}
                     <tbody>
                     <tr>
                         <td>Saldo Ayer:</td>
-                        <td>S/.25875156</td>
+                        <td>{{voucher.saldoAyer | currency : ""}}</td>
                     </tr>
                     <tr>
                         <td>Entradas:</td>
-                        <td>0</td>
+                        <td>{{voucher.entradas | currency : ""}}</td>
                     </tr>
                     <tr>
                         <td>Salidas:</td>
-                        <td>0</td>
+                        <td>{{voucher.salidas | currency : ""}}</td>
                     </tr>
                     <tr>
                         <td>Sobrantes de caja:</td>
-                        <td>0</td>
+                        <td>{{voucher.sobrante | currency : ""}}</td>
                     </tr>
                     <tr>
                         <td>Faltantes de caja:</td>
-                        <td>0</td>
+                        <td>{{voucher.faltante | currency : ""}}</td>
                     </tr>
                     <tr>
                         <td>Saldo por devolver:</td>
-                        <td>0</td>
+                        <td>{{voucher.porDevolver | currency : ""}}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <button type="button" class="btn btn-primary">Imprimir</button>
         </tab>
-        <tab heading="SJ">Short Labeled Justified content</tab>
-        <tab heading="Long Justified">Long Labeled Justified content</tab>
     </tabset>
 </div>
 </div>

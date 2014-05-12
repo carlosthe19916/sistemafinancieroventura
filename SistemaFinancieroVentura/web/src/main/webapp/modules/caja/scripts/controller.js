@@ -1,10 +1,30 @@
 angular.module('cajaApp.controller', []);
 
 angular.module('cajaApp.controller')
-    .controller('cajaNavbarController', ['$scope', "$cookieStore",
-        function($scope, $cookieStore) {
-            $scope.caja = $cookieStore.get("caja");
-            $scope.usuario = $cookieStore.get("usuario");
+    .controller('cajaNavbarController', ['$scope', "$cookieStore", "$dialogs", "CajaService","UsuarioService","AgenciaService",
+        function($scope, $cookieStore, $dialogs, CajaService, UsuarioService, AgenciaService) {
+
+            CajaService.getCurrentCaja().then(
+                function(caja){
+                    $cookieStore.put("caja", caja);
+                    $scope.caja = caja;
+                },
+                function error(error){
+                    $dialogs.error("Error no podrá realizar transacciones de ningun tipo","Error al cargar caja:\n"+JSON.stringify(error.data));;
+                }
+            );
+            UsuarioService.getCurrentUsuario().then(
+                function(usuario){
+                    $cookieStore.put("usuario", usuario);
+                    $scope.usuario = $cookieStore.get("usuario");
+                }
+            );
+            AgenciaService.getCurrentAgencia().then(
+                function(agencia){
+                    $cookieStore.put("agencia", agencia);
+                    $scope.agencia = agencia;
+                }
+            );
         }])
 
     .controller('AbrirCajaController', ['$scope', "$state", "$cookieStore", '$filter', "$dialogs", "CajaService",
@@ -15,11 +35,10 @@ angular.module('cajaApp.controller')
 
             $scope.detalleCaja = [];
             $scope.alertMonedasDisableState = function(){
-                return $scope.detalleCaja.length != 0;
+                return $scope.detalleCaja.length == 0;
             }
 
             if($scope.currentCaja.abierto == false){
-
                 CajaService.getDetalle().then(function(detalleCaja){
                     for(var i = 0; i<detalleCaja.length; i++){
                         angular.forEach(detalleCaja[i].detalle, function(row){
@@ -34,14 +53,22 @@ angular.module('cajaApp.controller')
                 $scope.myData = [];
                 $scope.gridOptions = [];
                 $scope.total = [];
+                var gridLayoutPlugin = [];
+                $scope.updateLayout = [];
+
                 $scope.getTemplate = function(index, simbolo){
+                    gridLayoutPlugin[index] = new ngGridLayoutPlugin();
+                    $scope.updateLayout[index] = function(){
+                        gridLayoutPlugin[index].updateGridLayout();
+                    };
                     $scope.myData[index] = $scope.detalleCaja[index].detalle;
                     $scope.gridOptions[index] = {
                         data: 'myData['+index+']',
+                        plugins: [gridLayoutPlugin[index]],
                         multiSelect: false,
                         columnDefs: [
                             //{ field: "valor", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>simbolo {{row.getProperty(col.field)}}</div></div>" },
-                            { field: "valor | currency : '"+simbolo+ " '", displayName: "Valor" },
+                            { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
                             { field: "cantidad", displayName: "Cantidad" },
                             { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
                         ]
@@ -61,7 +88,15 @@ angular.module('cajaApp.controller')
                     CajaService.abrir().then(
                         function(data){
                             $scope.progressTransaction = false;
-                            $state.go("app.caja.voucherAbrirCaja")
+
+                            //cookie
+                            $scope.currentCaja = $cookieStore.get("caja");
+                            $scope.currentCaja.abierto = true;
+                            $scope.currentCaja.estadoMovimiento = true;
+                            $cookieStore.put("caja", $scope.currentCaja);
+
+                            //redireccion
+                            $state.go("app.caja", null, { reload: true })
                         },
                         function error(error){
                             $dialogs.error("Error al abrir caja",JSON.stringify(error.message));
@@ -78,7 +113,7 @@ angular.module('cajaApp.controller')
                     return true;
                 }
                 else {
-                    if($scope.alertMonedasDisableState())
+                    if(!$scope.alertMonedasDisableState())
                         return false;
                     else
                         return true;
@@ -189,6 +224,14 @@ angular.module('cajaApp.controller')
                     CajaService.cerrar($scope.detalleCajaFinal).then(
                         function(data){
                             $scope.progressTransaction = false;
+
+                            //cookie
+                            $scope.currentCaja = $cookieStore.get("caja");
+                            $scope.currentCaja.abierto = false;
+                            $scope.currentCaja.estadoMovimiento = false;
+                            $cookieStore.put("caja", $scope.currentCaja);
+
+                            //redireccion
                             $state.go("app.caja.voucherCerrarCaja")
                         },
                         function error(error){
@@ -293,71 +336,19 @@ angular.module('cajaApp.controller')
     .controller('VoucherCerrarCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
         function($scope, $state, $filter, HistorialCajaService) {
 
-            $scope.today = function() {
-                $scope.desde = new Date();
-                $scope.hasta = new Date();
-            };
 
-            $scope.today();
+            HistorialCajaService.getVoucherCierreCaja($filter('date')($scope.fechaApertura, "dd/MM/yyyy")).then(
+                function(voucher){
+                    $scope.voucherByMoneda = voucher;
+                }
+            );
 
-            $scope.clear = function () {
-                $scope.desde = null;
-                $scope.hasta = null;
-            };
-
-            // Disable weekend selection
-            $scope.disabled = function(date, mode) {
-                return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-            };
-
-            $scope.toggleMin = function() {
-                $scope.minDate = $scope.minDate ? null : new Date();
-            };
-            $scope.toggleMin();
-
-            $scope.openDesde = function($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                $scope.openedDesde = true;
-            };
-            $scope.openHasta = function($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                $scope.openedHasta = true;
-            };
-
-            $scope.dateOptions = {
-                formatYear: 'yy',
-                startingDay: 1
-            };
-
-            $scope.initDate = new Date('2016-15-20');
-            $scope.formats = ['dd/MM/yyyy','dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-            $scope.format = $scope.formats[0];
-
-
-
-            $scope.buscar = function(){
-                HistorialCajaService.buscar($filter('date')($scope.desde, "dd/MM/yyyy"), $filter('date')( $scope.hasta, "dd/MM/yyyy")).then(
-                    function(historiales){
-                        $scope.listHistoriales = historiales;
-                    }
-                );
+            $scope.total = function(detalle){
+                var totalVoucher = 0;
+                for(var i = 0; i < detalle.length; i++){
+                    totalVoucher = totalVoucher + (detalle[i].valor*detalle[i].cantidad);
+                }
+                return totalVoucher;
             }
-
-            $scope.getVoucher = function(cajaHistorial){
-                $state.transitionTo('app.caja.voucherCerrarCaja', { fechaApertura: $filter('date')(cajaHistorial.fechaApertura, "dd/MM/yyyy")});
-            }
-
-            $scope.gridOptions = {
-                data: 'listHistoriales',
-                multiSelect: false,
-                columnDefs: [
-                    {field:"fechaApertura | date : 'dd/MM/yyyy'", displayName:'Fecha apertura'},
-                    {field:"horaApertura | date : 'hh:mm:ss'", displayName:'Hora apertura'},
-                    {field:"fechaCierre | date : 'dd/MM/yyyy'", displayName:'Fecha cierre'},
-                    {field:"horaCierre | date : 'hh:mm:ss'", displayName:'Hora cierre'},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
-            };
 
         }]);

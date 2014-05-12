@@ -3,7 +3,7 @@
     <div class="alert alert-info" ng-show="currentCaja.abierto">
         <p><strong>Info:</strong>La caja ya esta abierta, no se puede abrir nuevamente</p>
     </div>
-    <div class="alert alert-warning" ng-show="alertMonedasDisableState()">
+    <div class="alert alert-warning" ng-show="currentCaja.abierto && alertMonedasDisableState()">
         <p><strong>Warning:</strong>La caja no tiene bovedas asignadas</p>
     </div>
 
@@ -44,8 +44,8 @@
             </div>
             <div class="row">
                 <div class="col-sm-9">
-                    <accordion close-others="true">
-                        <accordion-group ng-repeat="detalle in detalleCaja" heading="Moneda: {{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}}  ------ Total:{{total[$index]()}}" is-open="false">
+                    <tabset>
+                        <tab ng-repeat="detalle in detalleCaja" select="updateLayout($index)" heading="Moneda:{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{total[$index]()}}">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -63,8 +63,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </accordion-group>
-                    </accordion>
+                        </tab>
+                    </tabset>
                 </div>
             </div>
 

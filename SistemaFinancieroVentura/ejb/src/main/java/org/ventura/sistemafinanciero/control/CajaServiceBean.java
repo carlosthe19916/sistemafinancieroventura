@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javassist.NotFoundException;
+
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Remote;
@@ -43,6 +45,8 @@ import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
+import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
+import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
@@ -205,6 +209,14 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 				throw new RollbackFailureException("Debe de abrir las bovedas asociadas a la caja("+boveda.getDenominacion()+")");
 		}
 		
+		//obteniendo el trabajador de la caja
+		Trabajador trabajador = null;
+		for (TrabajadorCaja trabCaj : caja.getTrabajadorCajas()) {
+			trabajador = trabCaj.getTrabajador();
+		}
+		if(trabajador == null)
+			throw new NonexistentEntityException("No se encontro un trabajador asiganada a la caja");
+		
 		try {
 			//abriendo caja
 			caja.setAbierto(true);
@@ -223,6 +235,7 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 			historialCajaNew.setFechaApertura(calendar.getTime());
 			historialCajaNew.setHoraApertura(calendar.getTime());
 			historialCajaNew.setEstado(true);			
+			historialCajaNew.setTrabajador(trabajador.getPersonaNatural().getApellidoPaterno()+" "+trabajador.getPersonaNatural().getApellidoMaterno()+","+trabajador.getPersonaNatural().getNombres());
 			historialCajaDAO.create(historialCajaNew);
 			
 			if(historialCajaOld != null){
@@ -327,8 +340,6 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 		Agencia agencia = null;
 		HistorialCaja historialCaja = null;
 		
-		Set<Moneda> monedasCierre;
-		
 		//recuperando agencia
 		Set<BovedaCaja> bovedaCajas = caja.getBovedaCajas();
 		for (BovedaCaja bovedaCaja : bovedaCajas) {
@@ -356,21 +367,18 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 		
 		//recuperando el historial del dia anterior
 		HistorialCaja historialAyer = null;
-		QueryParameter queryParameter2;
-		if(fechaApertura != null){
-			queryParameter2 = QueryParameter.with("idcaja", idCaja).and("fecha", fechaApertura);			
+		QueryParameter queryParameter;
+		if(fechaApertura != null){		
+			queryParameter = QueryParameter.with("idcaja", idCaja).and("fecha", fechaApertura);			
 		} else {
-			queryParameter2 = QueryParameter.with("idcaja", idCaja).and("fecha", historialCaja.getFechaApertura());
+			queryParameter = QueryParameter.with("idcaja", idCaja).and("fecha", historialCaja.getFechaApertura());
 		}
-		List<HistorialCaja> list2 = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialActivo, queryParameter2.parameters(), 1);
-		if(list2.size() > 1) {
-			throw new IllegalResultException("Existe mas de un historial en el dia pasado");
-		}			
-		else {
-			for (HistorialCaja hist : list2) {
+		List<HistorialCaja> list2 = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRangePenultimo, queryParameter.parameters(), 2);			
+		for (HistorialCaja hist : list2) {
+			if(!historialCaja.equals(hist))
 				historialAyer = hist;
-			}
 		}
+			
 									
 		//recuperando las monedas de la trasaccion
 		Set<DetalleHistorialCaja> detalleHistorial = historialCaja.getDetalleHistorialCajas();	
@@ -486,6 +494,60 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 				}
 			}
 		}
+		
+		return result;
+	}
+
+	@Override
+	public ResumenOperacionesCaja getResumenOperacionesCaja(int idCaja,Date fechaApertura) throws NonexistentEntityException,IllegalResultException {
+		Caja caja = cajaDAO.find(idCaja);
+		if(caja == null)
+			throw new NonexistentEntityException("Caja no encontrada");
+		
+		Agencia agencia = null;
+		HistorialCaja historialCaja = null;
+		
+		//recuperando agencia
+		Set<BovedaCaja> bovedaCajas = caja.getBovedaCajas();
+		for (BovedaCaja bovedaCaja : bovedaCajas) {
+			agencia = bovedaCaja.getBoveda().getAgencia();
+			break;
+		}
+		if(agencia == null)
+			throw new NonexistentEntityException("La caja no tiene una agencia asignada");
+		
+		//recuperando el historial
+		if(fechaApertura != null){
+			QueryParameter queryParameter = QueryParameter.with("idcaja", idCaja).and("desde", fechaApertura).and("hasta", fechaApertura);
+			List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRange, queryParameter.parameters());
+			if(list.size() > 1)
+				throw new IllegalResultException("Existe mas de un historial para la fecha dada");
+			else
+				for (HistorialCaja hist : list) {
+					historialCaja = hist;
+				}			
+			if(historialCaja == null)
+				throw new NonexistentEntityException("No existe un historial de caja para la fecha dada");
+		} else {
+			historialCaja = getHistorialActivo(idCaja);
+		}		
+			
+		
+		
+		ResumenOperacionesCaja result = new ResumenOperacionesCaja();
+		
+		/*
+		//recuperando las operaciones del dia						
+		Set<TransaccionBancaria> transBancarias = historialCaja.getTransaccionBancarias();
+		Set<TransaccionCompraVenta> transComVent = historialCaja.getTransaccionCompraVentas();
+		Set<TransaccionCuentaAporte> transCtaAport = historialCaja.getTransaccionCuentaAportes();
+		for (TransaccionBancaria transBanc : transBancarias) {
+			TipoCuentaBancaria tipoCuenta = transBanc.getCuentaBancaria().getTipoCuentaBancaria();
+			if(tipoCuenta.getDenominacion().equalsIgnoreCase(TipoCuentaBancariaType.AHORRO.toString())){
+				
+			}
+		}*/
+		
 		
 		return result;
 	}

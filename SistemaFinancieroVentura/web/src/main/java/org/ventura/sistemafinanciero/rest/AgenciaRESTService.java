@@ -11,6 +11,7 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Trabajador;
@@ -36,7 +37,7 @@ public class AgenciaRESTService {
 	@GET
 	@Path("/currentSession")
 	@Produces({ "application/xml", "application/json" })
-	public Agencia getAgenciaOfAuthenticateSession() {
+	public Response getAgenciaOfAuthenticateSession() {
 		Agencia agencia = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
@@ -46,12 +47,12 @@ public class AgenciaRESTService {
 			if (currentUser != null)
 				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
 			else
-				throw new NotFoundException();
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
 			agencia = trabajadorService.getAgencia(trabajador.getIdTrabajador());
 		} catch (NonexistentEntityException e) {
 			throw new InternalServerErrorException();
 		}
-		return agencia;
+		return Response.status(Response.Status.OK).entity(agencia).build();
 	}
 
 	
