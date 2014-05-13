@@ -37,7 +37,7 @@ import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
 		@NamedQuery(name = HistorialCaja.findByHistorialActivo, query = "SELECT c FROM HistorialCaja c WHERE c.caja.idCaja = :idcaja AND c.estado = true"),
-		@NamedQuery(name = HistorialCaja.findByHistorialDateRange, query = "SELECT h FROM HistorialCaja h WHERE h.caja.idCaja = :idcaja AND h.fechaApertura BETWEEN :desde AND :hasta ORDER BY h.fechaApertura DESC"),
+		@NamedQuery(name = HistorialCaja.findByHistorialDateRange, query = "SELECT h FROM HistorialCaja h WHERE h.caja.idCaja = :idcaja AND h.horaApertura BETWEEN :desde AND :hasta ORDER BY h.horaApertura DESC"),
 		@NamedQuery(name = HistorialCaja.findByHistorialDateRangePenultimo, query = "SELECT h FROM HistorialCaja h WHERE h.caja.idCaja = :idcaja AND h.fechaApertura <= :fecha ORDER BY h.horaApertura DESC") })
 public class HistorialCaja implements java.io.Serializable {
 
@@ -282,10 +282,11 @@ public class HistorialCaja implements java.io.Serializable {
 	public void setTransferenciaBancarias(Set transferenciaBancarias) {
 		this.transferenciaBancarias = transferenciaBancarias;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[Apertura:" + this.fechaApertura + "horaApertura:" + this.horaApertura + "]";
+		return "[Apertura:" + this.fechaApertura + "horaApertura:"
+				+ this.horaApertura + "]";
 	}
 
 	@Override
@@ -294,12 +295,13 @@ public class HistorialCaja implements java.io.Serializable {
 			return false;
 		}
 		final HistorialCaja other = (HistorialCaja) obj;
-		return (other.fechaApertura.equals(this.fechaApertura) && other.horaApertura.equals(this.horaApertura));
+		return (other.fechaApertura.equals(this.fechaApertura) && other.horaApertura
+				.equals(this.horaApertura));
 	}
 
 	@Override
 	public int hashCode() {
-		return this.fechaApertura.hashCode()*this.horaApertura.hashCode();
+		return this.fechaApertura.hashCode() * this.horaApertura.hashCode();
 	}
 
 }

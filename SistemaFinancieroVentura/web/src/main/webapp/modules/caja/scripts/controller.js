@@ -318,7 +318,7 @@ angular.module('cajaApp.controller')
             }
 
             $scope.getVoucher = function(cajaHistorial){
-                $state.transitionTo('app.caja.voucherCerrarCaja', { fechaApertura: cajaHistorial.fechaApertura});
+                $state.transitionTo('app.caja.voucherCerrarCaja', { fechaApertura: cajaHistorial.horaApertura});
             }
 
             $scope.gridOptions = {
@@ -336,13 +336,12 @@ angular.module('cajaApp.controller')
     .controller('VoucherCerrarCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
         function($scope, $state, $filter, HistorialCajaService) {
 
-
-            HistorialCajaService.getVoucherCierreCaja($filter('date')($scope.fechaApertura, "dd/MM/yyyy")).then(
+            HistorialCajaService.getVoucherCierreCaja($scope.fechaApertura).then(
                 function(voucher){
                     $scope.voucherByMoneda = voucher;
                 }
             );
-            HistorialCajaService.getResumenCierreCaja($filter('date')($scope.fechaApertura, "dd/MM/yyyy")).then(
+            HistorialCajaService.getResumenCierreCaja($scope.fechaApertura).then(
                 function(resumen){
                     $scope.resumenCaja = resumen;
                 }
@@ -357,7 +356,109 @@ angular.module('cajaApp.controller')
             }
 
             $scope.imprimirResumen = function(){
-                printHTML();
+
+                qz.findPrinter("EPSON TM-U220");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                qz.append("______ C.A.C. CAJA VENTURA ______\r\n");
+                qz.append("\x1B\x21\x01"); // 3
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                qz.append("RESUMEN DE OPERACIONES\r\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Agencia:"+ $scope.resumenCaja.agencia + " ");
+                qz.append("Caja:"+ $scope.resumenCaja.caja + " " + "\r\n");
+                qz.append("F.Apertu:"+($filter('date')($scope.resumenCaja.fechaApertura, 'dd/MM/yyyy'))+ " ");
+                qz.append("H.Apertu:"+($filter('date')($scope.resumenCaja.horaApertura, 'hh:mm:ss'))+"\r\n");
+                qz.append("F.Cierre:"+($filter('date')($scope.resumenCaja.fechaCierre, 'dd/MM/yyyy'))+ " ");
+                qz.append("H.Cierre:"+($filter('date')($scope.resumenCaja.horaCierre, 'hh:mm:ss'))+"\r\n");
+                qz.append("Trabajador:"+$scope.resumenCaja.trabajador+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Depositos(Total):"+($scope.resumenCaja.depositosAporte + $scope.resumenCaja.depositosAhorro + $scope.resumenCaja.depositosPlazoFijo + $scope.resumenCaja.depositosCorriente)+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("C.Aporte:"+$scope.resumenCaja.depositosAporte+" ");
+                qz.append("C.Ahorro:"+$scope.resumenCaja.depositosAhorro+"\r\n");
+                qz.append("C.P.fijo:"+$scope.resumenCaja.depositosPlazoFijo+" ");
+                qz.append("C.Corrie:"+$scope.resumenCaja.depositosCorriente+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Retiros(Total):"+($scope.resumenCaja.retirosAporte + $scope.resumenCaja.retirosAhorro + $scope.resumenCaja.retirosPlazoFijo + $scope.resumenCaja.retirosCorriente)+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("C.Aporte:"+$scope.resumenCaja.retirosAporte+" ");
+                qz.append("C.Ahorro:"+$scope.resumenCaja.retirosAhorro+"\r\n");
+                qz.append("C.P.fijo:"+$scope.resumenCaja.retirosPlazoFijo+" ");
+                qz.append("C.Corrie:"+$scope.resumenCaja.retirosCorriente+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Compra/Venta(Total):"+($scope.resumenCaja.compra + $scope.resumenCaja.venta)+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Compra:"+$scope.resumenCaja.compra+" ");
+                qz.append("Venta:"+$scope.resumenCaja.venta+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Trans. mayor cuantia(Total):"+($scope.resumenCaja.depositoMayorCuantia+$scope.resumenCaja.retiroMayorCuantia+$scope.resumenCaja.compraVentaMayorCuantia)+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Depositos:"+$scope.resumenCaja.depositoMayorCuantia+" ");
+                qz.append("Retiros  :"+$scope.resumenCaja.retiroMayorCuantia+"\r\n");
+                qz.append("Compra/venta:"+$scope.resumenCaja.compraVentaMayorCuantia+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Trans. caja-caja(Total):"+($scope.resumenCaja.enviadoCajaCaja+$scope.resumenCaja.recibidoCajaCaja)+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Enviado :"+$scope.resumenCaja.enviadoCajaCaja+" ");
+                qz.append("Recibido:"+$scope.resumenCaja.recibidoCajaCaja+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Trans. boveda-caja(Total):"+($scope.resumenCaja.enviadoBovedaCaja+$scope.resumenCaja.enviadoBovedaCaja)+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Enviado :"+$scope.resumenCaja.enviadoBovedaCaja+" ");
+                qz.append("Recibido:"+$scope.resumenCaja.enviadoBovedaCaja+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Cierre caja(Pendiente):\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Sobrante :"+$scope.resumenCaja.pendienteSobrante+" ");
+                qz.append("Faltante:"+$scope.resumenCaja.pendienteSobrante+"\r\n");
+
+
+                qz.append("\x1D\x56\x41"); // 4
+                qz.append("\x1B\x40"); // 5
+
+                qz.print();
+
+
             }
 
+
+          /* $("#content").html2canvas({
+                canvas: hidden_screenshot,
+                onrendered: function() {
+                    if (notReady()) { return; }
+                    // Optional, set up custom page size.  These only work for PostScript printing.
+                    // setPaperSize() must be called before setAutoSize(), setOrientation(), etc.
+                    qz.setPaperSize("8.5in", "11.0in");  // US Letter
+                    qz.setAutoSize(true);
+                    qz.appendImage($("canvas")[0].toDataURL('image/png'));
+                    // Automatically gets called when "qz.appendFile()" is finished.
+                    window['qzDoneAppending'] = function() {
+                        // Tell the applet to print.
+                        qz.printPS();
+
+                        // Remove reference to this function
+                        window['qzDoneAppending'] = null;
+                    };
+                }
+            });*/
         }]);

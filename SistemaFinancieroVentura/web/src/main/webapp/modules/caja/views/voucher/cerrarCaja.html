@@ -1,12 +1,19 @@
-<script type="text/javascript" src="bower_components/qz-print/js/printer.js"></script>
-<script type="text/javascript" src="bower_components/qz-print/js/deployJava.js"></script>
-<script type="text/javascript" src="bower_components/qz-print/js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="bower_components/qz-print/js/html2canvas.js"></script>
-<script type="text/javascript" src="bower_components/qz-print/js/jquery.plugin.html2canvas.js"></script>
-
 <div ng-controller="VoucherCerrarCajaController">
 <div class="row">
-<div class="col-md-6">
+<div class="col-md-6" id="voucher">
+
+    <applet id="qz"
+            archive="bower_components/qz-print/qz-print.jar"
+            name="QZ Print Plugin" code="qz.PrintApplet.class"
+            width="55"
+            height="55">
+        <param name="jnlp_href" value="bower_components/qz-print/qz-print_jnlp.jnlp">
+        <param name="cache_option" value="plugin">
+        <param name="disable_logging" value="false">
+        <param name="initial_focus" value="false">
+    </applet>
+    <canvas id="hidden_screenshot" style="display:none;"></canvas>
+
     <div>
         <fieldset>
             <legend>Resumen de operaciones</legend>
@@ -147,16 +154,16 @@
                 <thead>
                 <tr>
                     <th colspan="4">
-                        TRANS. CAJA-BOVEDA(TOTAL): {{resumenCaja.enviadoCajaCaja+resumenCaja.recibidoCajaCaja}}
+                        TRANS. CAJA-BOVEDA(TOTAL): {{resumenCaja.enviadoBovedaCaja+resumenCaja.enviadoBovedaCaja}}
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>Enviados:</td>
-                    <td>{{resumenCaja.enviadoCajaCaja}}</td>
+                    <td>{{resumenCaja.enviadoBovedaCaja}}</td>
                     <td>Recibidos:</td>
-                    <td>{{resumenCaja.recibidoCajaCaja}}</td>
+                    <td>{{resumenCaja.enviadoBovedaCaja}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -282,3 +289,5 @@
 </div>
 </div>
 </div>
+
+
