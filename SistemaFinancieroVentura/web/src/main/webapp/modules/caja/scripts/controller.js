@@ -356,4 +356,8 @@ angular.module('cajaApp.controller')
                 return totalVoucher;
             }
 
+            $scope.imprimirResumen = function(){
+                printHTML();
+            }
+
         }]);

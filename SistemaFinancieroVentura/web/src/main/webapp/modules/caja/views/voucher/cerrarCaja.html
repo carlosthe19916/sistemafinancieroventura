@@ -1,3 +1,9 @@
+<script type="text/javascript" src="bower_components/qz-print/js/printer.js"></script>
+<script type="text/javascript" src="bower_components/qz-print/js/deployJava.js"></script>
+<script type="text/javascript" src="bower_components/qz-print/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="bower_components/qz-print/js/html2canvas.js"></script>
+<script type="text/javascript" src="bower_components/qz-print/js/jquery.plugin.html2canvas.js"></script>
+
 <div ng-controller="VoucherCerrarCajaController">
 <div class="row">
 <div class="col-md-6">
@@ -171,7 +177,7 @@
             </table>
         </div>
     </div>
-    <button type="button" class="btn btn-primary">Imprimir</button>
+    <button type="button" class="btn btn-primary" ng-click="imprimirResumen()">Imprimir</button>
 </div>
 
 
