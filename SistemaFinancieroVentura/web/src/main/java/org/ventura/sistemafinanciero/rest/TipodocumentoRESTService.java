@@ -27,7 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
-import org.ventura.sistemafinanciero.entity.type.Tipopersona;
+import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.service.MaestroService;
 
 @Stateless
@@ -43,7 +43,7 @@ public class TipodocumentoRESTService {
 	@Path("/personanatural")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TipoDocumento> listAllFromPersonanatural() {
-		List<TipoDocumento> list = maestroService.getAll(Tipopersona.NATURAL);
+		List<TipoDocumento> list = maestroService.getAll(TipoPersona.NATURAL);
 		return list;
 	}
 
@@ -51,7 +51,7 @@ public class TipodocumentoRESTService {
 	@Path("/personajuridica")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TipoDocumento> listAllFromPersonajuridica() {
-		List<TipoDocumento> list = maestroService.getAll(Tipopersona.JURIDICA);
+		List<TipoDocumento> list = maestroService.getAll(TipoPersona.JURIDICA);
 		return list;
 	}
 

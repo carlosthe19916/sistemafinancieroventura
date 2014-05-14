@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
-import org.ventura.sistemafinanciero.entity.type.Tipopersona;
-import org.ventura.sistemafinanciero.service.BovedaService;
+import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.service.MaestroService;
 
 @Named
@@ -24,20 +23,16 @@ import org.ventura.sistemafinanciero.service.MaestroService;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class MaestroServiceBean implements MaestroService {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(BovedaService.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(MaestroService.class);
 
 	@Inject
 	private DAO<Object, TipoDocumento> tipodocumentoDAO;
 
 	@Override
-	public List<TipoDocumento> getAll(Tipopersona tipopersona) {
+	public List<TipoDocumento> getAll(TipoPersona tipopersona) {
 		List<TipoDocumento> list = null;
-		try {
-			QueryParameter queryParameter = QueryParameter.with("tipopersona", "PN");		
-			list = tipodocumentoDAO.findByNamedQuery(TipoDocumento.findByTipopersona,queryParameter.parameters());		
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(),e.getCause(),e.getLocalizedMessage());
-		}
+		QueryParameter queryParameter = QueryParameter.with("tipopersona", tipopersona.toString());
+		list = tipodocumentoDAO.findByNamedQuery(TipoDocumento.findByTipopersona, queryParameter.parameters());		
 		return list;
 	}
 

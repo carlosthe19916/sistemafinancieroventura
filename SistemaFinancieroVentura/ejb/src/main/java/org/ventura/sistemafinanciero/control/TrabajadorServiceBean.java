@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.Agencia;
+import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.Trabajador;
+import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
 import org.ventura.sistemafinanciero.entity.TrabajadorUsuario;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
@@ -32,6 +34,27 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 	@Inject private DAO<Object, Trabajador> trabajadorDAO;
 	@Inject private DAO<Object, Usuario> usuarioDAO;
 
+	@Override
+	public Caja findByTrabajador(int idTrabajador) throws NonexistentEntityException{
+		Caja result = null;
+		try {
+			Trabajador trabajador = trabajadorDAO.find(idTrabajador);
+			if(trabajador == null)
+				throw new NonexistentEntityException("Trabajador no existente");
+			Set<TrabajadorCaja> cajas = trabajador.getTrabajadorCajas();
+			if(cajas.size() >= 2)
+				throw new IllegalResultException("Trabajador tiene " + cajas.size() + " asignadas");
+			for (TrabajadorCaja trabajadorCaja : cajas) {
+				result = trabajadorCaja.getCaja();	
+				Hibernate.initialize(result);
+				break;
+			}
+		} catch (IllegalResultException e) {
+			LOGGER.error(e.getMessage(), e.getLocalizedMessage(), e.getCause());
+		}			
+		return result;
+	}
+	
 	@Override
 	public Trabajador findByUsuario(int idusuario) {
 		Trabajador result = null;
@@ -53,13 +76,6 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 		return result;
 	}
 
-
-	@Override
-	protected DAO<Object, Trabajador> getDAO() {
-		return trabajadorDAO;
-	}
-
-
 	@Override
 	public Agencia getAgencia(int idTrabajador) throws NonexistentEntityException {
 		Agencia result= null;
@@ -73,7 +89,10 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 		return result;
 	}
 
-	
-	
+	@Override
+	protected DAO<Object, Trabajador> getDAO() {
+		return trabajadorDAO;
+	}
+
 
 }

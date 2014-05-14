@@ -8,7 +8,6 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
@@ -55,5 +54,4 @@ public class AgenciaRESTService {
 		return Response.status(Response.Status.OK).entity(agencia).build();
 	}
 
-	
 }

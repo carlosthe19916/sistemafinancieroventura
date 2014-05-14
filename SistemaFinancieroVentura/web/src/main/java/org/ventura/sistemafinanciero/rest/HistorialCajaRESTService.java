@@ -51,8 +51,7 @@ import org.ventura.sistemafinanciero.service.UsuarioService;
 @Path("/historialcaja")
 @Stateless
 public class HistorialCajaRESTService {
-    
-    
+       
     @Resource
     private SessionContext context;
     
@@ -64,7 +63,7 @@ public class HistorialCajaRESTService {
     @Path("/currentSession")  
     @Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-    public List<HistorialCaja> getHistorialCajaCurrentSession(@QueryParam("desde") String desde, @QueryParam("hasta") String hasta){
+    public Response getHistorialCajaCurrentSession(@QueryParam("desde") String desde, @QueryParam("hasta") String hasta){
     	Caja caja = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
@@ -76,23 +75,19 @@ public class HistorialCajaRESTService {
 			else
 				throw new NotFoundException();
 			if(trabajador != null)
-				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
 			else
 				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			Date dateDesde = (desde != null ? formatter.parse(desde) : null);
-			Date dateHasta = (hasta != null ? formatter.parse(hasta) : null);
+			//Date dateDesde = (desde != null ? formatter.parse(desde) : null);
+			//Date dateHasta = (hasta != null ? formatter.parse(hasta) : null);
 			
-			return cajaService.getHistorialCaja(caja.getIdCaja(), dateDesde, dateHasta);
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//List<HistorialCaja> list = cajaService.getHistorialCaja(caja.getIdCaja(), dateDesde, dateHasta);
+			return Response.status(Response.Status.OK).entity(null).build();
 		} catch (NonexistentEntityException e) {
-			throw new InternalServerErrorException();
-		}
-		return null; 	
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		}	
     }
     
     @GET
@@ -111,7 +106,7 @@ public class HistorialCajaRESTService {
 			else
 				throw new NotFoundException();
 			if(trabajador != null)
-				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
 			else
 				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
 			
@@ -121,11 +116,10 @@ public class HistorialCajaRESTService {
 			return Response.status(Response.Status.OK).entity(result).build(); 
 		} catch (NonexistentEntityException e) {
 			throw new InternalServerErrorException();
-		} catch (IllegalResultException e) {
+		} /*catch (IllegalResultException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}   		
-    	return null;
+		}  */
     }
     
     @GET
@@ -144,7 +138,7 @@ public class HistorialCajaRESTService {
 			else
 				throw new NotFoundException();
 			if(trabajador != null)
-				caja = cajaService.findByTrabajador(trabajador.getIdTrabajador());
+				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
 			else
 				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
 						

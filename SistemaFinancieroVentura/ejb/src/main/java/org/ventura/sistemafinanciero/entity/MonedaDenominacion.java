@@ -5,12 +5,15 @@ package org.ventura.sistemafinanciero.entity;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,7 +22,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MONEDA_DENOMINACION", schema = "BDSISTEMAFINANCIERO")
+@NamedQueries({ @NamedQuery(name = MonedaDenominacion.allActive, query = "SELECT m from MonedaDenominacion m WHERE m.estado = 1") })
 public class MonedaDenominacion implements java.io.Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public final static String allActive = "allActive";
 
 	private int idMonedaDenominacion;
 	private Moneda moneda;
@@ -78,7 +89,7 @@ public class MonedaDenominacion implements java.io.Serializable {
 		this.moneda = moneda;
 	}
 
-	@Column(name = "DENOMINACION", nullable = false, length = 60,columnDefinition = "nvarchar2")
+	@Column(name = "DENOMINACION", nullable = false, length = 60, columnDefinition = "nvarchar2")
 	public String getDenominacion() {
 		return this.denominacion;
 	}

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
+import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
@@ -20,25 +21,21 @@ import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 public interface CajaService extends AbstractService<Caja> {
 	
 	//caja
-	public Caja findByTrabajador(int idTrabajador) throws NonexistentEntityException;
-	
 	public HistorialCaja getHistorialActivo(int idCaja) throws NonexistentEntityException;
-	
-	public Set<GenericMonedaDetalle> getDetalleCaja(int idCaja) throws NonexistentEntityException;
-	
-	public Set<DetalleHistorialCaja> getDetalleCajaByMoneda(int idHistorial, int idMoneda) throws NonexistentEntityException;
+	public Set<Boveda> getBovedasByCaja(int idCaja);
+	public Set<GenericMonedaDetalle> getDetalleCaja(int idCaja);
+	public Set<DetalleHistorialCaja> getDetalleCajaByMoneda(int idHistorial, int idMoneda);
 
 	//voucher caja
-	public Set<CajaCierreMoneda> getVoucherCierreCaja(int caja, Date fechaApertura) throws NonexistentEntityException, IllegalResultException;
+	public Set<CajaCierreMoneda> getVoucherCierreCaja(int caja, Date fechaApertura) throws NonexistentEntityException;
 	
 	public ResumenOperacionesCaja getResumenOperacionesCaja(int caja, Date fechaApertura) throws NonexistentEntityException, IllegalResultException;
 	
 	//historial caja
-	public List<HistorialCaja> getHistorialCaja(int idCaja, Date desde, Date hasta) throws NonexistentEntityException;
+	public List<HistorialCaja> getHistorialCaja(int idCaja, Date desde, Date hasta);
 	 
 	//transacciones
-	public void abrirCaja(int idCaja) throws NonexistentEntityException, RollbackFailureException;
-
+	public void abrirCaja(int idCaja) throws NonexistentEntityException , RollbackFailureException;
 	public void cerrarCaja(int idCaja, Set<GenericMonedaDetalle> detalleCaja) throws NonexistentEntityException, RollbackFailureException;
 	
 }

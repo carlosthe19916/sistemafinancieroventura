@@ -13,14 +13,16 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Boveda;
+import org.ventura.sistemafinanciero.entity.BovedaCaja;
+import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.service.BovedaService;
 
-@DeclareRoles({ "ADMIN", "JEFECAJA" })
 @Named
 @Stateless
 @Remote(BovedaService.class)
@@ -31,8 +33,9 @@ public class BovedaServiceBean extends AbstractServiceBean<Boveda> implements Bo
 
 	@Inject
 	private DAO<Object, Boveda> bovedaDAO;
-
-	@RolesAllowed("JEFECAJA")
+	@Inject
+	private DAO<Object, Caja> cajaDAO;
+	
 	@Override
 	public Set<Boveda> getBovedasByIdOficina(int idOficina) {
 		Set<Boveda> result = null;

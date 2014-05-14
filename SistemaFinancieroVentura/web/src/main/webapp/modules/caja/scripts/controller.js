@@ -1,30 +1,11 @@
 angular.module('cajaApp.controller', []);
 
 angular.module('cajaApp.controller')
-    .controller('cajaNavbarController', ['$scope', "$cookieStore", "$dialogs", "CajaService","UsuarioService","AgenciaService",
-        function($scope, $cookieStore, $dialogs, CajaService, UsuarioService, AgenciaService) {
-
-            CajaService.getCurrentCaja().then(
-                function(caja){
-                    $cookieStore.put("caja", caja);
-                    $scope.caja = caja;
-                },
-                function error(error){
-                    $dialogs.error("Error no podrá realizar transacciones de ningun tipo","Error al cargar caja:\n"+JSON.stringify(error.data));;
-                }
-            );
-            UsuarioService.getCurrentUsuario().then(
-                function(usuario){
-                    $cookieStore.put("usuario", usuario);
-                    $scope.usuario = $cookieStore.get("usuario");
-                }
-            );
-            AgenciaService.getCurrentAgencia().then(
-                function(agencia){
-                    $cookieStore.put("agencia", agencia);
-                    $scope.agencia = agencia;
-                }
-            );
+    .controller('cajaNavbarController', ["$rootScope", '$scope',
+        function($rootScope, $scope, $cookieStore, $dialogs) {
+            $scope.caja = $rootScope.caja;
+            $scope.usuario = $rootScope.usuario;
+            $scope.agencia = $rootScope.agencia;
         }])
 
     .controller('AbrirCajaController', ['$scope', "$state", "$cookieStore", '$filter', "$dialogs", "CajaService",
@@ -432,33 +413,16 @@ angular.module('cajaApp.controller')
                 qz.append("Sobrante :"+$scope.resumenCaja.pendienteSobrante+" ");
                 qz.append("Faltante:"+$scope.resumenCaja.pendienteSobrante+"\r\n");
 
-
                 qz.append("\x1D\x56\x41"); // 4
                 qz.append("\x1B\x40"); // 5
-
                 qz.print();
+            }
+        }])
+    .controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
+        function($scope, $state, $filter, HistorialCajaService) {
 
-
+            $scope.nuevo = function(){
+                $state.transitionTo('app.caja.createTransaccionBovedaCaja');
             }
 
-
-          /* $("#content").html2canvas({
-                canvas: hidden_screenshot,
-                onrendered: function() {
-                    if (notReady()) { return; }
-                    // Optional, set up custom page size.  These only work for PostScript printing.
-                    // setPaperSize() must be called before setAutoSize(), setOrientation(), etc.
-                    qz.setPaperSize("8.5in", "11.0in");  // US Letter
-                    qz.setAutoSize(true);
-                    qz.appendImage($("canvas")[0].toDataURL('image/png'));
-                    // Automatically gets called when "qz.appendFile()" is finished.
-                    window['qzDoneAppending'] = function() {
-                        // Tell the applet to print.
-                        qz.printPS();
-
-                        // Remove reference to this function
-                        window['qzDoneAppending'] = null;
-                    };
-                }
-            });*/
         }]);

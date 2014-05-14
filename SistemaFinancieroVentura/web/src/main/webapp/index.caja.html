@@ -18,8 +18,6 @@
         <link rel="stylesheet" href="bower_components/ngProgress/ngProgress.css">
         <link rel="stylesheet" href="bower_components/angular-block-ui/angular-block-ui.css">
 
-
-
         <script type="text/javascript" src="bower_components/jquery/jquery.js"></script>
         <script type="text/javascript" src="bower_components/angular/angular.js"></script>
         <script type="text/javascript" src="bower_components/angular/angular-sanitize.js"></script>
@@ -43,10 +41,6 @@
         <script type="text/javascript" src="modules/caja/scripts/controller.js"></script>
         <script type="text/javascript" src="modules/caja/scripts/services.js"></script>
         <script type="text/javascript" src="modules/caja/scripts/caja.js"></script>
-
-        <script type="text/javascript" src="bower_components/qz-print/js/jquery-1.10.2.js"></script>
-        <script type="text/javascript" src="bower_components/qz-print/js/html2canvas.js"></script>
-        <script type="text/javascript" src="bower_components/qz-print/js/jquery.plugin.html2canvas.js"></script>
 
     </head>
     <body style="padding-top: 70px;">
@@ -108,6 +102,13 @@
                     </li>
                 </ul>
             </div><!--/.nav-collapse -->
+        </div>
+
+        <div class="alert alert-danger" ng-show="caja === undefined">
+            <p><strong>Warning:</strong>No se pudo cargar la caja para el usuario ingresado, no podrá realizar transacciones</p>
+        </div>
+        <div class="alert alert-danger" ng-show="agencia === undefined">
+            <p><strong>Warning:</strong>No se pudo cargar la caja para el usuario ingresado, no podrá realizar transacciones</p>
         </div>
 
     </div>

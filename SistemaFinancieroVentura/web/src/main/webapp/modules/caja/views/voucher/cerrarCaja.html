@@ -1,19 +1,6 @@
 <div ng-controller="VoucherCerrarCajaController">
 <div class="row">
 <div class="col-md-6" id="voucher">
-
-    <applet id="qz"
-            archive="bower_components/qz-print/qz-print.jar"
-            name="QZ Print Plugin" code="qz.PrintApplet.class"
-            width="55"
-            height="55">
-        <param name="jnlp_href" value="bower_components/qz-print/qz-print_jnlp.jnlp">
-        <param name="cache_option" value="plugin">
-        <param name="disable_logging" value="false">
-        <param name="initial_focus" value="false">
-    </applet>
-    <canvas id="hidden_screenshot" style="display:none;"></canvas>
-
     <div>
         <fieldset>
             <legend>Resumen de operaciones</legend>
@@ -289,5 +276,15 @@
 </div>
 </div>
 </div>
+<applet id="qz"
+        archive="bower_components/qz-print/qz-print.jar"
+        name="QZ Print Plugin" code="qz.PrintApplet.class"
+        width="55"
+        height="55">
+    <param name="jnlp_href" value="bower_components/qz-print/qz-print_jnlp.jnlp">
+    <param name="cache_option" value="plugin">
+    <param name="disable_logging" value="false">
+    <param name="initial_focus" value="false">
+</applet>
 
 

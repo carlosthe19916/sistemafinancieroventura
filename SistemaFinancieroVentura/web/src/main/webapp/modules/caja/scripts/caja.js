@@ -93,8 +93,8 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                             ]},
                             {
                                 'name':'Transacciones internas', submenus:[
-                                { 'name':'Transaccion con boveda' , 'state':'app.administracion.personajuridicaCreate'},
-                                { 'name':'Transaccion con caja' , 'state':'app.administracion.personajuridicaBuscar'}
+                                { 'name':'Transaccion con boveda' , 'state':'app.caja.buscarTransaccionBovedaCaja'},
+                                { 'name':'Transaccion con caja' , 'state':'app.caja.tranaccionCajaCaja'}
                             ]}
                         ];
                     }
@@ -147,24 +147,31 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-
-        .state('app.transacciones', {
-            url: "/transacciones",
+        .state('app.caja.buscarTransaccionBovedaCaja', {
+            url: "/buscarBovedaCaja",
             views: {
-                "viewMenu": {
-                    controller: function($scope){
-                        $scope.menus = [{
-                            'name':'Transaccion', submenus:[
-                                { 'name':'Trans.Bancaria' , 'state':'transacciones.transaccionbancaria'},
-                                { 'name':'Trans.Compra/Venta' , 'state':'transacciones.transaccioncompraventa'},
-                                { 'name':'Trans.Aportes' , 'state':'transacciones.transaccionaportes'}
-                            ]}
-                        ];
-                    }
-                },
-                "viewContent": { template: "<div ui-view ='viewSubContent'></div>" }
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/buscarTransaccionBovedaCaja.html"
+                }
             }
         })
+        .state('app.caja.createTransaccionBovedaCaja', {
+            url: "/crearBovedaCaja",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/crearTransaccionBovedaCaja.html"
+                }
+            }
+        })
+        .state('app.caja.buscarTransaccionCajaCaja', {
+            url: "/transCajaCaja",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/transaccionCajaCaja.html"
+                }
+            }
+        })
+
         .state('transacciones.transaccionbancaria', {
             url: "/transaccionbancaria",
             views: {
@@ -227,25 +234,31 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             }
         });
 });
-/*
-cajaApp.run(["$rootScope", "$location", "$cookieStore", "$dialogs", "CajaService", "UsuarioService", "AgenciaService",
-    function ($rootScope, $location, $cookieStore, $dialogs, CajaService, UsuarioService, AgenciaService) {
+
+cajaApp.run(["$rootScope", "CajaService", "UsuarioService", "AgenciaService",
+    function ($rootScope, CajaService, UsuarioService, AgenciaService) {
         CajaService.getCurrentCaja().then(
             function(caja){
-                $cookieStore.put("caja", caja);
+                $rootScope.caja = caja;
             },
             function error(error){
-                $dialogs.error("Error no podrá realizar transacciones de ningun tipo","Error al cargar caja:\n"+JSON.stringify(error.data));;
+                $rootScope.caja = undefined;
             }
         );
         UsuarioService.getCurrentUsuario().then(
             function(usuario){
-                $cookieStore.put("usuario", usuario);
+                $rootScope.usuario = usuario;
+            },
+            function error(error){
+                $rootScope.usuario = undefined;
             }
         );
         AgenciaService.getCurrentAgencia().then(
             function(agencia){
-                $cookieStore.put("agencia", agencia);
+                $rootScope.agencia = agencia;
+            },
+            function error(error){
+                $rootScope.agencia = undefined;
             }
         );
-    }] );*/
+    }] );

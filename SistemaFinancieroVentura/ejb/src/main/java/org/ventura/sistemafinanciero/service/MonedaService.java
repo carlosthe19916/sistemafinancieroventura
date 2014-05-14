@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.service;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Remote;
@@ -11,6 +12,6 @@ import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 @Remote
 public interface MonedaService extends AbstractService<Moneda> {
 	
-	public Set<MonedaDenominacion> getDenominaciones(int idMoneda) throws NonexistentEntityException;
+	public List<MonedaDenominacion> getDenominaciones(int idMoneda);
 	
 }

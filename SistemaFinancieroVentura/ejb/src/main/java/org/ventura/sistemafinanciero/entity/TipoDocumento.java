@@ -29,6 +29,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({ @NamedQuery(name = TipoDocumento.findByTipopersona, query = "SELECT t FROM TipoDocumento t WHERE t.tipoPersona = :tipopersona") })
 public class TipoDocumento implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public final static String findByTipopersona = "TipoDocumento.findByTipopersona";
 
 	private int idTipoDocumento;
