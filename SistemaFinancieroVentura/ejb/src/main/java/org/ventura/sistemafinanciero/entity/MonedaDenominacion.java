@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MONEDA_DENOMINACION", schema = "BDSISTEMAFINANCIERO")
-@NamedQueries({ @NamedQuery(name = MonedaDenominacion.allActive, query = "SELECT m from MonedaDenominacion m WHERE m.estado = 1") })
+@NamedQueries({ @NamedQuery(name = MonedaDenominacion.allActive, query = "SELECT m from MonedaDenominacion m WHERE m.moneda.idMoneda = :idmoneda AND m.estado = 1") })
 public class MonedaDenominacion implements java.io.Serializable {
 
 	/**

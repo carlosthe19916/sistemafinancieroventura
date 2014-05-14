@@ -1,6 +1,10 @@
 package org.ventura.sistemafinanciero.control;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -13,6 +17,7 @@ import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
+import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.service.MonedaService;
 
 @Named
@@ -25,9 +30,30 @@ public class MonedaServiceBean extends AbstractServiceBean<Moneda> implements Mo
 
 	@Inject 
 	private DAO<Object, Moneda> monedaDAO;
+	
 	@Inject
 	private DAO<Object, MonedaDenominacion> monedaDenominacionDAO;
 
+	@Override
+	public Moneda findByDenominacion(String denominacion) {
+		QueryParameter queryParameter = QueryParameter.with("denominacion", denominacion);
+		List<Moneda> list = monedaDAO.findByNamedQuery(Moneda.findByDenominacion,queryParameter.parameters());
+		for (Moneda moneda : list) {
+			return moneda;
+		}
+		return null;
+	}
+
+	@Override
+	public Moneda findBySimbolo(String simbolo) {
+		QueryParameter queryParameter = QueryParameter.with("simbolo", simbolo);
+		List<Moneda> list = monedaDAO.findByNamedQuery(Moneda.findBySimbolo,queryParameter.parameters());
+		for (Moneda moneda : list) {
+			return moneda;
+		}
+		return null;
+	}
+	
 	@Override
 	public List<MonedaDenominacion> getDenominaciones(int idMoneda) {				
 		QueryParameter queryParameter = QueryParameter.with("idmoneda", idMoneda);
@@ -36,8 +62,26 @@ public class MonedaServiceBean extends AbstractServiceBean<Moneda> implements Mo
 	}
 
 	@Override
+	public Set<GenericDetalle> getGenericDenominaciones(int idMoneda) {
+		Moneda moneda = monedaDAO.find(idMoneda);
+		if(moneda != null){
+			Set<GenericDetalle> result = new TreeSet<GenericDetalle>();
+			Set<MonedaDenominacion> denominaciones = moneda.getMonedaDenominacions();
+			for (MonedaDenominacion monedaDenominacion : denominaciones) {
+				BigDecimal valor = monedaDenominacion.getValor();				
+				GenericDetalle detalle = new GenericDetalle(valor, BigInteger.ZERO);
+				result.add(detalle);
+			}
+			return result;
+		} else {
+			return null;	
+		}		
+	}
+	
+	@Override
 	protected DAO<Object, Moneda> getDAO() {
 		return monedaDAO;
 	}
+
 
 }

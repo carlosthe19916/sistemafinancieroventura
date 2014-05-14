@@ -79,17 +79,17 @@
                 <ul class="nav navbar-nav navbar-right" ng-controller="cajaNavbarController">
                     <li style="height: 50px;">
                         <a style="color: #333;">
-                            <span ng-show="caja.abierto && caja.estadoMovimiento" class="label label-info">Abierto</span>
-                            <span ng-show="caja.abierto && !caja.estadoMovimiento" class="label label-warning">Congelado</span>
-                            <span ng-show="!caja.abierto" class="label label-danger">Cerrado</span>
-                            <strong>{{caja.denominacion}}</strong>
+                            <span ng-show="cajaSession.abierto && cajaSession.estadoMovimiento" ng-cloak class="label label-info">Abierto</span>
+                            <span ng-show="cajaSession.abierto && !cajaSession.estadoMovimiento" ng-cloak class="label label-warning">Congelado</span>
+                            <span ng-show="!cajaSession.abierto" ng-cloak class="label label-danger">Cerrado</span>
+                            <strong><span ng-bind="cajaSession.denominacion"></span></strong>
                         </a>
                     </li>
                     <li>
                         <a>||</a>
                     </li>
                     <li>
-                        <a>{{usuario}}</a>
+                        <a><span ng-bind="usuarioSession"></span></a>
                     </li>
                     <li>
                         <a class="gwt-Anchor  sf-notification-image" style="padding-right: 30px"></a>
@@ -103,20 +103,13 @@
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
+    </div>
 
-        <div class="alert alert-danger" ng-show="caja === undefined">
-            <p><strong>Warning:</strong>No se pudo cargar la caja para el usuario ingresado, no podrá realizar transacciones</p>
-        </div>
-        <div class="alert alert-danger" ng-show="agencia === undefined">
-            <p><strong>Warning:</strong>No se pudo cargar la caja para el usuario ingresado, no podrá realizar transacciones</p>
-        </div>
-
+    <div class="alert alert-danger" ng-show="cajaSession.denominacion == 'undefined'" ng-cloak style="border-radius: 0px; margin-top: -19px;">
+        <p><strong>Warning:</strong>No se pudo cargar la <strong>CAJA</strong> para el usuario ingresado, no podrá realizar transacciones</p>
     </div>
 
     <div class="container">
-
-
-
         <div class="row" ui-view>
 
         </div>

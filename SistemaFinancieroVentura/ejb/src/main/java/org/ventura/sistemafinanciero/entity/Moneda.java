@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -25,12 +27,20 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "MONEDA", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "moneda")
 @XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({
+		@NamedQuery(name = Moneda.allActive, query = "SELECT m FROM Moneda m WHERE m.estado = 1"),
+		@NamedQuery(name = Moneda.findByDenominacion, query = "SELECT m FROM Moneda m WHERE LOWER(m.denominacion) = LOWER(:denominacion)"),
+		@NamedQuery(name = Moneda.findBySimbolo, query = "SELECT m FROM Moneda m WHERE LOWER(m.simbolo) = LOWER(:simbolo)") })
 public class Moneda implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public final static String allActive = "Moneda.allActive";
+	public final static String findByDenominacion = "Moneda.findByDenominacion";
+	public final static String findBySimbolo = "Moneda.findBySimbolo";
 
 	@XmlTransient
 	@Id

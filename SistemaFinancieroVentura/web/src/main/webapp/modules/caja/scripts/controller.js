@@ -3,243 +3,242 @@ angular.module('cajaApp.controller', []);
 angular.module('cajaApp.controller')
     .controller('cajaNavbarController', ["$rootScope", '$scope',
         function($rootScope, $scope, $cookieStore, $dialogs) {
-            $scope.caja = $rootScope.caja;
-            $scope.usuario = $rootScope.usuario;
-            $scope.agencia = $rootScope.agencia;
+            //$scope.caja = $rootScope.caja;
+            //$scope.usuario = $rootScope.usuario;
+            //$scope.agencia = $rootScope.agencia;
         }])
 
-    .controller('AbrirCajaController', ['$scope', "$state", "$cookieStore", '$filter', "$dialogs", "CajaService",
-        function($scope, $state, $cookieStore, $filter, $dialogs, CajaService) {
+    .controller('AbrirCajaController', ["$rootScope", "$scope", "$state", '$filter', "CajaService",
+        function($rootScope, $scope, $state, $filter, CajaService) {
 
-            $scope.currentAgencia = $cookieStore.get("agencia");
-            $scope.currentCaja = $cookieStore.get("caja");
+            $scope.control = {"success":false, "inProcess": false};
 
-            $scope.detalleCaja = [];
-            $scope.alertMonedasDisableState = function(){
-                return $scope.detalleCaja.length == 0;
-            }
-
-            if($scope.currentCaja.abierto == false){
-                CajaService.getDetalle().then(function(detalleCaja){
-                    for(var i = 0; i<detalleCaja.length; i++){
-                        angular.forEach(detalleCaja[i].detalle, function(row){
-                            row.subtotal = function(){
-                                return this.valor * this.cantidad;
-                            }
-                        });
-                    }
-                    $scope.detalleCaja = angular.copy(detalleCaja);
-                });
-
-                $scope.myData = [];
-                $scope.gridOptions = [];
-                $scope.total = [];
-                var gridLayoutPlugin = [];
-                $scope.updateLayout = [];
-
-                $scope.getTemplate = function(index, simbolo){
-                    gridLayoutPlugin[index] = new ngGridLayoutPlugin();
-                    $scope.updateLayout[index] = function(){
-                        gridLayoutPlugin[index].updateGridLayout();
-                    };
-                    $scope.myData[index] = $scope.detalleCaja[index].detalle;
-                    $scope.gridOptions[index] = {
-                        data: 'myData['+index+']',
-                        plugins: [gridLayoutPlugin[index]],
-                        multiSelect: false,
-                        columnDefs: [
-                            //{ field: "valor", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>simbolo {{row.getProperty(col.field)}}</div></div>" },
-                            { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
-                            { field: "cantidad", displayName: "Cantidad" },
-                            { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
-                        ]
-                    };
-                    $scope.total[index] = function(){
-                        var total = 0;
-                        for(var i = 0; i < $scope.myData[index].length; i++){
-                            total = total + ($scope.myData[index][i].valor * $scope.myData[index][i].cantidad);
+            CajaService.getDetalle().then(function(detalleCaja){
+                for(var i = 0; i<detalleCaja.length; i++){
+                    angular.forEach(detalleCaja[i].detalle, function(row){
+                        row.subtotal = function(){
+                            return this.valor * this.cantidad;
                         }
-                        return $filter('currency')(total," ")
-                    }
-                    return $scope.gridOptions[index];
+                    });
                 }
+                $scope.detalleCaja = angular.copy(detalleCaja);
+            });
 
-                $scope.abrirCaja = function () {
-                    $scope.progressTransaction = true;
-                    CajaService.abrir().then(
-                        function(data){
-                            $scope.progressTransaction = false;
+            $scope.myData = [];
+            $scope.gridOptions = [];
+            $scope.total = [];
+            var gridLayoutPlugin = [];
+            $scope.updateLayout = [];
 
-                            //cookie
-                            $scope.currentCaja = $cookieStore.get("caja");
-                            $scope.currentCaja.abierto = true;
-                            $scope.currentCaja.estadoMovimiento = true;
-                            $cookieStore.put("caja", $scope.currentCaja);
-
-                            //redireccion
-                            $state.go("app.caja", null, { reload: true })
-                        },
-                        function error(error){
-                            $dialogs.error("Error al abrir caja",JSON.stringify(error.message));
-                            $scope.progressTransaction = false;
-                        }
-                    );
+            $scope.getTemplate = function(index, simbolo){
+                gridLayoutPlugin[index] = new ngGridLayoutPlugin();
+                $scope.updateLayout[index] = function(){
+                    gridLayoutPlugin[index].updateGridLayout();
                 };
-            }
-
-            $scope.buttonDisableState = function(){
-                if($scope.progressTransaction == true)
-                    return true;
-                if($scope.currentCaja === undefined) {
-                    return true;
-                }
-                else {
-                    if(!$scope.alertMonedasDisableState())
-                        return false;
-                    else
-                        return true;
-                }
-            }
-        }])
-    .controller('CerrarCajaController', ['$scope', "$state", "$cookieStore", '$filter', "$dialogs", "CajaService",
-        function($scope, $state, $cookieStore, $filter, $dialogs, CajaService) {
-
-            $scope.currentAgencia = $cookieStore.get("agencia");
-            $scope.currentCaja = $cookieStore.get("caja");
-
-            $scope.detalleCajaInicial = [];
-
-            if($scope.currentCaja.abierto == true){
-                //cargar los datos del web service
-                CajaService.getDetalle().then(function(detalleCaja){
-                    for(var i = 0; i<detalleCaja.length; i++){
-                        angular.forEach(detalleCaja[i].detalle, function(row){
-                            row.subtotal = function(){
-                                return this.valor * this.cantidad;
-                            }
-                        });
-                    }
-                    $scope.detalleCajaInicial = angular.copy(detalleCaja);
-                    $scope.detalleCajaFinal = angular.copy(detalleCaja);
-                });
-
-
-                //update table grid
-                $scope.updateLayout = function(index){
-                    $scope.updateLayoutInicial[index];
-                    $scope.updateLayoutFinal[index];
+                $scope.myData[index] = $scope.detalleCaja[index].detalle;
+                $scope.gridOptions[index] = {
+                    data: 'myData['+index+']',
+                    plugins: [gridLayoutPlugin[index]],
+                    multiSelect: false,
+                    columnDefs: [
+                        //{ field: "valor", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>simbolo {{row.getProperty(col.field)}}</div></div>" },
+                        { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
+                        { field: "cantidad", displayName: "Cantidad" },
+                        { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
+                    ]
                 };
-
-                //configurar las tablas
-                $scope.myDataInicial = [];
-                $scope.gridOptionsInicial = [];
-                $scope.totalInicial = [];
-                var gridLayoutPluginInicial = [];
-                $scope.updateLayoutInicial = [];
-                $scope.getTemplateInicial = function(index, simbolo){
-                    gridLayoutPluginInicial[index] = new ngGridLayoutPlugin();
-                    $scope.updateLayoutInicial[index] = function(){
-                        gridLayoutPluginInicial[index].updateGridLayout();
-                    };
-
-                    $scope.myDataInicial[index] = $scope.detalleCajaInicial[index].detalle;
-                    $scope.gridOptionsInicial[index] = {
-                        data: 'myDataInicial['+index+']',
-                        plugins: [gridLayoutPluginInicial[index]],
-                        multiSelect: false,
-                        columnDefs: [
-                            //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>" },
-                            { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
-                            { field: "cantidad", displayName: "Cantidad" },
-                            { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
-                        ]
-                    };
-                    $scope.totalInicial[index] = function(){
-                        var total = 0;
-                        for(var i = 0; i < $scope.myDataInicial[index].length; i++){
-                            total = total + ($scope.myDataInicial[index][i].valor * $scope.myDataInicial[index][i].cantidad);
-                        }
-                        return $filter('currency')(total," ")
+                $scope.total[index] = function(){
+                    var total = 0;
+                    for(var i = 0; i < $scope.myData[index].length; i++){
+                        total = total + ($scope.myData[index][i].valor * $scope.myData[index][i].cantidad);
                     }
-                    return $scope.gridOptionsInicial[index];
+                    return $filter('currency')(total," ")
                 }
-
-                $scope.myDataFinal = [];
-                $scope.gridOptionsFinal = [];
-                $scope.totalFinal = [];
-                var gridLayoutPluginFinal = [];
-                $scope.updateLayoutFinal = [];
-                $scope.getTemplateFinal = function(index, simbolo){
-                    gridLayoutPluginFinal[index] = new ngGridLayoutPlugin();
-                    $scope.updateLayoutFinal[index] = function(){
-                        gridLayoutPluginFinal[index].updateGridLayout();
-                    };
-                    $scope.myDataFinal[index] = $scope.detalleCajaFinal[index].detalle;
-                    $scope.gridOptionsFinal[index] = {
-                        data: 'myDataFinal['+index+']',
-                        plugins: [gridLayoutPluginFinal[index]],
-                        multiSelect: false,
-                        enableCellSelection: true,
-                        enableRowSelection: false,
-                        enableCellEditOnFocus: true,
-                        columnDefs: [
-                            //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>", enableCellEdit: false },
-                            { field: "valor | currency : '"+simbolo+" '", displayName: "Valor", enableCellEdit: false },
-                            { field: "cantidad", displayName: "Cantidad", enableCellEdit: true },
-                            { field: "subtotal() | currency : '' ", displayName: "Subtotal", enableCellEdit: false }
-                        ]
-                    };
-                    $scope.totalFinal[index] = function(){
-                        var total = 0;
-                        for(var i = 0; i < $scope.myDataFinal[index].length; i++){
-                            total = total + ($scope.myDataFinal[index][i].valor * $scope.myDataFinal[index][i].cantidad);
-                        }
-                        return $filter('currency')(total," ")
-                    }
-                    return $scope.gridOptionsFinal[index];
-                }
-
-                //cerrar caja
-                $scope.cerrarCaja = function () {
-                    $scope.progressTransaction = true;
-                    CajaService.cerrar($scope.detalleCajaFinal).then(
-                        function(data){
-                            $scope.progressTransaction = false;
-
-                            //cookie
-                            $scope.currentCaja = $cookieStore.get("caja");
-                            $scope.currentCaja.abierto = false;
-                            $scope.currentCaja.estadoMovimiento = false;
-                            $cookieStore.put("caja", $scope.currentCaja);
-
-                            //redireccion
-                            $state.go("app.caja.voucherCerrarCaja")
-                        },
-                        function (error){
-                            $dialogs.error("Error al cerrar caja",JSON.stringify(error).message);
-                            $scope.progressTransaction = false;
-                        }
-                    );
-                };
-
-                //ocultar ceros
-                $scope.hideZeroRows = function(){
-                    for(var i = 0; i < $scope.gridOptionsFinal.length; i++){
-                        $scope.gridOptionsFinal[i].$gridScope.filterText = Math.ceil(24 * Math.random());
-                    }
-
-                }
+                return $scope.gridOptions[index];
             }
 
-            $scope.buttonDisableState = function(){
-                if($scope.progressTransaction == true)
+            $scope.abrirCaja = function () {
+                $scope.control.inProcess = true;
+
+                CajaService.abrir().then(
+                    function(data){
+                        $scope.control.inProcess = false;
+                        $scope.control.success = true;
+
+                        $rootScope.cajaSession.abierto = true;
+                        $rootScope.cajaSession.estadoMovimiento = true;
+
+                        $state.go("app.caja", null, { reload: true })
+                    },
+                    function error(error){
+                        $scope.control.inProcess = false;
+                        $scope.control.success = false;
+                        $scope.alerts = [
+                            { type: 'danger', msg: 'Error:' + error.data + "." }
+                        ];
+                        $scope.closeAlert = function(index) {
+                            $scope.alerts.splice(index, 1);
+                        };
+                    }
+                );
+            };
+
+            $scope.cancelar = function(){
+                $state.go("app.caja", null, { reload: true });
+            }
+
+
+            $scope.alertMessageDisplay = function(){
+                if($rootScope.cajaSession.denominacion == "undefined")
                     return true;
-                if($scope.currentCaja === undefined) {
+                if($rootScope.cajaSession.abierto == true)
                     return true;
-                }
-                else {
+                else
                     return false;
+            }
+
+            $scope.buttonDisableState = function(){
+               return $scope.alertMessageDisplay() || $scope.control.inProcess;
+            }
+        }])
+    .controller('CerrarCajaController', ["$rootScope", "$scope", "$state", "$filter", "CajaService",
+        function($rootScope, $scope, $state, $filter, CajaService) {
+
+            $scope.control = {"success":false, "inProcess": false};
+
+            //cargar los datos del web service
+            CajaService.getDetalle().then(function(detalleCaja){
+                for(var i = 0; i<detalleCaja.length; i++){
+                    angular.forEach(detalleCaja[i].detalle, function(row){
+                        row.subtotal = function(){
+                            return this.valor * this.cantidad;
+                        }
+                    });
                 }
+                $scope.detalleCajaInicial = angular.copy(detalleCaja);
+                $scope.detalleCajaFinal = angular.copy(detalleCaja);
+            });
+
+
+            //update table grid
+            $scope.updateLayout = function(index){
+                $scope.updateLayoutInicial[index];
+                $scope.updateLayoutFinal[index];
+            };
+
+            //configurar las tablas
+            $scope.myDataInicial = [];
+            $scope.gridOptionsInicial = [];
+            $scope.totalInicial = [];
+            var gridLayoutPluginInicial = [];
+            $scope.updateLayoutInicial = [];
+            $scope.getTemplateInicial = function(index, simbolo){
+                gridLayoutPluginInicial[index] = new ngGridLayoutPlugin();
+                $scope.updateLayoutInicial[index] = function(){
+                    gridLayoutPluginInicial[index].updateGridLayout();
+                };
+
+                $scope.myDataInicial[index] = $scope.detalleCajaInicial[index].detalle;
+                $scope.gridOptionsInicial[index] = {
+                    data: 'myDataInicial['+index+']',
+                    plugins: [gridLayoutPluginInicial[index]],
+                    multiSelect: false,
+                    columnDefs: [
+                        //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>" },
+                        { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
+                        { field: "cantidad", displayName: "Cantidad" },
+                        { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
+                    ]
+                };
+                $scope.totalInicial[index] = function(){
+                    var total = 0;
+                    for(var i = 0; i < $scope.myDataInicial[index].length; i++){
+                        total = total + ($scope.myDataInicial[index][i].valor * $scope.myDataInicial[index][i].cantidad);
+                    }
+                    return $filter('currency')(total," ")
+                }
+                return $scope.gridOptionsInicial[index];
+            }
+
+            $scope.myDataFinal = [];
+            $scope.gridOptionsFinal = [];
+            $scope.totalFinal = [];
+            var gridLayoutPluginFinal = [];
+            $scope.updateLayoutFinal = [];
+            $scope.getTemplateFinal = function(index, simbolo){
+                gridLayoutPluginFinal[index] = new ngGridLayoutPlugin();
+                $scope.updateLayoutFinal[index] = function(){
+                    gridLayoutPluginFinal[index].updateGridLayout();
+                };
+                $scope.myDataFinal[index] = $scope.detalleCajaFinal[index].detalle;
+                $scope.gridOptionsFinal[index] = {
+                    data: 'myDataFinal['+index+']',
+                    plugins: [gridLayoutPluginFinal[index]],
+                    multiSelect: false,
+                    enableCellSelection: true,
+                    enableRowSelection: false,
+                    enableCellEditOnFocus: true,
+                    columnDefs: [
+                        //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>", enableCellEdit: false },
+                        { field: "valor | currency : '"+simbolo+" '", displayName: "Valor", enableCellEdit: false },
+                        { field: "cantidad", displayName: "Cantidad", enableCellEdit: true },
+                        { field: "subtotal() | currency : '' ", displayName: "Subtotal", enableCellEdit: false }
+                    ]
+                };
+                $scope.totalFinal[index] = function(){
+                    var total = 0;
+                    for(var i = 0; i < $scope.myDataFinal[index].length; i++){
+                        total = total + ($scope.myDataFinal[index][i].valor * $scope.myDataFinal[index][i].cantidad);
+                    }
+                    return $filter('currency')(total," ")
+                }
+                return $scope.gridOptionsFinal[index];
+            }
+
+            //cerrar caja
+            $scope.cerrarCaja = function () {
+                $scope.control.inProcess = true;
+
+                CajaService.cerrar($scope.detalleCajaFinal).then(
+                    function(data){
+                        $scope.control.inProcess = false;
+                        $scope.control.success = true;
+
+                        $rootScope.cajaSession.abierto = false;
+                        $rootScope.cajaSession.estadoMovimiento = false;
+                        //redireccion
+                        $state.go("app.caja.voucherCerrarCaja");
+                    },
+                    function error(error){
+                        $scope.control.inProcess = false;
+                        $scope.control.success = false;
+
+                        $scope.alerts = [
+                            { type: "danger", msg: "Error: " + error.data + "."}
+                        ];
+
+                        $scope.closeAlert = function(index) {
+                            $scope.alerts.splice(index, 1);
+                        };
+                    }
+                );
+            };
+
+            $scope.cancelar = function(){
+                $state.go("app.caja", null, { reload: true });
+            }
+
+            $scope.alertMessageDisplay = function(){
+                if($rootScope.cajaSession.denominacion == "undefined")
+                    return true;
+                if($rootScope.cajaSession.abierto == false)
+                    return true;
+                else
+                    return false;
+            }
+
+            $scope.buttonDisableState = function(){
+                return $scope.alertMessageDisplay() || $scope.control.inProcess;
             }
 
         }])
@@ -423,6 +422,33 @@ angular.module('cajaApp.controller')
 
             $scope.nuevo = function(){
                 $state.transitionTo('app.caja.createTransaccionBovedaCaja');
+            }
+
+        }])
+    .controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService", "MonedaService",
+        function($scope, $state, $filter, CajaService, MonedaService) {
+
+            CajaService.getBovedasOfCurrentCaja().then(
+                function(bovedas){
+                    $scope.bovedas = bovedas;
+                }
+            );
+
+            $scope.nuevo = function(){
+                $state.transitionTo('app.caja.createTransaccionBovedaCaja');
+            }
+
+            $scope.bovedaDestino;
+
+            $scope.cargarDetalle = function(){
+                MonedaService.getDenominaciones($scope.bovedaDestino).then(
+                    function(detalle){
+                        $scope.detalle = detalle;
+                    },
+                    function error(error){
+                        Console.log("no se pud cargar");
+                    }
+                );
             }
 
         }]);

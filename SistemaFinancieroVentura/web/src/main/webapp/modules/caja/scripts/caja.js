@@ -17,21 +17,6 @@ cajaApp.config(["RestangularProvider", "$cookiesProvider",
 
         RestangularProvider.setBaseUrl("http://localhost:8080/SistemaFinancieroVentura-web/services");
 
-        /*
-        RestangularProvider.addRequestInterceptor(
-            function(element, operation, what, url) {
-                var caja = $cookies.caja;
-                if(caja != null && caja !== undefined){
-                    return element;
-                } else {
-                    if (operation === "get" || operation === "getList") {
-                        return element;
-                    } else {
-                        alert("No se encontró caja en sesion, no puede realizar ninguna transaccion");
-                        return null;
-                    }
-                }
-            });*/
     }] );
 
 cajaApp.config(function($stateProvider, $urlRouterProvider) {
@@ -237,28 +222,24 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
 
 cajaApp.run(["$rootScope", "CajaService", "UsuarioService", "AgenciaService",
     function ($rootScope, CajaService, UsuarioService, AgenciaService) {
+
+        $rootScope.cajaSession = {"denominacion":"undefined", "abreviatura":"undefined", "abierto": false, "estadoMovimiento":false, "estado": false};
+        $rootScope.agenciaSession = {"denominacion":"undefined", "abreviatura":"undefined", "ubigeo": "undefined", "estado":false};
+        $rootScope.usuarioSession = undefined;
+
         CajaService.getCurrentCaja().then(
             function(caja){
-                $rootScope.caja = caja;
-            },
-            function error(error){
-                $rootScope.caja = undefined;
+                $rootScope.cajaSession = caja;
             }
         );
         UsuarioService.getCurrentUsuario().then(
             function(usuario){
-                $rootScope.usuario = usuario;
-            },
-            function error(error){
-                $rootScope.usuario = undefined;
+                $rootScope.usuarioSession = usuario;
             }
         );
         AgenciaService.getCurrentAgencia().then(
             function(agencia){
-                $rootScope.agencia = agencia;
-            },
-            function error(error){
-                $rootScope.agencia = undefined;
+                $rootScope.agenciaSession = agencia;
             }
         );
     }] );

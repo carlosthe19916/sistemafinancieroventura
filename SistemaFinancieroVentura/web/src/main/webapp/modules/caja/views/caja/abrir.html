@@ -1,31 +1,32 @@
 <div ng-controller="AbrirCajaController">
 
-    <div class="alert alert-info" ng-show="currentCaja.abierto">
-        <p><strong>Info:</strong>La caja ya esta abierta, no se puede abrir nuevamente</p>
+    <div class="alert alert-info" ng-show="alertMessageDisplay()">
+        <p><strong>Info:</strong>La caja ya esta abierta, o no se pudo cargar correctamente</p>
     </div>
-    <div class="alert alert-warning" ng-show="currentCaja.abierto && alertMonedasDisableState()">
-        <p><strong>Warning:</strong>La caja no tiene bovedas asignadas</p>
-    </div>
+
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        {{alert.msg}}
+    </alert>
 
     <fieldset>
         <legend>Abrir caja</legend>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && formCrearPersonanatural.submitted}">
+                <div class="form-group">
                     <label>Agencia</label>
-                    <p>{{currentAgencia.denominacion}}</p>
+                    <p><span ng-bind="agenciaSession.denominacion"/> </p>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.numerodocumento.$invalid && formCrearPersonanatural.submitted}">
+                <div class="form-group">
                     <label>Caja</label>
-                    <p>{{currentCaja.denominacion}} - {{currentCaja.abreviatura}}</p>
+                    <p><span ng-bind="cajaSession.denominacion"/><span>-</span><span ng-bind="cajaSession.abreviatura"/></p>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.numerodocumento.$invalid && formCrearPersonanatural.submitted}">
+                <div class="form-group">
                     <label>Estado</label>
-                    <p>{{currentCaja.abierto ? 'Abierto' : 'Cerrado'}}</p>
+                    <p><span ng-bind-template="{{cajaSession.abierto ? 'Abierto' : 'Cerrado'}}"/></p>
                 </div>
             </div>
         </div>
@@ -43,9 +44,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-sm-11">
                     <tabset>
-                        <tab ng-repeat="detalle in detalleCaja" select="updateLayout($index)" heading="Moneda:{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{total[$index]()}}">
+                        <tab ng-repeat="detalle in detalleCaja" heading="{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{total[$index]()}}" select="updateLayout[$index]()">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -69,7 +70,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
-            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+            <button type="button" class="btn btn-default" ng-click="cancelar()">Cancelar</button>
         </form>
     </fieldset>
 </div>

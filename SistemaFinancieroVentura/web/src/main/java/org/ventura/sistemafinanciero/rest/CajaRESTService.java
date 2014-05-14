@@ -68,7 +68,7 @@ public class CajaRESTService {
 	}
     
     @GET
-	@Path("/currentSession")
+	@Path("/currentSession/bovedas")
 	@Produces({ "application/xml", "application/json" })
 	public Response getBovedasAuthenticateSession() {	
     	Caja caja = null;
@@ -93,7 +93,7 @@ public class CajaRESTService {
 	}
     
     @GET
-	@Path("/currentSession")
+	@Path("/currentSession/detalle")
 	@Produces({ "application/xml", "application/json" })
 	public Response getDetalleByMonedaAuthenticateSession() {	
     	Caja caja = null;
@@ -120,15 +120,14 @@ public class CajaRESTService {
     @GET
     @Path("/detalle")
     @Produces({ "application/xml", "application/json" })
-    public Response getCajaHistorialDetalle() {
-    	Set<GenericMonedaDetalle> result = null;    	    	   
+    public Response getCajaHistorialDetalle() {   	    	   
     	try {
     		String username = context.getCallerPrincipal().getName();
         	Usuario usuario = usuarioService.findByUsername(username);
         	Trabajador trabajador = trabajadorService.findByUsuario(usuario.getIdUsuario());
         	Caja caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
         	
-        	result =  cajaService.getDetalleCaja(caja.getIdCaja());
+        	Set<GenericMonedaDetalle> result =  cajaService.getDetalleCaja(caja.getIdCaja());
         	return Response.status(Response.Status.OK).entity(result).build();        	
 		} catch (NullPointerException e) {
 			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
@@ -174,8 +173,7 @@ public class CajaRESTService {
     @POST
     @Path("/cerrar") 
     @Consumes({ "application/xml", "application/json" })
-    public Response cerrarCaja(List<GenericMonedaDetalle> detalleCaja) {
-    	Response.ResponseBuilder builder = null;    	
+    public Response cerrarCaja(List<GenericMonedaDetalle> detalleCaja) {    	 
     	Caja caja = null;    	
 		try {
 			String username = context.getCallerPrincipal().getName();
@@ -191,17 +189,16 @@ public class CajaRESTService {
 				caja = null;	
 			if(caja != null) {
 				cajaService.cerrarCaja(caja.getIdCaja(), new HashSet<GenericMonedaDetalle>(detalleCaja));
-				builder = Response.ok();
+				return Response.status(Response.Status.OK).entity("Caja abierta correctamente").build();
 			} else {
-				throw new NotFoundException("Caja no encontrada");
+				return Response.status(Response.Status.NOT_FOUND).entity("Caja no encontrada").build();
 			}			
-		} catch (NonexistentEntityException e) {
-			builder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());					
+		} catch (NonexistentEntityException e) {			
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();					
 		} catch (RollbackFailureException e) {
-			builder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());	
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	
 		} catch (EJBException e) {
-			builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e);	
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();	
 		} 	
-		return builder.build();
     }
 }

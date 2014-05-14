@@ -26,6 +26,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Caja implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private int idCaja;
 	private String denominacion;
 	private String abreviatura;
@@ -63,7 +68,7 @@ public class Caja implements java.io.Serializable {
 		this.historialCajas = historialCajas;
 	}
 
-	@XmlElement(name = "id")
+	@XmlTransient
 	@Id
 	@Column(name = "ID_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
 	public int getIdCaja() {

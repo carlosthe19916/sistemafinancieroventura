@@ -89,4 +89,13 @@ angular.module("commonApp.service", ["restangular"])
                     return _estadocivilService.getList();
                 }
             }
+        }])
+    .factory("MonedaService",["Restangular",
+        function(Restangular){
+            var _monedaService = Restangular.all('moneda');
+            return {
+                getDenominaciones: function(moneda) {
+                    return Restangular.all('moneda/denominaciones').getList({"moneda":moneda},{});
+                }
+            }
         }]);

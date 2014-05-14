@@ -112,7 +112,9 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 			Set<BovedaCaja> bovedaCajas= caja.getBovedaCajas();
 			for (BovedaCaja bovedaCaja : bovedaCajas) {
 				Boveda boveda = bovedaCaja.getBoveda();
+				Moneda moneda = boveda.getMoneda();
 				Hibernate.initialize(boveda);
+				Hibernate.initialize(moneda);
 				result.add(boveda);
 			}
 		}	

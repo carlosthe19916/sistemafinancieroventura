@@ -94,7 +94,7 @@ public class Agencia implements java.io.Serializable {
 		this.trabajadors = trabajadors;
 	}
 
-	@XmlElement(name = "id")
+	@XmlTransient
 	@Id
 	@Column(name = "ID_AGENCIA", unique = true, nullable = false, precision = 22, scale = 0)
 	public int getIdAgencia() {

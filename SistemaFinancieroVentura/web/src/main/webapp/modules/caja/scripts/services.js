@@ -24,6 +24,9 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 getCurrentCaja: function(){
                     return Restangular.one("caja/currentSession").get();
+                },
+                getBovedasOfCurrentCaja: function(){
+                    return Restangular.all("caja/currentSession/bovedas").getList();
                 }
             }
         }])
