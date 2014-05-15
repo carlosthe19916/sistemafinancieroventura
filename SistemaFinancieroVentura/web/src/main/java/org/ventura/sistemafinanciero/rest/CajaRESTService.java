@@ -17,15 +17,20 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.Trabajador;
+import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.Usuario;
+import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.service.BovedaService;
 import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
@@ -39,6 +44,7 @@ public class CajaRESTService {
     @Resource
     private SessionContext context;
     
+    @EJB BovedaService bovedaService;
     @EJB CajaService cajaService;
     @EJB UsuarioService usuarioService;
     @EJB TrabajadorService trabajadorService;
@@ -115,6 +121,89 @@ public class CajaRESTService {
 		} catch (NonexistentEntityException e) {
 			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
 		} 			
+	}
+    
+    @POST
+	@Path("/currentSession/transaccionbovedacaja")
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+	public Response createTransaccionBovedaCaja(Set<GenericDetalle> detalleTransaccion, @QueryParam("boveda") String bovedaDenominacion) {	    	
+		try {
+			if(bovedaDenominacion.isEmpty() || bovedaDenominacion == null){
+				return Response.status(Response.Status.BAD_REQUEST).entity("Boveda no encontrada").build();
+			}
+			Caja caja = null;
+			Boveda boveda = null;
+			Agencia agencia = null;
+			String username = context.getCallerPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+			if(trabajador != null)
+				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
+										
+			agencia = trabajadorService.getAgencia(trabajador.getIdTrabajador());
+			boveda = bovedaService.findByAgenciaAndBoveda(agencia.getIdAgencia(), bovedaDenominacion);
+			
+			cajaService.crearTransaccionBovedaCaja(boveda.getIdBoveda(), caja.getIdCaja(), detalleTransaccion);
+			return Response.status(Response.Status.OK).entity("Transaccion creada").build();
+		} catch (NonexistentEntityException e) {
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		} catch (RollbackFailureException e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		} 			
+	}
+    
+    @GET
+	@Path("/currentSession/transaccionbovedacaja/enviados")
+	@Produces({ "application/xml", "application/json" })
+	public Response getTransaccionesEnviadas() {	    	
+		try {			
+			Caja caja = null;
+			String username = context.getCallerPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+			if(trabajador != null)
+				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());																
+			
+			Set<TransaccionBovedaCaja> result = cajaService.getTransaccionesEnviadasBovedaCaja(caja.getIdCaja(), -1);
+			return Response.status(Response.Status.OK).entity(result).build();
+		} catch (NonexistentEntityException e) {
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		}		
+	}
+    
+    @GET
+	@Path("/currentSession/transaccionbovedacaja/recibidos")
+	@Produces({ "application/xml", "application/json" })
+	public Response getTransaccionesRecibidas() {	    	
+		try {			
+			Caja caja = null;
+			String username = context.getCallerPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+			if(trabajador != null)
+				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());																
+			
+			Set<TransaccionBovedaCaja> result = cajaService.getTransaccionesRecibidasBovedaCaja(caja.getIdCaja(), -1);
+			return Response.status(Response.Status.OK).entity(result).build();
+		} catch (NonexistentEntityException e) {
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		}		
 	}
     
     @GET

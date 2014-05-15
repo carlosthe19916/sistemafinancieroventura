@@ -7,12 +7,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,7 +26,10 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "HISTORIAL_BOVEDA", schema = "BDSISTEMAFINANCIERO")
+@NamedQueries({ @NamedQuery(name = HistorialBoveda.findByHistorialActivo, query = "SELECT h FROM HistorialBoveda h WHERE h.boveda.idBoveda = :idboveda AND h.estado = 1") })
 public class HistorialBoveda implements java.io.Serializable {
+
+	public final static String findByHistorialActivo = "HistorialBoveda.findByHistorialActivo";
 
 	private BigDecimal idHistorialBoveda;
 	private Boveda boveda;
@@ -50,9 +56,8 @@ public class HistorialBoveda implements java.io.Serializable {
 
 	public HistorialBoveda(BigDecimal idHistorialBoveda, Boveda boveda,
 			Date fechaApertura, Date fechaCierre, Date horaApertura,
-			Date horaCierre, BigDecimal estado,
-			Set transaccionBovedaCajas, Set detalleHistorialBovedas,
-			Set transaccionBovedaOtros) {
+			Date horaCierre, BigDecimal estado, Set transaccionBovedaCajas,
+			Set detalleHistorialBovedas, Set transaccionBovedaOtros) {
 		this.idHistorialBoveda = idHistorialBoveda;
 		this.boveda = boveda;
 		this.fechaApertura = fechaApertura;

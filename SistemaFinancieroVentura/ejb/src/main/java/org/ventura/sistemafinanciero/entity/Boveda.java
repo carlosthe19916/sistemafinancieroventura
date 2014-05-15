@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -25,14 +27,17 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "BOVEDA", schema = "BDSISTEMAFINANCIERO")
-@XmlRootElement(name = "caja")
+@XmlRootElement(name = "boveda")
 @XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({ @NamedQuery(name = Boveda.findByAgenciaAndBoveda, query = "SELECT b FROM Boveda b INNER JOIN b.agencia a WHERE a.idAgencia = :idagencia AND LOWER(b.denominacion) = LOWER(:bovedadenominacion)") })
 public class Boveda implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public final static String findByAgenciaAndBoveda = "Boveda.findByAgenciaAndBoveda";
 
 	private int idBoveda;
 	private Moneda moneda;

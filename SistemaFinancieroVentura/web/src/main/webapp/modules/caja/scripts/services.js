@@ -27,6 +27,16 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 getBovedasOfCurrentCaja: function(){
                     return Restangular.all("caja/currentSession/bovedas").getList();
+                },
+                crearTransaccionBovedaCaja: function(boveda, detalle){
+                    var copy = Restangular.copy(detalle);
+                    return Restangular.all("caja/currentSession/transaccionbovedacaja").post(copy ,{"boveda":boveda});
+                },
+                getTransaccionBovedaCajaEnviadas: function(){
+                    return Restangular.all("caja/currentSession/transaccionbovedacaja/enviados").getList();
+                },
+                getTransaccionBovedaCajaRecibidas: function(){
+                    return Restangular.all("caja/currentSession/transaccionbovedacaja/recibidos").getList();
                 }
             }
         }])

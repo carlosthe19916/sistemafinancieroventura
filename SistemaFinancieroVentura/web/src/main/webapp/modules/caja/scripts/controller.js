@@ -417,16 +417,61 @@ angular.module('cajaApp.controller')
                 qz.print();
             }
         }])
-    .controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
-        function($scope, $state, $filter, HistorialCajaService) {
+    .controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService",
+        function($scope, $state, $filter, CajaService) {
 
             $scope.nuevo = function(){
                 $state.transitionTo('app.caja.createTransaccionBovedaCaja');
             }
 
+            $scope.myData = [{name: "Moroni", age: 50},
+                {name: "Tiancum", age: 43},
+                {name: "Jacob", age: 27},
+                {name: "Nephi", age: 29},
+                {name: "Enos", age: 34}];
+
+            $scope.gridOptionsRecibidos = { data: 'myData' };
+            $scope.gridOptionsEnviados = { data: 'myData' };
+
+
+            $scope.transaccionesEnviadas = [];
+            $scope.gridOptionsRecibidos = {
+                data: 'transaccionesEnviadas',
+                multiSelect: false,
+                columnDefs: [
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha apertura'},
+                    {field:"hora | date : 'hh:mm:ss'", displayName:'Hora apertura'},
+                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Fecha cierre'},
+                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Hora cierre'},
+                    {field:"origen", displayName:'Hora cierre'},
+                    {field:"monto", displayName:'Hora cierre'},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
+            };
+
+
+            CajaService.getTransaccionBovedaCajaEnviadas().then(
+                function(enviados){
+                    $scope.transaccionesEnviadas = enviados;
+                }
+            );
+            CajaService.getTransaccionBovedaCajaRecibidas().then(
+                function(recibidos){
+                    $scope.transaccionesRecibidas = recibidos;
+                }
+            );
+
         }])
-    .controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService", "MonedaService",
-        function($scope, $state, $filter, CajaService, MonedaService) {
+    .controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService", "MonedaService", "CajaService",
+        function($scope, $state, $filter, CajaService, MonedaService,CajaService) {
+
+            $scope.control = {"success":false, "inProcess": false, "submitted" : false};
+
+            //objetos de transaccion
+            $scope.boveda;
+            $scope.detalles = [];
+            //bovedas de caja
+            $scope.bovedas = [];
+
 
             CajaService.getBovedasOfCurrentCaja().then(
                 function(bovedas){
@@ -434,21 +479,55 @@ angular.module('cajaApp.controller')
                 }
             );
 
-            $scope.nuevo = function(){
-                $state.transitionTo('app.caja.createTransaccionBovedaCaja');
-            }
-
-            $scope.bovedaDestino;
-
             $scope.cargarDetalle = function(){
-                MonedaService.getDenominaciones($scope.bovedaDestino).then(
+                MonedaService.getDenominaciones($scope.boveda.moneda.denominacion).then(
                     function(detalle){
-                        $scope.detalle = detalle;
+                        $scope.detalles = detalle;
                     },
                     function error(error){
-                        Console.log("no se pud cargar");
+                        //mostrar error al usuario
+                        $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                     }
                 );
             }
+
+            $scope.total = function(){
+                var total = 0;
+                for(var i = 0; i<$scope.detalles.length; i++){
+                    total = total + ($scope.detalles[i].valor * $scope.detalles[i].cantidad);
+                }
+                return total;
+            }
+
+            $scope.crearTransaccion = function(){
+                if ($scope.formCrearTransaccionBovedaCaja.$valid && ($scope.total() != 0 || $scope.total() !== undefined)) {
+                    $scope.control.inProcess = true;
+                    CajaService.crearTransaccionBovedaCaja($scope.boveda.denominacion,$scope.detalles).then(
+                        function(data){
+                            $scope.control.inProcess = false;
+                            $scope.control.success = true;
+                            //redireccion al voucher
+                            //$state.transitionTo('app.caja.voucherCerrarCaja', { fechaApertura: cajaHistorial.horaApertura});
+                        },
+                        function error(error){
+                            $scope.control.inProcess = false;
+                            $scope.control.success = false;
+
+                            //mostrar error al usuario
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                } else {
+                    $scope.control.submitted = true;
+                }
+            }
+
+
+
+
+
+
 
         }]);

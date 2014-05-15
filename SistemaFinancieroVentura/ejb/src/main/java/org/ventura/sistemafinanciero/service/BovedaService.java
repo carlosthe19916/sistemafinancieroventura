@@ -11,5 +11,7 @@ import org.ventura.sistemafinanciero.entity.Boveda;
 public interface BovedaService extends AbstractService<Boveda> {
 
 	public Set<Boveda> getBovedasByIdOficina(int idOficina);
+
+	public Boveda findByAgenciaAndBoveda(int idAgencia, String bovedaDenominacion);
 		
 }

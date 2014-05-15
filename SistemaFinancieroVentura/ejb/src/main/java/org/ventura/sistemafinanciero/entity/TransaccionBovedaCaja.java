@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,6 +22,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.ventura.sistemafinanciero.entity.type.TransaccionBovedaCajaOrigen;
 import org.ventura.sistemafinanciero.entity.type.Variable;
@@ -28,9 +36,16 @@ import org.ventura.sistemafinanciero.entity.type.Variable;
  */
 @Entity
 @Table(name = "TRANSACCION_BOVEDA_CAJA", schema = "BDSISTEMAFINANCIERO")
+
+
 public class TransaccionBovedaCaja implements java.io.Serializable {
 
-	private BigDecimal idTransaccionBovedaCaja;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private BigInteger idTransaccionBovedaCaja;
 	private HistorialBoveda historialBoveda;
 	private HistorialCaja historialCaja;
 	private Date fecha;
@@ -46,7 +61,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 	public TransaccionBovedaCaja() {
 	}
 
-	public TransaccionBovedaCaja(BigDecimal idTransaccionBovedaCaja,
+	public TransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja,
 			HistorialBoveda historialBoveda, HistorialCaja historialCaja,
 			Date fecha, Date hora, BigDecimal saldoDisponibleOrigen,
 			boolean estadoSolicitud, boolean estadoConfirmacion,
@@ -62,7 +77,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.saldoDisponibleDestino = saldoDisponibleDestino;
 	}
 
-	public TransaccionBovedaCaja(BigDecimal idTransaccionBovedaCaja,
+	public TransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja,
 			HistorialBoveda historialBoveda, HistorialCaja historialCaja,
 			Date fecha, Date hora, BigDecimal saldoDisponibleOrigen,
 			String observacion, boolean estadoSolicitud,
@@ -82,16 +97,19 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.transaccionBovedaCajaDetalls = transaccionBovedaCajaDetalls;
 	}
 
+	@XmlTransient
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_TRANSACCION_BOVEDA_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdTransaccionBovedaCaja() {
+	public BigInteger getIdTransaccionBovedaCaja() {
 		return this.idTransaccionBovedaCaja;
 	}
 
-	public void setIdTransaccionBovedaCaja(BigDecimal idTransaccionBovedaCaja) {
+	public void setIdTransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja) {
 		this.idTransaccionBovedaCaja = idTransaccionBovedaCaja;
 	}
 
+	@XmlTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_HISTORIAL_BOVEDA", nullable = false)
 	public HistorialBoveda getHistorialBoveda() {
@@ -102,6 +120,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.historialBoveda = historialBoveda;
 	}
 
+	@XmlTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_HISTORIAL_CAJA", nullable = false)
 	public HistorialCaja getHistorialCaja() {
@@ -112,6 +131,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.historialCaja = historialCaja;
 	}
 
+	@XmlElement
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA", nullable = false, length = 7)
 	public Date getFecha() {
@@ -122,6 +142,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
+	@XmlElement
 	@Column(name = "HORA", nullable = false)
 	public Date getHora() {
 		return this.hora;
@@ -131,6 +152,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.hora = hora;
 	}
 
+	@XmlElement
 	@Column(name = "SALDO_DISPONIBLE_ORIGEN", nullable = false, precision = 18)
 	public BigDecimal getSaldoDisponibleOrigen() {
 		return this.saldoDisponibleOrigen;
@@ -140,6 +162,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.saldoDisponibleOrigen = saldoDisponibleOrigen;
 	}
 
+	@XmlElement
 	@Column(name = "OBSERVACION", length = 140, columnDefinition = "nvarchar2")
 	public String getObservacion() {
 		return this.observacion;
@@ -149,6 +172,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.observacion = observacion;
 	}
 
+	@XmlElement
 	@Column(name = "ESTADO_SOLICITUD", nullable = false, precision = 22, scale = 0)
 	public boolean getEstadoSolicitud() {
 		return (this.estadoSolicitud == 1 ? true : false);
@@ -158,6 +182,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.estadoSolicitud = (estadoSolicitud ? 1 : 0);
 	}
 
+	@XmlElement
 	@Column(name = "ESTADO_CONFIRMACION", nullable = false, precision = 22, scale = 0)
 	public boolean getEstadoConfirmacion() {
 		return (this.estadoConfirmacion == 1 ? true : false);
@@ -167,6 +192,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.estadoConfirmacion = (estadoConfirmacion ? 1 : 0);
 	}
 
+	@XmlElement
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "ORIGEN", length = 12, columnDefinition = "nvarchar2")
 	public TransaccionBovedaCajaOrigen getOrigen() {
@@ -177,6 +203,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.origen = origen;
 	}
 
+	@XmlElement
 	@Column(name = "SALDO_DISPONIBLE_DESTINO", nullable = false, precision = 18)
 	public BigDecimal getSaldoDisponibleDestino() {
 		return this.saldoDisponibleDestino;
@@ -186,6 +213,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.saldoDisponibleDestino = saldoDisponibleDestino;
 	}
 
+	@XmlElement
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "transaccionBovedaCaja")
 	public Set<TransaccionBovedaCajaDetall> getTransaccionBovedaCajaDetalls() {
 		return this.transaccionBovedaCajaDetalls;

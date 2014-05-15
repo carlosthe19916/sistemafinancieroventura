@@ -1,16 +1,19 @@
 <div ng-controller="CrearTransaccionBovedaCajaController">
     <fieldset>
-        <legend>Datos principales</legend>
-        <form name="formCrearTransaccionBovedaCaja" ng-submit="create()" novalidate>
+        <legend>Transaccion boveda - caja</legend>
+
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+
+        <form name="formCrearTransaccionBovedaCaja" ng-submit="crearTransaccion()" novalidate>
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionBovedaCaja.boveda.$invalid && formCrearPersonanatural.submitted}">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted}">
                         <label>Boveda(*)</label>
-                        <select name="boveda" ng-options="boveda.moneda.denominacion as boveda.denominacion for boveda in bovedas" ng-model="bovedaDestino" class="form-control" required autofocus>
+                        <select name="boveda" ng-options="boveda as boveda.denominacion for boveda in bovedas" ng-model="boveda" class="form-control" required autofocus>
                         </select>
-                        <div ng-show="formCrearTransaccionBovedaCaja.boveda.$invalid && formCrearTransaccionBovedaCaja.submitted">
+                        <div ng-show="formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearTransaccionBovedaCaja.boveda.$error.required">
-                                Ingrese sexo.
+                                Ingrese Boveda.
                             </p>
                         </div>
                     </div>
@@ -26,12 +29,56 @@
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="exampleInputPassword1">Detalle</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label>Detalle(*)</label>
+                        <table class="table table-striped table-bordered table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Denominacion</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="detalle in detalles">
+                                <td style="width: 20%;">
+                                    <span ng-bind="detalle.valor | currency: boveda.moneda.simbolo"/>
+                                </td>
+                                <td style="width: 35%;">
+                                    <ng-form name="cantidadForm">
+                                        <div class="form-group" ng-class="{ 'has-error' : cantidadForm.cantidad.$invalid && control.submitted}" style="margin-bottom: 0px;">
+                                            <input type="number" name="cantidad" ng-model="detalle.cantidad" class="form-control" required style="height: 27px;padding: 0px 12px;"/>
+                                            <div ng-show="cantidadForm.cantidad.$invalid && control.submitted">
+                                                <p class="help-block" ng-show="cantidadForm.cantidad.$error.required">
+                                                    Ingrese cantidad.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </ng-form>
+                                </td>
+                                <td style="width: 45%;">
+                                    <span>{{detalle.valor*detalle.cantidad | currency: boveda.moneda.simbolo}}</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr ng-class="{'danger': total() == 0 || total() === undefined}">
+                                    <td colspan="2">
+                                        Total: <span ng-bind="total() | currency : boveda.moneda.simbolo"></span>
+                                    </td>
+                                    <td ng-show="total() == 0 || total() === undefined">
+                                        Invalido
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-default">Cancelar</button>
         </form>
     </fieldset>
 

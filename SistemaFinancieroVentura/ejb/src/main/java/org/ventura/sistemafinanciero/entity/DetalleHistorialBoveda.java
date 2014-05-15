@@ -3,6 +3,8 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,14 +23,14 @@ public class DetalleHistorialBoveda implements java.io.Serializable {
 	private BigDecimal idDetalleHistorialBoveda;
 	private MonedaDenominacion monedaDenominacion;
 	private HistorialBoveda historialBoveda;
-	private BigDecimal cantidad;
+	private BigInteger cantidad;
 
 	public DetalleHistorialBoveda() {
 	}
 
 	public DetalleHistorialBoveda(BigDecimal idDetalleHistorialBoveda,
 			MonedaDenominacion monedaDenominacion,
-			HistorialBoveda historialBoveda, BigDecimal cantidad) {
+			HistorialBoveda historialBoveda, BigInteger cantidad) {
 		this.idDetalleHistorialBoveda = idDetalleHistorialBoveda;
 		this.monedaDenominacion = monedaDenominacion;
 		this.historialBoveda = historialBoveda;
@@ -66,11 +68,11 @@ public class DetalleHistorialBoveda implements java.io.Serializable {
 	}
 
 	@Column(name = "CANTIDAD", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getCantidad() {
+	public BigInteger getCantidad() {
 		return this.cantidad;
 	}
 
-	public void setCantidad(BigDecimal cantidad) {
+	public void setCantidad(BigInteger cantidad) {
 		this.cantidad = cantidad;
 	}
 

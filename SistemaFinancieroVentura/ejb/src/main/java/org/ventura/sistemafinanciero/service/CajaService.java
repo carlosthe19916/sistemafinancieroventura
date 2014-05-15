@@ -10,7 +10,9 @@ import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
+import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
+import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
@@ -33,9 +35,13 @@ public interface CajaService extends AbstractService<Caja> {
 	
 	//historial caja
 	public List<HistorialCaja> getHistorialCaja(int idCaja, Date desde, Date hasta);
+	
+	//transacciones
+	public Set<TransaccionBovedaCaja> getTransaccionesEnviadasBovedaCaja(int idCaja, int idHistorialCaja);
+	public Set<TransaccionBovedaCaja> getTransaccionesRecibidasBovedaCaja(int idCaja, int idHistorialCaja);
 	 
 	//transacciones
 	public void abrirCaja(int idCaja) throws NonexistentEntityException , RollbackFailureException;
 	public void cerrarCaja(int idCaja, Set<GenericMonedaDetalle> detalleCaja) throws NonexistentEntityException, RollbackFailureException;
-	
+	public void crearTransaccionBovedaCaja(int idBoveda, int idCaja, Set<GenericDetalle> detalleTransaccion)throws RollbackFailureException;
 }

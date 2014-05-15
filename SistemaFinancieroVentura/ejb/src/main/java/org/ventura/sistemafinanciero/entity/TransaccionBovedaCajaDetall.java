@@ -3,9 +3,13 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,20 +25,21 @@ public class TransaccionBovedaCajaDetall implements java.io.Serializable {
 	private BigDecimal idTransaccionBovedaCajaDet;
 	private MonedaDenominacion monedaDenominacion;
 	private TransaccionBovedaCaja transaccionBovedaCaja;
-	private BigDecimal cantidad;
+	private BigInteger cantidad;
 
 	public TransaccionBovedaCajaDetall() {
 	}
 
 	public TransaccionBovedaCajaDetall(BigDecimal idTransaccionBovedaCajaDet,
 			MonedaDenominacion monedaDenominacion,
-			TransaccionBovedaCaja transaccionBovedaCaja, BigDecimal cantidad) {
+			TransaccionBovedaCaja transaccionBovedaCaja, BigInteger cantidad) {
 		this.idTransaccionBovedaCajaDet = idTransaccionBovedaCajaDet;
 		this.monedaDenominacion = monedaDenominacion;
 		this.transaccionBovedaCaja = transaccionBovedaCaja;
 		this.cantidad = cantidad;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_TRANSACCION_BOVEDA_CAJA_DET", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getIdTransaccionBovedaCajaDet() {
@@ -68,11 +73,11 @@ public class TransaccionBovedaCajaDetall implements java.io.Serializable {
 	}
 
 	@Column(name = "CANTIDAD", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getCantidad() {
+	public BigInteger getCantidad() {
 		return this.cantidad;
 	}
 
-	public void setCantidad(BigDecimal cantidad) {
+	public void setCantidad(BigInteger cantidad) {
 		this.cantidad = cantidad;
 	}
 
