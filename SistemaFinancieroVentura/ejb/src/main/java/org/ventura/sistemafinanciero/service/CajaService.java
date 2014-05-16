@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
+import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
@@ -39,9 +41,12 @@ public interface CajaService extends AbstractService<Caja> {
 	//transacciones
 	public Set<TransaccionBovedaCaja> getTransaccionesEnviadasBovedaCaja(int idCaja, int idHistorialCaja);
 	public Set<TransaccionBovedaCaja> getTransaccionesRecibidasBovedaCaja(int idCaja, int idHistorialCaja);
-	 
+	public Set<PendienteCaja> getPendientes(int idCaja, int idHistorialCaja);
+	
 	//transacciones
 	public void abrirCaja(int idCaja) throws NonexistentEntityException , RollbackFailureException;
 	public void cerrarCaja(int idCaja, Set<GenericMonedaDetalle> detalleCaja) throws NonexistentEntityException, RollbackFailureException;
 	public void crearTransaccionBovedaCaja(int idBoveda, int idCaja, Set<GenericDetalle> detalleTransaccion)throws RollbackFailureException;
+	public void crearPendiente(int idCaja, int idBoveda, BigDecimal monto) throws RollbackFailureException;
+	//
 }

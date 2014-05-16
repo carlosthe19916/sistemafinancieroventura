@@ -35,10 +35,10 @@ import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
 
-@Path("/caja")
-@Stateless
+//@Path("/caja")
+//@Stateless
 public class CajaRESTService {
-    
+    /*
     private Logger log;
     
     @Resource
@@ -289,5 +289,5 @@ public class CajaRESTService {
 		} catch (EJBException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();	
 		} 	
-    }
+    }*/
 }

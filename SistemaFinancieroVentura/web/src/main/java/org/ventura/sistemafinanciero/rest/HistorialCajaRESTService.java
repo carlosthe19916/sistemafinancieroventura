@@ -16,9 +16,6 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +60,7 @@ public class HistorialCajaRESTService {
     @Path("/currentSession")  
     @Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-    public Response getHistorialCajaCurrentSession(@QueryParam("desde") String desde, @QueryParam("hasta") String hasta){
+    public Response getHistorialCajaCurrentSession(@QueryParam("desde") Long desde, @QueryParam("hasta") Long hasta){
     	Caja caja = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
@@ -79,12 +76,11 @@ public class HistorialCajaRESTService {
 			else
 				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			//Date dateDesde = (desde != null ? formatter.parse(desde) : null);
-			//Date dateHasta = (hasta != null ? formatter.parse(hasta) : null);
+			Date dateDesde = (desde != null ? new Date(desde) : null);
+			Date dateHasta = (desde != null ? new Date(hasta) : null);
 			
-			//List<HistorialCaja> list = cajaService.getHistorialCaja(caja.getIdCaja(), dateDesde, dateHasta);
-			return Response.status(Response.Status.OK).entity(null).build();
+			List<HistorialCaja> list = cajaService.getHistorialCaja(caja.getIdCaja(), dateDesde, dateHasta);
+			return Response.status(Response.Status.OK).entity(list).build();
 		} catch (NonexistentEntityException e) {
 			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
 		}	

@@ -3,7 +3,7 @@ angular.module('cajaApp.service', []);
 angular.module("cajaApp.service", ["restangular"])
     .factory("CajaService",["Restangular",
         function(Restangular){
-            var _cajaService = Restangular.all("caja");
+            var _cajaService = Restangular.all("caja/session");
             return {
                 create: function(caja){
                     return _cajaService.post(caja);
@@ -12,31 +12,34 @@ angular.module("cajaApp.service", ["restangular"])
                     var copy = Restangular.copy(caja);
                     return copy.put();
                 },
+                getCurrentCaja: function(){
+                    return Restangular.one("caja/session").get();
+                },
+                getDetalle: function(){
+                    return Restangular.all("caja/session/detalle").getList();
+                },
                 abrir: function(){
-                    return Restangular.one("caja/abrir").put();
+                    return Restangular.one("caja/session/abrir").put();
                 },
                 cerrar: function(detalle){
                     var copy = Restangular.copy(detalle);
-                    return Restangular.all("caja/cerrar").post(copy);
-                },
-                getDetalle: function(){
-                    return Restangular.all("caja/detalle").getList();
-                },
-                getCurrentCaja: function(){
-                    return Restangular.one("caja/currentSession").get();
+                    return Restangular.all("caja/session/cerrar").post(copy);
                 },
                 getBovedasOfCurrentCaja: function(){
-                    return Restangular.all("caja/currentSession/bovedas").getList();
+                    return Restangular.all("caja/session/bovedas").getList();
                 },
                 crearTransaccionBovedaCaja: function(boveda, detalle){
                     var copy = Restangular.copy(detalle);
-                    return Restangular.all("caja/currentSession/transaccionbovedacaja").post(copy ,{"boveda":boveda});
+                    return Restangular.all("caja/session/transaccionbovedacaja").post(copy ,{"boveda":boveda});
                 },
                 getTransaccionBovedaCajaEnviadas: function(){
-                    return Restangular.all("caja/currentSession/transaccionbovedacaja/enviados").getList();
+                    return Restangular.all("caja/session/transaccionbovedacaja/enviados").getList();
                 },
                 getTransaccionBovedaCajaRecibidas: function(){
-                    return Restangular.all("caja/currentSession/transaccionbovedacaja/recibidos").getList();
+                    return Restangular.all("caja/session/transaccionbovedacaja/recibidos").getList();
+                },
+                getPendientes: function(){
+                    return Restangular.all("caja/session/pendiente").getList();
                 }
             }
         }])

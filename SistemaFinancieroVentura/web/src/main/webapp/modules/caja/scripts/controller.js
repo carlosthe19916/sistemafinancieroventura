@@ -41,9 +41,9 @@ angular.module('cajaApp.controller')
                     plugins: [gridLayoutPlugin[index]],
                     multiSelect: false,
                     columnDefs: [
-                        //{ field: "valor", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>simbolo {{row.getProperty(col.field)}}</div></div>" },
+                        //{ field: valor, displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>simbolo {{row.getProperty(col.field)}}</div></div>" },
                         { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
-                        { field: "cantidad", displayName: "Cantidad" },
+                        { field: cantidad, displayName: "Cantidad" },
                         { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
                     ]
                 };
@@ -146,7 +146,7 @@ angular.module('cajaApp.controller')
                     columnDefs: [
                         //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>" },
                         { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
-                        { field: "cantidad", displayName: "Cantidad" },
+                        { field: cantidad, displayName: "Cantidad" },
                         { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
                     ]
                 };
@@ -181,7 +181,7 @@ angular.module('cajaApp.controller')
                     columnDefs: [
                         //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>", enableCellEdit: false },
                         { field: "valor | currency : '"+simbolo+" '", displayName: "Valor", enableCellEdit: false },
-                        { field: "cantidad", displayName: "Cantidad", enableCellEdit: true },
+                        { field: cantidad, displayName: "Cantidad", enableCellEdit: true },
                         { field: "subtotal() | currency : '' ", displayName: "Subtotal", enableCellEdit: false }
                     ]
                 };
@@ -242,6 +242,92 @@ angular.module('cajaApp.controller')
             }
 
         }])
+    .controller('BuscarPendienteController', ["$scope", "$state", "$filter", "CajaService",
+        function($scope, $state, $filter, CajaService) {
+
+            $scope.crear = function(){
+                $state.transitionTo('app.caja.pendienteCrear');
+            }
+
+            CajaService.getPendientes().then(
+                function(pendientes){
+                    $scope.pendientes = pendientes;
+                }
+            );
+
+            $scope.gridOptions = {
+                data: 'pendientes',
+                multiSelect: false,
+                columnDefs: [
+                    { field: "moneda.denominacion", displayName: "Moneda"},
+                    { field: "monto | currency : ''", displayName: "Monto"},
+                    { field: "tipoPendiente", displayName: "Tipo"},
+                    { field: "fecha | date : 'dd/MM/yyyy'", displayName: "Fecha"},
+                    { field: "hora | date : 'HH:mm:ss' ", displayName: "Hora"}
+                ]
+            };
+
+        }])
+    .controller('CrearPendienteController', ["$scope", "$state", "$filter","$modal", "CajaService","MonedaService",
+        function($scope, $state, $filter, $modal, CajaService,MonedaService) {
+
+            $scope.tipopendientes = [{"denominacion":"FALTANTE"},{"denominacion":"SOBRANTE"}];
+            $scope.monto = 0.00;
+
+            CajaService.getBovedasOfCurrentCaja().then(function(bovedas){
+                $scope.bovedas = bovedas;
+            });
+
+            $scope.open = function () {
+                MonedaService.getDenominaciones($scope.boveda.moneda.denominacion).then(
+                    function(denominaciones){
+                        $scope.denominacionesMoneda = denominaciones;
+                    }
+                );
+                var modalInstance = $modal.open({
+                    templateUrl: 'modules/common/views/util/calculadora.html',
+                    controller: "CalculadoraController",
+                    resolve: {
+                        denominaciones: function () {
+                            return $scope.denominacionesMoneda;
+                        },
+                        moneda: function () {
+                            return $scope.boveda.moneda.simbolo;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (total) {
+                    $scope.monto = total;
+                }, function () {
+                    //$log.info('Modal dismissed at: ' + new Date());
+                });
+            };
+
+        }])
+    .controller('CalculadoraController', function ($scope, $modalInstance, denominaciones, moneda) {
+
+        $scope.denominaciones = denominaciones;
+        $scope.moneda = moneda;
+
+        $scope.total = function(){
+            var totalCalculadora = 0;
+            for(var i = 0; i < $scope.denominaciones.length; i++){
+                totalCalculadora = totalCalculadora + ($scope.denominaciones[i].cantidad * $scope.denominaciones[i].valor);
+            }
+            return totalCalculadora;
+        }
+
+        $scope.ok = function () {
+            if (($scope.total() == 0 || $scope.total() === undefined)) {
+                $modalInstance.close($scope.total());
+            }
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    })
     .controller('HistorialCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
         function($scope, $state, $filter, HistorialCajaService) {
 
@@ -290,7 +376,7 @@ angular.module('cajaApp.controller')
 
 
             $scope.buscar = function(){
-                HistorialCajaService.buscar($filter('date')($scope.desde, "dd/MM/yyyy"), $filter('date')( $scope.hasta, "dd/MM/yyyy")).then(
+                HistorialCajaService.buscar($scope.desde.getTime(),$scope.hasta.getTime()).then(
                     function(historiales){
                         $scope.listHistoriales = historiales;
                     }
@@ -306,9 +392,9 @@ angular.module('cajaApp.controller')
                 multiSelect: false,
                 columnDefs: [
                     {field:"fechaApertura | date : 'dd/MM/yyyy'", displayName:'Fecha apertura'},
-                    {field:"horaApertura | date : 'hh:mm:ss'", displayName:'Hora apertura'},
+                    {field:"horaApertura | date : 'hh:mm:ss a'", displayName:'Hora apertura'},
                     {field:"fechaCierre | date : 'dd/MM/yyyy'", displayName:'Fecha cierre'},
-                    {field:"horaCierre | date : 'hh:mm:ss'", displayName:'Hora cierre'},
+                    {field:"horaCierre | date : 'HH:mm:ss'", displayName:'Hora cierre'},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
             };
 
@@ -353,9 +439,9 @@ angular.module('cajaApp.controller')
                 qz.append("Agencia:"+ $scope.resumenCaja.agencia + " ");
                 qz.append("Caja:"+ $scope.resumenCaja.caja + " " + "\r\n");
                 qz.append("F.Apertu:"+($filter('date')($scope.resumenCaja.fechaApertura, 'dd/MM/yyyy'))+ " ");
-                qz.append("H.Apertu:"+($filter('date')($scope.resumenCaja.horaApertura, 'hh:mm:ss'))+"\r\n");
+                qz.append("H.Apertu:"+($filter('date')($scope.resumenCaja.horaApertura, 'HH:mm:ss'))+"\r\n");
                 qz.append("F.Cierre:"+($filter('date')($scope.resumenCaja.fechaCierre, 'dd/MM/yyyy'))+ " ");
-                qz.append("H.Cierre:"+($filter('date')($scope.resumenCaja.horaCierre, 'hh:mm:ss'))+"\r\n");
+                qz.append("H.Cierre:"+($filter('date')($scope.resumenCaja.horaCierre, 'HH:mm:ss'))+"\r\n");
                 qz.append("Trabajador:"+$scope.resumenCaja.trabajador+"\r\n");
 
                 qz.append("\x1B\x40"); // 1
@@ -416,6 +502,54 @@ angular.module('cajaApp.controller')
                 qz.append("\x1B\x40"); // 5
                 qz.print();
             }
+
+            $scope.imprimirVoucherPorMoneda = function(index){
+
+                qz.findPrinter("EPSON TM-U220");
+
+                $scope.voucherPrint = $scope.voucherByMoneda[index];
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                qz.append("______ C.A.C. CAJA VENTURA ______\r\n");
+                qz.append("\x1B\x21\x01"); // 3
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                qz.append("VOUCHER CIERRE CAJA\r\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Agencia:"+ $scope.voucherPrint.agencia + " ");
+                qz.append("Caja:"+ $scope.voucherPrint.caja + " " + "\r\n");
+                qz.append("F.Apertu:"+($filter('date')($scope.voucherPrint.fechaApertura, 'dd/MM/yyyy'))+ " ");
+                qz.append("H.Apertu:"+($filter('date')($scope.voucherPrint.horaApertura, 'HH:mm:ss'))+"\r\n");
+                qz.append("F.Cierre:"+($filter('date')($scope.voucherPrint.fechaCierre, 'dd/MM/yyyy'))+ " ");
+                qz.append("H.Cierre:"+($filter('date')($scope.voucherPrint.horaCierre, 'HH:mm:ss'))+"\r\n");
+                qz.append("Trabajador:"+$scope.voucherPrint.trabajador+"\r\n");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append("Denominacion   Cantidad   Subtotal"+"\n");
+                qz.append("\x1B\x21\x01"); // 3
+                for(var i = 0; i<$scope.voucherPrint.detalle.length;i++){
+                    qz.append($scope.voucherPrint.detalle.valor + "   ");
+                    qz.append($scope.voucherPrint.detalle.cantidad + "   ");
+                    qz.append($filter('currency')(($scope.voucherPrint.detalle.valor*$scope.voucherPrint.detalle.cantidad),$scope.voucherPrint.moneda.simbolo)+ "\r\n");
+                }
+
+                qz.append("\n");
+                qz.append("Saldo ayer:"+$scope.voucherPrint.saldoAyer+"\r\n");
+                qz.append("Entradas:"+$scope.voucherPrint.entradas+"\r\n");
+                qz.append("Salidas:"+$scope.voucherPrint.salidas+"\r\n");
+                qz.append("Sobrantes:"+$scope.voucherPrint.entradas+"\r\n");
+                qz.append("Faltantes:"+$scope.voucherPrint.salidas+"\r\n");
+                qz.append("Faltantes:"+$scope.voucherPrint.porDevolver+"\r\n");
+
+                qz.append("\x1D\x56\x41"); // 4
+                qz.append("\x1B\x40"); // 5
+                qz.print();
+            }
         }])
     .controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService",
         function($scope, $state, $filter, CajaService) {
@@ -424,18 +558,18 @@ angular.module('cajaApp.controller')
                 $state.transitionTo('app.caja.createTransaccionBovedaCaja');
             }
 
-            $scope.myData = [{name: "Moroni", age: 50},
-                {name: "Tiancum", age: 43},
-                {name: "Jacob", age: 27},
-                {name: "Nephi", age: 29},
-                {name: "Enos", age: 34}];
+            CajaService.getTransaccionBovedaCajaEnviadas().then(
+                function(enviados){
+                    $scope.transaccionesEnviadas = enviados;
+                }
+            );
+            CajaService.getTransaccionBovedaCajaRecibidas().then(
+                function(recibidos){
+                    $scope.transaccionesRecibidas = recibidos;
+                }
+            );
 
-            $scope.gridOptionsRecibidos = { data: 'myData' };
-            $scope.gridOptionsEnviados = { data: 'myData' };
-
-
-            $scope.transaccionesEnviadas = [];
-            $scope.gridOptionsRecibidos = {
+            $scope.gridOptionsEnviados = {
                 data: 'transaccionesEnviadas',
                 multiSelect: false,
                 columnDefs: [
@@ -448,17 +582,21 @@ angular.module('cajaApp.controller')
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
             };
 
+            $scope.gridOptionsRecibidos = {
+                data: 'transaccionesRecibidas',
+                multiSelect: false,
+                columnDefs: [
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha apertura'},
+                    {field:"hora | date : 'hh:mm:ss'", displayName:'Hora apertura'},
+                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Fecha cierre'},
+                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Hora cierre'},
+                    {field:"origen", displayName:'Hora cierre'},
+                    {field:"monto", displayName:'Hora cierre'},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
+            };
 
-            CajaService.getTransaccionBovedaCajaEnviadas().then(
-                function(enviados){
-                    $scope.transaccionesEnviadas = enviados;
-                }
-            );
-            CajaService.getTransaccionBovedaCajaRecibidas().then(
-                function(recibidos){
-                    $scope.transaccionesRecibidas = recibidos;
-                }
-            );
+
+
 
         }])
     .controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService", "MonedaService", "CajaService",

@@ -36,8 +36,8 @@ import org.ventura.sistemafinanciero.entity.type.Variable;
  */
 @Entity
 @Table(name = "TRANSACCION_BOVEDA_CAJA", schema = "BDSISTEMAFINANCIERO")
-
-
+@XmlRootElement(name = "transaccionbovedacaja")
+@XmlAccessorType(XmlAccessType.NONE)
 public class TransaccionBovedaCaja implements java.io.Serializable {
 
 	/**
@@ -213,9 +213,9 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.saldoDisponibleDestino = saldoDisponibleDestino;
 	}
 
-	@XmlElement
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "transaccionBovedaCaja")
-	public Set<TransaccionBovedaCajaDetall> getTransaccionBovedaCajaDetalls() {
+	public Set<TransaccionBovedaCajaDetalle> getTransaccionBovedaCajaDetalls() {
 		return this.transaccionBovedaCajaDetalls;
 	}
 

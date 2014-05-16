@@ -74,6 +74,7 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                             {'name':'Abrir / cerrar', submenus:[
                                 { 'name':'Abrir caja' , 'state':'app.caja.abrirCaja'},
                                 { 'name':'Cerrar caja' , 'state':'app.caja.cerrarCaja'},
+                                { 'name':'Pendientes' , 'state':'app.caja.pendiente'},
                                 { 'name':'Historial' , 'state':'app.caja.historial'}
                             ]},
                             {
@@ -93,7 +94,7 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/panelControl",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/caja/views/caja/abrir.html"
+                    templateUrl: "modules/caja/views/caja/panel.html"
                 }
             }
         })
@@ -110,6 +111,30 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 "viewContent":{
                     templateUrl: "modules/caja/views/caja/cerrar.html"
+                }
+            }
+        })
+        .state('app.caja.pendiente', {
+            url: "/pendiente/buscar",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/buscarPendiente.html"
+                }
+            }
+        })
+        .state('app.caja.pendienteCrear', {
+            url: "/pendiente/crear",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/crearPendiente.html"
+                }
+            }
+        })
+        .state('app.caja.pendienteVoucher', {
+            url: "/pendiente/voucher",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/voucher/pendiente.html"
                 }
             }
         })

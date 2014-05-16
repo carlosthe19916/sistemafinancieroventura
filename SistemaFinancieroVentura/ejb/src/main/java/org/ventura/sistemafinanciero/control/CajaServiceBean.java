@@ -43,7 +43,7 @@ import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
-import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetall;
+import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
 import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
@@ -78,12 +78,14 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 	private EntityManagerProducer em;
 	
 	@Inject private DAO<Object, Boveda> bovedaDAO;
+	@Inject private DAO<Object, BovedaCaja> bovedaCajaDAO;
 	@Inject private DAO<Object, Caja> cajaDAO;
 	@Inject private DAO<Object, HistorialBoveda> historialBovedaDAO;
 	@Inject private DAO<Object, HistorialCaja> historialCajaDAO;
 	@Inject private DAO<Object, DetalleHistorialCaja> detalleHistorialCajaDAO;
 	@Inject private DAO<Object, TransaccionBovedaCaja> transaccionBovedaCajaDAO;
-	@Inject private DAO<Object, TransaccionBovedaCajaDetall> detalleTransaccionBovedaCajaDAO;
+	@Inject private DAO<Object, TransaccionBovedaCajaDetalle> detalleTransaccionBovedaCajaDAO;
+	@Inject private DAO<Object, PendienteCaja> pendienteCajaDAO;
 	
 	@EJB private VariableSistemaService variableSistemaService;
 	@EJB private MonedaService monedaService;
@@ -273,6 +275,31 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 			TransaccionBovedaCajaOrigen origen = trans.getOrigen();
 			if(origen.equals(TransaccionBovedaCajaOrigen.BOVEDA))
 				result.add(trans);
+		}
+		return result;
+	}
+	
+	public Set<PendienteCaja> getPendientes(int idCaja, int idHistorialCaja) {
+		Set<PendienteCaja> result;
+		Caja caja = cajaDAO.find(idCaja);
+		HistorialCaja historialCaja;
+		if(caja == null)
+			return null;
+		try {
+			historialCaja = (idHistorialCaja > 0 ? historialCajaDAO.find(idHistorialCaja) : this.getHistorialActivo(idCaja));
+		} catch (NonexistentEntityException e) {
+			LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
+			return null;
+		}
+		if(!historialCaja.getCaja().equals(caja)){
+			LOGGER.trace("Historial de caja no pertenece a la caja especificada");
+			return null;
+		}
+		result = historialCaja.getPendienteCajas();
+		for (PendienteCaja pendienteCaja : result) {
+			Moneda moneda = pendienteCaja.getMoneda();
+			Hibernate.initialize(pendienteCaja);
+			Hibernate.initialize(moneda);
 		}
 		return result;
 	}
@@ -840,7 +867,7 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 			//creando el detalle de transaccion
 			List<MonedaDenominacion> denominaciones = monedaService.getDenominaciones(moneda.getIdMoneda());
 			for (GenericDetalle detalle : detalleTransaccion) {
-				TransaccionBovedaCajaDetall det = new TransaccionBovedaCajaDetall();
+				TransaccionBovedaCajaDetalle det = new TransaccionBovedaCajaDetalle();
 				det.setCantidad(detalle.getCantidad());				
 				det.setTransaccionBovedaCaja(transaccionBovedaCaja);
 				for (MonedaDenominacion monedaDenominacion : denominaciones) {
@@ -854,6 +881,55 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 				detalleTransaccionBovedaCajaDAO.create(det);
 			}		
 		} catch (IllegalResultException e) {
+			LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
+		}				
+		
+	}
+
+	@Override
+	public void crearPendiente(int idCaja, int idBoveda, BigDecimal monto) throws RollbackFailureException {
+		Caja caja = cajaDAO.find(idCaja);
+		if(caja == null)
+			throw new RollbackFailureException("Caja no encontrada");
+		Boveda boveda = bovedaDAO.find(idBoveda);
+		if(boveda == null)
+			throw new RollbackFailureException("Boveda no encontrada");
+		
+		Set<BovedaCaja> bovedasCajas = caja.getBovedaCajas();
+		BovedaCaja bovedaCajaTransaccion = null;
+		for (BovedaCaja bovedaCaja : bovedasCajas) {
+			Boveda bov = bovedaCaja.getBoveda();
+			if(bov.equals(boveda)){
+				bovedaCajaTransaccion = bovedaCaja;
+				break;
+			}				
+		}
+		if(bovedaCajaTransaccion == null)
+			throw new RollbackFailureException("La caja y la boveda seleccionados no estan relacionados");
+		
+		//obteniendo el historial de la caja
+		HistorialCaja historialCaja;
+		try {
+			historialCaja = this.getHistorialActivo(idCaja);
+			
+			Calendar calendar = Calendar.getInstance();
+			PendienteCaja pendienteCaja = new PendienteCaja();
+			pendienteCaja.setFecha(calendar.getTime());
+			pendienteCaja.setHora(calendar.getTime());
+			pendienteCaja.setHistorialCaja(historialCaja);
+			pendienteCaja.setMoneda(boveda.getMoneda());
+			pendienteCaja.setMonto(monto);
+			pendienteCaja.setTipoPendiente(monto.compareTo(BigDecimal.ZERO) >= 1 ? TipoPendiente.SOBRANTE : TipoPendiente.SOBRANTE);
+			pendienteCajaDAO.create(pendienteCaja);
+			
+			//modificando el saldo de boveda
+			BigDecimal saldoActual = bovedaCajaTransaccion.getSaldo();
+			BigDecimal montoTransaccion = monto;
+			BigDecimal saldoFinal = saldoActual.add(montoTransaccion);
+			bovedaCajaTransaccion.setSaldo(saldoFinal);
+			bovedaCajaDAO.update(bovedaCajaTransaccion);
+			
+		} catch (NonexistentEntityException e) {
 			LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
 		}				
 		

@@ -34,7 +34,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
-import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
+import org.ventura.sistemafinanciero.entity.PendienteCaja;
 
 /**
  * A minimalistic CRUD implementation. Usually provides the implementation of
@@ -45,40 +45,40 @@ import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 @Stateless
 @Local(DAO.class)
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class TransaccionBovedaCajaDetalleBeanDAO implements DAO<Object, TransaccionBovedaCajaDetalle> {
+public class PendienteCajaBeanDAO implements DAO<Object, PendienteCaja> {
 
 	@PersistenceContext
 	private EntityManager em;
 
-	public TransaccionBovedaCajaDetalle create(TransaccionBovedaCajaDetalle t) {
+	public PendienteCaja create(PendienteCaja t) {
 		this.em.persist(t);
 		return t;
 	}
 
-	public void delete(TransaccionBovedaCajaDetalle t) {
+	public void delete(PendienteCaja t) {
 		t = this.em.merge(t);
 		this.em.remove(t);
 	}
 
-	public TransaccionBovedaCajaDetalle find(Object id) {
-		return this.em.find(TransaccionBovedaCajaDetalle.class, id);
+	public PendienteCaja find(Object id) {
+		return this.em.find(PendienteCaja.class, id);
 	}
 
-	public TransaccionBovedaCajaDetalle update(TransaccionBovedaCajaDetalle t) {
+	public PendienteCaja update(PendienteCaja t) {
 		return this.em.merge(t);
 	}
 
-	public List<TransaccionBovedaCajaDetalle> findAll() {
-		List<TransaccionBovedaCajaDetalle> list = null;
+	public List<PendienteCaja> findAll() {
+		List<PendienteCaja> list = null;
 		CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
-		cq.select(cq.from(TransaccionBovedaCajaDetalle.class));
+		cq.select(cq.from(PendienteCaja.class));
 		list = this.em.createQuery(cq).getResultList();
 		return list;
 	}
 	
-	public List<TransaccionBovedaCajaDetalle> findRange(int[] range) {
+	public List<PendienteCaja> findRange(int[] range) {
         javax.persistence.criteria.CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(TransaccionBovedaCajaDetalle.class));
+        cq.select(cq.from(PendienteCaja.class));
         javax.persistence.Query q = this.em.createQuery(cq);
         q.setMaxResults(range[1] - range[0]);
         q.setFirstResult(range[0]);
@@ -87,28 +87,28 @@ public class TransaccionBovedaCajaDetalleBeanDAO implements DAO<Object, Transacc
 
     public int count() {
         javax.persistence.criteria.CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
-        javax.persistence.criteria.Root<TransaccionBovedaCajaDetalle> rt = cq.from(TransaccionBovedaCajaDetalle.class);
+        javax.persistence.criteria.Root<PendienteCaja> rt = cq.from(PendienteCaja.class);
         cq.select(this.em.getCriteriaBuilder().count(rt));
         javax.persistence.Query q = this.em.createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
     
-	public List<TransaccionBovedaCajaDetalle> findByNamedQuery(String namedQueryName) {
+	public List<PendienteCaja> findByNamedQuery(String namedQueryName) {
 		return this.em.createNamedQuery(namedQueryName).getResultList();
 	}
 
-	public List<TransaccionBovedaCajaDetalle> findByNamedQuery(String namedQueryName,
+	public List<PendienteCaja> findByNamedQuery(String namedQueryName,
 			Map<String, Object> parameters) {
 		return findByNamedQuery(namedQueryName, parameters, 0);
 	}
 
-	public List<TransaccionBovedaCajaDetalle> findByNamedQuery(String queryName,
+	public List<PendienteCaja> findByNamedQuery(String queryName,
 			int resultLimit) {
 		return this.em.createNamedQuery(queryName).setMaxResults(resultLimit)
 				.getResultList();
 	}
 
-	public List<TransaccionBovedaCajaDetalle> findByNamedQuery(String namedQueryName,
+	public List<PendienteCaja> findByNamedQuery(String namedQueryName,
 			Map<String, Object> parameters, int resultLimit) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);

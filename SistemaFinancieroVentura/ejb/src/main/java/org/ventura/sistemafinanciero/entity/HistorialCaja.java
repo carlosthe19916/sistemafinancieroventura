@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
 		@NamedQuery(name = HistorialCaja.findByHistorialActivo, query = "SELECT c FROM HistorialCaja c WHERE c.caja.idCaja = :idcaja AND c.estado = true"),
-		@NamedQuery(name = HistorialCaja.findByHistorialDateRange, query = "SELECT h FROM HistorialCaja h WHERE h.caja.idCaja = :idcaja AND h.horaApertura BETWEEN :desde AND :hasta ORDER BY h.horaApertura DESC"),
+		@NamedQuery(name = HistorialCaja.findByHistorialDateRange, query = "SELECT h FROM HistorialCaja h WHERE h.caja.idCaja = :idcaja AND h.horaApertura BETWEEN :desde AND :hasta AND h.estado = false ORDER BY h.horaApertura DESC"),
 		@NamedQuery(name = HistorialCaja.findByHistorialDateRangePenultimo, query = "SELECT h FROM HistorialCaja h WHERE h.caja.idCaja = :idcaja AND h.fechaApertura <= :fecha ORDER BY h.horaApertura DESC") })
 public class HistorialCaja implements java.io.Serializable {
 

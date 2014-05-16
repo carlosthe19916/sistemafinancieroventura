@@ -1,0 +1,73 @@
+<div ng-controller="CrearPendienteController">
+    <fieldset>
+        <legend>Crear pendiente</legend>
+        <form name="formCrearPendiente">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearPendiente.boveda.$invalid && control.submitted}">
+                        <label>Boveda</label>
+                        <select name="boveda" ng-options="boveda as boveda.denominacion for boveda in bovedas" ng-model="boveda" class="form-control" required autofocus>
+                        </select>
+                        <div ng-show="formCrearPendiente.boveda.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearPendiente.boveda.$error.required">
+                                Ingrese boveda.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearPendiente.tipopendiente.$invalid && control.submitted}">
+                        <label>Tipo pendiente</label>
+                        <select name="tipopendiente" ng-options="tipopendiente as tipopendiente.denominacion for tipopendiente in tipopendientes" ng-model="tipopendiente" class="form-control" required>
+                        </select>
+                        <div ng-show="formCrearPendiente.tipopendiente.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearPendiente.tipopendiente.$error.required">
+                                Ingrese tipo pendiente.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearPendiente.monto.$invalid && control.submitted}">
+                        <label>Monto</label>
+                        <div class="input-group">
+                            <input type="text" name="monto" ng-model="monto" class="form-control" placeholder="Monto" required/>
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open()" ng-disabled="boveda === undefined">
+                                   <span class="glyphicon glyphicon-th-list"></span>
+                                </button>
+                              </span>
+                        </div>
+                        <div ng-show="formCrearPendiente.monto.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearPendiente.monto.$error.required">
+                                Ingrese monto.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <kbd style="display: block;margin-top: 3px;">
+                            <span ng-bind="boveda.moneda.simbolo "/>
+                            <span ng-bind="tipopendiente == 'SOBRANTE' ? monto : -monto | number : 2"/>
+                        </kbd>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && formCrearPersonanatural.submitted}">
+                        <label>Observacion</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState">Guardar</button>
+            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+        </form>
+    </fieldset>
+</div>
