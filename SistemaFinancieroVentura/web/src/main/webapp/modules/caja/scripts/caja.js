@@ -207,7 +207,10 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                             'name':'Persona juridica', submenus:[
                                 { 'name':'Registrar' , 'state':'app.administracion.personajuridicaCreate'},
                                 { 'name':'Buscar' , 'state':'app.administracion.personajuridicaBuscar'}
-                            ]}
+                            ]},{
+                                'name':'Socio', submenus:[
+                                { 'name':'Buscar Socio' , 'state':'app.administracion.socioBuscar'}
+                              ]}
                         ];
                     }
                 },
@@ -240,6 +243,14 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                     controller: function($scope, $stateParams) {
                         $scope.id = $stateParams.id;
                     }
+                }
+            }
+        })
+        .state('app.administracion.socioBuscar', {
+            url: "/socio/buscarSocio",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/socio/buscar.html"
                 }
             }
         });

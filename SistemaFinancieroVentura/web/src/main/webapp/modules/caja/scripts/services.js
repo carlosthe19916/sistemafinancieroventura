@@ -43,6 +43,21 @@ angular.module("cajaApp.service", ["restangular"])
                 }
             }
         }])
+        .factory("SocioService",["Restangular",
+        function(Restangular){
+
+            var _socioService = Restangular.all("socio");
+
+            return {
+                getSocios: function(){
+                    return _socioService.getList().$object;
+                },
+                findByFilterText: function(text){
+                    return Restangular.all("socio/filtertext/"+text).getList();
+                }
+            }
+        }])
+
     .factory("HistorialCajaService",["Restangular",
         function(Restangular){
             var _historialCajaService = Restangular.all("historialcaja");

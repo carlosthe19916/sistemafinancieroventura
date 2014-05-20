@@ -1,7 +1,8 @@
 var cajaApp = angular.module('commonApp',[
     "restangular",
     "commonApp.controller",
-    "commonApp.service"
+    "commonApp.service",
+    "ngProgress"
 ]);
 
 cajaApp.config(function(RestangularProvider) {
