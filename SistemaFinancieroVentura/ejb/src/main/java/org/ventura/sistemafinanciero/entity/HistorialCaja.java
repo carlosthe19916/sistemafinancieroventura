@@ -70,8 +70,8 @@ public class HistorialCaja implements java.io.Serializable {
 	public HistorialCaja() {
 	}
 
-	public HistorialCaja(BigInteger idHistorialCaja, Caja caja, Date fechaApertura,
-			Date horaApertura, boolean estado) {
+	public HistorialCaja(BigInteger idHistorialCaja, Caja caja,
+			Date fechaApertura, Date horaApertura, boolean estado) {
 		this.idHistorialCaja = idHistorialCaja;
 		this.caja = caja;
 		this.fechaApertura = fechaApertura;
@@ -79,9 +79,10 @@ public class HistorialCaja implements java.io.Serializable {
 		this.estado = (estado ? 1 : 0);
 	}
 
-	public HistorialCaja(BigInteger idHistorialCaja, Caja caja, Date fechaApertura,
-			Date fechaCierre, Date horaApertura, Date horaCierre,
-			boolean estado, Set transaccionCajaCajasForIdCajaHistorialDestino,
+	public HistorialCaja(BigInteger idHistorialCaja, Caja caja,
+			Date fechaApertura, Date fechaCierre, Date horaApertura,
+			Date horaCierre, boolean estado,
+			Set transaccionCajaCajasForIdCajaHistorialDestino,
 			Set transaccionCuentaAportes, Set transaccionCompraVentas,
 			Set pendienteCajas,
 			Set transaccionCajaCajasForIdCajaHistorialOrigen,
@@ -105,7 +106,7 @@ public class HistorialCaja implements java.io.Serializable {
 		this.transferenciaBancarias = transferenciaBancarias;
 	}
 
-	@XmlTransient
+	@XmlElement(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_HISTORIAL_CAJA", unique = true, nullable = false, precision = 22, scale = 0)

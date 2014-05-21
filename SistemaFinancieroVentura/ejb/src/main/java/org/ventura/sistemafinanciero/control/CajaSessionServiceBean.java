@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.control;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -598,6 +599,14 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		}
 		return result;
 
+	}
+
+	@Override
+	public Set<HistorialCaja> getHistorialCaja(Date dateDesde, Date dateHasta) {
+		Caja caja = getCaja();		
+		QueryParameter queryParameter = QueryParameter.with("idcaja", caja.getIdCaja()).and("desde", dateDesde).and("hasta", dateHasta);		
+		List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRange, queryParameter.parameters());		
+		return new HashSet<HistorialCaja>(list);
 	}
 	
 }

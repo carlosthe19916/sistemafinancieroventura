@@ -44,6 +44,9 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 getPendiente: function(idPendiente){
                     return Restangular.one("pendiente/"+idPendiente).get();
+                },
+                getHistoriales: function(desde, hasta){
+                    return Restangular.all("caja/session/historial").getList({"desde":desde,"hasta":hasta},{});
                 }
             }
         }])
@@ -69,11 +72,11 @@ angular.module("cajaApp.service", ["restangular"])
                 buscar: function(desde, hasta){
                     return Restangular.all("historialcaja/currentSession").getList({"desde":desde,"hasta":hasta},{});
                 },
-                getVoucherCierreCaja: function(fechaAperturaCaja){
-                    return Restangular.all("historialcaja/voucherCierreCaja").getList({"fechaApertura":fechaAperturaCaja},{});
+                getVoucherCierreCaja: function(idhistorial){
+                    return Restangular.all("historialcaja/"+idhistorial+"/voucherCierreCaja").getList();
                 },
-                getResumenCierreCaja: function(fechaAperturaCaja){
-                    return Restangular.one("historialcaja/resumenCierreCaja").get({"fechaApertura":fechaAperturaCaja},{});
+                getResumenCierreCaja: function(idhistorial){
+                    return Restangular.one("historialcaja/"+idhistorial+"/resumenCierreCaja").get();
                 }
             }
         }]);

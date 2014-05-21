@@ -393,8 +393,8 @@ angular.module('cajaApp.controller')
 
 
         }])
-    .controller('HistorialCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
-        function($scope, $state, $filter, HistorialCajaService) {
+    .controller('HistorialCajaController', ['$scope', "$state", '$filter', "CajaSessionService",
+        function($scope, $state, $filter, CajaSessionService) {
 
             $scope.today = function() {
                 $scope.desde = new Date();
@@ -438,10 +438,8 @@ angular.module('cajaApp.controller')
             $scope.formats = ['dd/MM/yyyy','dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
             $scope.format = $scope.formats[0];
 
-
-
             $scope.buscar = function(){
-                HistorialCajaService.buscar($scope.desde.getTime(),$scope.hasta.getTime()).then(
+                CajaSessionService.getHistoriales($scope.desde.getTime(),$scope.hasta.getTime()).then(
                     function(historiales){
                         $scope.listHistoriales = historiales;
                     }
@@ -449,7 +447,7 @@ angular.module('cajaApp.controller')
             }
 
             $scope.getVoucher = function(cajaHistorial){
-                $state.transitionTo('app.caja.voucherCerrarCaja', { fechaApertura: cajaHistorial.horaApertura});
+                $state.transitionTo('app.caja.voucherCerrarCaja', { id: cajaHistorial.id});
             }
 
             $scope.gridOptions = {
@@ -467,12 +465,12 @@ angular.module('cajaApp.controller')
     .controller('VoucherCerrarCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
         function($scope, $state, $filter, HistorialCajaService) {
 
-            HistorialCajaService.getVoucherCierreCaja($scope.fechaApertura).then(
+            HistorialCajaService.getVoucherCierreCaja($scope.id).then(
                 function(voucher){
                     $scope.voucherByMoneda = voucher;
                 }
             );
-            HistorialCajaService.getResumenCierreCaja($scope.fechaApertura).then(
+            HistorialCajaService.getResumenCierreCaja($scope.id).then(
                 function(resumen){
                     $scope.resumenCaja = resumen;
                 }

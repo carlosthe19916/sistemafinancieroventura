@@ -150,12 +150,12 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
         .state('app.caja.voucherCerrarCaja', {
-            url: "/voucherCerrarCaja?fechaApertura",
+            url: "/historial/:id/voucherCerrarCaja",
             views: {
                 "viewContent":{
                     templateUrl: "modules/caja/views/voucher/cerrarCaja.html",
                     controller: function($scope, $stateParams) {
-                        $scope.fechaApertura = $stateParams.fechaApertura;
+                        $scope.id = $stateParams.id;
                     }
                 }
             }

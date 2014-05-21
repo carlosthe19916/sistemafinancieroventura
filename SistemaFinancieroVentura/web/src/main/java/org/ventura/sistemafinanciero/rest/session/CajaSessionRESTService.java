@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.rest.session;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.hibernate.Hibernate;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
+import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
@@ -134,7 +136,12 @@ public class CajaSessionRESTService {
 	@Path("/historial")
 	@Produces({ "application/xml", "application/json" })
 	public Response getHistorialOfCaja(@QueryParam("desde") Long desde, @QueryParam("hasta") Long hasta) {
-		return null;
+		Date dateDesde = (desde != null ? new Date(desde) : null);
+		Date dateHasta = (desde != null ? new Date(hasta) : null);
+		if(dateDesde == null || dateHasta == null)
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		Set<HistorialCaja> list = cajaSessionService.getHistorialCaja(dateDesde, dateHasta);
+		return Response.status(Response.Status.OK).entity(list).build();
 	}
 
 	@RolesAllowed("CAJERO")

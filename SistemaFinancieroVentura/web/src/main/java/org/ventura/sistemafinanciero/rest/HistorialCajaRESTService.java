@@ -17,8 +17,6 @@
 package org.ventura.sistemafinanciero.rest;
 
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -27,23 +25,16 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Caja;
-import org.ventura.sistemafinanciero.entity.HistorialCaja;
-import org.ventura.sistemafinanciero.entity.Trabajador;
-import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
-import org.ventura.sistemafinanciero.exception.IllegalResultException;
-import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.service.CajaService;
+import org.ventura.sistemafinanciero.service.HistorialCajaService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
 
@@ -54,41 +45,16 @@ public class HistorialCajaRESTService {
     @Resource
     private SessionContext context;
     
-    @EJB CajaService cajaService;
-    @EJB UsuarioService usuarioService;
-    @EJB TrabajadorService trabajadorService;
+    @EJB 
+    private HistorialCajaService historialCajaService;
     
     @GET
     @Path("{id}/voucherCierreCaja")  
     @Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
     public Response getVoucherCierreCaja(@PathParam("id") BigInteger idHistorial){
-    	Caja caja = null;
-		/*try {
-			String username = context.getCallerPrincipal().getName();
-			Usuario currentUser = usuarioService.findByUsername(username);
-
-			Trabajador trabajador;
-			if (currentUser != null)
-				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
-			else
-				throw new NotFoundException();
-			if(trabajador != null)
-				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
-			else
-				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
-			
-			Date fechaApertura = (fecha != null ? new Date(fecha) : null);						
-			
-			Set<CajaCierreMoneda> result = cajaService.getVoucherCierreCaja(caja.getIdCaja(), fechaApertura);
-			return Response.status(Response.Status.OK).entity(result).build(); 
-		} catch (NonexistentEntityException e) {
-			throw new InternalServerErrorException();
-		} /*catch (IllegalResultException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  */
-    	return null;
+    	Set<CajaCierreMoneda> result = historialCajaService.getVoucherCierreCaja(idHistorial);    	
+		return Response.status(Response.Status.OK).entity(result).build(); 
     }
     
     @GET
@@ -96,31 +62,7 @@ public class HistorialCajaRESTService {
     @Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
     public Response getResumenCierreCaja(@PathParam("id") BigInteger idHistorial){
-    /*	Caja caja = null;
-		try {
-			String username = context.getCallerPrincipal().getName();
-			Usuario currentUser = usuarioService.findByUsername(username);
-
-			Trabajador trabajador;
-			if (currentUser != null)
-				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
-			else
-				throw new NotFoundException();
-			if(trabajador != null)
-				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
-			else
-				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
-						
-			Date fechaApertura = (fecha != null ? new Date(fecha) : null);
-			
-			ResumenOperacionesCaja result = cajaService.getResumenOperacionesCaja(caja.getIdCaja(), fechaApertura);
-			return Response.status(Response.Status.OK).entity(result).build(); 
-		} catch (NonexistentEntityException e) {
-			throw new InternalServerErrorException();
-		} catch (IllegalResultException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}   		*/
-    	return null;
+    	ResumenOperacionesCaja result = historialCajaService.getResumenOperacionesCaja(idHistorial);
+		return Response.status(Response.Status.OK).entity(result).build(); 
     }
 }
