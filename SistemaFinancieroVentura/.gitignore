@@ -76,3 +76,6 @@ local.properties
 .buildpath
 
 *.properties
+
+*.idea
+/.idea/*
