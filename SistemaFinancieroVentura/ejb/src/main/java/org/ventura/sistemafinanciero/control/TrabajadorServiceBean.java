@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.control;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 import javax.ejb.Remote;
@@ -35,7 +36,7 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 	@Inject private DAO<Object, Usuario> usuarioDAO;
 
 	@Override
-	public Caja findByTrabajador(int idTrabajador) throws NonexistentEntityException{
+	public Caja findByTrabajador(BigInteger idTrabajador) throws NonexistentEntityException{
 		Caja result = null;
 		try {
 			Trabajador trabajador = trabajadorDAO.find(idTrabajador);
@@ -56,7 +57,7 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 	}
 	
 	@Override
-	public Trabajador findByUsuario(int idusuario) {
+	public Trabajador findByUsuario(BigInteger idusuario) {
 		Trabajador result = null;
 		try {
 			Usuario usuario = usuarioDAO.find(idusuario);			
@@ -77,7 +78,7 @@ public class TrabajadorServiceBean extends AbstractServiceBean<Trabajador> imple
 	}
 
 	@Override
-	public Agencia getAgencia(int idTrabajador) throws NonexistentEntityException {
+	public Agencia getAgencia(BigInteger idTrabajador) throws NonexistentEntityException {
 		Agencia result= null;
 		Trabajador trabajador = super.findById(idTrabajador);
 		if(trabajador != null){

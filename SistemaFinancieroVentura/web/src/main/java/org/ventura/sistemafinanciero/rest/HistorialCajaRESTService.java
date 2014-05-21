@@ -16,6 +16,7 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -55,44 +57,14 @@ public class HistorialCajaRESTService {
     @EJB CajaService cajaService;
     @EJB UsuarioService usuarioService;
     @EJB TrabajadorService trabajadorService;
-     
-    @GET
-    @Path("/currentSession")  
-    @Consumes({ "application/xml", "application/json" })
-	@Produces({ "application/xml", "application/json" })
-    public Response getHistorialCajaCurrentSession(@QueryParam("desde") Long desde, @QueryParam("hasta") Long hasta){
-    	Caja caja = null;
-		try {
-			String username = context.getCallerPrincipal().getName();
-			Usuario currentUser = usuarioService.findByUsername(username);
-
-			Trabajador trabajador;
-			if (currentUser != null)
-				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
-			else
-				throw new NotFoundException();
-			if(trabajador != null)
-				caja = trabajadorService.findByTrabajador(trabajador.getIdTrabajador());
-			else
-				throw new NotFoundException("Usuario:"+username+" no tiene una caja asignada");	
-			
-			Date dateDesde = (desde != null ? new Date(desde) : null);
-			Date dateHasta = (desde != null ? new Date(hasta) : null);
-			
-			List<HistorialCaja> list = cajaService.getHistorialCaja(caja.getIdCaja(), dateDesde, dateHasta);
-			return Response.status(Response.Status.OK).entity(list).build();
-		} catch (NonexistentEntityException e) {
-			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-		}	
-    }
     
     @GET
-    @Path("/voucherCierreCaja")  
+    @Path("{id}/voucherCierreCaja")  
     @Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-    public Response getVoucherCierreCaja(@QueryParam("fechaApertura") Long fecha){
+    public Response getVoucherCierreCaja(@PathParam("id") BigInteger idHistorial){
     	Caja caja = null;
-		try {
+		/*try {
 			String username = context.getCallerPrincipal().getName();
 			Usuario currentUser = usuarioService.findByUsername(username);
 
@@ -116,14 +88,15 @@ public class HistorialCajaRESTService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  */
+    	return null;
     }
     
     @GET
-    @Path("/resumenCierreCaja")  
+    @Path("{id}/resumenCierreCaja")  
     @Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-    public Response getResumenCierreCaja(@QueryParam("fechaApertura") Long fecha){
-    	Caja caja = null;
+    public Response getResumenCierreCaja(@PathParam("id") BigInteger idHistorial){
+    /*	Caja caja = null;
 		try {
 			String username = context.getCallerPrincipal().getName();
 			Usuario currentUser = usuarioService.findByUsername(username);
@@ -147,7 +120,7 @@ public class HistorialCajaRESTService {
 		} catch (IllegalResultException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}   		
+		}   		*/
     	return null;
     }
 }

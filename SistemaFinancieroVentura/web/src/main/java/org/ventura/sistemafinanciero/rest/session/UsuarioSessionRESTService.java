@@ -14,18 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ventura.sistemafinanciero.rest;
+package org.ventura.sistemafinanciero.rest.session;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
-@Stateless
-@Path("/usuario")
-public class UsuarioRESTService {
+@RolesAllowed("CAJERO")
+@Path("/usuario/session")
+public class UsuarioSessionRESTService {
 
+	@RolesAllowed("CAJERO")
+	@GET
+	public Response getUsernameOfSession(@Context SecurityContext context) {
+		String username = context.getUserPrincipal().getName();
+		return Response.status(Response.Status.OK).entity(username).build();
+	}
 
 }

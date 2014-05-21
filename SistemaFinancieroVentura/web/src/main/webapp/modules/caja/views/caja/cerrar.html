@@ -4,7 +4,9 @@
         <p><strong>Info:</strong>La caja ya esta cerrada, o no se pudo cargar correctamente</p>
     </div>
 
-    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+        <span ng-bind-html="alert.msg"></span>
+    </alert>
 
     <fieldset>
         <legend>Cerrar caja</legend>

@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,10 +43,10 @@ public class Moneda implements java.io.Serializable {
 	public final static String findByDenominacion = "Moneda.findByDenominacion";
 	public final static String findBySimbolo = "Moneda.findBySimbolo";
 
-	@XmlTransient
+	@XmlElement(name="id")
 	@Id
 	@Column(name = "ID_MONEDA", unique = true, nullable = false, precision = 22, scale = 0)
-	private int idMoneda;
+	private BigInteger idMoneda;
 
 	@XmlElement
 	@Column(name = "DENOMINACION", nullable = false, length = 40, columnDefinition = "nvarchar2")
@@ -88,7 +89,7 @@ public class Moneda implements java.io.Serializable {
 	public Moneda() {
 	}
 
-	public Moneda(int idMoneda, String denominacion, String simbolo,
+	public Moneda(BigInteger idMoneda, String denominacion, String simbolo,
 			BigDecimal estado) {
 		this.idMoneda = idMoneda;
 		this.denominacion = denominacion;
@@ -96,7 +97,7 @@ public class Moneda implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Moneda(int idMoneda, String denominacion, String simbolo,
+	public Moneda(BigInteger idMoneda, String denominacion, String simbolo,
 			BigDecimal estado, Set transaccionCompraVentasForIdMonedaRecibido,
 			Set bovedas, Set transaccionCompraVentasForIdMonedaEntregado,
 			Set monedaDenominacions, Set pendienteCajas,
@@ -113,11 +114,11 @@ public class Moneda implements java.io.Serializable {
 		this.transaccionCajaCajas = transaccionCajaCajas;
 	}
 
-	public int getIdMoneda() {
+	public BigInteger getIdMoneda() {
 		return this.idMoneda;
 	}
 
-	public void setIdMoneda(int idMoneda) {
+	public void setIdMoneda(BigInteger idMoneda) {
 		this.idMoneda = idMoneda;
 	}
 

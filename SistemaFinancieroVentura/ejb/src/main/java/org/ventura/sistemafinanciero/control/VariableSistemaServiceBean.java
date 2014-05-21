@@ -43,8 +43,4 @@ public class VariableSistemaServiceBean extends AbstractServiceBean<VariableSist
 		return variableSistemaDAO;
 	}
 	
-	
-	
-	
-
 }

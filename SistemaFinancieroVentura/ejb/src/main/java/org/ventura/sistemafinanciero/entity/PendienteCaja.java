@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,7 +40,7 @@ public class PendienteCaja implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private BigInteger idPendienteCaja;
 	private HistorialCaja historialCaja;
 	private Moneda moneda;
@@ -78,6 +80,7 @@ public class PendienteCaja implements java.io.Serializable {
 	}
 
 	@XmlElement(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_PENDIENTE_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigInteger getIdPendienteCaja() {

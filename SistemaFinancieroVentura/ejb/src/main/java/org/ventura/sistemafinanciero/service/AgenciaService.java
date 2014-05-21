@@ -5,12 +5,13 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
-import org.ventura.sistemafinanciero.entity.Boveda;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Caja;
 
-@Remote
-public interface CajaService extends AbstractService<Caja> {
-	
-	public Set<Boveda> getBovedasByCaja(BigInteger idCaja);
 
+@Remote
+public interface AgenciaService extends AbstractService<Agencia> {
+	
+	public Set<Caja> getCajas(BigInteger idAgencia);
+	
 }

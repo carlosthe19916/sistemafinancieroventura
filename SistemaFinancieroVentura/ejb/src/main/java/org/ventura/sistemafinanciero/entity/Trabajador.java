@@ -3,8 +3,10 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +23,7 @@ import javax.persistence.Table;
 @Table(name = "TRABAJADOR", schema = "BDSISTEMAFINANCIERO")
 public class Trabajador implements java.io.Serializable {
 
-	private int idTrabajador;
+	private BigInteger idTrabajador;
 	private PersonaNatural personaNatural;
 	private Agencia agencia;
 	private BigDecimal estado;
@@ -31,7 +33,7 @@ public class Trabajador implements java.io.Serializable {
 	public Trabajador() {
 	}
 
-	public Trabajador(int idTrabajador, PersonaNatural personaNatural,
+	public Trabajador(BigInteger idTrabajador, PersonaNatural personaNatural,
 			Agencia agencia, BigDecimal estado) {
 		this.idTrabajador = idTrabajador;
 		this.personaNatural = personaNatural;
@@ -39,7 +41,7 @@ public class Trabajador implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Trabajador(int idTrabajador, PersonaNatural personaNatural,
+	public Trabajador(BigInteger idTrabajador, PersonaNatural personaNatural,
 			Agencia agencia, BigDecimal estado, Set trabajadorUsuarios,
 			Set trabajadorCajas) {
 		this.idTrabajador = idTrabajador;
@@ -52,11 +54,11 @@ public class Trabajador implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_TRABAJADOR", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdTrabajador() {
+	public BigInteger getIdTrabajador() {
 		return this.idTrabajador;
 	}
 
-	public void setIdTrabajador(int idTrabajador) {
+	public void setIdTrabajador(BigInteger idTrabajador) {
 		this.idTrabajador = idTrabajador;
 	}
 

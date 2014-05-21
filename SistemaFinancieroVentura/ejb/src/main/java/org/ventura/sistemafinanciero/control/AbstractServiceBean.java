@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.control;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,7 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 		}
 	}
 	
-	public void update(int id, T t) throws NonexistentEntityException, PreexistingEntityException {		
+	public void update(BigInteger id, T t) throws NonexistentEntityException, PreexistingEntityException {		
 		Set<ConstraintViolation<T>> violations = validator.validate(t);
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
@@ -46,7 +47,7 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 			throw new NonexistentEntityException("Objeto no existente");				
 	}
 
-	public void delete(int id) throws NonexistentEntityException {		
+	public void delete(BigInteger id) throws NonexistentEntityException {		
 		T t = getDAO().find(id);
 		if (t != null)
 			getDAO().delete(t);
@@ -54,7 +55,7 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 			throw new NonexistentEntityException("Objeto no existente");	
 	}
 
-	public T findById(int id) {
+	public T findById(BigInteger id) {
 		T result = null;
 		result = getDAO().find(id);		
 		return result;
@@ -64,7 +65,7 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 		return getDAO().findAll();
 	}
 
-	public List<T> findRange(int[] range){
+	public List<T> findRange(BigInteger[] range){
 		return getDAO().findRange(range);	
 	}
 

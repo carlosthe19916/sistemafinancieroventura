@@ -1,24 +1,24 @@
 
 angular.module("commonApp.service", ["restangular"])
-    .factory("UsuarioService",["Restangular",
+    .factory("UsuarioSessionService",["Restangular",
         function(Restangular){
 
-            var _usuarioService = Restangular.all("usuario");
+            var _usuarioService = Restangular.all("usuario/session");
 
             return {
                 getCurrentUsuario: function(){
-                    return Restangular.one("usuario/currentSession").get();
+                    return Restangular.one("usuario/session").get();
                 }
             }
         }])
-    .factory("AgenciaService",["Restangular",
+    .factory("AgenciaSessionService",["Restangular",
         function(Restangular){
 
             var _agenciaService = Restangular.all("agencia");
 
             return {
                 getCurrentAgencia: function(){
-                    return Restangular.one("agencia/currentSession").get();
+                    return Restangular.one("agencia/session").get();
                 }
             }
         }])
@@ -95,7 +95,7 @@ angular.module("commonApp.service", ["restangular"])
             var _monedaService = Restangular.all('moneda');
             return {
                 getDenominaciones: function(moneda) {
-                    return Restangular.all('moneda/denominaciones').getList({"moneda":moneda},{});
+                    return Restangular.all("moneda/"+moneda+"/denominaciones").getList();
                 }
             }
         }]);

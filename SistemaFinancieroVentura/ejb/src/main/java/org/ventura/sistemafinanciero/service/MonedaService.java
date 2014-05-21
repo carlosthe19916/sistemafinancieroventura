@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +13,8 @@ import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 @Remote
 public interface MonedaService extends AbstractService<Moneda> {
 	
-	public Moneda findByDenominacion(String denominacion);
+	public List<MonedaDenominacion> getDenominaciones(BigInteger idMoneda);
 	
-	public Moneda findBySimbolo(String simbolo);
-	
-	public List<MonedaDenominacion> getDenominaciones(int idMoneda);
-	
-	public Set<GenericDetalle> getGenericDenominaciones(int idMoneda);
+	public Set<GenericDetalle> getGenericDenominaciones(BigInteger idMoneda);
 	
 }

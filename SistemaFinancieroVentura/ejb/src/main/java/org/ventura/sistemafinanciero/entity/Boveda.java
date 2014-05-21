@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class Boveda implements java.io.Serializable {
 
 	public final static String findByAgenciaAndBoveda = "Boveda.findByAgenciaAndBoveda";
 
-	private int idBoveda;
+	private BigInteger idBoveda;
 	private Moneda moneda;
 	private Agencia agencia;
 	private String denominacion;
@@ -52,7 +53,7 @@ public class Boveda implements java.io.Serializable {
 	public Boveda() {
 	}
 
-	public Boveda(int idBoveda, Moneda moneda, Agencia agencia,
+	public Boveda(BigInteger idBoveda, Moneda moneda, Agencia agencia,
 			String denominacion, boolean estado, boolean abierto,
 			boolean estadoMovimiento) {
 		this.idBoveda = idBoveda;
@@ -64,7 +65,7 @@ public class Boveda implements java.io.Serializable {
 		this.estadoMovimiento = (estadoMovimiento ? 1 : 0);
 	}
 
-	public Boveda(int idBoveda, Moneda moneda, Agencia agencia,
+	public Boveda(BigInteger idBoveda, Moneda moneda, Agencia agencia,
 			String denominacion, boolean estado, boolean abierto,
 			boolean estadoMovimiento, Set bovedaCajas, Set historialBovedas) {
 		this.idBoveda = idBoveda;
@@ -78,14 +79,14 @@ public class Boveda implements java.io.Serializable {
 		this.historialBovedas = historialBovedas;
 	}
 
-	@XmlTransient
+	@XmlElement(name="id")
 	@Id
 	@Column(name = "ID_BOVEDA", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdBoveda() {
+	public BigInteger getIdBoveda() {
 		return this.idBoveda;
 	}
 
-	public void setIdBoveda(int idBoveda) {
+	public void setIdBoveda(BigInteger idBoveda) {
 		this.idBoveda = idBoveda;
 	}
 

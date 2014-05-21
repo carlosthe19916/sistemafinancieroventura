@@ -7,13 +7,12 @@ angular.module('cajaApp.controller')
             //$scope.usuario = $rootScope.usuario;
             //$scope.agencia = $rootScope.agencia;
         }])
-
-    .controller('AbrirCajaController', ["$rootScope", "$scope", "$state", '$filter', "CajaService",
-        function($rootScope, $scope, $state, $filter, CajaService) {
+    .controller('AbrirCajaController', ["$rootScope", "$scope", "$state", '$filter', "CajaSessionService",
+        function($rootScope, $scope, $state, $filter, CajaSessionService) {
 
             $scope.control = {"success":false, "inProcess": false};
 
-            CajaService.getDetalle().then(function(detalleCaja){
+            CajaSessionService.getDetalle().then(function(detalleCaja){
                 for(var i = 0; i<detalleCaja.length; i++){
                     angular.forEach(detalleCaja[i].detalle, function(row){
                         row.subtotal = function(){
@@ -41,9 +40,8 @@ angular.module('cajaApp.controller')
                     plugins: [gridLayoutPlugin[index]],
                     multiSelect: false,
                     columnDefs: [
-                        //{ field: valor, displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>simbolo {{row.getProperty(col.field)}}</div></div>" },
                         { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
-                        { field: cantidad, displayName: "Cantidad" },
+                        { field: "cantidad | number ", displayName: "Cantidad" },
                         { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
                     ]
                 };
@@ -87,7 +85,6 @@ angular.module('cajaApp.controller')
                 $state.go("app.caja", null, { reload: true });
             }
 
-
             $scope.alertMessageDisplay = function(){
                 if($rootScope.cajaSession.denominacion == "undefined")
                     return true;
@@ -98,16 +95,16 @@ angular.module('cajaApp.controller')
             }
 
             $scope.buttonDisableState = function(){
-               return $scope.alertMessageDisplay() || $scope.control.inProcess;
+                return $scope.alertMessageDisplay() || $scope.control.inProcess;
             }
         }])
-    .controller('CerrarCajaController', ["$rootScope", "$scope", "$state", "$filter", "CajaService",
-        function($rootScope, $scope, $state, $filter, CajaService) {
+    .controller('CerrarCajaController', ["$rootScope", "$scope", "$state", "$filter", "CajaSessionService",
+        function($rootScope, $scope, $state, $filter, CajaSessionService) {
 
             $scope.control = {"success":false, "inProcess": false};
 
             //cargar los datos del web service
-            CajaService.getDetalle().then(function(detalleCaja){
+            CajaSessionService.getDetalle().then(function(detalleCaja){
                 for(var i = 0; i<detalleCaja.length; i++){
                     angular.forEach(detalleCaja[i].detalle, function(row){
                         row.subtotal = function(){
@@ -144,9 +141,8 @@ angular.module('cajaApp.controller')
                     plugins: [gridLayoutPluginInicial[index]],
                     multiSelect: false,
                     columnDefs: [
-                        //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>" },
                         { field: "valor | currency : '"+simbolo+" '", displayName: "Valor" },
-                        { field: cantidad, displayName: "Cantidad" },
+                        { field: "cantidad", displayName: "Cantidad" },
                         { field: "subtotal() | currency : '' ", displayName: "Subtotal" }
                     ]
                 };
@@ -179,9 +175,8 @@ angular.module('cajaApp.controller')
                     enableRowSelection: false,
                     enableCellEditOnFocus: true,
                     columnDefs: [
-                        //{ field: "denominacion", displayName: "Denominacion", cellTemplate: "<div><div class='ngCellText'>{{simbolo}} {{row.getProperty(col.field)}}</div></div>", enableCellEdit: false },
                         { field: "valor | currency : '"+simbolo+" '", displayName: "Valor", enableCellEdit: false },
-                        { field: cantidad, displayName: "Cantidad", enableCellEdit: true },
+                        { field: "cantidad", displayName: "Cantidad", enableCellEdit: true },
                         { field: "subtotal() | currency : '' ", displayName: "Subtotal", enableCellEdit: false }
                     ]
                 };
@@ -199,7 +194,7 @@ angular.module('cajaApp.controller')
             $scope.cerrarCaja = function () {
                 $scope.control.inProcess = true;
 
-                CajaService.cerrar($scope.detalleCajaFinal).then(
+                CajaSessionService.cerrar($scope.detalleCajaFinal).then(
                     function(data){
                         $scope.control.inProcess = false;
                         $scope.control.success = true;
@@ -207,16 +202,31 @@ angular.module('cajaApp.controller')
                         $rootScope.cajaSession.abierto = false;
                         $rootScope.cajaSession.estadoMovimiento = false;
                         //redireccion
-                        $state.go("app.caja.voucherCerrarCaja");
+                        $state.transitionTo('app.caja.voucherCerrarCaja', { id: data.id });
                     },
                     function error(error){
                         $scope.control.inProcess = false;
                         $scope.control.success = false;
 
-                        $scope.alerts = [
-                            { type: "danger", msg: "Error: " + error.data + "."}
-                        ];
+                        if(error.status == 400){
+                            var mensajes = [];
+                            for(var i = 0; i<error.data.length; i++){
+                                var link = "<a ng-click='crearPendiente(error.data[i])'>Crear Pendiente</a>";
+                                mensajes[i] = {
+                                    type: "danger",
+                                    msg: 'Monto de cierre invalido en ' + error.data[i].boveda + ' necesita ' +
+                                        '<a href="www.google.com">Crear pendiente</a>',
+                                    prueba: error.data[i]
+                                };
+                            }
+                            $scope.alerts = mensajes;
 
+                            $scope.crearPendiente = function(){
+                               alert("jaja");
+                            }
+                        } else {
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                        }
                         $scope.closeAlert = function(index) {
                             $scope.alerts.splice(index, 1);
                         };
@@ -242,14 +252,14 @@ angular.module('cajaApp.controller')
             }
 
         }])
-    .controller('BuscarPendienteController', ["$scope", "$state", "$filter", "CajaService",
-        function($scope, $state, $filter, CajaService) {
+    .controller('BuscarPendienteController', ["$scope", "$state", "$filter", "CajaSessionService",
+        function($scope, $state, $filter, CajaSessionService) {
 
             $scope.crear = function(){
                 $state.transitionTo('app.caja.pendienteCrear');
             }
 
-            CajaService.getPendientes().then(
+            CajaSessionService.getPendientes().then(
                 function(pendientes){
                     $scope.pendientes = pendientes;
                 }
@@ -263,27 +273,38 @@ angular.module('cajaApp.controller')
                     { field: "monto | currency : ''", displayName: "Monto"},
                     { field: "tipoPendiente", displayName: "Tipo"},
                     { field: "fecha | date : 'dd/MM/yyyy'", displayName: "Fecha"},
-                    { field: "hora | date : 'HH:mm:ss' ", displayName: "Hora"}
+                    { field: "hora | date : 'HH:mm:ss' ", displayName: "Hora"},
+                    {displayName: 'Voucher', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="voucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}
                 ]
             };
 
+            $scope.voucher = function(pendiente) {
+                $state.transitionTo('app.caja.pendienteVoucher', { id: pendiente.id });
+            };
+
         }])
-    .controller('CrearPendienteController', ["$scope", "$state", "$filter","$modal", "CajaService","MonedaService",
-        function($scope, $state, $filter, $modal, CajaService,MonedaService) {
+    .controller('CrearPendienteController', ["$scope", "$state", "$filter", "$modal", "CajaSessionService","MonedaService",
+        function($scope, $state, $filter,$modal, CajaSessionService, MonedaService) {
 
-            $scope.tipopendientes = [{"denominacion":"FALTANTE"},{"denominacion":"SOBRANTE"}];
-            $scope.monto = 0.00;
+            $scope.control = {"success":false, "inProcess": false};
 
-            CajaService.getBovedasOfCurrentCaja().then(function(bovedas){
+            $scope.tipopendientes = [{"denominacion":"FALTANTE", "factor":1},{"denominacion":"SOBRANTE", "factor":-1}];
+            $scope.monto;
+            $scope.boveda;
+
+            CajaSessionService.getBovedasOfCurrentCaja().then(function(bovedas){
                 $scope.bovedas = bovedas;
             });
 
-            $scope.open = function () {
-                MonedaService.getDenominaciones($scope.boveda.moneda.denominacion).then(
+            $scope.bovedaChange = function(boveda){
+                MonedaService.getDenominaciones($scope.boveda.moneda.id).then(
                     function(denominaciones){
                         $scope.denominacionesMoneda = denominaciones;
                     }
                 );
+            }
+
+            $scope.open = function () {
                 var modalInstance = $modal.open({
                     templateUrl: 'modules/common/views/util/calculadora.html',
                     controller: "CalculadoraController",
@@ -304,30 +325,74 @@ angular.module('cajaApp.controller')
                 });
             };
 
+            $scope.crearPendiente = function(){
+                if($scope.formCrearPendiente.$valid && $scope.monto != 0){
+                    $scope.control.inProcess = true;
+                    CajaSessionService.crearPendiente($scope.boveda.id, ($scope.monto * $scope.tipopendiente.factor), $scope.observacion).then(
+                        function(data){
+                            $scope.control.inProcess = false;
+                            $state.transitionTo('app.caja.pendienteVoucher', { id: data.id });
+                        },
+                        function error(error){
+                            $scope.control.inProcess = false;
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                } else {
+                    $scope.control.submitted = true;
+                }
+            }
+
+            $scope.buttonDisableState = function(){
+                return $scope.control.inProcess;
+            }
+
         }])
-    .controller('CalculadoraController', function ($scope, $modalInstance, denominaciones, moneda) {
+    .controller('VoucherPendienteController', ["$scope", "$state", "$filter", "CajaSessionService",
+        function($scope, $state, $filter, CajaSessionService) {
 
-        $scope.denominaciones = denominaciones;
-        $scope.moneda = moneda;
+            CajaSessionService.getPendiente($scope.id).then(
+                function(pendiente){
+                    $scope.pendiente = pendiente;
+                },
+                function error(error){
+                    alert("pendiente no encontrado");
+                }
+            );
 
-        $scope.total = function(){
-            var totalCalculadora = 0;
-            for(var i = 0; i < $scope.denominaciones.length; i++){
-                totalCalculadora = totalCalculadora + ($scope.denominaciones[i].cantidad * $scope.denominaciones[i].valor);
+            $scope.cancelar = function(){
+
             }
-            return totalCalculadora;
-        }
 
-        $scope.ok = function () {
-            if (($scope.total() == 0 || $scope.total() === undefined)) {
-                $modalInstance.close($scope.total());
+            $scope.imprimir = function(){
+
+                qz.findPrinter("EPSON TM-U220");
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                qz.append("______ C.A.C. CAJA VENTURA ______\r\n");
+                qz.append("\x1B\x21\x01"); // 3
+
+                qz.append("\x1B\x40"); // 1
+                qz.append("\x1B\x21\x08"); // 2
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                qz.append("PENDIENTE\r\n");
+                qz.append("\x1B\x21\x01"); // 3
+                qz.append("Fecha:"+($filter('date')($scope.pendiente.fecha, 'dd/MM/yyyy'))+ " ");
+                qz.append("Hora:"+($filter('date')($scope.pendiente.hora, 'HH:mm:ss'))+"\r\n");
+                qz.append("Tipo:"+($scope.pendiente.tipoPendiente)+ "\r\n");
+                qz.append("Moneda:"+($scope.pendiente.moneda.denominacion)+ "\r\n");
+                qz.append("Monto:"+($filter('currency')($scope.pendiente.monto, $scope.pendiente.moneda.simbolo))+ "\r\n");
+
+                qz.append("\x1D\x56\x41"); // 4
+                qz.append("\x1B\x40"); // 5
+                qz.print();
             }
-        };
 
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    })
+
+        }])
     .controller('HistorialCajaController', ['$scope', "$state", '$filter', "HistorialCajaService",
         function($scope, $state, $filter, HistorialCajaService) {
 

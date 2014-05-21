@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class Usuario implements java.io.Serializable {
 
 	public final static String findByUsername = "findByUsername";
 
-	private int idUsuario;
+	private BigInteger idUsuario;
 	private String username;
 	private String password;
 	private Set usuarioRols = new HashSet(0);
@@ -39,12 +40,12 @@ public class Usuario implements java.io.Serializable {
 	public Usuario() {
 	}
 
-	public Usuario(int idUsuario, String username) {
+	public Usuario(BigInteger idUsuario, String username) {
 		this.idUsuario = idUsuario;
 		this.username = username;
 	}
 
-	public Usuario(int idUsuario, String username, String password,
+	public Usuario(BigInteger idUsuario, String username, String password,
 			Set usuarioRols, Set trabajadorUsuarios) {
 		this.idUsuario = idUsuario;
 		this.username = username;
@@ -55,11 +56,11 @@ public class Usuario implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_USUARIO", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdUsuario() {
+	public BigInteger getIdUsuario() {
 		return this.idUsuario;
 	}
 
-	public void setIdUsuario(int idUsuario) {
+	public void setIdUsuario(BigInteger idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 

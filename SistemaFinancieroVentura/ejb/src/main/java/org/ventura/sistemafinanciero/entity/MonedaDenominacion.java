@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class MonedaDenominacion implements java.io.Serializable {
 
 	public final static String allActive = "allActive";
 
-	private int idMonedaDenominacion;
+	private BigInteger idMonedaDenominacion;
 	private Moneda moneda;
 	private String denominacion;
 	private BigDecimal valor;
@@ -52,7 +53,7 @@ public class MonedaDenominacion implements java.io.Serializable {
 	public MonedaDenominacion() {
 	}
 
-	public MonedaDenominacion(int idMonedaDenominacion, Moneda moneda,
+	public MonedaDenominacion(BigInteger idMonedaDenominacion, Moneda moneda,
 			String denominacion, BigDecimal valor, BigDecimal estado) {
 		this.idMonedaDenominacion = idMonedaDenominacion;
 		this.moneda = moneda;
@@ -61,7 +62,7 @@ public class MonedaDenominacion implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public MonedaDenominacion(int idMonedaDenominacion, Moneda moneda,
+	public MonedaDenominacion(BigInteger idMonedaDenominacion, Moneda moneda,
 			String denominacion, BigDecimal valor, BigDecimal estado,
 			Set transaccionBovedaCajaDetalls, Set detalleHistorialBovedas,
 			Set transaccionBovedaOtroDetalls, Set detalleHistorialCajas) {
@@ -79,11 +80,11 @@ public class MonedaDenominacion implements java.io.Serializable {
 	@XmlTransient
 	@Id
 	@Column(name = "ID_MONEDA_DENOMINACION", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdMonedaDenominacion() {
+	public BigInteger getIdMonedaDenominacion() {
 		return this.idMonedaDenominacion;
 	}
 
-	public void setIdMonedaDenominacion(int idMonedaDenominacion) {
+	public void setIdMonedaDenominacion(BigInteger idMonedaDenominacion) {
 		this.idMonedaDenominacion = idMonedaDenominacion;
 	}
 

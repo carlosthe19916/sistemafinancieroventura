@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class HistorialCaja implements java.io.Serializable {
 	public final static String findByHistorialDateRange = "findByHistorialDateRange";
 	public final static String findByHistorialDateRangePenultimo = "findByHistorialDateRangePenultimo";
 
-	private int idHistorialCaja;
+	private BigInteger idHistorialCaja;
 	private Caja caja;
 	private Date fechaApertura;
 	private Date fechaCierre;
@@ -69,7 +70,7 @@ public class HistorialCaja implements java.io.Serializable {
 	public HistorialCaja() {
 	}
 
-	public HistorialCaja(int idHistorialCaja, Caja caja, Date fechaApertura,
+	public HistorialCaja(BigInteger idHistorialCaja, Caja caja, Date fechaApertura,
 			Date horaApertura, boolean estado) {
 		this.idHistorialCaja = idHistorialCaja;
 		this.caja = caja;
@@ -78,7 +79,7 @@ public class HistorialCaja implements java.io.Serializable {
 		this.estado = (estado ? 1 : 0);
 	}
 
-	public HistorialCaja(int idHistorialCaja, Caja caja, Date fechaApertura,
+	public HistorialCaja(BigInteger idHistorialCaja, Caja caja, Date fechaApertura,
 			Date fechaCierre, Date horaApertura, Date horaCierre,
 			boolean estado, Set transaccionCajaCajasForIdCajaHistorialDestino,
 			Set transaccionCuentaAportes, Set transaccionCompraVentas,
@@ -108,11 +109,11 @@ public class HistorialCaja implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_HISTORIAL_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdHistorialCaja() {
+	public BigInteger getIdHistorialCaja() {
 		return this.idHistorialCaja;
 	}
 
-	public void setIdHistorialCaja(int idHistorialCaja) {
+	public void setIdHistorialCaja(BigInteger idHistorialCaja) {
 		this.idHistorialCaja = idHistorialCaja;
 	}
 

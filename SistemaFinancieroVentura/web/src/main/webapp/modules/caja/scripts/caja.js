@@ -131,10 +131,13 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
         .state('app.caja.pendienteVoucher', {
-            url: "/pendiente/voucher",
+            url: "/pendiente/:id/voucher",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/caja/views/voucher/pendiente.html"
+                    templateUrl: "modules/caja/views/voucher/pendiente.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
                 }
             }
         })
@@ -256,24 +259,24 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
-cajaApp.run(["$rootScope", "CajaService", "UsuarioService", "AgenciaService",
-    function ($rootScope, CajaService, UsuarioService, AgenciaService) {
+cajaApp.run(["$rootScope", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService",
+    function ($rootScope, CajaSessionService, UsuarioSessionService, AgenciaSessionService) {
 
         $rootScope.cajaSession = {"denominacion":"undefined", "abreviatura":"undefined", "abierto": false, "estadoMovimiento":false, "estado": false};
         $rootScope.agenciaSession = {"denominacion":"undefined", "abreviatura":"undefined", "ubigeo": "undefined", "estado":false};
         $rootScope.usuarioSession = undefined;
 
-        CajaService.getCurrentCaja().then(
+        CajaSessionService.getCurrentCaja().then(
             function(caja){
                 $rootScope.cajaSession = caja;
             }
         );
-        UsuarioService.getCurrentUsuario().then(
+        UsuarioSessionService.getCurrentUsuario().then(
             function(usuario){
                 $rootScope.usuarioSession = usuario;
             }
         );
-        AgenciaService.getCurrentAgencia().then(
+        AgenciaSessionService.getCurrentAgencia().then(
             function(agencia){
                 $rootScope.agenciaSession = agencia;
             }

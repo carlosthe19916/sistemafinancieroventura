@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class Caja implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int idCaja;
+	private BigInteger idCaja;
 	private String denominacion;
 	private String abreviatura;
 	private int estado;
@@ -44,7 +45,7 @@ public class Caja implements java.io.Serializable {
 	public Caja() {
 	}
 
-	public Caja(int idCaja, String denominacion, String abreviatura,
+	public Caja(BigInteger idCaja, String denominacion, String abreviatura,
 			boolean estado, boolean abierto, boolean estadoMovimiento) {
 		this.idCaja = idCaja;
 		this.denominacion = denominacion;
@@ -54,7 +55,7 @@ public class Caja implements java.io.Serializable {
 		this.estadoMovimiento = (estadoMovimiento ? 1 : 0);
 	}
 
-	public Caja(int idCaja, String denominacion, String abreviatura,
+	public Caja(BigInteger idCaja, String denominacion, String abreviatura,
 			boolean estado, boolean abierto, boolean estadoMovimiento,
 			Set trabajadorCajas, Set bovedaCajas, Set historialCajas) {
 		this.idCaja = idCaja;
@@ -71,11 +72,11 @@ public class Caja implements java.io.Serializable {
 	@XmlTransient
 	@Id
 	@Column(name = "ID_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdCaja() {
+	public BigInteger getIdCaja() {
 		return this.idCaja;
 	}
 
-	public void setIdCaja(int idCaja) {
+	public void setIdCaja(BigInteger idCaja) {
 		this.idCaja = idCaja;
 	}
 

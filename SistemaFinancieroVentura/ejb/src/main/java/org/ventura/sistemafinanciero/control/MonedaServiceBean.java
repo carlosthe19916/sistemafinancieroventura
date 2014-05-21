@@ -33,36 +33,16 @@ public class MonedaServiceBean extends AbstractServiceBean<Moneda> implements Mo
 	
 	@Inject
 	private DAO<Object, MonedaDenominacion> monedaDenominacionDAO;
-
-	@Override
-	public Moneda findByDenominacion(String denominacion) {
-		QueryParameter queryParameter = QueryParameter.with("denominacion", denominacion);
-		List<Moneda> list = monedaDAO.findByNamedQuery(Moneda.findByDenominacion,queryParameter.parameters());
-		for (Moneda moneda : list) {
-			return moneda;
-		}
-		return null;
-	}
-
-	@Override
-	public Moneda findBySimbolo(String simbolo) {
-		QueryParameter queryParameter = QueryParameter.with("simbolo", simbolo);
-		List<Moneda> list = monedaDAO.findByNamedQuery(Moneda.findBySimbolo,queryParameter.parameters());
-		for (Moneda moneda : list) {
-			return moneda;
-		}
-		return null;
-	}
 	
 	@Override
-	public List<MonedaDenominacion> getDenominaciones(int idMoneda) {				
+	public List<MonedaDenominacion> getDenominaciones(BigInteger idMoneda) {				
 		QueryParameter queryParameter = QueryParameter.with("idmoneda", idMoneda);
 		List<MonedaDenominacion> denominaciones = monedaDenominacionDAO.findByNamedQuery(MonedaDenominacion.allActive,queryParameter.parameters());
 		return denominaciones;		
 	}
 
 	@Override
-	public Set<GenericDetalle> getGenericDenominaciones(int idMoneda) {
+	public Set<GenericDetalle> getGenericDenominaciones(BigInteger idMoneda) {
 		Moneda moneda = monedaDAO.find(idMoneda);
 		if(moneda != null){
 			Set<GenericDetalle> result = new TreeSet<GenericDetalle>();

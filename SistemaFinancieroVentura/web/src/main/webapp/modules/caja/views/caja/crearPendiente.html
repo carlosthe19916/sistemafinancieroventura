@@ -1,12 +1,17 @@
 <div ng-controller="CrearPendienteController">
     <fieldset>
         <legend>Crear pendiente</legend>
-        <form name="formCrearPendiente">
+
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+            {{alert.msg}}
+        </alert>
+
+        <form name="formCrearPendiente" ng-submit="crearPendiente()" novalidate>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPendiente.boveda.$invalid && control.submitted}">
                         <label>Boveda</label>
-                        <select name="boveda" ng-options="boveda as boveda.denominacion for boveda in bovedas" ng-model="boveda" class="form-control" required autofocus>
+                        <select name="boveda" ng-options="boveda as boveda.denominacion for boveda in bovedas" ng-model="boveda" ng-change="bovedaChange(boveda)" class="form-control" required autofocus>
                         </select>
                         <div ng-show="formCrearPendiente.boveda.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPendiente.boveda.$error.required">
@@ -36,7 +41,7 @@
                             <input type="text" name="monto" ng-model="monto" class="form-control" placeholder="Monto" required/>
                               <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="open()" ng-disabled="boveda === undefined">
-                                   <span class="glyphicon glyphicon-th-list"></span>
+                                    <span class="glyphicon glyphicon-th-list"></span>
                                 </button>
                               </span>
                         </div>
@@ -52,7 +57,7 @@
                         <label>&nbsp;</label>
                         <kbd style="display: block;margin-top: 3px;">
                             <span ng-bind="boveda.moneda.simbolo "/>
-                            <span ng-bind="tipopendiente == 'SOBRANTE' ? monto : -monto | number : 2"/>
+                            <span ng-bind="(tipopendiente.factor * monto)| number : 2"/>
                         </kbd>
                     </div>
                 </div>
@@ -61,12 +66,12 @@
                 <div class="col-sm-8">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && formCrearPersonanatural.submitted}">
                         <label>Observacion</label>
-                        <textarea class="form-control" rows="3"></textarea>
+                        <textarea class="form-control" rows="3" ng-model="observacion"></textarea>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState">Guardar</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
             <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
         </form>
     </fieldset>
