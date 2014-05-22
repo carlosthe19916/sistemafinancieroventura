@@ -80,7 +80,7 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                             {
                                 'name':'Transacciones internas', submenus:[
                                 { 'name':'Transaccion con boveda' , 'state':'app.caja.buscarTransaccionBovedaCaja'},
-                                { 'name':'Transaccion con caja' , 'state':'app.caja.tranaccionCajaCaja'}
+                                { 'name':'Transaccion con caja' , 'state':'app.caja.buscarTransaccionCajaCaja'}
                             ]}
                         ];
                     }
@@ -176,27 +176,44 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('app.caja.voucherTransaccionBovedaCaja', {
+            url: "/voucherTransaccionBovedaCaja/:id",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/voucher/transaccionBovedaCaja.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
         .state('app.caja.buscarTransaccionCajaCaja', {
             url: "/transCajaCaja",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/caja/views/caja/transaccionCajaCaja.html"
+                    templateUrl: "modules/caja/views/caja/buscarTransaccionCajaCaja.html"
                 }
             }
         })
-
-        .state('transacciones.transaccionbancaria', {
-            url: "/transaccionbancaria",
+        .state('app.caja.createTransaccionCajaCaja', {
+            url: "/crearCajaCaja",
             views: {
-
-                "viewSubContent":{
-                    templateUrl: "caja/views/transaccion/transaccionbancaria.html"
+                "viewContent":{
+                    templateUrl: "modules/caja/views/caja/crearTransaccionCajaCaja.html"
                 }
             }
         })
-
-
-
+        .state('app.caja.voucherTransaccionCajaCaja', {
+            url: "/voucherTransaccionCajaCaja/:id",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/caja/views/voucher/transaccionCajaCaja.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
         .state('app.administracion', {
             url: "/administracion",
             views: {

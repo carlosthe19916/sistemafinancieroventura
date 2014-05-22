@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class Agencia implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idAgencia;
+	private BigInteger idAgencia;
 
 	@NotNull(message = "Sucursal is null")
 	private Sucursal sucursal;
@@ -64,15 +65,16 @@ public class Agencia implements java.io.Serializable {
 	@NotEmpty(message = "Ubigeo is empty")
 	@NotBlank(message = "Ubigeo is blank")
 	private String ubigeo;
-	
+
 	private Set bovedas = new HashSet(0);
 	private Set trabajadors = new HashSet(0);
 
 	public Agencia() {
 	}
 
-	public Agencia(int idAgencia, Sucursal sucursal, String denominacion,
-			boolean estado, String abreviatura, String ubigeo) {
+	public Agencia(BigInteger idAgencia, Sucursal sucursal,
+			String denominacion, boolean estado, String abreviatura,
+			String ubigeo) {
 		this.idAgencia = idAgencia;
 		this.sucursal = sucursal;
 		this.denominacion = denominacion;
@@ -81,9 +83,9 @@ public class Agencia implements java.io.Serializable {
 		this.ubigeo = ubigeo;
 	}
 
-	public Agencia(int idAgencia, Sucursal sucursal, String denominacion,
-			boolean estado, String abreviatura, String ubigeo, Set bovedas,
-			Set trabajadors) {
+	public Agencia(BigInteger idAgencia, Sucursal sucursal,
+			String denominacion, boolean estado, String abreviatura,
+			String ubigeo, Set bovedas, Set trabajadors) {
 		this.idAgencia = idAgencia;
 		this.sucursal = sucursal;
 		this.denominacion = denominacion;
@@ -94,14 +96,14 @@ public class Agencia implements java.io.Serializable {
 		this.trabajadors = trabajadors;
 	}
 
-	@XmlTransient
+	@XmlElement(name = "id")
 	@Id
 	@Column(name = "ID_AGENCIA", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdAgencia() {
+	public BigInteger getIdAgencia() {
 		return this.idAgencia;
 	}
 
-	public void setIdAgencia(int idAgencia) {
+	public void setIdAgencia(BigInteger idAgencia) {
 		this.idAgencia = idAgencia;
 	}
 

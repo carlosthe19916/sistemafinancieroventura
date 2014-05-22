@@ -19,6 +19,9 @@ angular.module("commonApp.service", ["restangular"])
             return {
                 getCurrentAgencia: function(){
                     return Restangular.one("agencia/session").get();
+                },
+                getCajasOfAgencia: function(){
+                    return Restangular.one("agencia/session/cajas").get();
                 }
             }
         }])

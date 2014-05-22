@@ -39,7 +39,7 @@ public class TransaccionCajaCajaSessionRESTService {
 
 
 	@GET
-	@Path("/transaccioncajacaja/enviados")
+	@Path("/enviados")
 	@Produces({ "application/xml", "application/json" })
 	public Response getTransaccionesCajaCajaOfCajaEnviados(@Context SecurityContext context) {
 		Set<TransaccionCajaCaja> result = cajaSessionService.getTransaccionesEnviadasCajaCaja();
@@ -47,7 +47,7 @@ public class TransaccionCajaCajaSessionRESTService {
 	}
 
 	@GET
-	@Path("/transaccioncajacaja/recibidos")
+	@Path("/recibidos")
 	@Produces({ "application/xml", "application/json" })
 	public Response getTransaccionesCajaCajaOfCajaRecibidos(@Context SecurityContext context) {
 		Set<TransaccionCajaCaja> result = cajaSessionService.getTransaccionesRecibidasCajaCaja();
@@ -56,7 +56,7 @@ public class TransaccionCajaCajaSessionRESTService {
 	
 	@POST
 	@Produces({ "application/xml", "application/json" })
-	public Response createTransaccionesCajaCaja(@Context SecurityContext context) {
+	public Response createTransaccionCajaCaja(@Context SecurityContext context) {
 		return null;
 	}
 }

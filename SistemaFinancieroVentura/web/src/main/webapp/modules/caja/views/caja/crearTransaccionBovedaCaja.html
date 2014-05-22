@@ -64,14 +64,14 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                                <tr ng-class="{'danger': total() == 0 || total() === undefined}">
-                                    <td colspan="2">
-                                        Total: <span ng-bind="total() | currency : boveda.moneda.simbolo"></span>
-                                    </td>
-                                    <td ng-show="total() == 0 || total() === undefined">
-                                        Invalido
-                                    </td>
-                                </tr>
+                            <tr ng-class="{'danger': total() == 0 || total() === undefined}">
+                                <td colspan="2">
+                                    Total: <span ng-bind="total() | currency : boveda.moneda.simbolo"></span>
+                                </td>
+                                <td ng-show="total() == 0 || total() === undefined">
+                                    Invalido
+                                </td>
+                            </tr>
                             </tfoot>
                         </table>
                     </div>

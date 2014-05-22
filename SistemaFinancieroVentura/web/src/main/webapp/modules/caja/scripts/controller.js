@@ -58,7 +58,7 @@ angular.module('cajaApp.controller')
             $scope.abrirCaja = function () {
                 $scope.control.inProcess = true;
 
-                CajaService.abrir().then(
+                CajaSessionService.abrir().then(
                     function(data){
                         $scope.control.inProcess = false;
                         $scope.control.success = true;
@@ -614,19 +614,19 @@ angular.module('cajaApp.controller')
                 qz.print();
             }
         }])
-    .controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService",
-        function($scope, $state, $filter, CajaService) {
+    .controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaSessionService",
+        function($scope, $state, $filter, CajaSessionService) {
 
             $scope.nuevo = function(){
                 $state.transitionTo('app.caja.createTransaccionBovedaCaja');
             }
 
-            CajaService.getTransaccionBovedaCajaEnviadas().then(
+            CajaSessionService.getTransaccionBovedaCajaEnviadas().then(
                 function(enviados){
                     $scope.transaccionesEnviadas = enviados;
                 }
             );
-            CajaService.getTransaccionBovedaCajaRecibidas().then(
+            CajaSessionService.getTransaccionBovedaCajaRecibidas().then(
                 function(recibidos){
                     $scope.transaccionesRecibidas = recibidos;
                 }
@@ -636,12 +636,12 @@ angular.module('cajaApp.controller')
                 data: 'transaccionesEnviadas',
                 multiSelect: false,
                 columnDefs: [
-                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha apertura'},
-                    {field:"hora | date : 'hh:mm:ss'", displayName:'Hora apertura'},
-                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Fecha cierre'},
-                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Hora cierre'},
-                    {field:"origen", displayName:'Hora cierre'},
-                    {field:"monto", displayName:'Hora cierre'},
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha'},
+                    {field:"hora | date : 'HH:mm:ss'", displayName:'Hora'},
+                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Estado solicitud'},
+                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Estado cierre'},
+                    {field:"origen", displayName:'Origen'},
+                    {field:"monto | currency :''", displayName:'Monto'},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
             };
 
@@ -649,21 +649,22 @@ angular.module('cajaApp.controller')
                 data: 'transaccionesRecibidas',
                 multiSelect: false,
                 columnDefs: [
-                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha apertura'},
-                    {field:"hora | date : 'hh:mm:ss'", displayName:'Hora apertura'},
-                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Fecha cierre'},
-                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Hora cierre'},
-                    {field:"origen", displayName:'Hora cierre'},
-                    {field:"monto", displayName:'Hora cierre'},
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha'},
+                    {field:"hora | date : 'HH:mm:ss'", displayName:'Hora'},
+                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Estado solicitud'},
+                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Estado cierre'},
+                    {field:"origen", displayName:'Origen'},
+                    {field:"monto | currency :''", displayName:'Monto'},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
             };
 
-
-
+            $scope.getVoucher = function(row){
+                $state.transitionTo('app.caja.voucherPendiente', { id: row.id });
+            }
 
         }])
-    .controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaService", "MonedaService", "CajaService",
-        function($scope, $state, $filter, CajaService, MonedaService,CajaService) {
+    .controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "MonedaService", "CajaSessionService",
+        function($scope, $state, $filter, MonedaService,CajaSessionService) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted" : false};
 
@@ -674,14 +675,14 @@ angular.module('cajaApp.controller')
             $scope.bovedas = [];
 
 
-            CajaService.getBovedasOfCurrentCaja().then(
+            CajaSessionService.getBovedasOfCurrentCaja().then(
                 function(bovedas){
                     $scope.bovedas = bovedas;
                 }
             );
 
             $scope.cargarDetalle = function(){
-                MonedaService.getDenominaciones($scope.boveda.moneda.denominacion).then(
+                MonedaService.getDenominaciones($scope.boveda.moneda.id).then(
                     function(detalle){
                         $scope.detalles = detalle;
                     },
@@ -704,12 +705,12 @@ angular.module('cajaApp.controller')
             $scope.crearTransaccion = function(){
                 if ($scope.formCrearTransaccionBovedaCaja.$valid && ($scope.total() != 0 || $scope.total() !== undefined)) {
                     $scope.control.inProcess = true;
-                    CajaService.crearTransaccionBovedaCaja($scope.boveda.denominacion,$scope.detalles).then(
+                    CajaSessionService.crearTransaccionBovedaCaja($scope.boveda.id,$scope.detalles).then(
                         function(data){
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
                             //redireccion al voucher
-                            //$state.transitionTo('app.caja.voucherCerrarCaja', { fechaApertura: cajaHistorial.horaApertura});
+                            $state.transitionTo('app.caja.voucherTransaccionBovedaCaja', { id: data.id});
                         },
                         function error(error){
                             $scope.control.inProcess = false;
@@ -724,10 +725,100 @@ angular.module('cajaApp.controller')
                     $scope.control.submitted = true;
                 }
             }
+        }])
+    .controller('VoucherTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "MonedaService", "CajaSessionService",
+        function($scope, $state, $filter, MonedaService,CajaSessionService) {
+
 
         }])
-        
-        .controller('SocioBuscarController', ['$scope','$state','$dialogs', 'ngProgress','Restangular', "SocioService", "$http",
+    .controller('BuscarTransaccionCajaCajaController', ['$scope', "$state", '$filter', "CajaSessionService",
+        function($scope, $state, $filter, CajaSessionService) {
+
+            $scope.nuevo = function(){
+                $state.transitionTo('app.caja.createTransaccionCajaCaja');
+            }
+
+            CajaSessionService.getTransaccionCajaCajaEnviadas().then(
+                function(enviados){
+                    $scope.transaccionesEnviadas = enviados;
+                }
+            );
+            CajaSessionService.getTransaccionCajaCajaRecibidas().then(
+                function(recibidos){
+                    $scope.transaccionesRecibidas = recibidos;
+                }
+            );
+
+            $scope.gridOptionsEnviados = {
+                data: 'transaccionesEnviadas',
+                multiSelect: false,
+                columnDefs: [
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha'},
+                    {field:"hora | date : 'HH:mm:ss'", displayName:'Hora'},
+                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Estado solicitud'},
+                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Estado cierre'},
+                    {field:"origen", displayName:'Origen'},
+                    {field:"monto | currency :''", displayName:'Monto'},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
+            };
+
+            $scope.gridOptionsRecibidos = {
+                data: 'transaccionesRecibidas',
+                multiSelect: false,
+                columnDefs: [
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'Fecha'},
+                    {field:"hora | date : 'HH:mm:ss'", displayName:'Hora'},
+                    {field:"estadoSolicitud | date : 'dd/MM/yyyy'", displayName:'Estado solicitud'},
+                    {field:"estadoConfirmacion | date : 'hh:mm:ss'", displayName:'Estado cierre'},
+                    {field:"origen", displayName:'Origen'},
+                    {field:"monto | currency :''", displayName:'Monto'},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button></div>'}]
+            };
+
+            $scope.getVoucher = function(row){
+                $state.transitionTo('app.caja.voucherTransaccionCajaCaja', { id: row.id });
+            }
+
+        }])
+    .controller('CrearTransaccionCajaCajaController', ['$scope', "$state", '$filter', "CajaSessionService","AgenciaSessionService",
+        function($scope, $state, $filter,CajaSessionService,AgenciaSessionService) {
+
+            $scope.control = {"success":false, "inProcess": false, "submitted" : false};
+
+            //objetos de transaccion
+            $scope.moneda;
+            $scope.caja;
+
+            $scope.cajas = [];
+            $scope.monedas = [];
+
+            CajaSessionService.getMonedasOfCurrentCaja().then(
+                function(monedas){
+                    $scope.monedas = monedas;
+                }
+            );
+
+            AgenciaSessionService.getCajasOfAgencia().then(
+                function(cajas){
+                    $scope.cajas = cajas;
+                }
+            );
+
+            $scope.crearTransaccion = function(){
+                if ($scope.formCrearTransaccionCajaCaja.$valid) {
+                    $scope.control.inProcess = true;
+
+                } else {
+                    $scope.control.submitted = true;
+                }
+            }
+        }])
+    .controller('VoucherTransaccionCajaCajaController', ['$scope', "$state", '$filter', "MonedaService", "CajaSessionService",
+        function($scope, $state, $filter, MonedaService,CajaSessionService) {
+
+
+        }])
+    .controller('SocioBuscarController', ['$scope','$state','$dialogs', 'ngProgress','Restangular', "SocioService", "$http",
         function($scope, $state, $dialogs, ngProgress, Restangular, SocioService, $http) {
 
             $scope.sociosList = [];

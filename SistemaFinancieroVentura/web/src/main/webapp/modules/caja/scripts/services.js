@@ -11,8 +11,11 @@ angular.module("cajaApp.service", ["restangular"])
                 getDetalle: function(){
                     return Restangular.all("caja/session/detalle").getList();
                 },
+                getMonedasOfCurrentCaja: function(){
+                    return Restangular.all("caja/session/monedas").getList();
+                },
                 abrir: function(){
-                    return Restangular.one("caja/session/abrir").put();
+                    return Restangular.one("caja/session/abrir").post();
                 },
                 cerrar: function(detalle){
                     var copy = Restangular.copy(detalle);
@@ -25,11 +28,21 @@ angular.module("cajaApp.service", ["restangular"])
                     var copy = Restangular.copy(detalle);
                     return Restangular.all("caja/session/transaccionbovedacaja").post(copy ,{"boveda":boveda});
                 },
+                crearTransaccionCajaCaja: function(boveda, detalle){
+                    var copy = Restangular.copy(detalle);
+                    return Restangular.all("caja/session/transaccioncajacaja").post(copy ,{"boveda":boveda});
+                },
                 getTransaccionBovedaCajaEnviadas: function(){
                     return Restangular.all("caja/session/transaccionbovedacaja/enviados").getList();
                 },
                 getTransaccionBovedaCajaRecibidas: function(){
                     return Restangular.all("caja/session/transaccionbovedacaja/recibidos").getList();
+                },
+                getTransaccionCajaCajaEnviadas: function(){
+                    return Restangular.all("caja/session/transaccioncajacaja/enviados").getList();
+                },
+                getTransaccionCajaCajaRecibidas: function(){
+                    return Restangular.all("caja/session/transaccioncajacaja/recibidos").getList();
                 },
                 getPendientes: function(){
                     return Restangular.all("caja/session/pendiente").getList();

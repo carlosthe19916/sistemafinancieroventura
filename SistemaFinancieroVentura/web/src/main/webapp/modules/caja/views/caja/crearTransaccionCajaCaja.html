@@ -1,0 +1,78 @@
+<div ng-controller="CrearTransaccionCajaCajaController">
+    <fieldset>
+        <legend>Transaccion caja - caja</legend>
+
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+
+        <form name="formCrearTransaccionCajaCaja" ng-submit="crearTransaccion()" novalidate>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionCajaCaja.caja.$invalid && control.submitted}">
+                        <label>Caja(*)</label>
+                        <select name="caja" ng-options="caja as caja.denominacion for caja in cajas" ng-model="caja" class="form-control" required autofocus>
+                        </select>
+                        <div ng-show="formCrearTransaccionCajaCaja.caja.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearTransaccionCajaCaja.caja.$error.required">
+                                Ingrese caja.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionCajaCaja.moneda.$invalid && control.submitted}">
+                        <label>Moneda(*)</label>
+                        <select name="moneda" ng-options="moneda as moneda.denominacion for moneda in monedas" ng-model="moneda" class="form-control" required>
+                        </select>
+                        <div ng-show="formCrearTransaccionCajaCaja.moneda.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearTransaccionCajaCaja.moneda.$error.required">
+                                Ingrese moneda.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionCajaCaja.monto.$invalid && control.submitted}">
+                        <label>Monto</label>
+                        <div class="input-group">
+                            <input type="text" name="monto" ng-model="monto" class="form-control" placeholder="Monto" required/>
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open()" ng-disabled="moneda === undefined">
+                                    <span class="glyphicon glyphicon-th-list"></span>
+                                </button>
+                              </span>
+                        </div>
+                        <div ng-show="formCrearTransaccionCajaCaja.monto.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearTransaccionCajaCaja.monto.$error.required">
+                                Ingrese monto.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <kbd style="display: block;margin-top: 3px;">
+                            <span ng-bind="moneda.simbolo "/>
+                            <span ng-bind="monto | number : 2"/>
+                        </kbd>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label>Observacion</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-default">Cancelar</button>
+        </form>
+    </fieldset>
+
+</div>

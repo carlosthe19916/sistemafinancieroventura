@@ -422,7 +422,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		if(boveda == null || caja == null)
 			throw new RollbackFailureException("Caja o Boveda no encontrada");
 		Moneda moneda = boveda.getMoneda();
-		HistorialCaja historialCaja = null;
+		HistorialCaja historialCaja = getHistorialActivo();
 		HistorialBoveda historialBoveda = null;
 				
 
@@ -435,18 +435,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 			for (HistorialBoveda hist : listHistBovedas) {
 				historialBoveda = hist;
 			}
-		}
-		
-		//obteniendo historial de caja
-		QueryParameter queryParameter2 = QueryParameter.with("idcaja", caja.getIdCaja());
-		List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialActivo, queryParameter2.parameters());
-		if(list.size() > 1){
-			throw new RollbackFailureException("La caja tiene mas de un historial activo");
-		} else {
-			for (HistorialCaja c : list) {
-				historialCaja = c;
-			}
-		}	
+		}			
+		if(historialBoveda == null)
+			throw new RollbackFailureException("Boveda no tiene historiales activos");
 		
 		//determinando los saldos
 		BigDecimal totalTransaccion = BigDecimal.ZERO;
@@ -504,8 +495,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 				}
 			}
 			detalleTransaccionBovedaCajaDAO.create(det);
-		}	
-		
+		}			
 		return transaccionBovedaCaja.getIdTransaccionBovedaCaja();
 
 	}
@@ -524,8 +514,16 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 
 	@Override
 	public Set<Moneda> getMonedas() {
-		// TODO Auto-generated method stub
-		return null;
+		Caja caja = getCaja();
+		Set<BovedaCaja> bovedaCajas = caja.getBovedaCajas();
+		Set<Moneda> result = new HashSet<>();
+		for (BovedaCaja bovedaCaja : bovedaCajas) {
+			Boveda boveda = bovedaCaja.getBoveda();
+			Moneda moneda = boveda.getMoneda();
+			Hibernate.initialize(moneda);
+			result.add(moneda);
+		}
+		return result;
 	}
 
 	@Override
@@ -566,26 +564,44 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 
 	@Override
 	public Set<TransaccionBovedaCaja> getTransaccionesEnviadasBovedaCaja() {
-		// TODO Auto-generated method stub
-		return null;
+		HistorialCaja historial = getHistorialActivo();
+		Set<TransaccionBovedaCaja> enviados = historial.getTransaccionBovedaCajas();
+		Set<TransaccionBovedaCaja> result = new HashSet<>();
+		for (TransaccionBovedaCaja transaccionBovedaCaja : enviados) {
+			if(transaccionBovedaCaja.getOrigen().equals(TransaccionBovedaCajaOrigen.CAJA))
+				result.add(transaccionBovedaCaja);
+		}
+		Hibernate.initialize(result);
+		return result;
 	}
 
 	@Override
 	public Set<TransaccionBovedaCaja> getTransaccionesRecibidasBovedaCaja() {
-		// TODO Auto-generated method stub
-		return null;
+		HistorialCaja historial = getHistorialActivo();
+		Set<TransaccionBovedaCaja> enviados = historial.getTransaccionBovedaCajas();
+		Set<TransaccionBovedaCaja> result = new HashSet<>();
+		for (TransaccionBovedaCaja transaccionBovedaCaja : enviados) {
+			if(transaccionBovedaCaja.getOrigen().equals(TransaccionBovedaCajaOrigen.BOVEDA))
+				result.add(transaccionBovedaCaja);
+		}
+		Hibernate.initialize(result);
+		return result;
 	}
 
 	@Override
 	public Set<TransaccionCajaCaja> getTransaccionesEnviadasCajaCaja() {
-		// TODO Auto-generated method stub
-		return null;
+		HistorialCaja historial = getHistorialActivo();
+		Set<TransaccionCajaCaja> enviados = historial.getTransaccionCajaCajasForIdCajaHistorialOrigen();		
+		Hibernate.initialize(enviados);
+		return enviados;
 	}
 
 	@Override
 	public Set<TransaccionCajaCaja> getTransaccionesRecibidasCajaCaja() {
-		// TODO Auto-generated method stub
-		return null;
+		HistorialCaja historial = getHistorialActivo();
+		Set<TransaccionCajaCaja> recibidos = historial.getTransaccionCajaCajasForIdCajaHistorialDestino();		
+		Hibernate.initialize(recibidos);
+		return recibidos;
 	}
 
 	@Override
