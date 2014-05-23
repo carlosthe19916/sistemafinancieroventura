@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.opensource.org/licenses/gpl-2.
  */
 package org.ventura.sistemafinanciero.dao;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,7 @@ public interface DAO<K, T> {
 
 	public List<T> findAll();
 	
-	public List<T> findRange(BigInteger[] range);
+	public List<T> findRange(int[] range);
 
     public int count();
     

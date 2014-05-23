@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.control;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.ejb.Remote;
@@ -13,6 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
+import org.ventura.sistemafinanciero.entity.Departamento;
+import org.ventura.sistemafinanciero.entity.Distrito;
+import org.ventura.sistemafinanciero.entity.Pais;
+import org.ventura.sistemafinanciero.entity.Provincia;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.service.MaestroService;
@@ -28,12 +33,46 @@ public class MaestroServiceBean implements MaestroService {
 	@Inject
 	private DAO<Object, TipoDocumento> tipodocumentoDAO;
 
+	@Inject
+	private DAO<Object, Pais> paisDAO;
+	
+	@Inject
+	private DAO<Object, Departamento> departamentoDAO;	
+	@Inject
+	private DAO<Object, Provincia> provinciaDAO;
+	@Inject
+	private DAO<Object, Distrito> distritoDAO;
+	
 	@Override
 	public List<TipoDocumento> getAll(TipoPersona tipopersona) {
 		List<TipoDocumento> list = null;
 		QueryParameter queryParameter = QueryParameter.with("tipopersona", tipopersona.toString());
 		list = tipodocumentoDAO.findByNamedQuery(TipoDocumento.findByTipopersona, queryParameter.parameters());		
 		return list;
+	}
+
+	@Override
+	public List<Pais> getPaises() {		
+		return paisDAO.findAll();
+	}
+
+	@Override
+	public List<Departamento> getDepartamentos() {
+		return departamentoDAO.findAll();
+	}
+
+	@Override
+	public List<Provincia> getProvincias(BigInteger idDepartamento) {
+		QueryParameter queryParameter = QueryParameter.with("iddepartamento", idDepartamento);
+		List<Provincia> provincias = provinciaDAO.findByNamedQuery(Provincia.findByIdDepartamento, queryParameter.parameters());
+		return provincias;
+	}
+
+	@Override
+	public List<Distrito> getDistritos(BigInteger idProvincia) {
+		QueryParameter queryParameter = QueryParameter.with("idprovincia", idProvincia);
+		List<Distrito> provincias = distritoDAO.findByNamedQuery(Distrito.findByIdProvincia, queryParameter.parameters());
+		return provincias;
 	}
 
 }

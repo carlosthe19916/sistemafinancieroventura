@@ -24,6 +24,13 @@ angular.module('commonApp.controller')
             $modalInstance.dismiss('cancel');
         };
     })
+    .controller('pruebaController', function ($scope) {
+
+        $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+            alert("entroo");
+            event.preventDefault();//prevent file from uploading
+        });
+    })
     .controller('PersonanaturalBuscarController', ['$scope','$state','$dialogs', 'ngProgress','Restangular', "PersonanaturalService",
         function($scope, $state, $dialogs, ngProgress, Restangular, PersonanaturalService) {
 
@@ -140,106 +147,85 @@ angular.module('commonApp.controller')
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="edit(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="delete(row.entity)"><span class="glyphicon glyphicon-remove"></span>Del</button></div>'}]
             };
         }])
-    .controller('PersonanaturalController', ['$scope', '$state', '$dialogs', 'Restangular',"TipodocumentoService","SexoService","EstadocivilService", "PersonanaturalService",
-        function($scope,$state, $dialogs, Restangular,TipodocumentoService, SexoService, EstadocivilService, PersonanaturalService) {
+    .controller('CrearPersonaNaturalController', ["$scope", "$state","$window", "MaestroService", "PersonaNaturalService",
+        function($scope, $state,$window, MaestroService, PersonaNaturalService) {
+            $scope.control = {"success":false, "inProcess": false, "submitted" : false};
+            $scope.persona = PersonaNaturalService.getModel();
+            $scope.ubigeo = {"departamento":"", "provincia":"", "distrito":""};
+            $scope.persona.ubigeo = $scope.ubigeo.departamento + $scope.ubigeo.provincia + $scope.ubigeo.distrito;
 
-            TipodocumentoService.getTipodocumentosPersonanatural().then(function(tipodocumentos){
+            $scope.dateOptions = {
+                formatYear: 'yyyy',
+                startingDay: 1
+            };
+
+            $scope.fechaNacimiento = new Date();
+            $scope.persona.fechaNacimiento = $scope.fechaNacimiento.getTime();
+
+            $scope.open = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                $scope.opened = true;
+            };
+
+            MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
                 $scope.tipodocumentos = tipodocumentos;
             });
-            SexoService.getSexos().then(function(sexos){
+            MaestroService.getSexos().then(function(sexos){
                 $scope.sexos = sexos;
             });
-            EstadocivilService.getEstadosciviles().then(function(estadosciviles){
+            MaestroService.getEstadosciviles().then(function(estadosciviles){
                 $scope.estadosciviles = estadosciviles;
             });
+            MaestroService.getPaises().then(function(paises){
+                $scope.paises = paises;
+            });
+            MaestroService.getDepartamentos().then(function(departamentos){
+                $scope.departamentos = departamentos;
+            });
 
-            if(!angular.isUndefined($scope.id) && !($scope.id === null) ){
-                $scope.persona = PersonanaturalService.findById($scope.id);
+            $scope.changeDepartamento = function(departamento){
+                MaestroService.getProvincias(departamento.id).then(function(provincias){
+                    $scope.provincias = provincias;
+                });
             }
-
-            $scope.cancel = function () {
-                $state.go("app.administracion.personanaturalBuscar");
+            $scope.changeProvincia = function(provincia){
+                MaestroService.getDistritos(provincia.id).then(function(distritos){
+                    $scope.distritos = distritos;
+                });
             }
 
             //logic
             $scope.create = function(){
                 if ($scope.formCrearPersonanatural.$valid) {
                     $scope.buttonDisableState = true;
-                    PersonanaturalService.create($scope.persona).then(
+                    PersonaNaturalService.crear($scope.persona).then(
                         function(persona){
-                            $state.go("app.administracion.personanaturalBuscar");
+                           //PersonaNaturalService.guardarPersonaResponse(data.id);
+                           //alert("dato enviado "+PersonaNaturalService.getPersonaResponse());
+                            $window.close();
                         },
                         function error(error){
-                            switch(error.status)
-                            {
-                                //conflic with other person
-                                case 409:
-                                    $dialogs.error("Error","Conflicto:\n"+JSON.stringify(error.data));
-                                    break;
-                            }
+                            $scope.control.inProcess = false;
+                            $scope.control.success = false;
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.alerts.splice(index, 1);
                         }
                     );
                     $scope.buttonDisableState = false;
                 } else {
-                    if($scope.searched == true)
-                        $scope.formCrearPersonanatural.submitted = true;
+                    $scope.control.submitted = true;
                 }
             }
 
-            $scope.update = function(){
-                if ($scope.formCrearPersonanatural.$valid) {
-                    $scope.buttonDisableState = true;
-                    PersonanaturalService.update($scope.persona).then(
-                        function(persona){
-                            $state.go("app.administracion.personanaturalBuscar");
-                        },
-                        function error(error){
-                            switch(error.status)
-                            {
-                                //conflic with other person
-                                case 409:
-                                    $dialogs.error("Error","Conflicto:\n"+JSON.stringify(error.data));
-                                    break;
-                            }
-                        }
-                    );
-                    $scope.buttonDisableState = false;
-                } else {
-                    if($scope.searched == true)
-                        $scope.formCrearPersonanatural.submitted = true;
-                }
+            $scope.cancel = function () {
+                //$state.go("app.administracion.personanaturalBuscar");
+                alert("cancelar");
             }
 
-            $scope.searched = false;
-
-            $scope.findByTipoNumeroDocumento = function(){
-                var idtipodocumento = $scope.persona.tipodocumento.id;
-                var numerodocumento = $scope.persona.numerodocumento;
-                PersonanaturalService.findByTipoNumeroDocumento(idtipodocumento, numerodocumento).then(
-                    function(persona){
-                        $scope.alerts[0].type = "warning";
-                        $scope.alerts[0].msg = "Existe una persona con el mismo Tipo y Numero de documento";
-                    },function error(error){
-                        //not found exception
-                        if(error.status == 404){
-                            $scope.alerts[0].type = "info";
-                            $scope.alerts[0].msg = "La persona puede crearse.";
-                        }
-                    }
-                );
-                $scope.searched = true;
+            $scope.buttonDisableState = function(){
+                return $scope.control.inProcess;
             }
-
-            $scope.keypressCallback = function($event) {
-                $scope.findByTipoNumeroDocumento();
-                $event.preventDefault();
-            };
-
-            $scope.alerts = [
-                { type: 'info', msg: 'Existe una persona con el mismo Tipo y Numero de documento.' }
-            ];
-            $scope.closeAlert = function(index) {
-                $scope.alerts.splice(index, 1);
-            };
 
         }]);

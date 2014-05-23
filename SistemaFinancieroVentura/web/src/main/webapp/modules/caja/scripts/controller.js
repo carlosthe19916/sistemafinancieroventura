@@ -286,7 +286,7 @@ angular.module('cajaApp.controller')
     .controller('CrearPendienteController', ["$scope", "$state", "$filter", "$modal", "CajaSessionService","MonedaService",
         function($scope, $state, $filter,$modal, CajaSessionService, MonedaService) {
 
-            $scope.control = {"success":false, "inProcess": false};
+            $scope.control = {"success":false, "inProcess": false, "submitted":false};
 
             $scope.tipopendientes = [{"denominacion":"FALTANTE", "factor":1},{"denominacion":"SOBRANTE", "factor":-1}];
             $scope.monto;

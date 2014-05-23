@@ -74,6 +74,20 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 findByFilterText: function(text){
                     return Restangular.all("socio/filtertext/"+text).getList();
+                },
+                crear: function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
+                    var data = $.param({
+                        tipoPersona:tipoPersona,
+                        idTipoDocumentoSocio:idTipoDocumentoSocio,
+                        numeroDocumentoSocio:numeroDocumentoSocio,
+                        idTipoDocumentoApoderado:idTipoDocumentoApoderado,
+                        numeroDocumentoApoderado:numeroDocumentoApoderado}
+                    );
+                    return Restangular.one("socio").customPOST(
+                        data,
+                        '',{},{
+                            "Content-Type":"application/x-www-form-urlencoded"}
+                    );
                 }
             }
         }])

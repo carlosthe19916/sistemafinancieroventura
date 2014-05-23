@@ -2,7 +2,7 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,11 +40,16 @@ import javax.xml.bind.annotation.XmlTransient;
 		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filtertext OR LOWER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE '%:filtertext%'") })
 public class PersonaNatural implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public final static String FindByTipoAndNumeroDocumento = "FindByTipoAndNumeroDocumento";
 	public final static String FindByFilterText = "FindByFilterText";
 	public final static String FindAll = "FindAll";
 
-	private int idPersonaNatural;
+	private BigInteger idPersonaNatural;
 	private TipoDocumento tipoDocumento;
 	private String numeroDocumento;
 	private String apellidoPaterno;
@@ -68,7 +75,7 @@ public class PersonaNatural implements java.io.Serializable {
 	public PersonaNatural() {
 	}
 
-	public PersonaNatural(int idPersonaNatural,
+	public PersonaNatural(BigInteger idPersonaNatural,
 			TipoDocumento tipoDocumento, String numeroDocumento,
 			String apellidoPaterno, String apellidoMaterno, String nombres,
 			Date fechaNacimiento, String sexo) {
@@ -82,7 +89,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.sexo = sexo;
 	}
 
-	public PersonaNatural(int idPersonaNatural,
+	public PersonaNatural(BigInteger idPersonaNatural,
 			TipoDocumento tipoDocumento, String numeroDocumento,
 			String apellidoPaterno, String apellidoMaterno, String nombres,
 			Date fechaNacimiento, String sexo, String estadoCivil,
@@ -114,18 +121,19 @@ public class PersonaNatural implements java.io.Serializable {
 		this.trabajadors = trabajadors;
 	}
 
-	@XmlElement
+	@XmlElement(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_PERSONA_NATURAL", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdPersonaNatural() {
+	public BigInteger getIdPersonaNatural() {
 		return this.idPersonaNatural;
 	}
 
-	public void setIdPersonaNatural(int idPersonaNatural) {
+	public void setIdPersonaNatural(BigInteger idPersonaNatural) {
 		this.idPersonaNatural = idPersonaNatural;
 	}
 
-	@XmlElement(name="tipodocumento")
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TIPO_DOCUMENTO", nullable = false)
 	public TipoDocumento getTipoDocumento() {
@@ -136,7 +144,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.tipoDocumento = tipoDocumento;
 	}
 
-	@XmlElement(name="numerodocumento")
+	@XmlElement
 	@Column(name = "NUMERO_DOCUMENTO", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumeroDocumento() {
 		return this.numeroDocumento;
@@ -146,7 +154,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.numeroDocumento = numeroDocumento;
 	}
 
-	@XmlElement(name="apellidopaterno")
+	@XmlElement
 	@Column(name = "APELLIDO_PATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoPaterno() {
 		return this.apellidoPaterno;
@@ -156,7 +164,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.apellidoPaterno = apellidoPaterno;
 	}
 
-	@XmlElement(name="apellidomaterno")
+	@XmlElement
 	@Column(name = "APELLIDO_MATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoMaterno() {
 		return this.apellidoMaterno;
@@ -176,7 +184,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.nombres = nombres;
 	}
 
-	@XmlElement(name="fechanacimiento")
+	@XmlElement
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_NACIMIENTO", nullable = false, length = 7)
 	public Date getFechaNacimiento() {
@@ -197,7 +205,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.sexo = sexo;
 	}
 
-	@XmlElement(name="estadocivil")
+	@XmlElement
 	@Column(name = "ESTADO_CIVIL", length = 20, columnDefinition = "nvarchar2")
 	public String getEstadoCivil() {
 		return this.estadoCivil;
@@ -267,6 +275,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.email = email;
 	}
 
+	@XmlElement
 	@Column(name = "UBIGEO", length = 12, columnDefinition = "nvarchar2")
 	public String getUbigeo() {
 		return this.ubigeo;
@@ -276,6 +285,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.ubigeo = ubigeo;
 	}
 
+	@XmlElement
 	@Column(name = "CODIGO_PAIS", length = 6, columnDefinition = "nvarchar2")
 	public String getCodigoPais() {
 		return this.codigoPais;
@@ -285,6 +295,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.codigoPais = codigoPais;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personaNatural")
 	public Set<Titular> getTitulars() {
 		return this.titulars;
@@ -294,6 +305,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.titulars = titulars;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personaNatural")
 	public Set<PersonaJuridica> getPersonaJuridicas() {
 		return this.personaJuridicas;
@@ -303,6 +315,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.personaJuridicas = personaJuridicas;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personaNatural")
 	public Set<Accionista> getAccionistas() {
 		return this.accionistas;
@@ -312,6 +325,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.accionistas = accionistas;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personaNatural")
 	public Set<Socio> getSocios() {
 		return this.socios;
@@ -321,6 +335,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.socios = socios;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personaNatural")
 	public Set<Trabajador> getTrabajadors() {
 		return this.trabajadors;

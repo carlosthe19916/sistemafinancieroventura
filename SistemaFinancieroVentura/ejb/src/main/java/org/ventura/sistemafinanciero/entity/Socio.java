@@ -3,9 +3,11 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,29 +26,30 @@ import javax.persistence.TemporalType;
 @Table(name = "SOCIO", schema = "BDSISTEMAFINANCIERO")
 public class Socio implements java.io.Serializable {
 
-	private BigDecimal idSocio;
-	private PersonaNatural personaNatural;
-	private CuentaAporte cuentaAporte;
+	private BigInteger idSocio;
+	private PersonaNatural personaNatural;	
 	private PersonaJuridica personaJuridica;
+	private PersonaNatural apoderado;	
+	private CuentaAporte cuentaAporte;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private BigDecimal estado;
+	private int estado;
 	private Set cuentaBancarias = new HashSet(0);
 
 	public Socio() {
 	}
 
-	public Socio(BigDecimal idSocio, CuentaAporte cuentaAporte,
-			Date fechaInicio, BigDecimal estado) {
+	public Socio(BigInteger idSocio, CuentaAporte cuentaAporte,
+			Date fechaInicio, boolean estado) {
 		this.idSocio = idSocio;
 		this.cuentaAporte = cuentaAporte;
 		this.fechaInicio = fechaInicio;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 	}
 
-	public Socio(BigDecimal idSocio, PersonaNatural personaNatural,
+	public Socio(BigInteger idSocio, PersonaNatural personaNatural,
 			CuentaAporte cuentaAporte, PersonaJuridica personaJuridica,
-			Date fechaInicio, Date fechaFin, BigDecimal estado,
+			Date fechaInicio, Date fechaFin, boolean estado,
 			Set cuentaBancarias) {
 		this.idSocio = idSocio;
 		this.personaNatural = personaNatural;
@@ -54,22 +57,22 @@ public class Socio implements java.io.Serializable {
 		this.personaJuridica = personaJuridica;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);;
 		this.cuentaBancarias = cuentaBancarias;
 	}
 
 	@Id
 	@Column(name = "ID_SOCIO", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdSocio() {
+	public BigInteger getIdSocio() {
 		return this.idSocio;
 	}
 
-	public void setIdSocio(BigDecimal idSocio) {
+	public void setIdSocio(BigInteger idSocio) {
 		this.idSocio = idSocio;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_APODERADO")
+	@JoinColumn(name = "ID_PERSONA_NATURAL")
 	public PersonaNatural getPersonaNatural() {
 		return this.personaNatural;
 	}
@@ -119,12 +122,12 @@ public class Socio implements java.io.Serializable {
 	}
 
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "socio")
@@ -134,6 +137,16 @@ public class Socio implements java.io.Serializable {
 
 	public void setCuentaBancarias(Set cuentaBancarias) {
 		this.cuentaBancarias = cuentaBancarias;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_APODERADO")
+	public PersonaNatural getApoderado() {
+		return apoderado;
+	}
+
+	public void setApoderado(PersonaNatural apoderado) {
+		this.apoderado = apoderado;
 	}
 
 }

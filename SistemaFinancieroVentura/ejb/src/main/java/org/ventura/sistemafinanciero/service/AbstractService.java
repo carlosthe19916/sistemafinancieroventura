@@ -18,7 +18,7 @@ public interface AbstractService<T> {
 	
 	public List<T> findAll();
 
-	public List<T> findRange(BigInteger[] range);
+	public List<T> findRange(int[] range);
 
 	public int count();
 	

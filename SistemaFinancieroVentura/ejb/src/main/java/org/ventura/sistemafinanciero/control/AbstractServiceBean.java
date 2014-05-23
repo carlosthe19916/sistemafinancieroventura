@@ -65,7 +65,7 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 		return getDAO().findAll();
 	}
 
-	public List<T> findRange(BigInteger[] range){
+	public List<T> findRange(int[] range){
 		return getDAO().findRange(range);	
 	}
 

@@ -7,6 +7,7 @@ var cajaApp = angular.module('cajaApp',[
     "ngGrid",
     "ui.keypress",
     "blockUI",
+    "flow",
     "cajaApp.controller",
     "cajaApp.service",
     "commonApp"
@@ -81,6 +82,53 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                                 'name':'Transacciones internas', submenus:[
                                 { 'name':'Transaccion con boveda' , 'state':'app.caja.buscarTransaccionBovedaCaja'},
                                 { 'name':'Transaccion con caja' , 'state':'app.caja.buscarTransaccionCajaCaja'}
+                            ]}
+                        ];
+                    }
+                },
+                "viewContent":{
+                    template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                }
+            }
+        })
+        .state('app.transaccion', {
+            url: "/transaccion",
+            views: {
+                "viewMenu":{
+                    controller: function($scope){
+                        $scope.menus = [
+                            {'name':'Socio', submenus:[
+                                { 'name':'Aporte' , 'state':'app.transaccion.aporte'}
+                            ]},
+                            {'name':'Cuenta bancaria', submenus:[
+                                { 'name':'Deposito/retiro' , 'state':'app.transaccion.depositoRetiro'},
+                                { 'name':'Transferencia' , 'state':'app.transaccion.transferencia'},
+                                { 'name':'Compra/venta' , 'state':'app.transaccion.compraVenta'}
+                            ]},
+                            {'name':'Historial', submenus:[
+                                { 'name':'Buscar transaccion' , 'state':'app.transaccion.buscarTransaccion'}
+                            ]}
+                        ];
+                    }
+                },
+                "viewContent":{
+                    template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                }
+            }
+        })
+        .state('app.socio', {
+            url: "/socio",
+            views: {
+                "viewMenu":{
+                    controller: function($scope){
+                        $scope.menus = [
+                            {'name':'Socio', submenus:[
+                                { 'name':'Nuevo' , 'state':'app.socio.crearSocio'},
+                                { 'name':'Buscar' , 'state':'app.socio.buscarSocio'}
+                            ]},
+                            {'name':'Cuentas bancarias', submenus:[
+                                { 'name':'Nuevo' , 'state':'app.socio.crearCuentaBancaria'},
+                                { 'name':'Buscar' , 'state':'app.socio.buscarCuentaBancaria'}
                             ]}
                         ];
                     }
@@ -214,66 +262,163 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('app.administracion', {
-            url: "/administracion",
+
+
+
+        .state('app.transaccion.aporte', {
+            url: "/aporte",
             views: {
-                "viewMenu":{
-                    controller: function($scope){
-                        $scope.menus = [{
-                            'name':'Persona natural', submenus:[
-                                { 'name':'Registrar' , 'state':'app.administracion.personanaturalCreate'},
-                                { 'name':'Buscar' , 'state':'app.administracion.personanaturalBuscar'}
-                            ]},{
-                            'name':'Persona juridica', submenus:[
-                                { 'name':'Registrar' , 'state':'app.administracion.personajuridicaCreate'},
-                                { 'name':'Buscar' , 'state':'app.administracion.personajuridicaBuscar'}
-                            ]},{
-                                'name':'Socio', submenus:[
-                                { 'name':'Buscar Socio' , 'state':'app.administracion.socioBuscar'}
-                              ]}
-                        ];
-                    }
-                },
-                "viewContent":{
-                    template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                "viewContent": {
+                    templateUrl: "modules/caja/views/transaccion/aporte.html"
                 }
             }
         })
-        .state('app.administracion.personanaturalBuscar', {
-            url: "/persona/buscar",
+        .state('app.transaccion.aporteVoucher', {
+            url: "/aporte/:id/voucher",
             views: {
-                "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/buscar.html"
-                }
-            }
-        })
-        .state('app.administracion.personanaturalCreate', {
-            url: "/persona/crear",
-            views: {
-                "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/create.html"
-                }
-            }
-        })
-        .state('app.administracion.personanaturalUpdate', {
-            url: "/persona/update/:id",
-            views: {
-                "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/update.html",
+                "viewContent": {
+                    templateUrl: "modules/caja/views/voucher/aporte.html",
                     controller: function($scope, $stateParams) {
                         $scope.id = $stateParams.id;
                     }
                 }
             }
         })
-        .state('app.administracion.socioBuscar', {
-            url: "/socio/buscarSocio",
+        .state('app.transaccion.depositoRetiro', {
+            url: "/depositoRetiro",
             views: {
-                "viewContent":{
-                    templateUrl: "modules/caja/views/socio/buscar.html"
+                "viewContent": {
+                    templateUrl: "modules/caja/views/transaccion/depositoRetiro.html"
                 }
             }
-        });
+        })
+        .state('app.transaccion.depositoRetiroVoucher', {
+            url: "/depositoRetiro/:id/voucher",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/voucher/depositoRetiro.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
+        .state('app.transaccion.transferencia', {
+            url: "/transferencia",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/transaccion/transferencia.html"
+                }
+            }
+        })
+        .state('app.transaccion.transferenciaVoucher', {
+            url: "/depositoRetiro/:id/voucher",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/voucher/transferencia.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
+        .state('app.transaccion.compraVenta', {
+            url: "/compraVenta",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/transaccion/compraVenta.html"
+                }
+            }
+        })
+        .state('app.transaccion.compraVentaVoucher', {
+            url: "/compraVenta/:id/voucher",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/voucher/compraVenta.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
+        .state('app.transaccion.buscarTransaccion', {
+            url: "/buscarTransaccion",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/transaccion/buscarTransaccion.html"
+                }
+            }
+        })
+
+
+
+        .state('app.socio.crearSocio', {
+            url: "/crearSocio",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/socio/crearSocio.html"
+                }
+            }
+        })
+        .state('app.transaccion.buscarSocio', {
+            url: "/buscarSocio",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/voucher/buscarSocio.html"
+                }
+            }
+        })
+        .state('app.socio.crearCuentaBancaria', {
+            url: "/crearCuentaBancaria",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/socio/crearCuentaBancaria.html"
+                }
+            }
+        })
+        .state('app.transaccion.buscarCuentaBancaria', {
+            url: "/buscarCuentaBancaria",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/voucher/buscarCuentaBancaria.html"
+                }
+            }
+        })
+
+
+
+        .state('app.socio.crearPersonaNatural', {
+            url: "/personaNatural",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/common/views/personanatural/create.html"
+                }
+            }
+        })
+        .state('app.socio.editarPersonaNatural', {
+            url: "/personaNatural/:id",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/common/views/personanatural/update.html"
+                }
+            }
+        })
+        .state('app.socio.crearPersonaJuridica', {
+            url: "/personaJuridica",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/common/views/personanatural/create.html"
+                }
+            }
+        })
+        .state('app.socio.editarPersonaJuridica', {
+            url: "/Juridica/:id",
+            views: {
+                "viewContent":{
+                    templateUrl: "modules/common/views/personanatural/update.html"
+                }
+            }
+        })
 });
 
 cajaApp.run(["$rootScope", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService",

@@ -3,15 +3,19 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,9 +26,19 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PERSONA_JURIDICA", schema = "BDSISTEMAFINANCIERO")
+@NamedQueries({
+		@NamedQuery(name = PersonaJuridica.FindAll, query = "SELECT p FROM PersonaJuridica p"),
+		@NamedQuery(name = PersonaJuridica.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaJuridica p WHERE p.tipoDocumento.idTipoDocumento = :idtipodocumento AND p.numeroDocumento = :numerodocumento"),
+		@NamedQuery(name = PersonaJuridica.FindByFilterText, query = "SELECT p FROM PersonaJuridica p WHERE p.numeroDocumento = :filtertext OR LOWER(p.razonSocial) LIKE '%:filtertext%'") })
 public class PersonaJuridica implements java.io.Serializable {
 
-	private BigDecimal idPersonaJuridica;
+	private static final long serialVersionUID = 1L;
+
+	public final static String FindByTipoAndNumeroDocumento = "PersonaJuridica.FindByTipoAndNumeroDocumento";
+	public final static String FindByFilterText = "PersonaJuridica.FindByFilterText";
+	public final static String FindAll = "PersonaJuridica.FindAll";
+
+	private BigInteger idPersonaJuridica;
 	private TipoDocumento tipoDocumento;
 	private PersonaNatural personaNatural;
 	private String numeroDocumento;
@@ -45,7 +59,7 @@ public class PersonaJuridica implements java.io.Serializable {
 	public PersonaJuridica() {
 	}
 
-	public PersonaJuridica(BigDecimal idPersonaJuridica,
+	public PersonaJuridica(BigInteger idPersonaJuridica,
 			TipoDocumento tipoDocumento, String tipoEmpresa, BigDecimal finLucro) {
 		this.idPersonaJuridica = idPersonaJuridica;
 		this.tipoDocumento = tipoDocumento;
@@ -53,7 +67,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.finLucro = finLucro;
 	}
 
-	public PersonaJuridica(BigDecimal idPersonaJuridica,
+	public PersonaJuridica(BigInteger idPersonaJuridica,
 			TipoDocumento tipoDocumento, PersonaNatural personaNatural,
 			String numeroDocumento, String razonSocial, String nombreComercial,
 			Date fechaConstitucion, String direccion, String referencia,
@@ -80,11 +94,11 @@ public class PersonaJuridica implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_PERSONA_JURIDICA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdPersonaJuridica() {
+	public BigInteger getIdPersonaJuridica() {
 		return this.idPersonaJuridica;
 	}
 
-	public void setIdPersonaJuridica(BigDecimal idPersonaJuridica) {
+	public void setIdPersonaJuridica(BigInteger idPersonaJuridica) {
 		this.idPersonaJuridica = idPersonaJuridica;
 	}
 
@@ -108,7 +122,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.personaNatural = personaNatural;
 	}
 
-	@Column(name = "NUMERO_DOCUMENTO", length = 40,columnDefinition = "nchar")
+	@Column(name = "NUMERO_DOCUMENTO", length = 40, columnDefinition = "nchar")
 	public String getNumeroDocumento() {
 		return this.numeroDocumento;
 	}
@@ -117,7 +131,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.numeroDocumento = numeroDocumento;
 	}
 
-	@Column(name = "RAZON_SOCIAL", length = 40,columnDefinition = "nvarchar2")
+	@Column(name = "RAZON_SOCIAL", length = 40, columnDefinition = "nvarchar2")
 	public String getRazonSocial() {
 		return this.razonSocial;
 	}
@@ -126,7 +140,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.razonSocial = razonSocial;
 	}
 
-	@Column(name = "NOMBRE_COMERCIAL", length = 40,columnDefinition = "nvarchar2")
+	@Column(name = "NOMBRE_COMERCIAL", length = 40, columnDefinition = "nvarchar2")
 	public String getNombreComercial() {
 		return this.nombreComercial;
 	}
@@ -145,7 +159,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.fechaConstitucion = fechaConstitucion;
 	}
 
-	@Column(name = "DIRECCION", length = 140,columnDefinition = "nvarchar2")
+	@Column(name = "DIRECCION", length = 140, columnDefinition = "nvarchar2")
 	public String getDireccion() {
 		return this.direccion;
 	}
@@ -154,7 +168,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.direccion = direccion;
 	}
 
-	@Column(name = "REFERENCIA", length = 140,columnDefinition = "nvarchar2")
+	@Column(name = "REFERENCIA", length = 140, columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
 	}
@@ -163,7 +177,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.referencia = referencia;
 	}
 
-	@Column(name = "TELEFONO", length = 40,columnDefinition = "nvarchar2")
+	@Column(name = "TELEFONO", length = 40, columnDefinition = "nvarchar2")
 	public String getTelefono() {
 		return this.telefono;
 	}
@@ -172,7 +186,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.telefono = telefono;
 	}
 
-	@Column(name = "CELULAR", length = 40,columnDefinition = "nvarchar2")
+	@Column(name = "CELULAR", length = 40, columnDefinition = "nvarchar2")
 	public String getCelular() {
 		return this.celular;
 	}
@@ -181,7 +195,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.celular = celular;
 	}
 
-	@Column(name = "EMAIL", length = 40,columnDefinition = "nvarchar2")
+	@Column(name = "EMAIL", length = 40, columnDefinition = "nvarchar2")
 	public String getEmail() {
 		return this.email;
 	}
@@ -190,7 +204,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "TIPO_EMPRESA", nullable = false, length = 60,columnDefinition = "nvarchar2")
+	@Column(name = "TIPO_EMPRESA", nullable = false, length = 60, columnDefinition = "nvarchar2")
 	public String getTipoEmpresa() {
 		return this.tipoEmpresa;
 	}
@@ -208,7 +222,7 @@ public class PersonaJuridica implements java.io.Serializable {
 		this.finLucro = finLucro;
 	}
 
-	@Column(name = "UBIGEO", length = 12,columnDefinition = "nvarchar2")
+	@Column(name = "UBIGEO", length = 12, columnDefinition = "nvarchar2")
 	public String getUbigeo() {
 		return this.ubigeo;
 	}

@@ -25,7 +25,7 @@
         <script type="text/javascript" src="bower_components/angular-ui-router/angular-ui-router.js"></script>
         <script type="text/javascript" src="bower_components/restangular/restangular.js"></script>
         <script type="text/javascript" src="bower_components/restangular/underscore-min.js"></script>
-        <script type="text/javascript" src="bower_components/ui-bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+        <script type="text/javascript" src="bower_components/ui-bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
         <script type="text/javascript" src="bower_components/ng-grid/build/ng-grid.js"></script>
         <script type="text/javascript" src="bower_components/ng-grid/plugins/ng-grid-layout.js"></script>
         <script type="text/javascript" src="bower_components/ngProgress/ngProgress.min.js"></script>
@@ -33,12 +33,15 @@
         <script type="text/javascript" src="bower_components/ui-utils-0.1.1/ui-utils.js"></script>
         <script type="text/javascript" src="bower_components/ui-utils-0.1.1/ui-utils-ieshiv.js"></script>
         <script type="text/javascript" src="bower_components/angular-dialog-service/dialogs.js"></script>
+        <script type="text/javascript" src="bower_components/ng-flow/dist/ng-flow.js"></script>
+        <script type="text/javascript" src="bower_components/ng-flow/dist/ng-flow-standalone.js"></script>
 
         <script type="text/javascript" src="modules/common/scripts/services.js"></script>
         <script type="text/javascript" src="modules/common/scripts/controller.js"></script>
         <script type="text/javascript" src="modules/common/scripts/common.js"></script>
 
         <script type="text/javascript" src="modules/caja/scripts/controller.js"></script>
+        <script type="text/javascript" src="modules/caja/scripts/controllerModuloSocio.js"></script>
         <script type="text/javascript" src="modules/caja/scripts/services.js"></script>
         <script type="text/javascript" src="modules/caja/scripts/caja.js"></script>
 
@@ -67,10 +70,10 @@
                         <a href="#contact" ui-sref="app.caja">Caja</a>
                     </li>
                     <li ui-sref-active="active">
-                        <a href="#about" ui-sref="app.transacciones">Transacciones</a>
+                        <a href="#about" ui-sref="app.transaccion">Transacciones</a>
                     </li>
                     <li ui-sref-active="active">
-                        <a href="#contact" ui-sref="app.cuentasPersonales">Cuentas personales</a>
+                        <a href="#contact" ui-sref="app.socio">Socios</a>
                     </li>
                     <li ui-sref-active="active" ng-class="{active: $state.includes('app.administracion.*')}">
                         <a href="#contact" ui-sref="app.administracion">Administracion</a>

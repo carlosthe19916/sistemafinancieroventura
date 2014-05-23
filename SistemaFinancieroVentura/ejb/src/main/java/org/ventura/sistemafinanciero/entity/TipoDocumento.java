@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,25 +37,25 @@ public class TipoDocumento implements java.io.Serializable {
 
 	public final static String findByTipopersona = "TipoDocumento.findByTipopersona";
 
-	private int idTipoDocumento;
+	private BigInteger idTipoDocumento;
 	private String denominacion;
 	private String abreviatura;
 	private String tipoPersona;
-	private BigDecimal numeroCaracteres;
-	private BigDecimal estado;
+	private BigInteger numeroCaracteres;
+	private BigInteger estado;
 	private Set personaNaturals = new HashSet(0);
 	private Set personaJuridicas = new HashSet(0);
 
 	public TipoDocumento() {
 	}
 
-	public TipoDocumento(int idTipoDocumento) {
+	public TipoDocumento(BigInteger idTipoDocumento) {
 		this.idTipoDocumento = idTipoDocumento;
 	}
 
-	public TipoDocumento(int idTipoDocumento, String denominacion,
+	public TipoDocumento(BigInteger idTipoDocumento, String denominacion,
 			String abreviatura, String tipoPersona,
-			BigDecimal numeroCaracteres, BigDecimal estado,
+			BigInteger numeroCaracteres, BigInteger estado,
 			Set personaNaturals, Set personaJuridicas) {
 		this.idTipoDocumento = idTipoDocumento;
 		this.denominacion = denominacion;
@@ -69,11 +70,11 @@ public class TipoDocumento implements java.io.Serializable {
 	@XmlElement(name="id")
 	@Id
 	@Column(name = "ID_TIPO_DOCUMENTO", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdTipoDocumento() {
+	public BigInteger getIdTipoDocumento() {
 		return this.idTipoDocumento;
 	}
 
-	public void setIdTipoDocumento(int idTipoDocumento) {
+	public void setIdTipoDocumento(BigInteger idTipoDocumento) {
 		this.idTipoDocumento = idTipoDocumento;
 	}
 
@@ -107,21 +108,22 @@ public class TipoDocumento implements java.io.Serializable {
 		this.tipoPersona = tipoPersona;
 	}
 
+	@XmlElement
 	@Column(name = "NUMERO_CARACTERES", precision = 22, scale = 0)
-	public BigDecimal getNumeroCaracteres() {
+	public BigInteger getNumeroCaracteres() {
 		return this.numeroCaracteres;
 	}
 
-	public void setNumeroCaracteres(BigDecimal numeroCaracteres) {
+	public void setNumeroCaracteres(BigInteger numeroCaracteres) {
 		this.numeroCaracteres = numeroCaracteres;
 	}
 
 	@Column(name = "ESTADO", precision = 22, scale = 0)
-	public BigDecimal getEstado() {
+	public BigInteger getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(BigDecimal estado) {
+	public void setEstado(BigInteger estado) {
 		this.estado = estado;
 	}
 
