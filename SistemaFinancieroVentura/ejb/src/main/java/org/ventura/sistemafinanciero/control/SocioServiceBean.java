@@ -122,30 +122,16 @@ public class SocioServiceBean extends AbstractServiceBean<SocioView> implements 
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc, String numDoc) {
 		switch (tipoPersona) {
 		case NATURAL:
-			PersonaNatural personaNatural = personaNaturalService.findByTipoNumeroDocumento(idTipoDoc, numDoc);
-			if(personaNatural == null)
-				return null;
-			Set<Socio> socios = personaNatural.getSocios();
-			if(socios.size() == 1){
-				for (Socio socio : socios) {
-					return socio;
-				}
-			} else {
-				return null;
-			}
+			QueryParameter queryParameter1 = QueryParameter.with("idtipodocumento", idTipoDoc).and("numerodocumento", numDoc);
+			List<Socio> list1 = socioDAO.findByNamedQuery(Socio.FindByPNTipoAndNumeroDocumento ,queryParameter1.parameters());
+			if(list1.size() == 1)
+				return list1.get(0);
 			break;
 		case JURIDICA:
-			PersonaJuridica personaJuridica = personaJuridicaService.findByTipoNumeroDocumento(idTipoDoc, numDoc);
-			if(personaJuridica == null)
-				return null;
-			Set<Socio> socios2 = personaJuridica.getSocios();
-			if(socios2.size() == 1){
-				for (Socio socio : socios2) {
-					return socio;
-				}
-			} else {
-				return null;
-			}
+			QueryParameter queryParameter2 = QueryParameter.with("idtipodocumento", idTipoDoc).and("numerodocumento", numDoc);
+			List<Socio> list2 = socioDAO.findByNamedQuery(Socio.FindByPJTipoAndNumeroDocumento ,queryParameter2.parameters());
+			if(list2.size() == 1)
+				return list2.get(0);
 			break;
 		default:
 			return null;

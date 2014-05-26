@@ -63,7 +63,6 @@ public class SocioCajaRESTService {
 	}
 	
 	@POST
-	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
 	public Response createSocio(@FormParam("tipoPersona") @DefaultValue("null") TipoPersona tipoPersona,
 			@FormParam("idTipoDocumentoSocio") @DefaultValue("null") BigInteger tipoDocumentoSocio,

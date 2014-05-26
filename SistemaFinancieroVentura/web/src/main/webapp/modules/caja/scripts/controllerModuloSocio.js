@@ -1,7 +1,7 @@
 
 angular.module('cajaApp.controller')
-    .controller('CrearSocioController', [ "$scope","$state","$window", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService",
-        function($scope, $state,$window, MaestroService, PersonaNaturalService, PersonaJuridicaService) {
+    .controller('CrearSocioController', [ "$scope","$state","$window", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService",
+        function($scope, $state,$window, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted" : false};
             $scope.tipoPersonas = [{"denominacion":"NATURAL"},{"denominacion":"JURIDICA"}];
@@ -87,7 +87,28 @@ angular.module('cajaApp.controller')
             $scope.crearSocio = function(){
                 if ($scope.formCrearSocio.$valid) {
                     $scope.control.inProcess = true;
+                    var tipoPersona = $scope.transaccion.tipoPersona;
+                    var idTipoDocumentoSocio = $scope.transaccion.idTipoDocumentoSocio;
+                    var numeroDocumentoSocio = $scope.transaccion.numeroDocumentoSocio;
+                    var idTipoDocumentoApoderado = $scope.transaccion.idTipoDocumentoApoderado;
+                    var numeroDocumentoApoderado = $scope.transaccion.numeroDocumentoApoderado;
 
+                    SocioService.crear(tipoPersona,
+                        idTipoDocumentoSocio,
+                        numeroDocumentoSocio,
+                        idTipoDocumentoApoderado,
+                        numeroDocumentoApoderado).then(
+                        function(data){
+                            $scope.control.inProcess = false;
+                            $scope.control.success = true;
+                            alert("socio creado");
+                        }, function error(error){
+                            $scope.control.inProcess = true;
+                            $scope.control.success = false;
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
                 } else {
                     $scope.control.submitted = true;
                 }
