@@ -360,14 +360,28 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('app.transaccion.buscarSocio', {
+        .state('app.socio.buscarSocio', {
             url: "/buscarSocio",
             views: {
                 "viewContent": {
-                    templateUrl: "modules/caja/views/voucher/buscarSocio.html"
+                    templateUrl: "modules/caja/views/socio/buscarSocio.html"
                 }
             }
         })
+        .state('app.socio.panelSocio', {
+            url: "/:id/panelSocio",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/socio/panelSocio.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
+
+
+
         .state('app.socio.crearCuentaBancaria', {
             url: "/crearCuentaBancaria",
             views: {

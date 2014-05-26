@@ -88,6 +88,24 @@ angular.module("cajaApp.service", ["restangular"])
                         '',{},{
                             "Content-Type":"application/x-www-form-urlencoded"}
                     );
+                },
+                getSocio: function(id){
+                    return Restangular.one("socio/"+id).get();
+                },
+                getCuentaAporte: function(id){
+                    return Restangular.one("socio/"+id+"/cuentaAporte").get();
+                },
+                getPersonaNatural: function(id){
+                    return Restangular.one("socio/"+id+"/personaNatural").get();
+                },
+                getPersonaJuridica: function(id){
+                    return Restangular.one("socio/"+id+"/personaJuridica").get();
+                },
+                getApoderado: function(id){
+                    return Restangular.one("socio/"+id+"/apoderado").get();
+                },
+                getCuentasBancarias: function(id){
+                    return Restangular.all("socio/"+id+"/cuentasBancarias").getList();
                 }
             }
         }])

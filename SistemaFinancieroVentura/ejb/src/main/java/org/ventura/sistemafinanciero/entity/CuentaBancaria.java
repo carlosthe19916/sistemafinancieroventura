@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,8 +22,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 
 /**
@@ -28,9 +36,16 @@ import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
  */
 @Entity
 @Table(name = "CUENTA_BANCARIA", schema = "BDSISTEMAFINANCIERO")
+@XmlRootElement(name = "cuentaBancaria")
+@XmlAccessorType(XmlAccessType.NONE)
 public class CuentaBancaria implements java.io.Serializable {
 
-	private BigDecimal idCuentaBancaria;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private BigInteger idCuentaBancaria;
 	private Socio socio;
 	private TipoCuentaBancaria tipoCuentaBancaria;
 	private String numeroCuenta;
@@ -38,9 +53,8 @@ public class CuentaBancaria implements java.io.Serializable {
 	private Date fechaApertura;
 	private Date fechaCierre;
 	private BigDecimal saldo;
-	private BigDecimal cantidadRetirantes;
-	private BigDecimal estado;
-	private String estadoCuenta;
+	private int cantidadRetirantes;
+	private EstadoCuentaBancaria estado;
 	private Set cuentaBancariaTasas = new HashSet(0);
 	private Set titulars = new HashSet(0);
 	private Set transferenciaBancariasForIdCuentaBancariaOrigen = new HashSet(0);
@@ -53,11 +67,10 @@ public class CuentaBancaria implements java.io.Serializable {
 	public CuentaBancaria() {
 	}
 
-	public CuentaBancaria(BigDecimal idCuentaBancaria, Socio socio,
+	public CuentaBancaria(BigInteger idCuentaBancaria, Socio socio,
 			TipoCuentaBancaria tipoCuentaBancaria, String numeroCuenta,
-			Date fechaApertura, BigDecimal saldo,
-			BigDecimal cantidadRetirantes, BigDecimal estado,
-			String estadoCuenta) {
+			Date fechaApertura, BigDecimal saldo, int cantidadRetirantes,
+			EstadoCuentaBancaria estado, String estadoCuenta) {
 		this.idCuentaBancaria = idCuentaBancaria;
 		this.socio = socio;
 		this.tipoCuentaBancaria = tipoCuentaBancaria;
@@ -66,13 +79,12 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.saldo = saldo;
 		this.cantidadRetirantes = cantidadRetirantes;
 		this.estado = estado;
-		this.estadoCuenta = estadoCuenta;
 	}
 
-	public CuentaBancaria(BigDecimal idCuentaBancaria, Socio socio,
+	public CuentaBancaria(BigInteger idCuentaBancaria, Socio socio,
 			TipoCuentaBancaria tipoCuentaBancaria, String numeroCuenta,
 			Date fechaApertura, Date fechaCierre, BigDecimal saldo,
-			BigDecimal cantidadRetirantes, BigDecimal estado,
+			int cantidadRetirantes, EstadoCuentaBancaria estado,
 			String estadoCuenta, Set cuentaBancariaTasas, Set titulars,
 			Set transferenciaBancariasForIdCuentaBancariaOrigen,
 			Set transferenciaBancariasForIdCuentaBancariaDestino,
@@ -87,7 +99,6 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.saldo = saldo;
 		this.cantidadRetirantes = cantidadRetirantes;
 		this.estado = estado;
-		this.estadoCuenta = estadoCuenta;
 		this.cuentaBancariaTasas = cuentaBancariaTasas;
 		this.titulars = titulars;
 		this.transferenciaBancariasForIdCuentaBancariaOrigen = transferenciaBancariasForIdCuentaBancariaOrigen;
@@ -97,16 +108,19 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.transaccionBancarias = transaccionBancarias;
 	}
 
+	@XmlElement(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_CUENTA_BANCARIA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdCuentaBancaria() {
+	public BigInteger getIdCuentaBancaria() {
 		return this.idCuentaBancaria;
 	}
 
-	public void setIdCuentaBancaria(BigDecimal idCuentaBancaria) {
+	public void setIdCuentaBancaria(BigInteger idCuentaBancaria) {
 		this.idCuentaBancaria = idCuentaBancaria;
 	}
 
+	@XmlTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_SOCIO", nullable = false)
 	public Socio getSocio() {
@@ -117,6 +131,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.socio = socio;
 	}
 
+	@XmlElement
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "TIPO_CUENTA_BANCARIA", nullable = false, length = 10, columnDefinition = "nvarchar2")
 	public TipoCuentaBancaria getTipoCuentaBancaria() {
@@ -127,6 +142,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.tipoCuentaBancaria = tipoCuentaBancaria;
 	}
 
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_MONEDA", nullable = false)
 	public Moneda getMoneda() {
@@ -137,6 +153,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.moneda = moneda;
 	}
 
+	@XmlElement
 	@Column(name = "NUMERO_CUENTA", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumeroCuenta() {
 		return this.numeroCuenta;
@@ -146,6 +163,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.numeroCuenta = numeroCuenta;
 	}
 
+	@XmlElement
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_APERTURA", nullable = false, length = 7)
 	public Date getFechaApertura() {
@@ -156,6 +174,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.fechaApertura = fechaApertura;
 	}
 
+	@XmlElement
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_CIERRE", length = 7)
 	public Date getFechaCierre() {
@@ -166,6 +185,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.fechaCierre = fechaCierre;
 	}
 
+	@XmlElement
 	@Column(name = "SALDO", nullable = false, precision = 18)
 	public BigDecimal getSaldo() {
 		return this.saldo;
@@ -175,33 +195,28 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.saldo = saldo;
 	}
 
+	@XmlElement
 	@Column(name = "CANTIDAD_RETIRANTES", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getCantidadRetirantes() {
+	public int getCantidadRetirantes() {
 		return this.cantidadRetirantes;
 	}
 
-	public void setCantidadRetirantes(BigDecimal cantidadRetirantes) {
+	public void setCantidadRetirantes(int cantidadRetirantes) {
 		this.cantidadRetirantes = cantidadRetirantes;
 	}
 
-	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
+	@XmlElement
+	@Enumerated(EnumType.STRING)
+	@Column(name = "ESTADO", nullable = false, length = 12, columnDefinition = "nvarchar2")
+	public EstadoCuentaBancaria getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(BigDecimal estado) {
+	public void setEstado(EstadoCuentaBancaria estado) {
 		this.estado = estado;
 	}
 
-	@Column(name = "ESTADO_CUENTA", nullable = false, length = 30, columnDefinition = "nvarchar2")
-	public String getEstadoCuenta() {
-		return this.estadoCuenta;
-	}
-
-	public void setEstadoCuenta(String estadoCuenta) {
-		this.estadoCuenta = estadoCuenta;
-	}
-
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancaria")
 	public Set<CuentaBancariaTasa> getCuentaBancariaTasas() {
 		return this.cuentaBancariaTasas;
@@ -211,6 +226,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.cuentaBancariaTasas = cuentaBancariaTasas;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancaria")
 	public Set<Titular> getTitulars() {
 		return this.titulars;
@@ -220,6 +236,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.titulars = titulars;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancariaByIdCuentaBancariaOrigen")
 	public Set<TransferenciaBancaria> getTransferenciaBancariasForIdCuentaBancariaOrigen() {
 		return this.transferenciaBancariasForIdCuentaBancariaOrigen;
@@ -230,6 +247,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.transferenciaBancariasForIdCuentaBancariaOrigen = transferenciaBancariasForIdCuentaBancariaOrigen;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancariaByIdCuentaBancariaDestino")
 	public Set<TransferenciaBancaria> getTransferenciaBancariasForIdCuentaBancariaDestino() {
 		return this.transferenciaBancariasForIdCuentaBancariaDestino;
@@ -240,6 +258,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.transferenciaBancariasForIdCuentaBancariaDestino = transferenciaBancariasForIdCuentaBancariaDestino;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancaria")
 	public Set<CuentaBancariaInteresGenera> getCuentaBancariaInteresGeneras() {
 		return this.cuentaBancariaInteresGeneras;
@@ -249,6 +268,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.cuentaBancariaInteresGeneras = cuentaBancariaInteresGeneras;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancaria")
 	public Set<Beneficiario> getBeneficiarios() {
 		return this.beneficiarios;
@@ -258,6 +278,7 @@ public class CuentaBancaria implements java.io.Serializable {
 		this.beneficiarios = beneficiarios;
 	}
 
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancaria")
 	public Set<TransaccionBancaria> getTransaccionBancarias() {
 		return this.transaccionBancarias;

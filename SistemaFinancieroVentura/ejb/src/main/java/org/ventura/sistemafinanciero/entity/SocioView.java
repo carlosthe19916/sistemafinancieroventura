@@ -11,53 +11,51 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
 /**
  * The persistent class for the SOCIO_VIEW database table.
  * 
  */
 @Entity
-@Table(name="SOCIO_VIEW", schema = "BDSISTEMAFINANCIERO")
+@Table(name = "SOCIO_VIEW", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "socioview")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({
-	@NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext") })
+@NamedQueries({ @NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext") })
 public class SocioView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public final static String FindByFilterTextSocioView = "FindByFilterTextSocioView";
-	
-	@XmlElement
+
+	@XmlElement(name = "id")
 	@Id
 	@Column(name = "IDSOCIO", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal idsocio;
-	
+
 	@XmlElement
-	@Column(name="SOCIO", nullable = false, length = 192, columnDefinition = "nvarchar2")
+	@Column(name = "SOCIO", nullable = false, length = 192, columnDefinition = "nvarchar2")
 	private String socio;
-	
+
 	@XmlElement
 	@Temporal(TemporalType.DATE)
-	@Column(name="\"FECHA ASOCIADO\"")
+	@Column(name = "\"FECHA ASOCIADO\"")
 	private Date fechaasociado;
-	
+
 	@XmlElement
-	@Column(name="\"TIPO DOCUMENTO\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
+	@Column(name = "\"TIPO DOCUMENTO\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	private String tipodocumento;
-	
+
 	@XmlElement
-	@Column(name="\"NUMERO DOCUMENTO\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
+	@Column(name = "\"NUMERO DOCUMENTO\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	private String numerodocumento;
-	
+
 	@XmlElement
 	@Temporal(TemporalType.DATE)
-	@Column(name="\"FEC. NAC. / FEC. CONST.\"")
+	@Column(name = "\"FEC. NAC. / FEC. CONST.\"")
 	private Date fecNacfecConst;
-	
+
 	@XmlElement
-	@Column(name="\"TIPO PERSONA\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
+	@Column(name = "\"TIPO PERSONA\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	private String tipopersona;
-	
+
 	@XmlElement
 	@Column(name = "DIRECCION", nullable = false, length = 70, columnDefinition = "nvarchar2")
 	private String direccion;
@@ -66,7 +64,6 @@ public class SocioView implements Serializable {
 	@Column(name = "EMAIL", nullable = false, length = 70, columnDefinition = "nvarchar2")
 	private String email;
 
-	
 	public SocioView() {
 	}
 
