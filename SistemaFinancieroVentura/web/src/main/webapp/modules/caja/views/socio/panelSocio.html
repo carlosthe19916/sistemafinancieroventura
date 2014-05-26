@@ -175,28 +175,33 @@
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">Cuentas bancarias</div>
-                <div class="panel-body">
-                    <p>...</p>
-                </div>
-
-                <!-- Table -->
-                <table class="table">
-                    <tr>
-                        <td>Documento.:</td>
-                        <td><span/></td>
-                    </tr>
-                    <tr>
-                        <td>Ap. y nombres.:</td>
-                        <td><span/></td>
-                    </tr>
-                    <tr>
-                        <td>Ap.y nombres:</td>
-                        <td><span/></td>
-                    </tr>
-                    <tr>
-                        <td>F.nacimiento:</td>
-                        <td><span/></td>
-                    </tr>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Tipo Cta.</th>
+                            <th>Num. Cta.</th>
+                            <th>Moneda</th>
+                            <th>F. Saldo</th>
+                            <th>F. Apertura</th>
+                            <th>F. Cierre</th>
+                            <th>Cant.Retirantes</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cuenta in cuentasBancarias">
+                            <td><span ng-bind="cuenta.tipoCuentaBancaria"/></td>
+                            <td><span ng-bind="cuenta.numeroCuenta"/></td>
+                            <td><span ng-bind="cuenta.moneda.denominacion"/></td>
+                            <td><span ng-bind="cuenta.moneda.saldo"/></td>
+                            <td><span ng-bind="cuenta.fechaApertura | date : 'dd/MM/yyyy'"/></td>
+                            <td><span ng-bind="cuenta.fechaCierre | date : 'dd/MM/yyyy'"/></td>
+                            <td><span ng-bind="cuenta.cantidadRetirantes | date : 'dd/MM/yyyy'"/></td>
+                            <td><span ng-bind="cuenta.estado"/></td>
+                            <td><button type="button" class="btn btn-primary btn-small">Editar</button></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
