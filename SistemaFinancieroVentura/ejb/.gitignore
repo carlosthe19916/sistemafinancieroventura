@@ -4,6 +4,9 @@
 target/
 target-test/
 
+target/clasess
+target-test/test-classes
+
 # OS Files #
 .DS_Store
  
