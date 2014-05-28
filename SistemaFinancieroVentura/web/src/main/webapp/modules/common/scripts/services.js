@@ -204,6 +204,9 @@ angular.module("commonApp.service", ["restangular"])
         function(Restangular){
             var _monedaService = Restangular.all('moneda');
             return {
+                getMonedas: function() {
+                    return Restangular.all("moneda").getList();
+                },
                 getDenominaciones: function(moneda) {
                     return Restangular.all("moneda/"+moneda+"/denominaciones").getList();
                 }
@@ -235,6 +238,14 @@ angular.module("commonApp.service", ["restangular"])
                 },
                 getDistritos: function(provincia) {
                     return Restangular.all("provincia/"+provincia+"/distritos").getList();
+                }
+            }
+        }])
+    .factory("TasaInteresService",["Restangular",
+        function(Restangular){
+            return {
+                getTasaCuentaAhorro: function(idMoneda) {
+                    return Restangular.one("tasa/ahorro/"+idMoneda).get();
                 }
             }
         }]);

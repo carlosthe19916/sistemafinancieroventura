@@ -380,26 +380,33 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-
-
         .state('app.socio.crearCuentaBancaria', {
-            url: "/crearCuentaBancaria",
+            url: "/cuentaBancaria",
             views: {
                 "viewContent": {
-                    templateUrl: "modules/caja/views/socio/crearCuentaBancaria.html"
+                    templateUrl: "modules/caja/views/cuenta/crear.html"
                 }
             }
         })
-        .state('app.transaccion.buscarCuentaBancaria', {
+        .state('app.socio.editarCuentaBancaria', {
+            url: "/cuentaBancaria/:id",
+            views: {
+                "viewContent": {
+                    templateUrl: "modules/caja/views/cuenta/editar.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
+                }
+            }
+        })
+        .state('app.socio.buscarCuentaBancaria', {
             url: "/buscarCuentaBancaria",
             views: {
                 "viewContent": {
-                    templateUrl: "modules/caja/views/voucher/buscarCuentaBancaria.html"
+                    templateUrl: "modules/caja/views/cuenta/buscar.html"
                 }
             }
         })
-
-
 
         .state('app.socio.crearPersonaNatural', {
             url: "/personaNatural",

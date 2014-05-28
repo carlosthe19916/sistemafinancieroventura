@@ -118,8 +118,7 @@ public class PersonanaturalRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Set<PersonaNatural> findByFilterText(
 			@PathParam("filterText") @DefaultValue("") String filterText) {
-		Set<PersonaNatural> list = personanaturalService
-				.findByFilterText(filterText);
+		Set<PersonaNatural> list = personanaturalService.findByFilterText(filterText);
 		return list;
 	}
 

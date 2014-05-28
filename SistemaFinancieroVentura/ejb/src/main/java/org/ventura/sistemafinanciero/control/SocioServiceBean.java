@@ -159,7 +159,11 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		if(socio == null)
 			return null;
 		Set<CuentaBancaria> cuentas =  socio.getCuentaBancarias();
-		Hibernate.initialize(cuentas);
+		for (CuentaBancaria cuentaBancaria : cuentas) {
+			Hibernate.initialize(cuentaBancaria);
+			Moneda moneda = cuentaBancaria.getMoneda();
+			Hibernate.initialize(moneda);
+		}
 		return cuentas;
 	}
 	

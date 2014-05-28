@@ -63,7 +63,22 @@ angular.module("cajaApp.service", ["restangular"])
                 }
             }
         }])
-        .factory("SocioService",["Restangular",
+    .factory("HistorialCajaService",["Restangular",
+        function(Restangular){
+            var _historialCajaService = Restangular.all("historialcaja");
+            return {
+                buscar: function(desde, hasta){
+                    return Restangular.all("historialcaja/currentSession").getList({"desde":desde,"hasta":hasta},{});
+                },
+                getVoucherCierreCaja: function(idhistorial){
+                    return Restangular.all("historialcaja/"+idhistorial+"/voucherCierreCaja").getList();
+                },
+                getResumenCierreCaja: function(idhistorial){
+                    return Restangular.one("historialcaja/"+idhistorial+"/resumenCierreCaja").get();
+                }
+            }
+        }])
+    .factory("SocioService",["Restangular",
         function(Restangular){
 
             var _socioService = Restangular.all("socio");
@@ -77,11 +92,11 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 crear: function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
                     var data = $.param({
-                        tipoPersona:tipoPersona,
-                        idTipoDocumentoSocio:idTipoDocumentoSocio,
-                        numeroDocumentoSocio:numeroDocumentoSocio,
-                        idTipoDocumentoApoderado:idTipoDocumentoApoderado,
-                        numeroDocumentoApoderado:numeroDocumentoApoderado}
+                            tipoPersona:tipoPersona,
+                            idTipoDocumentoSocio:idTipoDocumentoSocio,
+                            numeroDocumentoSocio:numeroDocumentoSocio,
+                            idTipoDocumentoApoderado:idTipoDocumentoApoderado,
+                            numeroDocumentoApoderado:numeroDocumentoApoderado}
                     );
                     return Restangular.one("socio").customPOST(
                         data,
@@ -109,19 +124,18 @@ angular.module("cajaApp.service", ["restangular"])
                 }
             }
         }])
-
-    .factory("HistorialCajaService",["Restangular",
+    .factory("CuentaBancariaService",["Restangular",
         function(Restangular){
-            var _historialCajaService = Restangular.all("historialcaja");
+            var _historialCajaService = Restangular.all("cuentaBancaria");
             return {
-                buscar: function(desde, hasta){
-                    return Restangular.all("historialcaja/currentSession").getList({"desde":desde,"hasta":hasta},{});
+                getCuentasBancarias: function(){
+                    return _historialCajaService.getList().$object;
                 },
-                getVoucherCierreCaja: function(idhistorial){
-                    return Restangular.all("historialcaja/"+idhistorial+"/voucherCierreCaja").getList();
+                getCuentasBancaria: function(id){
+                    return Restangular.one("cuentaBancaria/"+id).get();
                 },
-                getResumenCierreCaja: function(idhistorial){
-                    return Restangular.one("historialcaja/"+idhistorial+"/resumenCierreCaja").get();
+                findByFilterText: function(text){
+                    return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 }
             }
         }]);

@@ -56,7 +56,7 @@ public class CuentaBancariaTasa implements java.io.Serializable {
 		this.cuentaBancaria = cuentaBancaria;
 	}
 
-	@Column(name = "VALOR", precision = 5, scale = 3)
+	@Column(name = "VALOR", precision = 5, scale = 4)
 	public BigDecimal getValor() {
 		return this.valor;
 	}
