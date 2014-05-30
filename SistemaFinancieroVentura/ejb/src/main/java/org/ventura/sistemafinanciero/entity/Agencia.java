@@ -49,6 +49,12 @@ public class Agencia implements java.io.Serializable {
 	@NotBlank(message = "Denominacion is blank")
 	private String denominacion;
 
+	@NotNull(message = "Codigo is null")
+	@Size(min = 1, max = 3, message = "Denominacion size 1-100")
+	@NotEmpty(message = "Denominacion is empty")
+	@NotBlank(message = "Denominacion is blank")
+	private String codigo;
+	
 	@NotNull(message = "Estado is null")
 	@Min(value = 0)
 	@Max(value = 1)
@@ -126,6 +132,16 @@ public class Agencia implements java.io.Serializable {
 
 	public void setDenominacion(String denominacion) {
 		this.denominacion = denominacion;
+	}
+	
+	@XmlElement
+	@Column(name = "CODIGO", nullable = false, length = 3, columnDefinition = "nvarchar2")
+	public String getCodigo() {
+		return this.codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	@XmlElement

@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -32,8 +34,10 @@ public class Accionista implements java.io.Serializable {
 
 	@NotNull(message = "Persona natural is null")
 	private PersonaNatural personaNatural;
+
 	@NotNull(message = "Persona juridica is null")
 	private PersonaJuridica personaJuridica;
+
 	@NotNull(message = "Porcentaje participacion is null")
 	private BigDecimal porcentajeParticipacion;
 
@@ -49,6 +53,7 @@ public class Accionista implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_ACCIONISTA", unique = true, nullable = false, precision = 22, scale = 0)
 	public int getIdAccionista() {

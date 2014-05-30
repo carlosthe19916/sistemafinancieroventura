@@ -6,6 +6,7 @@ var cajaApp = angular.module('cajaApp',[
     "dialogs",
     "ngGrid",
     "ui.keypress",
+    "ui.unique",
     "blockUI",
     "flow",
     "cajaApp.controller",
@@ -412,7 +413,7 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/personaNatural",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/create.html"
+                    templateUrl: "modules/common/views/personaNatural/crear.html"
                 }
             }
         })
@@ -420,7 +421,10 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/personaNatural/:id",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/update.html"
+                    templateUrl: "modules/common/views/personaNatural/editar.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
                 }
             }
         })
@@ -428,15 +432,18 @@ cajaApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/personaJuridica",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/create.html"
+                    templateUrl: "modules/common/views/personaJuridica/crear.html"
                 }
             }
         })
         .state('app.socio.editarPersonaJuridica', {
-            url: "/Juridica/:id",
+            url: "/personaJuridica/:id",
             views: {
                 "viewContent":{
-                    templateUrl: "modules/common/views/personanatural/update.html"
+                    templateUrl: "modules/common/views/personaJuridica/editar.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.id = $stateParams.id;
+                    }
                 }
             }
         })

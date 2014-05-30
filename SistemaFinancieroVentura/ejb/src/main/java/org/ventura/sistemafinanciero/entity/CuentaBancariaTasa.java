@@ -3,9 +3,12 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,6 +39,7 @@ public class CuentaBancariaTasa implements java.io.Serializable {
 		this.valor = valor;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_CUENTA_BANCARIA_TASA", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getIdCuentaBancariaTasa() {

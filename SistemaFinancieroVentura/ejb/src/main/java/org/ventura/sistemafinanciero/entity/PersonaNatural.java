@@ -345,4 +345,26 @@ public class PersonaNatural implements java.io.Serializable {
 		this.trabajadors = trabajadors;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof PersonaNatural)) {
+			return false;
+		}
+		final PersonaNatural other = (PersonaNatural) obj;
+		if(other.getNumeroDocumento().equalsIgnoreCase(this.numeroDocumento)){
+			if(other.getTipoDocumento().equals(this.tipoDocumento)){
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return this.tipoDocumento.hashCode() * this.numeroDocumento.hashCode();
+	}
+
 }

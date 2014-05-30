@@ -134,6 +134,9 @@ angular.module("cajaApp.service", ["restangular"])
                 getCuentasBancaria: function(id){
                     return Restangular.one("cuentaBancaria/"+id).get();
                 },
+                crearCuentaAhorro: function(transaccion){
+                    return Restangular.all("cuentaBancaria/ahorro").post(transaccion);
+                },
                 findByFilterText: function(text){
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 }

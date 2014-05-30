@@ -34,6 +34,7 @@ import org.ventura.sistemafinanciero.entity.Provincia;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.type.Estadocivil;
 import org.ventura.sistemafinanciero.entity.type.Sexo;
+import org.ventura.sistemafinanciero.entity.type.TipoEmpresa;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.service.MaestroService;
 
@@ -93,6 +94,18 @@ public class MaestroRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TipoDocumento> listAllFromPersonajuridica() {
 		List<TipoDocumento> list = maestroService.getAll(TipoPersona.JURIDICA);
+		return list;
+	}
+	
+	@GET
+	@Path("/tipoEmpresa")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<TipoEmpresa> listTipoEmpresa() {
+		TipoEmpresa[] s = TipoEmpresa.values();
+		List<TipoEmpresa> list = new ArrayList<TipoEmpresa>();
+		for (int i = 0; i < s.length; i++) {
+			list.add(s[i]);
+		}
 		return list;
 	}
 	

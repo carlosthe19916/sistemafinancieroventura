@@ -35,21 +35,33 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.Trabajador;
+import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
-import org.ventura.sistemafinanciero.rest.dto.CrearCuentaAhorro;
+import org.ventura.sistemafinanciero.rest.dto.CuentaAhorroDTO;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
+import org.ventura.sistemafinanciero.service.TrabajadorService;
+import org.ventura.sistemafinanciero.service.UsuarioService;
 
 @Path("/cuentaBancaria")
 public class CuentaBancariaRESTService {
     
 	@EJB
 	private CuentaBancariaService cuentaBancariaService;
+	@EJB
+	private UsuarioService usuarioService;
+	@EJB
+	private TrabajadorService trabajadorService;
 	
 	@GET
 	@Path("/")
@@ -78,21 +90,25 @@ public class CuentaBancariaRESTService {
 		Set<CuentaBancaria> list = cuentaBancariaService.findByFilterText(filterText);
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
-	
-	@POST
-	@Consumes({ "application/xml", "application/json" })
-	@Produces({ "application/xml", "application/json" })
-	public Response createCuentaBancaria() {				
-		return null;
-	}
-	
+		
 	@POST
 	@Path("/ahorro")
 	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
 	public Response createCuentaAhorro(
-			CrearCuentaAhorro cuenta) {	
+			CuentaAhorroDTO cuenta, @Context SecurityContext context) {	
 		try {		
+			String username = context.getUserPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+			Agencia agencia = trabajadorService.getAgencia(trabajador.getIdTrabajador());
+			if(agencia == null)
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+			
 			BigInteger idMoneda = cuenta.getIdMoneda();
 			TipoPersona tipoPersona = cuenta.getTipoPersona();
 			BigInteger idPersona = cuenta.getIdPersona();
@@ -100,9 +116,11 @@ public class CuentaBancariaRESTService {
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 			
-			BigInteger idCuenta = cuentaBancariaService.createCuentaAhorro(idMoneda, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);
+			BigInteger idCuenta = cuentaBancariaService.createCuentaAhorro(agencia.getIdAgencia(), idMoneda, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);
 			JsonObject model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
 			return Response.status(Response.Status.OK).entity(model).build();
+		} catch (NonexistentEntityException e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		} catch (RollbackFailureException e) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		} catch (EJBException e) {

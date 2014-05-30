@@ -18,6 +18,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaTasa;
@@ -32,6 +33,7 @@ import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.TasaInteresService;
+import org.ventura.sistemafinanciero.util.ProduceObject;
 
 @Named
 @Stateless
@@ -57,6 +59,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	private DAO<Object, Beneficiario> beneficiarioDAO;
 	@Inject
 	private DAO<Object, CuentaBancariaTasa> cuentaBancariaTasaDAO;
+	@Inject
+	private DAO<Object, Agencia> agenciaDAO;
 	
 	@EJB
 	private TasaInteresService tasaInteresService;
@@ -68,7 +72,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	}
 	
 	@Override
-	public BigInteger createCuentaAhorro(BigInteger idMoneda,
+	public BigInteger createCuentaAhorro(BigInteger idAgencia, BigInteger idMoneda,
 			TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes,
 			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
 			throws RollbackFailureException {
@@ -89,6 +93,10 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		
 		Calendar calendar = Calendar.getInstance();
 		Moneda moneda = monedaDAO.find(idMoneda);
+		Agencia agencia = agenciaDAO.find(idAgencia);
+		
+		if(agencia == null)
+			throw new RollbackFailureException("Agencia no encontrada");
 		
 		//verificar si existe el socio
 		Set<Socio> socios = null;
@@ -96,7 +104,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		if(personaNatural != null)
 			socios = personaNatural.getSocios();
 		if(personaJuridica != null)
-			socios = personaNatural.getSocios();
+			socios = personaJuridica.getSocios();
 		for (Socio s : socios) {
 			if(s.getEstado())
 				socio = s;
@@ -114,7 +122,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 				titular.setEstado(true);
 				titular.setPersonaNatural(persona);
 				titular.setFechaInicio(calendar.getTime());
-				titular.setFechaFin(null);				
+				titular.setFechaFin(null);	
+				listTitulres.add(titular);
 			}							
 		}
 		
@@ -134,6 +143,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		
 		//crear cuenta bancaria
 		CuentaBancaria cuentaBancaria = new CuentaBancaria();
+		cuentaBancaria.setNumeroCuenta(agencia.getCodigo());
 		cuentaBancaria.setBeneficiarios(null);
 		cuentaBancaria.setCantidadRetirantes(cantRetirantes);
 		cuentaBancaria.setEstado(EstadoCuentaBancaria.ACTIVO);
@@ -144,8 +154,13 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancaria.setSocio(socio);
 		cuentaBancaria.setTipoCuentaBancaria(TipoCuentaBancaria.AHORRO);
 		cuentaBancaria.setTitulars(null);
-		cuentaBancariaDAO.create(cuentaBancaria);
-				
+		cuentaBancariaDAO.create(cuentaBancaria);				
+		//generar el numero de cuenta de cuenta
+		String numeroCuenta = ProduceObject.getNumeroCuenta(cuentaBancaria);
+		cuentaBancaria.setNumeroCuenta(numeroCuenta);
+		cuentaBancariaDAO.update(cuentaBancaria);
+		
+		//crear titulares
 		for (Titular titular : listTitulres) {
 			titular.setCuentaBancaria(cuentaBancaria);
 			titularDAO.create(titular);

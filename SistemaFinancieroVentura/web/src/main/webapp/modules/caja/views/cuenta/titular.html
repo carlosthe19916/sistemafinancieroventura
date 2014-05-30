@@ -10,7 +10,7 @@
                    <div class="col-sm-4">
                        <div class="form-group" ng-class="{ 'has-error' : formTitular.tipoDocumento.$invalid && control.submitted}">
                            <label>Tipo documento</label>
-                           <select id="cmbTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos" ng-model="persona.idTipoDocumento" class="form-control" required autofocus>
+                           <select id="cmbTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos" ng-model="titular.idTipoDocumento" class="form-control" required autofocus>
                            </select>
                            <div ng-show="formTitular.tipoDocumento.$invalid && control.submitted">
                                <p class="help-block" ng-show="formTitular.tipoDocumento.$error.required">
@@ -22,7 +22,7 @@
                    <div class="col-sm-4">
                        <div class="form-group" ng-class="{ 'has-error' : formTitular.numeroDocumento.$invalid && control.submitted}">
                            <label>Numero documento</label>
-                           <input type="text" name="numeroDocumento" ng-model="persona.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                           <input type="text" name="numeroDocumento" ng-model="titular.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
                            <div ng-show="formTitular.numeroDocumento.$invalid && control.submitted">
                                <p class="help-block" ng-show="formTitular.numeroDocumento.$error.required">
                                    Ingrese numero documento valido.
@@ -70,7 +70,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="persona in personas">
+                        <tr ng-repeat="persona in titulares | unique">
                             <td><span ng-bind-template="{{persona.tipoDocumento.abreviatura}}/{{persona.numeroDocumento}}"/></td>
                             <td><span ng-bind="persona.apellidoPaterno"/></td>
                             <td><span ng-bind="persona.apellidoMaterno"/></td>
