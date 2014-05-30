@@ -45,9 +45,9 @@ public class PersonaNatural implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public final static String FindByTipoAndNumeroDocumento = "FindByTipoAndNumeroDocumento";
-	public final static String FindByFilterText = "FindByFilterText";
-	public final static String FindAll = "FindAll";
+	public final static String FindByTipoAndNumeroDocumento = "PersonaNatural.FindByTipoAndNumeroDocumento";
+	public final static String FindByFilterText = "PersonaNatural.FindByFilterText";
+	public final static String FindAll = "PersonaNatural.FindAll";
 
 	private BigInteger idPersonaNatural;
 	private TipoDocumento tipoDocumento;
@@ -306,7 +306,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personaNatural")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "representanteLegal")
 	public Set<PersonaJuridica> getPersonaJuridicas() {
 		return this.personaJuridicas;
 	}

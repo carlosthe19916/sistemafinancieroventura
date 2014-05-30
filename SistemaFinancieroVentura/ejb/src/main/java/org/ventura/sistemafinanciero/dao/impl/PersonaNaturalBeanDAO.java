@@ -46,7 +46,7 @@ import org.ventura.sistemafinanciero.entity.PersonaNatural;
 @Stateless
 @Local(DAO.class)
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class PersonanaturalBeanDAO implements DAO<Object, PersonaNatural> {
+public class PersonaNaturalBeanDAO implements DAO<Object, PersonaNatural> {
 
 	@PersistenceContext
 	private EntityManager em;
