@@ -115,10 +115,10 @@ angular.module('cajaApp.controller')
             }
 
             $scope.crearPersonaSocio = function(){
-                if($scope.tipoPersona !== undefined && $scope.tipoPersona !== null){
-                    if($scope.tipoPersona.denominacion == "NATURAL"){
+                if($scope.transaccion.tipoPersona !== undefined && $scope.transaccion.tipoPersona !== null){
+                    if($scope.transaccion.tipoPersona == "NATURAL"){
                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural");
-                    } else{if($scope.tipoPersona.denominacion == "JURIDICA"){
+                    } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
                         $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaJuridica");
                     }}
                 } else{
