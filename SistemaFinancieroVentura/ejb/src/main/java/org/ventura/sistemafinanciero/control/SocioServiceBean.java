@@ -216,7 +216,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			cuentaAporte.setMoneda(ProduceObject.getMonedaPrincipal());
 			cuentaAporte.setSaldo(BigDecimal.ZERO);
 			cuentaAporte.setSocios(null);
-			cuentaAporteDAO.create(cuentaAporte);
+			cuentaAporteDAO.create(cuentaAporte);					
 			
 			socio = new Socio();
 			socio.setPersonaNatural(personaNatural);

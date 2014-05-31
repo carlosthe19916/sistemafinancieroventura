@@ -21,6 +21,7 @@ angular.module('cajaApp.controller')
             });
 
             $scope.tipoPersonaChange = function(){
+                $scope.transaccion.numeroDocumentoSocio = "";
                 if($scope.transaccion.tipoPersona == "NATURAL"){
                     MaestroService.getTipoDocumentoPN().then(function(data){
                             $scope.tipoDocumentosSocio = data;
@@ -101,11 +102,10 @@ angular.module('cajaApp.controller')
                         function(data){
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
-                            alert("socio creado");
                         }, function error(error){
                             $scope.control.inProcess = true;
                             $scope.control.success = false;
-                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         }
                     );

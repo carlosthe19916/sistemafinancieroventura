@@ -2,8 +2,8 @@
     <fieldset>
         <legend>Crear socio</legend>
     </fieldset>
-    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
-        <span ng-bind-html="alert.msg"></span>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <span ng-bind="alert.msg"></span>
     </alert>
     <form name="formCrearSocio" ng-submit="crearSocio()" novalidate>
         <div class="row">

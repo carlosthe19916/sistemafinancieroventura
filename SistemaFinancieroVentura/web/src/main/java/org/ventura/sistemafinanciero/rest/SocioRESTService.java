@@ -44,6 +44,7 @@ import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.rest.dto.SocioDTO;
 import org.ventura.sistemafinanciero.service.SocioService;
 
 @Path("/socio")
@@ -178,19 +179,28 @@ public class SocioRESTService {
 	
 	@POST
 	@Produces({ "application/xml", "application/json" })
-	public Response createSocio(@FormParam("tipoPersona") @DefaultValue("null") TipoPersona tipoPersona,
-			@FormParam("idTipoDocumentoSocio") @DefaultValue("null") BigInteger tipoDocumentoSocio,
-			@FormParam("numeroDocumentoSocio") @DefaultValue("null") String numeroDocumentoSocio,
-			@FormParam("idTipoDocumentoApoderado") @DefaultValue("null") BigInteger tipoDocumentoApoderado,
-			@FormParam("numeroDocumentoApoderado") @DefaultValue("null") String numeroDocumentoApoderado) {
+	public Response createSocio(SocioDTO socioDTO) {
 		try {			
-			BigInteger idSocio = socioService.create(tipoPersona, tipoDocumentoSocio, numeroDocumentoSocio, tipoDocumentoApoderado, numeroDocumentoApoderado);
+			TipoPersona tipoPersona = socioDTO.getTipoPersona();
+			BigInteger idTipoDocumentoSocio = socioDTO.getIdTipoDocumentoSocio();
+			String numeroDocumentoSocio = socioDTO.getNumeroDocumentoSocio();
+			BigInteger idTipoDocumentoApoderado = socioDTO.getIdTipoDocumentoApoderado();
+			String numeroDocumentoApoderado = socioDTO.getNumeroDocumentoApoderado();
+			
+			if(tipoPersona == null || idTipoDocumentoSocio == null || numeroDocumentoSocio == null){
+				JsonObject model = Json.createObjectBuilder().add("message", "datos no validos").build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+			}
+			
+			BigInteger idSocio = socioService.create(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado, numeroDocumentoApoderado);
 			JsonObject model = Json.createObjectBuilder().add("message", "Socio creado").add("id", idSocio).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (RollbackFailureException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		} catch (EJBException e) {
-			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {			
+			JsonObject model = Json.createObjectBuilder().add("message", "Error interno, intentelo nuevamente").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
 		} 
 	}				
 	
