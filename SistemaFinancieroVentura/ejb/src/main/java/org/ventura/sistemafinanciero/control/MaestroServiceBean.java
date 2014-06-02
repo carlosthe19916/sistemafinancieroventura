@@ -55,7 +55,31 @@ public class MaestroServiceBean implements MaestroService {
 	public List<Pais> getPaises() {		
 		return paisDAO.findAll();
 	}
+	
+	@Override
+	public Pais findPaisByAbreviatura(String abrevitura) {
+		if(abrevitura == null || abrevitura.isEmpty())
+			return null;
+		QueryParameter namedQueryName = QueryParameter.with("abreviatura", abrevitura);
+		List<Pais> list = paisDAO.findByNamedQuery(Pais.findByAbreviatura, namedQueryName.parameters());
+		if(list.size() == 1)
+			return list.get(0);
+		else 
+			return null;
+	}
 
+	@Override
+	public Pais findPaisByCodigo(String codigo) {
+		if(codigo == null || codigo.isEmpty())
+			return null;
+		QueryParameter namedQueryName = QueryParameter.with("abreviatura", codigo);
+		List<Pais> list = paisDAO.findByNamedQuery(Pais.findByCodigo, namedQueryName.parameters());
+		if(list.size() == 1)
+			return list.get(0);
+		else 
+			return null;
+	}
+	
 	@Override
 	public List<Departamento> getDepartamentos() {
 		return departamentoDAO.findAll();

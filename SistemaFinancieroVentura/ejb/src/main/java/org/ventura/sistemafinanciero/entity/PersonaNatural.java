@@ -286,7 +286,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "CODIGO_PAIS", length = 6, columnDefinition = "nvarchar2")
+	@Column(name = "CODIGO_PAIS", length = 6, nullable = false, columnDefinition = "nvarchar2")
 	public String getCodigoPais() {
 		return this.codigoPais;
 	}

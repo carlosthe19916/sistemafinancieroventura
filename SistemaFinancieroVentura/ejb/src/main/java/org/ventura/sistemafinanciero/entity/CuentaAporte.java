@@ -42,6 +42,7 @@ public class CuentaAporte implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private BigInteger idCuentaaporte;
+	private String numeroCuenta;
 	private BigDecimal saldo;
 	private Moneda moneda;
 	private EstadoCuentaAporte estadoCuenta;
@@ -78,6 +79,16 @@ public class CuentaAporte implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Column(name = "NUMERO_CUENTA", nullable = false, length = 14, columnDefinition = "nvarchar2")
+	public String getNumeroCuenta() {
+		return this.numeroCuenta;
+	}
+
+	public void setNumeroCuenta(String numeroCuenta) {
+		this.numeroCuenta = numeroCuenta;
+	}
+	
+	@XmlElement
 	@Column(name = "SALDO", nullable = false, precision = 18)
 	public BigDecimal getSaldo() {
 		return this.saldo;
@@ -87,7 +98,7 @@ public class CuentaAporte implements java.io.Serializable {
 		this.saldo = saldo;
 	}
 
-	@XmlTransient
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_MONEDA", nullable = false)
 	public Moneda getMoneda() {

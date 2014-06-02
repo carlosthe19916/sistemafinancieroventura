@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 
 import org.ventura.sistemafinanciero.dao.DAO;
+import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
@@ -22,6 +23,19 @@ public class ProduceObject {
 			sb.append("0");
 		}
 		return sb.toString();
+	}
+	
+	public static String getNumeroCuenta(CuentaAporte cuenta){
+		String numeroCuenta = cuenta.getNumeroCuenta();
+		
+		BigInteger idCuenta = cuenta.getIdCuentaaporte();
+		BigInteger idMoneda = cuenta.getMoneda().getIdMoneda();	
+		
+		numeroCuenta = numeroCuenta +  completar(idCuenta.toString(), 8);
+		numeroCuenta = numeroCuenta + idMoneda;
+		numeroCuenta = numeroCuenta + ProduceObject.CODIGO_CUENTA_APORTE;		
+		
+		return numeroCuenta;
 	}
 	
 	public static String getNumeroCuenta(CuentaBancaria cuentaBancaria){

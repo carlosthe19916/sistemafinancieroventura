@@ -99,7 +99,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : formCrearPendiente.boveda.$invalid && control.submitted}">
                     <label>&nbsp;</label>
                     <div class="input-group">
-                        <button type="button" class="btn btn-link">Nueva persona</button>
+                        <button type="button" class="btn btn-link" ng-click="crearPersonaApoderado()">Nueva persona</button>
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@
         </div>
 
         <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
         <button type="button" class="btn btn-default">Cancelar</button>
     </form>
 </div>

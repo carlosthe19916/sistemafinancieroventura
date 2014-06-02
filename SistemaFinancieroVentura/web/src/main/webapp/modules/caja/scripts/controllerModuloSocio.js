@@ -1,7 +1,10 @@
-
 angular.module('cajaApp.controller')
     .controller('CrearSocioController', [ "$scope","$state","$window", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService",
         function($scope, $state,$window, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
+
+            angular.element(document).ready(function() {
+                $('select[autofocus]:visible:first').focus();
+            });
 
             $scope.control = {"success":false, "inProcess": false, "submitted" : false};
             $scope.tipoPersonas = [{"denominacion":"NATURAL"},{"denominacion":"JURIDICA"}];
@@ -102,8 +105,9 @@ angular.module('cajaApp.controller')
                         function(data){
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
+                            $state.transitionTo("app.socio.panelSocio", { id: data.id });
                         }, function error(error){
-                            $scope.control.inProcess = true;
+                            $scope.control.inProcess = false;
                             $scope.control.success = false;
                             $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
@@ -124,6 +128,14 @@ angular.module('cajaApp.controller')
                 } else{
                     alert("Seleccione tipo de persona");
                 }
+            }
+
+            $scope.crearPersonaApoderado = function(){
+                $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural");
+            }
+
+            $scope.buttonDisableState = function(){
+                return $scope.control.inProcess;
             }
         }])
     .controller("BuscarSocioController", ["$scope", "$state", "ngProgress", "SocioService",
@@ -218,12 +230,12 @@ angular.module('cajaApp.controller')
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:'id', displayName:'ID SOCIO'},
-                    {field:'tipodocumento', displayName:'TIPO DOC.'},
-                    {field:'numerodocumento', displayName:'NUM. DOC.'},
-                    {field:'tipopersona', displayName:'TIPO PERSONA'},
-                    {field:'socio', displayName:'SOCIO'},
-                    {field:"fechaasociado | date:'dd-MM-yyyy'", displayName:'FECHA ASOCIADO'},
+                    {field:'id', displayName:'ID SOCIO', width:"10%"},
+                    {field:'tipodocumento', displayName:'TIPO DOC.',width:"15%"},
+                    {field:'numerodocumento', displayName:'NUM. DOC.',width:"12%"},
+                    {field:'tipopersona', displayName:'TIPO PERSONA',width:"12%"},
+                    {field:'socio', displayName:'SOCIO',width:"28%"},
+                    {field:"fechaasociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:"14%"},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editSocio(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
             };
@@ -232,51 +244,54 @@ angular.module('cajaApp.controller')
                 $state.transitionTo("app.socio.panelSocio", { id: row.id });
             }
         }])
-    .controller("PanelSocioController", ["$scope", "$state", "ngProgress", "SocioService",
-        function($scope, $state, ngProgress, SocioService) {
+    .controller("PanelSocioController", ["$scope", "$state","$window", "SocioService", "MaestroService",
+        function($scope, $state,$window, SocioService, MaestroService) {
 
             SocioService.getSocio($scope.id).then(
                 function(data){
                     $scope.socio = data;
                 }, function error(error){
-
+                    $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
+                    $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                 }
             );
             SocioService.getCuentaAporte($scope.id).then(
                 function(data){
                     $scope.cuentaAporte = data;
                 }, function error(error){
-
+                    $scope.alerts = [{ type: "warning", msg: "Cuenta de aporte no encontrada."}];
+                    $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                 }
             );
-            SocioService.getPersonaNatural($scope.id).then(
-                function(data){
-                    $scope.personaNatural = data;
-                }, function error(error){
+            SocioService.getPersonaNatural($scope.id).then(function(data){
+                $scope.personaNatural = data;
+                var abreviaturaPais = $scope.personaNatural.codigoPais;
+                MaestroService.getPaisByAbreviatura(abreviaturaPais).then(function(pais){
+                    $scope.pais = pais;
+                });
+            });
+            SocioService.getPersonaJuridica($scope.id).then(function(data){
+                $scope.personaJuridica = data;
+                var abreviaturaPais = $scope.personaJuridica.representanteLegal.codigoPais;
+                MaestroService.getPaisByAbreviatura(abreviaturaPais).then(function(pais){
+                    $scope.pais = pais;
+                });
+            });
+            SocioService.getApoderado($scope.id).then(function(data){
+                $scope.apoderado = data;
+            });
 
-                }
-            );
-            SocioService.getPersonaJuridica($scope.id).then(
-                function(data){
-                    $scope.personaJuridica = data;
-                }, function error(error){
+            SocioService.getCuentasBancarias($scope.id).then(function(data){
+                $scope.cuentasBancarias = data;
+            });
 
-                }
-            );
-            SocioService.getApoderado($scope.id).then(
-                function(data){
-                    $scope.apoderado = data;
-                }, function error(error){
 
-                }
-            );
-            SocioService.getCuentasBancarias($scope.id).then(
-                function(data){
-                    $scope.cuentasBancarias = data;
-                }, function error(error){
+            $scope.editarSocioPN = function(){
+                $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural/"+ $scope.personaNatural.id);
+            }
+            $scope.editarSocioPJ = function(){
 
-                }
-            );
+            }
 
         }])
 

@@ -7,6 +7,8 @@ import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,12 +22,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PAIS", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "pais")
 @XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({
+		@NamedQuery(name = Pais.findByAbreviatura, query = "SELECT p FROM Pais p WHERE p.abreviatura = :abreviatura"),
+		@NamedQuery(name = Pais.findByCodigo, query = "SELECT p FROM Pais p WHERE p.codigo = :codigo") })
 public class Pais implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public final static String findByAbreviatura = "Pais.findByAbreviatura";
+	public final static String findByCodigo = "Pais.findByCodigo";
 
 	private BigInteger idPais;
 	private String denominacion;

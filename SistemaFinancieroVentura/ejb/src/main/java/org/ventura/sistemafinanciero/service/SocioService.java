@@ -1,6 +1,7 @@
 package org.ventura.sistemafinanciero.service;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Remote;
@@ -20,7 +21,7 @@ public interface SocioService extends AbstractService<Socio>{
 	//no transaccional
 	public Set<SocioView> findByFilterText(String filterText);
 
-	public Set<SocioView> findAllView();
+	public List<SocioView> findAllView();
 	
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc, String numDoc);
 	
@@ -35,6 +36,6 @@ public interface SocioService extends AbstractService<Socio>{
 	public Set<CuentaBancaria> getCuentasBancarias(BigInteger idSocio);
 	
 	//transaccional
-	public BigInteger create(TipoPersona tipoPersona,BigInteger idDocSocio, String numDocSocio,BigInteger idDocApoderado, String numDocApoderado) throws RollbackFailureException;	
+	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona,BigInteger idDocSocio, String numDocSocio,BigInteger idDocApoderado, String numDocApoderado) throws RollbackFailureException;	
 	
 }

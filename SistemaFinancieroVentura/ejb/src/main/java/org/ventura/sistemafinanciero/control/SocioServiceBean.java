@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.control;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
+import org.ventura.sistemafinanciero.entity.Accionista;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.Moneda;
@@ -50,6 +53,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	private DAO<Object, SocioView> socioViewDAO;
 	@Inject
 	private DAO<Object, CuentaAporte> cuentaAporteDAO;
+	@Inject
+	private DAO<Object, Agencia> agenciaDAO;
 	
 	@EJB
 	private PersonaNaturalService personaNaturalService;
@@ -70,9 +75,9 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	public Set<SocioView> findAllView() {
+	public List<SocioView> findAllView() {		
 		List<SocioView> list = socioViewDAO.findAll();
-		return new HashSet<>(list);
+		return list;
 	}
 	
 	@Override
@@ -118,8 +123,13 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		PersonaJuridica persona = socio.getPersonaJuridica();
 		if(persona != null) {
 			Hibernate.initialize(persona);
-			TipoDocumento documento = persona.getTipoDocumento();
-			Hibernate.initialize(documento);
+		
+			Set<Accionista> accionistas = persona.getAccionistas();
+			PersonaNatural personaNatural = persona.getRepresentanteLegal();
+			TipoDocumento tipoDocumento = persona.getTipoDocumento();
+			Hibernate.initialize(accionistas);
+			Hibernate.initialize(personaNatural);
+			Hibernate.initialize(tipoDocumento);
 		}
 		return persona;
 	}
@@ -168,26 +178,45 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	public BigInteger create(TipoPersona tipoPersona, BigInteger idDocSocio,
+	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona, BigInteger idDocSocio,
 			String numDocSocio, BigInteger idDocApoderado,
 			String numDocApoderado) throws RollbackFailureException {
 		PersonaNatural personaNatural = null;
 		PersonaJuridica personaJuridica = null;
-		PersonaNatural apoderado = personaNaturalService.findByTipoNumeroDocumento(idDocApoderado, numDocApoderado);
+		PersonaNatural apoderado = null;
+		Agencia agencia = agenciaDAO.find(idAgencia);
+		
+		if(agencia == null)
+			throw new RollbackFailureException("Agencia no encontrada");
+		
+		if(idDocApoderado != null && numDocApoderado != null) {
+			apoderado = personaNaturalService.findByTipoNumeroDocumento(idDocApoderado, numDocApoderado);
+			if(apoderado == null)
+				throw new RollbackFailureException("Apoderado no encontrado");
+		}
+			
 		Calendar calendar = Calendar.getInstance();
 		switch (tipoPersona) {
 		case NATURAL:
 			personaNatural = personaNaturalService.findByTipoNumeroDocumento(idDocSocio, numDocSocio);
 			if(personaNatural == null)
 				throw new RollbackFailureException("Persona para socio no encontrado");
+			if(apoderado != null)
+				if(personaNatural.equals(apoderado))
+					throw new RollbackFailureException("Apoderado y socio deben de ser diferentes");
 			break;
 		case JURIDICA:
 			personaJuridica = personaJuridicaService.findByTipoNumeroDocumento(idDocSocio, numDocSocio);
+			if(personaJuridica == null)
+				throw new RollbackFailureException("Persona para socio no encontrado");
+			if(apoderado != null)
+				if(personaJuridica.getRepresentanteLegal().equals(apoderado))
+					throw new RollbackFailureException("Apoderado y representante legal deben de ser diferentes");
 			break;
 		default:
 			throw new RollbackFailureException("Tipo de persona no valido");
-		}
-						
+		}		
+		
 		//verificar si el socio ya existe
 		Socio socio = findSocio(tipoPersona, idDocSocio,numDocSocio);
 		if(socio != null){
@@ -195,11 +224,16 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 				CuentaAporte aporte = socio.getCuentaAporte();
 				if(aporte != null){
 					CuentaAporte cuentaAporte = new CuentaAporte();
+					cuentaAporte.setNumeroCuenta(agencia.getCodigo());
 					cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.ACTIVO);
 					cuentaAporte.setMoneda(ProduceObject.getMonedaPrincipal());
 					cuentaAporte.setSaldo(BigDecimal.ZERO);
 					cuentaAporte.setSocios(null);
 					cuentaAporteDAO.create(cuentaAporte);
+					
+					String numeroCuenta = ProduceObject.getNumeroCuenta(cuentaAporte);
+					cuentaAporte.setNumeroCuenta(numeroCuenta);
+					cuentaAporteDAO.update(cuentaAporte);
 					
 					socio.setCuentaAporte(cuentaAporte);
 					socio.setApoderado(apoderado);
@@ -212,11 +246,16 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			}
 		} else {			
 			CuentaAporte cuentaAporte = new CuentaAporte();
+			cuentaAporte.setNumeroCuenta(agencia.getCodigo());
 			cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.ACTIVO);
 			cuentaAporte.setMoneda(ProduceObject.getMonedaPrincipal());
 			cuentaAporte.setSaldo(BigDecimal.ZERO);
 			cuentaAporte.setSocios(null);
 			cuentaAporteDAO.create(cuentaAporte);					
+			
+			String numeroCuenta = ProduceObject.getNumeroCuenta(cuentaAporte);
+			cuentaAporte.setNumeroCuenta(numeroCuenta);
+			cuentaAporteDAO.update(cuentaAporte);
 			
 			socio = new Socio();
 			socio.setPersonaNatural(personaNatural);

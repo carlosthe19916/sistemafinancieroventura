@@ -224,6 +224,12 @@ angular.module("commonApp.service", ["restangular"])
                 getPaises: function() {
                     return Restangular.all("pais").getList();
                 },
+                getPaisByAbreviatura: function(abreviatura) {
+                    return Restangular.one("pais/abreviatura/"+abreviatura).get();
+                },
+                getPaisByCodigo: function(codigo) {
+                    return Restangular.one("pais/codigo/"+codigo).get();
+                },
                 getDepartamentos: function() {
                     return Restangular.all("departamento").getList();
                 },

@@ -1,7 +1,6 @@
 package org.ventura.sistemafinanciero.control;
 
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,12 +52,17 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 		List<PersonaJuridica> list = personaJuridicaDAO.findAll();
 		for (PersonaJuridica personaJuridica : list) {
 			Set<Accionista> accionistas = personaJuridica.getAccionistas();
-			PersonaNatural personaNatural = personaJuridica.getRepresentanteLegal();
-			TipoDocumento tipoDocumento = personaJuridica.getTipoDocumento();
-			Hibernate.initialize(accionistas);
-			Hibernate.initialize(personaNatural);
-			Hibernate.initialize(tipoDocumento);
-			
+			PersonaNatural representante = personaJuridica.getRepresentanteLegal();
+			TipoDocumento tipoDocumento = personaJuridica.getTipoDocumento();			
+			Hibernate.initialize(representante);
+			Hibernate.initialize(tipoDocumento);	
+			for (Accionista accionista : accionistas) {				
+				PersonaNatural p = accionista.getPersonaNatural();
+				TipoDocumento doc = p.getTipoDocumento();
+				Hibernate.initialize(accionista);
+				Hibernate.initialize(p);
+				Hibernate.initialize(doc);
+			}
 		}
 		return list;
 	}

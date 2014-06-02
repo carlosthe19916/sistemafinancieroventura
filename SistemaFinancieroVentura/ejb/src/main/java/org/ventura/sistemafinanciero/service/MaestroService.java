@@ -18,6 +18,8 @@ public interface MaestroService {
 	public List<TipoDocumento> getAll(TipoPersona tipopersona);
 	
 	public List<Pais> getPaises();
+	public Pais findPaisByAbreviatura(String abrevitura);
+	public Pais findPaisByCodigo(String codigo);
 	
 	public List<Departamento> getDepartamentos();
 	public List<Provincia> getProvincias(BigInteger idDepartamento);
