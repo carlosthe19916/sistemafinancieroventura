@@ -90,7 +90,7 @@ angular.module("cajaApp.service", ["restangular"])
                 findByFilterText: function(text){
                     return Restangular.all("socio/filtertext/"+text).getList();
                 },
-                crear: function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
+                /*crear: function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
                     var data = $.param({
                             tipoPersona:tipoPersona,
                             idTipoDocumentoSocio:idTipoDocumentoSocio,
@@ -103,6 +103,16 @@ angular.module("cajaApp.service", ["restangular"])
                         '',{},{
                             "Content-Type":"application/x-www-form-urlencoded"}
                     );
+                },*/
+                crear : function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
+                    var socio = {
+                        "tipoPersona" : tipoPersona,
+                        "idTipoDocumentoSocio" : idTipoDocumentoSocio,
+                        "numeroDocumentoSocio" : numeroDocumentoSocio,
+                        "idTipoDocumentoApoderado" : idTipoDocumentoApoderado,
+                        "numeroDocumentoApoderado" : numeroDocumentoApoderado
+                    }
+                    return Restangular.all("socio").post(socio);
                 },
                 getSocio: function(id){
                     return Restangular.one("socio/"+id).get();
@@ -133,6 +143,15 @@ angular.module("cajaApp.service", ["restangular"])
                 },
                 getCuentasBancaria: function(id){
                     return Restangular.one("cuentaBancaria/"+id).get();
+                },
+                crearCuentaAhorro: function(transaccion){
+                    return Restangular.all("cuentaBancaria/ahorro").post(transaccion);
+                },
+                crearCuentaCorriente: function(transaccion){
+                    return Restangular.all("cuentaBancaria/corriente").post(transaccion);
+                },
+                crearCuentaPlazoFijo: function(transaccion){
+                    return Restangular.all("cuentaBancaria/plazoFijo").post(transaccion);
                 },
                 findByFilterText: function(text){
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
