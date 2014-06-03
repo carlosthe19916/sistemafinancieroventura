@@ -24,6 +24,16 @@ angular.module('commonApp.controller')
             $modalInstance.dismiss('cancel');
         };
     })
+    .controller('BuscarCuentaBancariaController', function ($scope, $modalInstance) {
+        $scope.ok = function () {
+            if (($scope.total() != 0 && $scope.total() !== undefined)) {
+                $modalInstance.close($scope.total());
+            }
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    })
     .controller('pruebaController', function ($scope) {
 
         $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {

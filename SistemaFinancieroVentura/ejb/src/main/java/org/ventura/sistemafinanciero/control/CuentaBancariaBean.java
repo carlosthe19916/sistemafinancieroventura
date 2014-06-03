@@ -22,10 +22,12 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
+import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaTasa;
+import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
@@ -49,6 +51,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 
 	@Inject
 	private DAO<Object, CuentaBancaria> cuentaBancariaDAO;
+	@Inject
+	private DAO<Object, CuentaBancariaView> cuentaBancariaViewDAO;
 	@Inject
 	private DAO<Object, PersonaNatural> personaNaturalDAO;
 	@Inject
@@ -423,5 +427,23 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		return this.cuentaBancariaDAO;
 	}
 	
+	@Override
+	public Set<CuentaBancariaView> findAllView() {
+		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findAll();
+		return new HashSet<>(list);
+	}
+
+	@Override
+	public Set<CuentaBancariaView> findByFilterTextView(String filterText) {
+		if (filterText == null)
+			return new HashSet<CuentaBancariaView>();
+		if (filterText.isEmpty() || filterText.trim().isEmpty()) {
+			return new HashSet<CuentaBancariaView>();
+		}
+		List<CuentaBancariaView> list = null;
+		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
+		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters(), 2);
+		return new HashSet<CuentaBancariaView>(list);
+	}
 
 }

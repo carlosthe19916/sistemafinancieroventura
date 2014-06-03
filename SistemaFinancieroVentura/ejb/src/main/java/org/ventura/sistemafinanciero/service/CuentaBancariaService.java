@@ -9,6 +9,7 @@ import javax.ejb.Remote;
 
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
@@ -16,6 +17,10 @@ import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 
 	public Set<CuentaBancaria> findByFilterText(String filterText);
+	
+	Set<CuentaBancariaView> findAllView();
+	
+	Set<CuentaBancariaView> findByFilterTextView(String filterText);
 
 	public BigInteger createCuentaAhorro(BigInteger idAgencia,
 			BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona,

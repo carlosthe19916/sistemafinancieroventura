@@ -141,6 +141,9 @@ angular.module("cajaApp.service", ["restangular"])
                 getCuentasBancarias: function(){
                     return _historialCajaService.getList().$object;
                 },
+                getCuentasBancariasView: function(){
+                    return Restangular.all("cuentaBancaria/a").getList().$object;
+                },
                 getCuentasBancaria: function(id){
                     return Restangular.one("cuentaBancaria/"+id).get();
                 },
@@ -154,6 +157,9 @@ angular.module("cajaApp.service", ["restangular"])
                     return Restangular.all("cuentaBancaria/plazoFijo").post(transaccion);
                 },
                 findByFilterText: function(text){
+                    return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
+                },
+                findByFilterTextView: function(text){
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 }
             }

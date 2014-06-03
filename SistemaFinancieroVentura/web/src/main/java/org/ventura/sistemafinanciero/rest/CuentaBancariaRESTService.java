@@ -28,7 +28,6 @@ import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -43,6 +42,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Trabajador;
@@ -82,6 +82,14 @@ public class CuentaBancariaRESTService {
 	}
 	
 	@GET
+	@Path("/a")
+	@Produces({ "application/xml", "application/json" })
+	public Response findAllView() {
+		Set<CuentaBancariaView> list = cuentaBancariaService.findAllView();
+		return Response.status(Response.Status.OK).entity(list).build();
+	}
+	
+	@GET
 	@Path("/{id}")
 	@Produces({ "application/xml", "application/json" })
 	public Response findCuentaBancaria(@PathParam("id")BigInteger id) {				
@@ -98,6 +106,15 @@ public class CuentaBancariaRESTService {
 	public Response findByFilterText(
 			@PathParam("filterText") @DefaultValue("") String filterText) {
 		Set<CuentaBancaria> list = cuentaBancariaService.findByFilterText(filterText);
+		return Response.status(Response.Status.OK).entity(list).build();
+	}
+	
+	@GET
+	@Path("/filtertext/{filterText}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findByFilterTextView(
+			@PathParam("filterText") @DefaultValue("") String filterText) {
+		Set<CuentaBancariaView> list = cuentaBancariaService.findByFilterTextView(filterText);
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 		
