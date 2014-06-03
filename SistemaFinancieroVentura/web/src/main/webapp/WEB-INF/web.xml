@@ -15,15 +15,20 @@
 			<web-resource-name>CAJA</web-resource-name>
 			<description></description>
 			<url-pattern>/*</url-pattern>
-			<http-method>GET</http-method>
-			<http-method>PUT</http-method>
-			<http-method>POST</http-method>
-			<http-method>DELETE</http-method>
 		</web-resource-collection>
 		<auth-constraint>
 			<description>Tiene acceso a todo el sistema</description>
 			<role-name>CAJERO</role-name>
 		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>bootstrap</web-resource-name>
+			<description>bootstrap</description>
+			<url-pattern>/bower_components/bootstrap/*</url-pattern>
+			<url-pattern>/favicon.ico</url-pattern>
+		</web-resource-collection>
 	</security-constraint>
 
 	<security-role>
@@ -39,4 +44,9 @@
 			<form-error-page>/unauthorized.html</form-error-page>
 		</form-login-config>
 	</login-config>
+	
+	<error-page>
+    <error-code>404</error-code>
+    <location>/404.html</location>
+</error-page>
 </web-app>
