@@ -147,6 +147,12 @@ angular.module("cajaApp.service", ["restangular"])
                 crearCuentaAhorro: function(transaccion){
                     return Restangular.all("cuentaBancaria/ahorro").post(transaccion);
                 },
+                crearCuentaCorriente: function(transaccion){
+                    return Restangular.all("cuentaBancaria/corriente").post(transaccion);
+                },
+                crearCuentaPlazoFijo: function(transaccion){
+                    return Restangular.all("cuentaBancaria/plazoFijo").post(transaccion);
+                },
                 findByFilterText: function(text){
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 }

@@ -18,7 +18,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && control.submitted}">
                 <label>Tipo persona</label>
-                <select id="cmbTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
+                <select focus-on="firstFocus" id="cmbTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearCuenta.tipoPersona.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">

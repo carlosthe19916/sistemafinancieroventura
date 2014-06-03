@@ -31,7 +31,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Caja;
@@ -56,6 +55,36 @@ public class TasaInteresRESTService {
 	@Produces({ "application/xml", "application/json" })
 	public Response findTasaAhorroByMoneda(@PathParam("idMoneda")BigInteger idMoneda) {				
 		BigDecimal result = tasaInteresService.getTasaInteresCuentaAhorro(idMoneda);
+		if(result != null){
+			JsonObject model = Json.createObjectBuilder().add("valor", result).build();			
+			return Response.status(Response.Status.OK).entity(model).build();
+		}			
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "No se encontró resultados").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}			
+	}
+	
+	@GET
+	@Path("/plazoFijo/{idMoneda}")
+	@Produces({ "application/xml", "application/json" })
+	public Response findTasaPlazoFijoByMoneda(@PathParam("idMoneda")BigInteger idMoneda) {				
+		BigDecimal result = tasaInteresService.getTasaInteresCuentaPlazoFijo(idMoneda, 0, BigDecimal.ZERO);
+		if(result != null){
+			JsonObject model = Json.createObjectBuilder().add("valor", result).build();			
+			return Response.status(Response.Status.OK).entity(model).build();
+		}			
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "No se encontró resultados").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}			
+	}
+	
+	@GET
+	@Path("/plazoFijo/{idMoneda}/{periodo}/{monto}")
+	@Produces({ "application/xml", "application/json" })
+	public Response findTasaPlazoFijoByMonedaPeriodoMonto(@PathParam("idMoneda")BigInteger idMoneda,@PathParam("periodo")int periodo, @PathParam("monto")BigDecimal monto) {				
+		BigDecimal result = tasaInteresService.getTasaInteresCuentaPlazoFijo(idMoneda, periodo, monto);
 		if(result != null){
 			JsonObject model = Json.createObjectBuilder().add("valor", result).build();			
 			return Response.status(Response.Status.OK).entity(model).build();

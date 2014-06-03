@@ -9,6 +9,7 @@ var cajaApp = angular.module('cajaApp',[
     "ui.unique",
     "blockUI",
     "flow",
+    "focusOn",
     "cajaApp.controller",
     "cajaApp.service",
     "commonApp"
@@ -472,3 +473,12 @@ cajaApp.run(["$rootScope", "CajaSessionService", "UsuarioSessionService", "Agenc
             }
         );
     }] );
+
+/*
+cajaApp.run(
+    [        '$rootScope', '$state', '$stateParams',
+        function ($rootScope,   $state,   $stateParams) {
+
+            $rootScope.$state = $state;
+            $rootScope.$stateParams = $stateParams;
+        }]);*/

@@ -34,8 +34,24 @@ public class TasaInteresServiceBean extends AbstractServiceBean<TasaInteres> imp
 	
 	@Override
 	public BigDecimal getTasaInteresCuentaPlazoFijo(BigInteger idMoneda,
-			int periodo, BigDecimal monto) {
-		return null;
+			int periodo, BigDecimal monto) {		
+		Moneda moneda = monedaDAO.find(idMoneda);
+		ValorTasaInteres valorTasaInteres = null;
+		if(moneda == null)
+			return null;
+		QueryParameter queryParameter = QueryParameter
+				.with("tasaInteresDenominacion", TasaInteresType.TASA_CUENTA_PLAZO_FIJO.toString())
+				.and("idMoneda", idMoneda)
+				.and("periodo", periodo)
+				.and("monto", monto);
+		List<ValorTasaInteres> list = valorTasaInteresDAO.findByNamedQuery(ValorTasaInteres.finByDenominacionTasaAndIdMonedaPeriodoMonto, queryParameter.parameters());
+		if(list.size() == 1)
+			valorTasaInteres = list.get(0);
+		
+		if(valorTasaInteres != null)
+			return valorTasaInteres.getValor();
+		else
+			return null;
 	}
 
 	@Override

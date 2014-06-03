@@ -10,7 +10,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearSocio.tipoPersona.$invalid && control.submitted}">
                     <label>Tipo persona</label>
-                    <select name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
+                    <select focus-on="firstFocus" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                     </select>
                     <div ng-show="formCrearSocio.tipoPersona.$invalid && control.submitted">
                         <p class="help-block" ng-show="formCrearSocio.tipoPersona.$error.required">
