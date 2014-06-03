@@ -27,7 +27,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "VALOR_TASA_INTERES", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "valorTasaInteres")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = ValorTasaInteres.finByDenominacionTasaAndIdMoneda, query = "SELECT v FROM ValorTasaInteres v INNER JOIN v.moneda m INNER JOIN v.tasaInteres t WHERE t.denominacion = :tasaInteresDenominacion AND m.idMoneda = :idMoneda ") })
+@NamedQueries({
+		@NamedQuery(name = ValorTasaInteres.finByDenominacionTasaAndIdMoneda, query = "SELECT v FROM ValorTasaInteres v INNER JOIN v.moneda m INNER JOIN v.tasaInteres t WHERE t.denominacion = :tasaInteresDenominacion AND m.idMoneda = :idMoneda "),
+		@NamedQuery(name = ValorTasaInteres.finByDenominacionTasaAndIdMonedaPeriodoMonto, query = "SELECT v FROM ValorTasaInteres v INNER JOIN v.moneda m INNER JOIN v.tasaInteres t WHERE t.denominacion = :tasaInteresDenominacion AND m.idMoneda = :idMoneda AND (:periodo BETWEEN v.periodoMinimo AND v.montoMaximo) AND (:monto BETWEEN v.montoMinimo AND v.montoMaximo) ") })
 public class ValorTasaInteres implements java.io.Serializable {
 
 	/**
@@ -36,6 +38,7 @@ public class ValorTasaInteres implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public final static String finByDenominacionTasaAndIdMoneda = "ValorTasaInteres.finByDenominacionTasaAndIdMoneda";
+	public final static String finByDenominacionTasaAndIdMonedaPeriodoMonto = "ValorTasaInteres.finByDenominacionTasaAndIdMonedaPeriodoMonto";
 
 	private BigInteger idValorTasaInteres;
 	private BigDecimal valor;

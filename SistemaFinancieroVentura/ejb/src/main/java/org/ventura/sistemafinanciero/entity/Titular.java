@@ -135,4 +135,20 @@ public class Titular implements java.io.Serializable {
 		this.estado = (estado ? 1 : 0);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof Titular)) {
+			return false;
+		}
+		final Titular other = (Titular) obj;
+		return other.getPersonaNatural().equals(this.personaNatural);
+	}
+
+	@Override
+	public int hashCode() {
+		if(this.personaNatural != null)		
+			return this.personaNatural.hashCode();
+		else 
+			return 0;
+	}
 }

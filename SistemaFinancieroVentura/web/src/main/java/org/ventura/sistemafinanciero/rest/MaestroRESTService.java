@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Departamento;
 import org.ventura.sistemafinanciero.entity.Distrito;
@@ -34,6 +37,7 @@ import org.ventura.sistemafinanciero.entity.Provincia;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.type.Estadocivil;
 import org.ventura.sistemafinanciero.entity.type.Sexo;
+import org.ventura.sistemafinanciero.entity.type.TipoEmpresa;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.service.MaestroService;
 
@@ -97,11 +101,49 @@ public class MaestroRESTService {
 	}
 	
 	@GET
+	@Path("/tipoEmpresa")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<TipoEmpresa> listTipoEmpresa() {
+		TipoEmpresa[] s = TipoEmpresa.values();
+		List<TipoEmpresa> list = new ArrayList<TipoEmpresa>();
+		for (int i = 0; i < s.length; i++) {
+			list.add(s[i]);
+		}
+		return list;
+	}
+	
+	@GET
 	@Path("/pais")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Pais> getPaises() {
 		List<Pais> list = maestroService.getPaises();
 		return list;
+	}
+	
+	@GET
+	@Path("/pais/abreviatura/{abreviatura}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findPaisByAbreviatura(@PathParam("abreviatura") String abreviatura) {
+		Pais pais = maestroService.findPaisByAbreviatura(abreviatura);
+		if(pais != null) {
+			return Response.status(Response.Status.OK).entity(pais).build();
+		} else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Pais no encontrado").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}
+	}
+	
+	@GET
+	@Path("/pais/codigo/{codigo}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findPaisByCodigo(@PathParam("codigo") String codigo) {
+		Pais pais = maestroService.findPaisByCodigo(codigo);
+		if(pais != null) {
+			return Response.status(Response.Status.OK).entity(pais).build();
+		} else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Pais no encontrado").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}
 	}
 	
 	@GET

@@ -286,7 +286,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
-	@Column(name = "CODIGO_PAIS", length = 6, columnDefinition = "nvarchar2")
+	@Column(name = "CODIGO_PAIS", length = 6, nullable = false, columnDefinition = "nvarchar2")
 	public String getCodigoPais() {
 		return this.codigoPais;
 	}
@@ -343,6 +343,28 @@ public class PersonaNatural implements java.io.Serializable {
 
 	public void setTrabajadors(Set trabajadors) {
 		this.trabajadors = trabajadors;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof PersonaNatural)) {
+			return false;
+		}
+		final PersonaNatural other = (PersonaNatural) obj;
+		if(other.getNumeroDocumento().equalsIgnoreCase(this.numeroDocumento)){
+			if(other.getTipoDocumento().equals(this.tipoDocumento)){
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return this.tipoDocumento.hashCode() * this.numeroDocumento.hashCode();
 	}
 
 }

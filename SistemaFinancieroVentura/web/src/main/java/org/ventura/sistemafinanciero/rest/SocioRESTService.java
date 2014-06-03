@@ -17,6 +17,7 @@
 package org.ventura.sistemafinanciero.rest;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.EJB;
@@ -27,24 +28,32 @@ import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
+import org.ventura.sistemafinanciero.entity.Trabajador;
+import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.rest.dto.SocioDTO;
 import org.ventura.sistemafinanciero.service.SocioService;
+import org.ventura.sistemafinanciero.service.TrabajadorService;
+import org.ventura.sistemafinanciero.service.UsuarioService;
 
 @Path("/socio")
 @Stateless
@@ -52,6 +61,11 @@ public class SocioRESTService {
     
 	@EJB
 	private SocioService socioService;
+	
+	@EJB
+	private UsuarioService usuarioService;
+	@EJB
+	private TrabajadorService trabajadorService;
 	
 	@GET
 	@Path("/{id}")
@@ -171,26 +185,52 @@ public class SocioRESTService {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Set<SocioView> listAll() {
-		Set<SocioView> list = socioService.findAllView();		
-		return list;
+	public Response listAll() {
+		List<SocioView> list = socioService.findAllView();
+		return Response.status(Response.Status.OK).entity(list).build();
 	}
 	
 	@POST
 	@Produces({ "application/xml", "application/json" })
-	public Response createSocio(@FormParam("tipoPersona") @DefaultValue("null") TipoPersona tipoPersona,
-			@FormParam("idTipoDocumentoSocio") @DefaultValue("null") BigInteger tipoDocumentoSocio,
-			@FormParam("numeroDocumentoSocio") @DefaultValue("null") String numeroDocumentoSocio,
-			@FormParam("idTipoDocumentoApoderado") @DefaultValue("null") BigInteger tipoDocumentoApoderado,
-			@FormParam("numeroDocumentoApoderado") @DefaultValue("null") String numeroDocumentoApoderado) {
-		try {			
-			BigInteger idSocio = socioService.create(tipoPersona, tipoDocumentoSocio, numeroDocumentoSocio, tipoDocumentoApoderado, numeroDocumentoApoderado);
+	public Response createSocio(SocioDTO socioDTO, @Context SecurityContext context) {
+		try {	
+			//agencia
+			String username = context.getUserPrincipal().getName();
+			Usuario currentUser = usuarioService.findByUsername(username);
+			Trabajador trabajador;
+			if (currentUser != null)
+				trabajador = trabajadorService.findByUsuario(currentUser.getIdUsuario());
+			else
+				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+			Agencia agencia = trabajadorService.getAgencia(trabajador.getIdTrabajador());
+			if(agencia == null)
+				return Response.status(Response.Status.NOT_FOUND).entity("Agencia no encontrado").build();
+			
+			//socio
+			TipoPersona tipoPersona = socioDTO.getTipoPersona();
+			BigInteger idTipoDocumentoSocio = socioDTO.getIdTipoDocumentoSocio();
+			String numeroDocumentoSocio = socioDTO.getNumeroDocumentoSocio();
+			BigInteger idTipoDocumentoApoderado = socioDTO.getIdTipoDocumentoApoderado();
+			String numeroDocumentoApoderado = socioDTO.getNumeroDocumentoApoderado();
+			
+			if(tipoPersona == null || idTipoDocumentoSocio == null || numeroDocumentoSocio == null){
+				JsonObject model = Json.createObjectBuilder().add("message", "datos no validos").build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+			}
+			
+			//transaccion
+			BigInteger idSocio = socioService.create(agencia.getIdAgencia(), tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado, numeroDocumentoApoderado);
 			JsonObject model = Json.createObjectBuilder().add("message", "Socio creado").add("id", idSocio).build();
 			return Response.status(Response.Status.OK).entity(model).build();
+		} catch (NonexistentEntityException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (RollbackFailureException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		} catch (EJBException e) {
-			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {			
+			JsonObject model = Json.createObjectBuilder().add("message", "Error interno, intentelo nuevamente").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
 		} 
 	}				
 	

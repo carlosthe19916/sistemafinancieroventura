@@ -7,11 +7,12 @@ import javax.ejb.Remote;
 
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
 @Remote
 public interface PersonaJuridicaService extends AbstractService<PersonaJuridica>{
 
-	public BigInteger crear(PersonaJuridica personaJuridica) throws PreexistingEntityException;
+	public BigInteger crear(PersonaJuridica personaJuridica) throws PreexistingEntityException, RollbackFailureException;
 	
 	public PersonaJuridica findByTipoNumeroDocumento(BigInteger idTipodocumento, String numerodocumento);
 

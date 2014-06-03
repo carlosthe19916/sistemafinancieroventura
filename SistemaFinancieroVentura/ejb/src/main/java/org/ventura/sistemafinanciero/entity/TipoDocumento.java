@@ -145,4 +145,23 @@ public class TipoDocumento implements java.io.Serializable {
 		this.personaJuridicas = personaJuridicas;
 	}
 
+	@Override
+	public String toString() {
+		return this.denominacion;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof TipoDocumento)) {
+			return false;
+		}
+		final TipoDocumento other = (TipoDocumento) obj;
+		return other.getAbreviatura().equalsIgnoreCase(this.abreviatura);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.abreviatura.hashCode();
+	}
+	
 }

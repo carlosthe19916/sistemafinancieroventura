@@ -19,11 +19,14 @@ import java.util.Date;
 @Table(name = "SOCIO_VIEW", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "socioview")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext") })
+@NamedQueries({
+		@NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext"),
+		@NamedQuery(name = SocioView.findAll, query = "SELECT sv FROM SocioView sv ORDER BY sv.idsocio ASC") })
 public class SocioView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public final static String FindByFilterTextSocioView = "FindByFilterTextSocioView";
+	public final static String FindByFilterTextSocioView = "SocioView.FindByFilterTextSocioView";
+	public final static String findAll = "SocioView.findAll";
 
 	@XmlElement(name = "id")
 	@Id

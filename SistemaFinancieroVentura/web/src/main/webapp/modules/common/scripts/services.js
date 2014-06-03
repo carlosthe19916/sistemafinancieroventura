@@ -42,9 +42,9 @@ angular.module("commonApp.service", ["restangular"])
                 getModel: function(){
                     return {
                         "id":undefined,
-                        "tipoDocumento":{},
+                        "tipoDocumento":{"id":undefined},
                         "numeroDocumento":undefined,
-                        "apellidoPatenor":undefined,
+                        "apellidoPaterno":undefined,
                         "apellidoMaterno":undefined,
                         "nombres":undefined,
                         "fechaNacimiento":undefined,
@@ -97,71 +97,62 @@ angular.module("commonApp.service", ["restangular"])
         }])
     .factory("PersonaJuridicaService",["Restangular",
         function(Restangular){
-
-            var personaResponse = undefined;
-            var _personanaturalService = Restangular.all("personanatural");
+            var _personaJuridicaService = Restangular.all("personaJuridica");
 
             return {
-                guardarPersonaResponse:function (data) {
-                    personaResponse = data;
-                    console.log(data);
-                },
-                getPersonaResponse:function () {
-                    return personaResponse;
-                },
                 getModel: function(){
                     return {
                         "id":undefined,
-                        "tipoDocumento":{},
+                        "tipoDocumento":{"id":undefined},
                         "numeroDocumento":undefined,
-                        "apellidoPatenor":undefined,
-                        "apellidoMaterno":undefined,
-                        "nombres":undefined,
-                        "fechaNacimiento":undefined,
-                        "sexo":undefined,
-                        "estadoCivil":undefined,
-                        "ocupacion":undefined,
+                        "razonSocial":undefined,
+                        "nombreComercial":undefined,
+                        "representanteLegal": {},
+                        "fechaConstitucion":undefined,
+                        "actividadPrincipal":undefined,
+                        "tipoEmpresa":undefined,
+                        "finLucro":undefined,
                         "direccion":undefined,
                         "referencia":undefined,
                         "telefono":undefined,
                         "celular":undefined,
                         "email":undefined,
                         "ubigeo":undefined,
-                        "codigoPais":undefined
+                        "accionistas":undefined
                     };
                 },
-                crear: function(persona){
-                    return _personanaturalService.post(persona);
-                },
-                crearWithImages: function(persona,foto){
-                    var data = $.param({persona:persona,foto:foto});
-                    return Restangular.one("personanatural").customPOST(
-                        data,
-                        '',{},{
-                            "Content-Type":"multipart/form-data"}
-                    );
+                crear: function(personaJuridica, representanteLegal, accionistas){
+                    personaJuridica.representanteLegal = {"id":representanteLegal.id};
+                    var accionistasFinal = [];
+                    for(var i = 0; i < accionistas.length; i++){
+                        var porcentaje = accionistas[i].porcentajeParticipacion;
+                        var personaNatural = {"id":accionistas[i].personaNatural.id};
+                        accionistasFinal[i] = {
+                            "porcentajeParticipacion" : porcentaje,
+                            "personaNatural" : personaNatural
+                        }
+                    }
+                    personaJuridica.accionistas = accionistasFinal;
+                    return _personaJuridicaService.post(personaJuridica);
                 },
                 update: function(persona){
                     var copy = Restangular.copy(persona);
                     return copy.put();
                 },
                 remove: function(id){
-                    return Restangular.all("personanatural/"+id).remove();
+                    return Restangular.all("personaJuridica/"+id).remove();
                 },
                 getPersonas: function(){
-                    return _personanaturalService.getList().$object;
+                    return _personaJuridicaService.getList().$object;
                 },
                 findById: function(id){
-                    return Restangular.one("personanatural", id).get().$object;
+                    return Restangular.one("personaJuridica", id).get().$object;
                 },
                 findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
-                    return Restangular.one('personanatural'+'/'+idtipodocumento+'/'+numerodocumento).get();
+                    return Restangular.one('personaJuridica'+'/'+idtipodocumento+'/'+numerodocumento).get();
                 },
                 findByFilterText: function(text){
-                    return Restangular.all("personanatural/filtertext/"+text).getList();
-                },
-                currentSession: function(){
-                    return Restangular.one("personanatural/currentSession").get().$object;
+                    return Restangular.all("personaJuridica/filtertext/"+text).getList();
                 }
             }
         }])
@@ -227,8 +218,17 @@ angular.module("commonApp.service", ["restangular"])
                 getEstadosciviles: function() {
                     return Restangular.all("estadocivil").getList();
                 },
+                getTiposEmpresa: function() {
+                    return Restangular.all("tipoEmpresa").getList();
+                },
                 getPaises: function() {
                     return Restangular.all("pais").getList();
+                },
+                getPaisByAbreviatura: function(abreviatura) {
+                    return Restangular.one("pais/abreviatura/"+abreviatura).get();
+                },
+                getPaisByCodigo: function(codigo) {
+                    return Restangular.one("pais/codigo/"+codigo).get();
                 },
                 getDepartamentos: function() {
                     return Restangular.all("departamento").getList();
@@ -244,8 +244,30 @@ angular.module("commonApp.service", ["restangular"])
     .factory("TasaInteresService",["Restangular",
         function(Restangular){
             return {
+                getInteresGenerado : function(tasa, periodo, monto){
+                    if(tasa !== undefined && tasa !== null && periodo !== undefined && periodo !== null && monto !== undefined && monto !== null){
+                        var result = monto * Math.pow((tasa+1),(periodo/360));
+                        return result;
+                    }
+                    else {
+                        return 0;
+                    }
+                },
                 getTasaCuentaAhorro: function(idMoneda) {
                     return Restangular.one("tasa/ahorro/"+idMoneda).get();
+                },
+                getTasaCuentaCorriente: function(idMoneda) {
+                    return Restangular.one("tasa/corriente/"+idMoneda).get();
+                },
+                getTasaCuentaPlazoFijo: function(idMoneda, periodo, monto) {
+                    if (arguments.length == 1) {
+                        return Restangular.one("tasa/plazoFijo/"+idMoneda).get();
+                    } else if (arguments.length == 2) {
+                        return Restangular.one("tasa/plazoFijo/"+idMoneda+"/"+periodo+"/"+0).get();
+                    } else if (arguments.length == 3) {
+                        return Restangular.one("tasa/plazoFijo/"+idMoneda+"/"+periodo+"/"+monto).get();
+                    }
+
                 }
             }
         }]);

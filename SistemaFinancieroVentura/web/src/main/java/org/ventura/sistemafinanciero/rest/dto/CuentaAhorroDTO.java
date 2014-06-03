@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ventura.sistemafinanciero.entity.Beneficiario;
@@ -13,7 +14,7 @@ import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 
 @XmlRootElement(name = "crearCuentaAhorro")
 @XmlAccessorType(XmlAccessType.NONE)
-public class CrearCuentaAhorro implements Serializable {
+public class CuentaAhorroDTO implements Serializable {
 
 	/**
 	 * 
@@ -27,6 +28,7 @@ public class CrearCuentaAhorro implements Serializable {
 	private List<BigInteger> titulares;
 	private List<Beneficiario> beneficiarios;
 
+	@XmlElement
 	public BigInteger getIdMoneda() {
 		return idMoneda;
 	}
@@ -35,6 +37,7 @@ public class CrearCuentaAhorro implements Serializable {
 		this.idMoneda = idMoneda;
 	}
 
+	@XmlElement
 	public TipoPersona getTipoPersona() {
 		return tipoPersona;
 	}
@@ -43,6 +46,7 @@ public class CrearCuentaAhorro implements Serializable {
 		this.tipoPersona = tipoPersona;
 	}
 
+	@XmlElement
 	public BigInteger getIdPersona() {
 		return idPersona;
 	}
@@ -51,6 +55,7 @@ public class CrearCuentaAhorro implements Serializable {
 		this.idPersona = idPersona;
 	}
 
+	@XmlElement
 	public int getCantRetirantes() {
 		return cantRetirantes;
 	}
@@ -59,6 +64,7 @@ public class CrearCuentaAhorro implements Serializable {
 		this.cantRetirantes = cantRetirantes;
 	}
 
+	@XmlElement
 	public List<BigInteger> getTitulares() {
 		return titulares;
 	}
@@ -67,6 +73,7 @@ public class CrearCuentaAhorro implements Serializable {
 		this.titulares = titulares;
 	}
 
+	@XmlElement
 	public List<Beneficiario> getBeneficiarios() {
 		return beneficiarios;
 	}
