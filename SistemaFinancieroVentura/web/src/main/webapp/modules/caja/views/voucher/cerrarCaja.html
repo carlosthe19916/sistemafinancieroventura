@@ -26,7 +26,7 @@
             <tr>
                 <td>FECHA CIERRE:</td>
                 <td><span ng-bind="resumenCaja.fechaCierre | date : 'dd/MM/yyyy'"/> </td>
-                <td>HORA APERTURA:</td>
+                <td>HORA CIERRE:</td>
                 <td><span ng-bind="resumenCaja.horaCierre | date : 'HH:mm:ss'"/> </td>
             </tr>
             <tr>
@@ -52,7 +52,7 @@
                     <td><span ng-bind="resumenCaja.depositosAhorro"/></td>
                 </tr>
                 <tr>
-                    <td>C. Plazo fijo</td>
+                    <td>C. Plazo Fijo</td>
                     <td><span ng-bind="resumenCaja.depositosPlazoFijo"/></td>
                     <td>C. Corriente</td>
                     <td><span ng-bind="resumenCaja.depositosCorriente"/></td>
@@ -75,7 +75,7 @@
                     <td><span ng-bind="resumenCaja.retirosAhorro"/></td>
                 </tr>
                 <tr>
-                    <td>C. Plazo fijo</td>
+                    <td>C. Plazo Fijo</td>
                     <td><span ng-bind="resumenCaja.retirosPlazoFijo"/></td>
                     <td>C. Corriente</td>
                     <td><span ng-bind="resumenCaja.retirosCorriente"/></td>
@@ -217,7 +217,7 @@
                         <thead>
                         <tr>
                             <th>Denominacion</th>
-                            <th>cantidad</th>
+                            <th>Cantidad</th>
                             <th>Subtotal</th>
                         </tr>
                         </thead>
@@ -256,15 +256,15 @@
                         <td><span ng-bind="voucher.salidas | currency : voucher.moneda.simbolo"/></td>
                     </tr>
                     <tr>
-                        <td>Sobrantes de caja:</td>
+                        <td>Sobrantes de Caja:</td>
                         <td><span ng-bind="voucher.sobrante | currency : voucher.moneda.simbolo"/></td>
                     </tr>
                     <tr>
-                        <td>Faltantes de caja:</td>
+                        <td>Faltantes de Caja:</td>
                         <td><span ng-bind="voucher.faltante | currency : voucher.moneda.simbolo"/></td>
                     </tr>
                     <tr>
-                        <td>Saldo por devolver:</td>
+                        <td>Saldo por Devolver:</td>
                         <td><span ng-bind="voucher.porDevolver | currency : voucher.moneda.simbolo"/></td>
                     </tr>
                     </tbody>
