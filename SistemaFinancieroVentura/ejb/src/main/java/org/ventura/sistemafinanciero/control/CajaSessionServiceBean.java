@@ -399,13 +399,13 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		pendienteCaja.setHistorialCaja(historialCaja);
 		pendienteCaja.setMoneda(boveda.getMoneda());
 		pendienteCaja.setMonto(monto);
-		pendienteCaja.setTipoPendiente(monto.compareTo(BigDecimal.ZERO) >= 1 ? TipoPendiente.SOBRANTE : TipoPendiente.FALTANTE);
+		pendienteCaja.setTipoPendiente(monto.compareTo(BigDecimal.ZERO) >= 1 ? TipoPendiente.FALTANTE : TipoPendiente.SOBRANTE);
 		pendienteCaja.setObservacion(observacion);
 		pendienteCajaDAO.create(pendienteCaja);
 		
 		//modificando el saldo de boveda
 		BigDecimal saldoActual = bovedaCajaTransaccion.getSaldo();
-		BigDecimal montoTransaccion = monto;
+		BigDecimal montoTransaccion = (monto.negate());
 		BigDecimal saldoFinal = saldoActual.add(montoTransaccion);
 		bovedaCajaTransaccion.setSaldo(saldoFinal);
 		bovedaCajaDAO.update(bovedaCajaTransaccion);

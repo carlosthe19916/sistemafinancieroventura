@@ -4,8 +4,9 @@
         <p><strong>Info:</strong>La caja ya esta cerrada, o no se pudo cargar correctamente</p>
     </div>
 
-    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
         <span ng-bind-html="alert.msg"></span>
+        <a href ng-click="crearPendiente($index)">Crear pendiente</a>
     </alert>
 
     <fieldset>
@@ -47,7 +48,7 @@
                 <div class="col-sm-12">
                     <tabset>
                         <tab ng-repeat="detalle in detalleCajaInicial" select="updateLayout($index)" heading="Moneda:{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{totalFinal[$index]()}}">
-                            <div class="row">
+                            <div class="row" style="padding-top: 10px;">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div ng-grid="getTemplateInicial($index, detalle.moneda.simbolo)" style="border: 1px solid rgb(212,212,212); height: 400px;">

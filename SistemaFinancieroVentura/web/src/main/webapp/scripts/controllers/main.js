@@ -1,7 +1,52 @@
-define(['angular'], function (angular) {
+define([
+    'angular',
+    './MainController',
+    './NavBarController',
+
+    './caja/AbrirCajaController',
+    './caja/CerrarCajaController',
+    './caja/VoucherCerrarCajaController',
+    './caja/BuscarPendienteController',
+    './caja/CrearPendienteController',
+    './caja/VoucherPendienteController',
+    './caja/BuscarTransaccionBovedaCajaController',
+    './caja/CrearTransaccionBovedaCajaController',
+    './caja/VoucherTransaccionBovedaCajaController',
+    './caja/BuscarTransaccionCajaCajaController',
+    './caja/CrearTransaccionCajaCajaController',
+    './caja/VoucherTransaccionCajaCajaController',
+    './caja/HistorialCajaController',
+
+    './cuentaBancaria/BeneficiarioController',
+    './cuentaBancaria/TitularController',
+    './cuentaBancaria/BuscarCuentaBancariaController',
+    './cuentaBancaria/CrearCuentaBancariaController',
+    './cuentaBancaria/CrearCuentaAhorroController',
+    './cuentaBancaria/CrearCuentaCorrienteController',
+    './cuentaBancaria/CrearCuentaPlazoFijoController',
+
+    './persona/natural/BuscarPersonaNaturalController',
+    './persona/natural/CrearPersonaNaturalController',
+    './persona/juridica/AccionistaController',
+    './persona/juridica/CrearPersonaJuridicaController',
+
+    './socio/CrearSocioController',
+    './socio/BuscarSocioController',
+    './socio/PanelSocioController',
+
+    './util/CalculadoraController'
+], function () {
+
+});
+
+
+/*
+define([
+    'angular'
+], function (angular) {
   'use strict';
 
-  angular.module('sistCoopApp.controllers.MainCtrl', [])
+  angular.module('cajaApp.controllers.MainCtrl', [])
     .controller('MainCtrl', function ($scope) {
       $scope.awesomeThings = [
         'HTML5 Boilerplate',
@@ -9,4 +54,4 @@ define(['angular'], function (angular) {
         'Karma'
       ];
     });
-});
+});*/
