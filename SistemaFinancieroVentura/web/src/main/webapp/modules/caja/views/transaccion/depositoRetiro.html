@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div ng-controller="CrearTransaccionDepositoRetiroController">
     <fieldset>
         <legend>Transaccion Deposito / Retiro</legend>
@@ -8,7 +7,7 @@
         </alert>
 
         <form name="formCrearTransaccion" ng-submit="crearPendiente()" novalidate>
-            
+
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && control.submitted}">
@@ -98,105 +97,4 @@
             <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
         </form>
     </fieldset>
-=======
-<div ng-controller="CrearTransaccionDepositoRetiroController">
-    <fieldset>
-        <legend>Transaccion Deposito / Retiro</legend>
-
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
-            {{alert.msg}}
-        </alert>
-
-        <form name="formCrearTransaccion" ng-submit="crearPendiente()" novalidate>
-            
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && control.submitted}">
-                        <label>Numero Cuenta</label>
-                        <div class="input-group">
-                            <input type="text" name="numeroCuenta" ng-model="cuentabancaria" class="form-control" placeholder="Numero de Cuenta" required autofocus/>
-                              <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>
-                              </span>
-                        </div>
-                        <div ng-show="formCrearTransaccion.numeroCuenta.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.numeroCuenta.$error.required">
-                                Ingrese Numero de Cuenta.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
-                        <label>Tipo Transaccion</label>
-                        <select name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="tipotransaccion" class="form-control" required>
-                        </select>
-                        <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
-                                Ingrese Tipo Transaccion.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipopendiente.$invalid && control.submitted}">
-                        <label>Tipo Moneda</label>
-                        <input type="text" name="tipomoneda" ng-model="tipomoneda" class="form-control" placeholder="Tipo Moneda" required/>
-                        <div ng-show="formCrearTransaccion.tipomoneda.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.tipomoneda.$error.required">
-                                Ingrese tipo Moneda.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && control.submitted}">
-                        <label>Monto</label>
-                        <div class="input-group">
-                            <input type="text" name="monto" ng-model="monto" class="form-control" placeholder="Monto" required/>
-                              <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open()" ng-disabled="tipotransaccion === undefined">
-                                    <span class="glyphicon glyphicon-th-list"></span>
-                                </button>
-                              </span>
-                        </div>
-                        <div ng-show="formCrearTransaccion.monto.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.monto.$error.required">
-                                Ingrese monto.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <kbd style="display: block;margin-top: 3px;">
-                            <span ng-bind="boveda.moneda.simbolo "/>
-                            <span ng-bind="(tipopendiente.factor * monto)| number : 2"/>
-                        </kbd>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.referencia.$invalid && formCrearTransaccion.submitted}">
-                        <label>Observacion</label>
-                        <input type="text" name="referencia" ng-model="referncia" class="form-control" placeholder="Referencia"/>
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
-            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
-        </form>
-    </fieldset>
->>>>>>> branch 'master' of https://code.google.com/p/sistemafinancieroventura/
 </div>
