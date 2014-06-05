@@ -15,7 +15,7 @@
                         <div class="input-group">
                             <input type="text" name="numeroCuenta" ng-model="cuentabancaria" class="form-control" placeholder="Numero de Cuenta" required autofocus/>
                               <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria('lg')">
+                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()">
                                     <span class="glyphicon glyphicon-search"></span>
                                 </button>
                               </span>
@@ -30,13 +30,13 @@
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipopendiente.$invalid && control.submitted}">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
                         <label>Tipo Transaccion</label>
-                        <select name="tipopendiente" ng-options="tipopendiente as tipopendiente.denominacion for tipopendiente in tipopendientes" ng-model="tipopendiente" class="form-control" required>
+                        <select name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="tipotransaccion" class="form-control" required>
                         </select>
-                        <div ng-show="formCrearTransaccion.tipopendiente.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.tipopendiente.$error.required">
-                                Ingrese tipo pendiente.
+                        <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
+                                Ingrese Tipo Transaccion.
                             </p>
                         </div>
                     </div>
@@ -45,36 +45,11 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipopendiente.$invalid && control.submitted}">
-                        <label>Tipo Transaccion</label>
-                        <select name="tipopendiente" ng-options="tipopendiente as tipopendiente.denominacion for tipopendiente in tipopendientes" ng-model="tipopendiente" class="form-control" required autofocus>
-                        </select>
-                        <div ng-show="formCrearTransaccion.tipopendiente.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.tipopendiente.$error.required">
-                                Ingrese tipo pendiente.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.boveda.$invalid && control.submitted}">
-                        <label>Boveda</label>
-                        <select name="boveda" ng-options="boveda as boveda.denominacion for boveda in bovedas" ng-model="boveda" ng-change="bovedaChange(boveda)" class="form-control" required>
-                        </select>
-                        <div ng-show="formCrearTransaccion.boveda.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.boveda.$error.required">
-                                Ingrese boveda.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipopendiente.$invalid && control.submitted}">
-                        <label>Tipo pendiente</label>
-                        <select name="tipopendiente" ng-options="tipopendiente as tipopendiente.denominacion for tipopendiente in tipopendientes" ng-model="tipopendiente" class="form-control" required>
-                        </select>
-                        <div ng-show="formCrearTransaccion.tipopendiente.$invalid && control.submitted">
-                            <p class="help-block" ng-show="formCrearTransaccion.tipopendiente.$error.required">
-                                Ingrese tipo pendiente.
+                        <label>Tipo Moneda</label>
+                        <input type="text" name="tipomoneda" ng-model="tipomoneda" class="form-control" placeholder="Tipo Moneda" required/>
+                        <div ng-show="formCrearTransaccion.tipomoneda.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formCrearTransaccion.tipomoneda.$error.required">
+                                Ingrese tipo Moneda.
                             </p>
                         </div>
                     </div>
@@ -87,7 +62,7 @@
                         <div class="input-group">
                             <input type="text" name="monto" ng-model="monto" class="form-control" placeholder="Monto" required/>
                               <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open()" ng-disabled="boveda === undefined">
+                                <button type="button" class="btn btn-default" ng-click="open()" ng-disabled="tipotransaccion === undefined">
                                     <span class="glyphicon glyphicon-th-list"></span>
                                 </button>
                               </span>
@@ -111,9 +86,9 @@
             </div>
             <div class="row">
                 <div class="col-sm-8">
-                    <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && formCrearPersonanatural.submitted}">
+                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.referencia.$invalid && formCrearTransaccion.submitted}">
                         <label>Observacion</label>
-                        <textarea class="form-control" rows="3" ng-model="observacion"></textarea>
+                        <input type="text" name="referencia" ng-model="referncia" class="form-control" placeholder="Referencia"/>
                     </div>
                 </div>
             </div>
