@@ -25,11 +25,7 @@ angular.module('commonApp.controller')
         };
     })
     .controller('BuscarCuentaBancariaController', function ($scope, $modalInstance) {
-        $scope.ok = function () {
-            if (($scope.total() != 0 && $scope.total() !== undefined)) {
-                $modalInstance.close($scope.total());
-            }
-        };
+       
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };

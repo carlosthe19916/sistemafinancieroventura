@@ -4,7 +4,10 @@ angular.module('cajaApp.controller')
         function($scope, $state, $filter, $modal, CuentaBancariaService, CajaSessionService, ngProgress) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted":false};
-
+            
+            $scope.tipotransacciones = [{"denominacion":"DEPOSITO"},{"denominacion":"RETIRO"}];
+            $scope.tipomoneda;
+            
             $scope.cuentabancaria;
             $scope.monto;
             $scope.boveda;
@@ -108,11 +111,6 @@ angular.module('cajaApp.controller')
                 }
             }, true);
 
-            $scope.gridOptions = {
-                data: 'cuentabancariaList'
-                
-            };
-            
             $scope.openBuscarCuentaBancaria = function () {
                 var modalInstance = $modal.open({
                     templateUrl: 'modules/common/views/util/buscarCuentaBancaria.html',
@@ -125,7 +123,13 @@ angular.module('cajaApp.controller')
                     //$log.info('Modal dismissed at: ' + new Date());
                 });
             };
-
+            
+            var ModalInstanceCtrl = function ($scope, $modalInstance) {
+            	$scope.gridOptions = {
+            			 
+            	};
+            };
+            
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
             }
