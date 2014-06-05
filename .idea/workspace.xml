@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2e1ed954-bb5e-43d0-af6f-264099069275" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SistemaFinancieroVentura/web/src/main/webapp/modules/caja/views/transaccion/depositoRetiro.html" afterPath="$PROJECT_DIR$/SistemaFinancieroVentura/web/src/main/webapp/modules/caja/views/transaccion/depositoRetiro.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sistemafinancieroventura.iws" />
