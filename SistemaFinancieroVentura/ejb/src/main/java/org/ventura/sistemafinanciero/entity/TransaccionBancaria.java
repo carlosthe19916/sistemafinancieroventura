@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,12 +11,21 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 
@@ -24,17 +34,28 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
  */
 @Entity
 @Table(name = "TRANSACCION_BANCARIA", schema = "BDSISTEMAFINANCIERO")
+@XmlRootElement(name = "transaccionBancaria")
+@XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({ @NamedQuery(name = TransaccionBancaria.findNumeroOperacion, query = "SELECT t FROM TransaccionBancaria t INNER JOIN t.historialCaja hc INNER JOIN hc.caja c WHERE c.idCaja = :idcaja ORDER BY t.numeroOperacion DESC") })
 public class TransaccionBancaria implements java.io.Serializable {
 
-	private BigDecimal idTransaccionBancaria;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public final static String findNumeroOperacion = "TransaccionBancaria.findNumeroOperacion";
+
+	private BigInteger idTransaccionBancaria;
+	private Moneda moneda;
 	private HistorialCaja historialCaja;
 	private CuentaBancaria cuentaBancaria;
 	private Date fecha;
 	private Date hora;
-	private BigDecimal numeroOperacion;
+	private BigInteger numeroOperacion;
 	private BigDecimal monto;
 	private String referencia;
-	private BigDecimal estado;
+	private int estado;
 	private BigDecimal saldoDisponible;
 	private Tipotransaccionbancaria tipoTransaccion;
 	private String observacion;
@@ -42,10 +63,10 @@ public class TransaccionBancaria implements java.io.Serializable {
 	public TransaccionBancaria() {
 	}
 
-	public TransaccionBancaria(BigDecimal idTransaccionBancaria,
+	public TransaccionBancaria(BigInteger idTransaccionBancaria,
 			HistorialCaja historialCaja, CuentaBancaria cuentaBancaria,
-			Date fecha, Date hora, BigDecimal numeroOperacion,
-			BigDecimal monto, BigDecimal estado, BigDecimal saldoDisponible,
+			Date fecha, Date hora, BigInteger numeroOperacion,
+			BigDecimal monto, boolean estado, BigDecimal saldoDisponible,
 			Tipotransaccionbancaria tipoTransaccion) {
 		this.idTransaccionBancaria = idTransaccionBancaria;
 		this.historialCaja = historialCaja;
@@ -54,15 +75,15 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.hora = hora;
 		this.numeroOperacion = numeroOperacion;
 		this.monto = monto;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 		this.saldoDisponible = saldoDisponible;
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
-	public TransaccionBancaria(BigDecimal idTransaccionBancaria,
+	public TransaccionBancaria(BigInteger idTransaccionBancaria,
 			HistorialCaja historialCaja, CuentaBancaria cuentaBancaria,
-			Date fecha, Date hora, BigDecimal numeroOperacion,
-			BigDecimal monto, String referencia, BigDecimal estado,
+			Date fecha, Date hora, BigInteger numeroOperacion,
+			BigDecimal monto, String referencia, boolean estado,
 			BigDecimal saldoDisponible,
 			Tipotransaccionbancaria tipoTransaccion, String observacion) {
 		this.idTransaccionBancaria = idTransaccionBancaria;
@@ -73,22 +94,36 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.numeroOperacion = numeroOperacion;
 		this.monto = monto;
 		this.referencia = referencia;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 		this.saldoDisponible = saldoDisponible;
 		this.tipoTransaccion = tipoTransaccion;
 		this.observacion = observacion;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@XmlElement(name = "id")
 	@Id
 	@Column(name = "ID_TRANSACCION_BANCARIA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdTransaccionBancaria() {
+	public BigInteger getIdTransaccionBancaria() {
 		return this.idTransaccionBancaria;
 	}
 
-	public void setIdTransaccionBancaria(BigDecimal idTransaccionBancaria) {
+	public void setIdTransaccionBancaria(BigInteger idTransaccionBancaria) {
 		this.idTransaccionBancaria = idTransaccionBancaria;
 	}
 
+	@XmlElement
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_MONEDA", nullable = false)
+	public Moneda getMoneda() {
+		return this.moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
+	}
+
+	@XmlTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_HISTORIAL_CAJA", nullable = false)
 	public HistorialCaja getHistorialCaja() {
@@ -99,6 +134,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.historialCaja = historialCaja;
 	}
 
+	@XmlTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CUENTA_BANCARIA", nullable = false)
 	public CuentaBancaria getCuentaBancaria() {
@@ -109,6 +145,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.cuentaBancaria = cuentaBancaria;
 	}
 
+	@XmlElement
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA", nullable = false, length = 7)
 	public Date getFecha() {
@@ -119,6 +156,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
+	@XmlElement
 	@Column(name = "HORA", nullable = false)
 	public Date getHora() {
 		return this.hora;
@@ -128,15 +166,17 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.hora = hora;
 	}
 
+	@XmlElement
 	@Column(name = "NUMERO_OPERACION", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getNumeroOperacion() {
+	public BigInteger getNumeroOperacion() {
 		return this.numeroOperacion;
 	}
 
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
 
+	@XmlElement
 	@Column(name = "MONTO", nullable = false, precision = 18)
 	public BigDecimal getMonto() {
 		return this.monto;
@@ -146,6 +186,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.monto = monto;
 	}
 
+	@XmlElement
 	@Column(name = "REFERENCIA", length = 140, columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
@@ -155,15 +196,17 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.referencia = referencia;
 	}
 
+	@XmlElement
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
 	}
 
+	@XmlElement
 	@Column(name = "SALDO_DISPONIBLE", nullable = false, precision = 18)
 	public BigDecimal getSaldoDisponible() {
 		return this.saldoDisponible;
@@ -173,6 +216,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.saldoDisponible = saldoDisponible;
 	}
 
+	@XmlElement
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "TIPO_TRANSACCION", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public Tipotransaccionbancaria getTipoTransaccion() {
@@ -183,6 +227,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
+	@XmlElement
 	@Column(name = "OBSERVACION", length = 100, columnDefinition = "nvarchar2")
 	public String getObservacion() {
 		return this.observacion;

@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService", "ngProgress",
-        function($scope, $state, $filter, $modal, CuentaBancariaService, CajaSessionService, ngProgress) {
+    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService", "ngProgress",
+        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, ngProgress) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted":false};
 
@@ -29,18 +29,6 @@ define(['../../module'], function (controllers) {
                     $scope.transaccion.montoReal = 0;
                 }
             });
-
-            $scope.getMontoReal = function(){
-                if($scope.transaccion.monto !== undefined && $scope.transaccion.monto !== null){
-                    if($scope.transaccion.tipoTransaccion !== undefined && $scope.transaccion.tipoTransaccion !== null){
-                        return ( Math.abs($scope.transaccion.monto) * $scope.transaccion.tipoTransaccion.factor );
-                    } else {
-                        return $scope.transaccion.monto;
-                    }
-                } else {
-                    return 0;
-                }
-            }
 
             $scope.openCalculadora = function () {
                 var modalInstance = $modal.open({
@@ -73,7 +61,26 @@ define(['../../module'], function (controllers) {
             //transaccion
             $scope.crearTransaccion = function(){
                 if($scope.formCrearTransaccion.$valid){
-                    alert("creando transaccion");
+                    $scope.control.inProcess = true;
+                    var transaccion = {
+                        "numeroCuenta" : $scope.transaccion.numeroCuenta,
+                        "monto": $scope.transaccion.montoReal,
+                        "referencia" : $scope.transaccion.referencia
+                    }
+                    CajaSessionService.crearTransaccionBancaria(transaccion).then(
+                        function(data){
+                            $scope.control.success = true;
+                            $scope.control.inProcess = false;
+                            $state.transitionTo('app.transaccion.depositoRetiroVoucher', { id: data.id });
+                        },
+                        function error(error){
+                            $scope.control.inProcess = false;
+                            $scope.control.success = false;
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $window.scrollTo(0,0);
+                        }
+                    );
                 } else {
                     $scope.control.submitted = true;
                 }

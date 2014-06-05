@@ -2,7 +2,7 @@
     <fieldset>
         <legend>Transaccion Deposito / Retiro</legend>
 
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             {{alert.msg}}
         </alert>
 

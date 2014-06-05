@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.EJBAccessException;
 import javax.ejb.Remote;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
@@ -32,6 +33,7 @@ import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
+import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialBoveda;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialBoveda;
@@ -39,9 +41,11 @@ import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
+import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
 import org.ventura.sistemafinanciero.entity.TrabajadorUsuario;
+import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
@@ -49,7 +53,9 @@ import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.entity.type.TipoPendiente;
+import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 import org.ventura.sistemafinanciero.entity.type.TransaccionBovedaCajaOrigen;
+import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.MonedaService;
@@ -97,6 +103,14 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	//private DAO<Object, TransaccionCajaCaja> transaccionCajaCajaDAO;
 	@Inject 
 	private DAO<Object, TransaccionBovedaCajaDetalle> detalleTransaccionBovedaCajaDAO;
+	
+	@Inject
+	private DAO<Object, CuentaBancaria> cuentaBancariaDAO;
+	@Inject
+	private DAO<Object, TransaccionBancaria> transaccionBancariaDAO;
+	
+	@Inject
+	private DAO<Object, Moneda> monedaDAO;
 	
 	@EJB
 	private MonedaService monedaService;
@@ -167,6 +181,40 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 			break;
 		}
 		return cajaHistorial;
+	}
+	
+	private BigInteger getNumeroOperacion(){
+		//falta modificar
+		Caja caja = this.getCaja();
+		QueryParameter queryParameter = QueryParameter.with("idcaja", caja.getIdCaja());
+		List<TransaccionBancaria> list = transaccionBancariaDAO.findByNamedQuery(TransaccionBancaria.findNumeroOperacion, queryParameter.parameters(), 1);
+		if(list.size() == 0) {
+			return BigInteger.ONE;	
+		}			
+		else {
+			TransaccionBancaria transaccion = list.get(0);
+			return transaccion.getNumeroOperacion().add(BigInteger.ONE);
+		}
+	}
+	
+	private void actualizarSaldoCaja(BigDecimal monto, BigInteger idMoneda) throws RollbackFailureException{
+		Moneda monedaTransaccion = monedaDAO.find(idMoneda);
+		Caja caja = this.getCaja();
+		Set<BovedaCaja> bovedasCajas = caja.getBovedaCajas();
+		for (BovedaCaja bovedaCaja : bovedasCajas) {
+			Moneda monedaBoveda = bovedaCaja.getBoveda().getMoneda();
+			if(monedaTransaccion.equals(monedaBoveda)){
+				BigDecimal saldoActual = bovedaCaja.getSaldo();
+				BigDecimal saldoFinal = saldoActual.add(monto);
+				if(saldoFinal.compareTo(BigDecimal.ZERO) >= 0){
+					bovedaCaja.setSaldo(saldoFinal);
+					bovedaCajaDAO.update(bovedaCaja);
+				} else {
+					throw new RollbackFailureException("Saldo menor a cero, no se puede modificar saldo de caja");
+				}
+				break;
+			}				
+		}
 	}
 	
 	@Override
@@ -508,8 +556,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 
 	@Override	
 	protected DAO<Object, Caja> getDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.cajaDAO;
 	}
 
 	@Override
@@ -623,6 +670,76 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		QueryParameter queryParameter = QueryParameter.with("idcaja", caja.getIdCaja()).and("desde", dateDesde).and("hasta", dateHasta);		
 		List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRange, queryParameter.parameters());		
 		return new HashSet<HistorialCaja>(list);
+	}
+
+	@Override
+	@AllowedTo(Permission.ABIERTO)
+	public BigInteger crearDepositoBancario(String numeroCuenta,
+			BigDecimal monto, String referencia)
+			throws RollbackFailureException {
+		
+		CuentaBancaria cuentaBancaria = null;
+		if(monto.compareTo(BigDecimal.ZERO) != 1){
+			throw new RollbackFailureException("Monto invalido para transaccion");
+		}
+		try {
+			QueryParameter queryParameter = QueryParameter.with("numerocuenta", numeroCuenta);
+			List<CuentaBancaria> list = cuentaBancariaDAO.findByNamedQuery(CuentaBancaria.findByNumeroCuenta, queryParameter.parameters());
+			if(list.size() == 1)
+				cuentaBancaria = list.get(0);
+			else
+				throw new IllegalResultException("Existen mas de una cuenta con el numero de cuenta indicado");
+		} catch (IllegalResultException e) {
+			LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
+			throw new EJBAccessException("Error de inconsistencia de datos");
+		}
+		
+		switch (cuentaBancaria.getEstado()) {
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta CONGELADA, no se pueden realizar transacciones");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta INACTIVO, no se pueden realizar transacciones");
+		default:
+			break;
+		}
+		
+		//obteniendo datos de caja en session
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		Trabajador trabajador = this.getTrabajador();
+		PersonaNatural natural = trabajador.getPersonaNatural();
+		
+		//obteniendo saldo disponible de cuenta
+		BigDecimal saldoDisponible = cuentaBancaria.getSaldo().add(monto);
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		TransaccionBancaria transaccionBancaria = new TransaccionBancaria();
+		transaccionBancaria.setCuentaBancaria(cuentaBancaria);
+		transaccionBancaria.setEstado(true);
+		transaccionBancaria.setFecha(calendar.getTime());
+		transaccionBancaria.setHora(calendar.getTime());
+		transaccionBancaria.setHistorialCaja(historialCaja);
+		transaccionBancaria.setMonto(monto);
+		transaccionBancaria.setNumeroOperacion(this.getNumeroOperacion());
+		transaccionBancaria.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
+		transaccionBancaria.setReferencia(referencia);
+		transaccionBancaria.setSaldoDisponible(saldoDisponible);
+		transaccionBancaria.setTipoTransaccion(Tipotransaccionbancaria.DEPOSITO);
+		transaccionBancaria.setMoneda(cuentaBancaria.getMoneda());
+		transaccionBancariaDAO.create(transaccionBancaria);				
+		//actualizar saldo caja
+		this.actualizarSaldoCaja(monto, cuentaBancaria.getMoneda().getIdMoneda());
+		
+		return transaccionBancaria.getIdTransaccionBancaria();		
+	}
+
+	@Override
+	@AllowedTo(Permission.ABIERTO)
+	public BigInteger crearRetiroBancario(String numeroCuenta,
+			BigDecimal monto, String referencia)
+			throws RollbackFailureException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

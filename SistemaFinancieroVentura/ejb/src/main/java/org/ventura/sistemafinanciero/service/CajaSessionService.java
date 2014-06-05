@@ -40,4 +40,7 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	public BigInteger crearTransaccionBovedaCaja(BigInteger idBoveda, Set<GenericDetalle> detalleTransaccion) throws RollbackFailureException;	
 	public BigInteger crearTransaccionCajaCaja(BigInteger idCajadestino,BigInteger idMoneda, BigDecimal monto, String observacion) throws RollbackFailureException;	
 	
+	public BigInteger crearDepositoBancario(String numeroCuenta, BigDecimal monto, String referencia) throws RollbackFailureException;
+	public BigInteger crearRetiroBancario(String numeroCuenta, BigDecimal monto, String referencia) throws RollbackFailureException;
+	
 }

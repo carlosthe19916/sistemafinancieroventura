@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -19,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,7 +30,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.ventura.sistemafinanciero.entity.listener.CuentaBancariaListener;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 
@@ -40,12 +40,15 @@ import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 @Table(name = "CUENTA_BANCARIA", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "cuentaBancaria")
 @XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({ @NamedQuery(name = CuentaBancaria.findByNumeroCuenta, query = "SELECT c FROM CuentaBancaria c WHERE c.numeroCuenta = :numerocuenta") })
 public class CuentaBancaria implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public final static String findByNumeroCuenta = "CuentaBancaria.findByNumeroCuenta";
 
 	private BigInteger idCuentaBancaria;
 	private Socio socio;

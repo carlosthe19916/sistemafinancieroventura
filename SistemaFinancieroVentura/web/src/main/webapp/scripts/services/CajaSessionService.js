@@ -59,6 +59,12 @@ define(['./module'], function (services) {
                 },
                 getHistoriales: function(desde, hasta){
                     return Restangular.all("caja/session/historial").getList({"desde":desde,"hasta":hasta},{});
+                },
+
+
+
+                crearTransaccionBancaria: function(transaccion){
+                    return Restangular.all("caja/session/transaccionBancaria").post(transaccion);
                 }
             }
         }])
