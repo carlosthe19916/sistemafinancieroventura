@@ -738,8 +738,62 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	public BigInteger crearRetiroBancario(String numeroCuenta,
 			BigDecimal monto, String referencia)
 			throws RollbackFailureException {
-		// TODO Auto-generated method stub
-		return null;
+		CuentaBancaria cuentaBancaria = null;
+		if(monto.compareTo(BigDecimal.ZERO) != -1){
+			throw new RollbackFailureException("Monto invalido para transaccion");
+		}
+		try {
+			QueryParameter queryParameter = QueryParameter.with("numerocuenta", numeroCuenta);
+			List<CuentaBancaria> list = cuentaBancariaDAO.findByNamedQuery(CuentaBancaria.findByNumeroCuenta, queryParameter.parameters());
+			if(list.size() == 1)
+				cuentaBancaria = list.get(0);
+			else
+				throw new IllegalResultException("Existen mas de una cuenta con el numero de cuenta indicado");
+		} catch (IllegalResultException e) {
+			LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
+			throw new EJBAccessException("Error de inconsistencia de datos");
+		}
+		
+		switch (cuentaBancaria.getEstado()) {
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta CONGELADA, no se pueden realizar transacciones");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta INACTIVO, no se pueden realizar transacciones");
+		default:
+			break;
+		}
+		
+		//obteniendo datos de caja en session
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		Trabajador trabajador = this.getTrabajador();
+		PersonaNatural natural = trabajador.getPersonaNatural();
+		
+		//obteniendo saldo disponible de cuenta
+		BigDecimal saldoDisponible = cuentaBancaria.getSaldo().add(monto);
+		if(saldoDisponible.compareTo(BigDecimal.ZERO) == -1){
+			throw new RollbackFailureException("Saldo insuficiente para transaccion");
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		TransaccionBancaria transaccionBancaria = new TransaccionBancaria();
+		transaccionBancaria.setCuentaBancaria(cuentaBancaria);
+		transaccionBancaria.setEstado(true);
+		transaccionBancaria.setFecha(calendar.getTime());
+		transaccionBancaria.setHora(calendar.getTime());
+		transaccionBancaria.setHistorialCaja(historialCaja);
+		transaccionBancaria.setMonto(monto);
+		transaccionBancaria.setNumeroOperacion(this.getNumeroOperacion());
+		transaccionBancaria.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
+		transaccionBancaria.setReferencia(referencia);
+		transaccionBancaria.setSaldoDisponible(saldoDisponible);
+		transaccionBancaria.setTipoTransaccion(Tipotransaccionbancaria.RETIRO);
+		transaccionBancaria.setMoneda(cuentaBancaria.getMoneda());
+		transaccionBancariaDAO.create(transaccionBancaria);				
+		//actualizar saldo caja
+		this.actualizarSaldoCaja(monto, cuentaBancaria.getMoneda().getIdMoneda());
+		
+		return transaccionBancaria.getIdTransaccionBancaria();	
 	}
 	
 }
