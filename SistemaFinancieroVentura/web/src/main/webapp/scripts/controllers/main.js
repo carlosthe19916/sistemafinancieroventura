@@ -17,6 +17,8 @@ define([
     './caja/VoucherTransaccionCajaCajaController',
     './caja/HistorialCajaController',
 
+    './caja/transaccion/CrearTransaccionDepositoRetiroController',
+
     './cuentaBancaria/BeneficiarioController',
     './cuentaBancaria/TitularController',
     './cuentaBancaria/BuscarCuentaBancariaController',
@@ -24,6 +26,7 @@ define([
     './cuentaBancaria/CrearCuentaAhorroController',
     './cuentaBancaria/CrearCuentaCorrienteController',
     './cuentaBancaria/CrearCuentaPlazoFijoController',
+    './cuentaBancaria/BuscarCuentaBancariaPopUpController',
 
     './persona/natural/BuscarPersonaNaturalController',
     './persona/natural/CrearPersonaNaturalController',

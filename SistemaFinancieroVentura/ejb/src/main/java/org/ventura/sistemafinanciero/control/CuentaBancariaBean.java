@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.control;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -432,6 +433,38 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findAll();
 		return new HashSet<>(list);
 	}
+	
+	@Override
+	public List<CuentaBancariaView> findAllView(
+			List<TipoPersona> tipoPersonaList,
+			List<TipoCuentaBancaria> tipoCuentaList,
+			List<EstadoCuentaBancaria> estadoCuentaList, List<Moneda> monedaList) {
+		if(tipoPersonaList == null) {
+			tipoPersonaList = new ArrayList<>();
+		}
+			
+		if(tipoCuentaList == null){
+			tipoCuentaList = new ArrayList<>();
+		}
+		if(estadoCuentaList == null) {
+			estadoCuentaList = new ArrayList<>();
+		}			
+		if(monedaList == null) {
+			monedaList = new ArrayList<>();
+		}
+						
+						
+		QueryParameter queryParameter = QueryParameter.with("listTipoPersona", tipoPersonaList).
+				and("listTipoCuenta", tipoCuentaList).
+				and("listEstadoCuenta", estadoCuentaList);//.and("listMoneda", monedaList);
+		
+		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByLists, queryParameter.parameters(), 200);
+		for (CuentaBancariaView cuentaBancariaView : list) {
+			Moneda moneda = cuentaBancariaView.getMoneda();
+			Hibernate.initialize(moneda);
+		}
+		return list;
+	}
 
 	@Override
 	public Set<CuentaBancariaView> findByFilterTextView(String filterText) {
@@ -444,6 +477,6 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
 		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters(), 2);
 		return new HashSet<CuentaBancariaView>(list);
-	}
+	}	
 
 }

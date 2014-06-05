@@ -20,8 +20,7 @@ angular.module('cajaApp.controller')
             $scope.openCaulculadora = function () {
                 var modalInstance = $modal.open({
                     templateUrl: 'modules/common/views/util/calculadora.html',
-                    controller: "CalculadoraController",
-                    
+                    controller: "CalculadoraController"
                 });
 
                 modalInstance.result.then(function (total) {

@@ -5,29 +5,28 @@
             <h4 class="modal-title">Buscar Cuenta Bancaria</h4>
         </div>
         <form name="formSearchCuentaBancaria" novalidate>
-
-            <div class="modal-body">
-                <div class="input-group">
-                    <input type="text" name="search" ng-model="search" class="form-control" placeholder="Numero de Documento / Apellidos y Nombres / Razon Social" required autofocus />
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-default">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-					</span>
-                </div>
-                <div
-                        ng-show="formSearchCuentaBancaria.search.$invalid && control.submitted">
-                    <p class="help-block"
-                       ng-show="formSearchCuentaBancaria.search.$error.required">
-                        Ingrese un valor de busqueda.</p>
-                </div>
-            </div>
-
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" name="search" ng-model="filterOptions.filterText" class="form-control" placeholder="Numero de Documento / Apellidos y Nombres / Razon Social" required autofocus />
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+                        <div ng-show="formSearchCuentaBancaria.search.$invalid && control.submitted">
+                            <p class="help-block" ng-show="formSearchCuentaBancaria.search.$error.required">
+                                Ingrese un valor de busqueda.</p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="form-group">
-                            <div class="gridStyle" ng-grid="gridOptions555"></div>
+                            <div class="gridStyle" ng-grid="gridOptions" style="border: 1px solid rgb(212,212,212); height: 350px;"></div>
                         </div>
                     </div>
                 </div>

@@ -13,12 +13,147 @@ define(['./app'], function(app) {
         $stateProvider
             .state('index', {
                 url: '/index',
-                template: "</br></br></br></br><div class='center-block'><h3 class='text-center'>Bienvenido al sistema</h3></div>"
+                template:
+                    '<div class="container" ng-controller="MainController" style="padding-top: 70px;">' +
+                    '<div class="navbar navbar-default navbar-fixed-top" role="navigation">' +
+                    '<div class="container">' +
+                    '<div class="navbar-header">' +
+                    '<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">' +
+                    '               <span class="sr-only">Toggle navigation</span>' +
+                    '               <span class="icon-bar"></span>' +
+                    '               <span class="icon-bar"></span>' +
+                    '               <span class="icon-bar"></span>' +
+                    '</button>' +
+                    '<a class="navbar-brand" href="#">' +
+                    '<img alt="Google AdSense" src="images/logo.png">' +
+                    '</a>' +
+                    '</div>' +
+                    '<div class="navbar-collapse collapse">' +
+                    '<ul class="nav navbar-nav">'+
+                    '<li ui-sref-active="active" class="active">'+
+                    '   <a href="#" ui-sref="index">Página principal</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '   <a href="#contact" ui-sref="app.caja">Caja</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '<a href="#about" ui-sref="app.transaccion">Transacciones</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '<a href="#contact" ui-sref="app.socio">Socios</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '<a href="#contact" ui-sref="app.administracion">Administracion</a>'+
+                    '</li>'+
+                    '</ul>'+
+                    '<ul class="nav navbar-nav navbar-right" ng-controller="CajaNavbarController">'+
+                    '<li style="height: 50px;">'+
+                    '<a style="color: #333;">'+
+                    '<span ng-show="cajaSession.abierto && cajaSession.estadoMovimiento" ng-cloak class="label label-info">Abierto</span>'+
+                    '<span ng-show="cajaSession.abierto && !cajaSession.estadoMovimiento" ng-cloak class="label label-warning">Congelado</span>'+
+                    '<span ng-show="!cajaSession.abierto" ng-cloak class="label label-danger">Cerrado</span>'+
+                    '<strong><span ng-bind="cajaSession.denominacion"></span></strong>'+
+                    '</a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a>||</a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a><span ng-bind="usuarioSession"></span></a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a class="gwt-Anchor  sf-notification-image" style="padding-right: 30px"></a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a class="gwt-Anchor  sf-config-image" style="padding-right: 30px"></a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a class="gwt-Anchor  sf-alert-image" style="padding-right: 30px"></a>'+
+                    '</li>'+
+                    '</ul>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="alert alert-danger" ng-show="cajaSession.denominacion === undefined" ng-cloak style="border-radius: 0px; margin-top: -19px;">'+
+                    '<p><strong>Warning:</strong>No se pudo cargar la <strong>CAJA</strong> para el usuario ingresado, no podrá realizar transacciones</p>'+
+                    '</div>'+
+                    '<div class="container">'+
+                    '<div class="row" ui-view>'+
+                        '</br></br></br></br><div class="center-block"><h3 class="text-center">Bienvenido al sistema</h3></div>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'
             })
             .state('app', {
                 abstract: true,
                 url: "/app",
-                template: "" +
+                template: '' +
+                    '<div class="container" ng-controller="MainController" style="padding-top: 70px;">' +
+                    '<div class="navbar navbar-default navbar-fixed-top" role="navigation">' +
+                    '<div class="container">' +
+                    '<div class="navbar-header">' +
+                    '<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">' +
+                    '               <span class="sr-only">Toggle navigation</span>' +
+                    '               <span class="icon-bar"></span>' +
+                    '               <span class="icon-bar"></span>' +
+                    '               <span class="icon-bar"></span>' +
+                    '</button>' +
+                    '<a class="navbar-brand" href="#">' +
+                    '<img alt="Google AdSense" src="images/logo.png">' +
+                    '</a>' +
+                    '</div>' +
+                    '<div class="navbar-collapse collapse">' +
+                    '<ul class="nav navbar-nav">'+
+                    '<li ui-sref-active="active" class="active">'+
+                    '   <a href="#" ui-sref="index">Página principal</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '   <a href="#contact" ui-sref="app.caja">Caja</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '<a href="#about" ui-sref="app.transaccion">Transacciones</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '<a href="#contact" ui-sref="app.socio">Socios</a>'+
+                    '</li>'+
+                    '<li ui-sref-active="active">'+
+                    '<a href="#contact" ui-sref="app.administracion">Administracion</a>'+
+                    '</li>'+
+                    '</ul>'+
+                    '<ul class="nav navbar-nav navbar-right" ng-controller="CajaNavbarController">'+
+                    '<li style="height: 50px;">'+
+                    '<a style="color: #333;">'+
+                    '<span ng-show="cajaSession.abierto && cajaSession.estadoMovimiento" ng-cloak class="label label-info">Abierto</span>'+
+                    '<span ng-show="cajaSession.abierto && !cajaSession.estadoMovimiento" ng-cloak class="label label-warning">Congelado</span>'+
+                    '<span ng-show="!cajaSession.abierto" ng-cloak class="label label-danger">Cerrado</span>'+
+                    '<strong><span ng-bind="cajaSession.denominacion"></span></strong>'+
+                    '</a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a>||</a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a><span ng-bind="usuarioSession"></span></a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a class="gwt-Anchor  sf-notification-image" style="padding-right: 30px"></a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a class="gwt-Anchor  sf-config-image" style="padding-right: 30px"></a>'+
+                    '</li>'+
+                    '<li>'+
+                    '<a class="gwt-Anchor  sf-alert-image" style="padding-right: 30px"></a>'+
+                    '</li>'+
+                    '</ul>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="alert alert-danger" ng-show="cajaSession.denominacion === undefined" ng-cloak style="border-radius: 0px; margin-top: -19px;">'+
+                    '<p><strong>Warning:</strong>No se pudo cargar la <strong>CAJA</strong> para el usuario ingresado, no podrá realizar transacciones</p>'+
+                    '</div>'+
+                    '<div class="container">'+
+                    '<div class="row" ui-view>'+
+
                     "<div class='col-sm-6 col-md-3'>" +
                     "<div class='thumbnail' style='min-height: 500px;'>" +
                     "<div class='caption sf-nav-bar-left-content ng-scope' ui-view='viewMenu' style='width: 88%;'>"+
@@ -43,7 +178,12 @@ define(['./app'], function(app) {
                     "<div class='caption' ui-view='viewContent'>"+
                     "</div>"+
                     "</div>"+
-                    "</div>"
+                    "</div>"+
+
+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'
             })
             .state('app.caja', {
                 url: "/caja",

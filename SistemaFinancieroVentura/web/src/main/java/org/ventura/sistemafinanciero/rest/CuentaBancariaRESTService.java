@@ -43,13 +43,17 @@ import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
+import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
+import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
+import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.rest.dto.BuscarCuentaViewDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaAhorroDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaCorrienteDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaPlazoFijoDTO;
@@ -82,10 +86,23 @@ public class CuentaBancariaRESTService {
 	}
 	
 	@GET
-	@Path("/a")
+	@Path("/view")
 	@Produces({ "application/xml", "application/json" })
 	public Response findAllView() {
 		Set<CuentaBancariaView> list = cuentaBancariaService.findAllView();
+		return Response.status(Response.Status.OK).entity(list).build();
+	}
+	
+	@POST
+	@Path("/view/tipoCuenta/estadoCuenta")
+	@Produces({ "application/xml", "application/json" })
+	public Response findAllViewByTipoEstadoCuenta(BuscarCuentaViewDTO dto) {
+		List<TipoPersona> tipoPersonaList = dto.getTipoPersonaList();
+		List<TipoCuentaBancaria> tipoCuentaList = dto.getTipoCuentaList();		
+		List<EstadoCuentaBancaria> estadoCuentaList = dto.getEstadoCuentaList();
+		List<Moneda> monedaList = dto.getMonedaList();
+		
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(tipoPersonaList, tipoCuentaList, estadoCuentaList, monedaList);
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 	

@@ -7,8 +7,33 @@ define(['./module'], function (services) {
                 getCuentasBancarias: function(){
                     return _historialCajaService.getList().$object;
                 },
-                getCuentasBancariasView: function(){
-                    return Restangular.all("cuentaBancaria/a").getList().$object;
+                getCuentasBancariasView: function(tipoPersonaList, tipoCuentaList, estadoCuentaList, monedaList ){
+                    //return Restangular.all("cuentaBancaria/view").getList();
+                    if (arguments.length == 1) {
+                        var trans = {"tipoPersonaList":tipoPersonaList}
+                        return Restangular.all("cuentaBancaria/view/tipoCuenta/estadoCuenta/").post(trans);
+                    } else if (arguments.length == 2) {
+                        var trans = {
+                            "tipoPersonaList":tipoPersonaList,
+                            "tipoCuentaList":tipoCuentaList
+                        }
+                        return Restangular.all("cuentaBancaria/view/tipoCuenta/estadoCuenta/").post(trans);
+                    } else if (arguments.length == 3) {
+                        var trans = {
+                            "tipoPersonaList":tipoPersonaList,
+                            "tipoCuentaList":tipoCuentaList,
+                            "estadoCuentaList":estadoCuentaList
+                        }
+                        return Restangular.all("cuentaBancaria/view/tipoCuenta/estadoCuenta/").post(trans);
+                    } else if (arguments.length == 4) {
+                        var trans = {
+                            "tipoPersonaList":tipoPersonaList,
+                            "tipoCuentaList":tipoCuentaList,
+                            "estadoCuentaList":estadoCuentaList,
+                            "monedaList":monedaList
+                        }
+                        return Restangular.all("cuentaBancaria/view/tipoCuenta/estadoCuenta/").post(trans);
+                    }
                 },
                 getCuentasBancaria: function(id){
                     return Restangular.one("cuentaBancaria/"+id).get();
