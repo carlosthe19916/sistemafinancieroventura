@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div>
     <div class="modal-content">
         <div class="modal-header">
@@ -41,47 +40,3 @@
         </form>
     </div><!-- /.modal-content -->
 </div>
-=======
-<div>
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" ng-click="cancel()">&times;</button>
-            <h4 class="modal-title">Buscar Cuenta Bancaria</h4>
-        </div>
-        <form name="formSearchCuentaBancaria" novalidate>
-
-			<div class="modal-body">
-				<div class="input-group">
-					<input type="text" name="search" ng-model="search" class="form-control" placeholder="Numero de Documento / Apellidos y Nombres / Razon Social" required autofocus /> 
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-default">
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
-					</span>
-				</div>
-				<div
-					ng-show="formSearchCuentaBancaria.search.$invalid && control.submitted">
-					<p class="help-block"
-						ng-show="formSearchCuentaBancaria.search.$error.required">
-						Ingrese un valor de busqueda.</p>
-				</div>
-			</div>
-
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="form-group">
-							<div class="gridStyle" ng-grid="gridOptions555"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="modal-footer">
-            	<button type="button" class="btn btn-primary" ng-click="ok()">Guardar</button>
-                <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
-            </div>
-        </form>
-    </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
->>>>>>> branch 'master' of https://code.google.com/p/sistemafinancieroventura/
