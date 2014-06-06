@@ -264,7 +264,7 @@ define(['./app'], function(app) {
                 url: "/panelControl",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/panel.html"
+                        templateUrl: "views/cajero/caja/panelCaja.html"
                     }
                 }
             })
@@ -272,7 +272,7 @@ define(['./app'], function(app) {
                 url: "/abrir",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/abrir.html"
+                        templateUrl: "views/cajero/caja/abrirCaja.html"
                     }
                 }
             })
@@ -280,7 +280,7 @@ define(['./app'], function(app) {
                 url: "/cerrar",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/cerrar.html"
+                        templateUrl: "views/cajero/caja/cerrarCaja.html"
                     }
                 }
             })
@@ -288,7 +288,7 @@ define(['./app'], function(app) {
                 url: "/pendiente/buscar",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/buscarPendiente.html"
+                        templateUrl: "views/cajero/caja/buscarPendiente.html"
                     }
                 }
             })
@@ -296,7 +296,7 @@ define(['./app'], function(app) {
                 url: "/pendiente/crear/?idboveda&monto",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/crearPendiente.html",
+                        templateUrl: "views/cajero/caja/crearPendiente.html",
                         controller: function($scope, $stateParams) {
                             $scope.idboveda = $stateParams.idboveda;
                             $scope.monto = $stateParams.monto;
@@ -308,7 +308,7 @@ define(['./app'], function(app) {
                 url: "/pendiente/:id/voucher",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/voucher/pendiente.html",
+                        templateUrl: "views/cajero/voucher/pendienteVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -319,7 +319,7 @@ define(['./app'], function(app) {
                 url: "/historial",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/historial.html"
+                        templateUrl: "views/cajero/caja/historialCaja.html"
                     }
                 }
             })
@@ -327,7 +327,7 @@ define(['./app'], function(app) {
                 url: "/historial/:id/voucherCerrarCaja",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/voucher/cerrarCaja.html",
+                        templateUrl: "views/cajero/voucher/cerrarCajaVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -338,7 +338,7 @@ define(['./app'], function(app) {
                 url: "/buscarBovedaCaja",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/buscarTransaccionBovedaCaja.html"
+                        templateUrl: "views/cajero/caja/buscarTransaccionBovedaCaja.html"
                     }
                 }
             })
@@ -346,7 +346,7 @@ define(['./app'], function(app) {
                 url: "/crearBovedaCaja",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/crearTransaccionBovedaCaja.html"
+                        templateUrl: "views/cajero/caja/crearTransaccionBovedaCaja.html"
                     }
                 }
             })
@@ -354,7 +354,7 @@ define(['./app'], function(app) {
                 url: "/voucherTransaccionBovedaCaja/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/voucher/transaccionBovedaCaja.html",
+                        templateUrl: "views/cajero/voucher/transaccionBovedaCaja.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -365,7 +365,7 @@ define(['./app'], function(app) {
                 url: "/transCajaCaja",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/buscarTransaccionCajaCaja.html"
+                        templateUrl: "views/cajero/caja/buscarTransaccionCajaCaja.html"
                     }
                 }
             })
@@ -373,7 +373,7 @@ define(['./app'], function(app) {
                 url: "/crearCajaCaja",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/caja/crearTransaccionCajaCaja.html"
+                        templateUrl: "views/cajero/caja/crearTransaccionCajaCaja.html"
                     }
                 }
             })
@@ -381,7 +381,7 @@ define(['./app'], function(app) {
                 url: "/voucherTransaccionCajaCaja/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/caja/views/voucher/transaccionCajaCaja.html",
+                        templateUrl: "views/cajero/voucher/transaccionCajaCajaVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -395,7 +395,7 @@ define(['./app'], function(app) {
                 url: "/aporte",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/transaccion/aporte.html"
+                        templateUrl: "views/cajero/transaccion/aporte.html"
                     }
                 }
             })
@@ -403,7 +403,7 @@ define(['./app'], function(app) {
                 url: "/aporte/:id/voucher",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/voucher/aporte.html",
+                        templateUrl: "views/cajero/voucher/aporteVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -414,7 +414,7 @@ define(['./app'], function(app) {
                 url: "/depositoRetiro",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/transaccion/depositoRetiro.html"
+                        templateUrl: "views/cajero/transaccion/depositoRetiro.html"
                     }
                 }
             })
@@ -422,7 +422,7 @@ define(['./app'], function(app) {
                 url: "/depositoRetiro/:id/voucher",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/voucher/depositoRetiro.html",
+                        templateUrl: "views/cajero/voucher/depositoRetiroVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -433,7 +433,7 @@ define(['./app'], function(app) {
                 url: "/transferencia",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/transaccion/transferencia.html"
+                        templateUrl: "views/cajero/transaccion/transferencia.html"
                     }
                 }
             })
@@ -441,7 +441,7 @@ define(['./app'], function(app) {
                 url: "/depositoRetiro/:id/voucher",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/voucher/transferencia.html",
+                        templateUrl: "views/cajero/voucher/transferenciaVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -452,7 +452,7 @@ define(['./app'], function(app) {
                 url: "/compraVenta",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/transaccion/compraVenta.html"
+                        templateUrl: "views/cajero/transaccion/compraVenta.html"
                     }
                 }
             })
@@ -460,7 +460,7 @@ define(['./app'], function(app) {
                 url: "/compraVenta/:id/voucher",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/voucher/compraVenta.html",
+                        templateUrl: "views/cajero/voucher/compraVentaVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -471,7 +471,7 @@ define(['./app'], function(app) {
                 url: "/buscarTransaccion",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/transaccion/buscarTransaccion.html"
+                        templateUrl: "views/cajero/transaccion/buscarTransaccion.html"
                     }
                 }
             })
@@ -482,7 +482,7 @@ define(['./app'], function(app) {
                 url: "/crearSocio",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/socio/crearSocio.html"
+                        templateUrl: "views/cajero/socio/crearSocio.html"
                     }
                 }
             })
@@ -490,7 +490,7 @@ define(['./app'], function(app) {
                 url: "/buscarSocio",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/socio/buscarSocio.html"
+                        templateUrl: "views/cajero/socio/buscarSocio.html"
                     }
                 }
             })
@@ -498,7 +498,7 @@ define(['./app'], function(app) {
                 url: "/:id/panelSocio",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/socio/panelSocio.html",
+                        templateUrl: "views/cajero/socio/panelSocio.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -510,7 +510,7 @@ define(['./app'], function(app) {
                 url: "/cuentaBancaria",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/cuenta/crear.html"
+                        templateUrl: "views/cajero/cuentaBancaria/crearCuentaBancaria.html"
                     }
                 }
             })
@@ -518,7 +518,7 @@ define(['./app'], function(app) {
                 url: "/cuentaBancaria/:id",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/cuenta/editar.html",
+                        templateUrl: "views/cajero/cuentaBancaria/editarCuentaBancaria.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -529,7 +529,7 @@ define(['./app'], function(app) {
                 url: "/buscarCuentaBancaria",
                 views: {
                     "viewContent": {
-                        templateUrl: "modules/caja/views/cuenta/buscar.html"
+                        templateUrl: "views/cajero/cuentaBancaria/buscarCuentaBancaria.html"
                     }
                 }
             })
@@ -538,7 +538,7 @@ define(['./app'], function(app) {
                 url: "/personaNatural",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/common/views/personaNatural/crear.html"
+                        templateUrl: "views/cajero/socio/personaNatural/crearPersonaNatural.html"
                     }
                 }
             })
@@ -546,7 +546,7 @@ define(['./app'], function(app) {
                 url: "/personaNatural/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/common/views/personaNatural/editar.html",
+                        templateUrl: "views/cajero/socio/personaNatural/editarPersonaNatural.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -557,7 +557,7 @@ define(['./app'], function(app) {
                 url: "/personaJuridica",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/common/views/personaJuridica/crear.html"
+                        templateUrl: "views/cajero/socio/personaJuridica/crearPersonaJuridica.html"
                     }
                 }
             })
@@ -565,7 +565,7 @@ define(['./app'], function(app) {
                 url: "/personaJuridica/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "modules/common/views/personaJuridica/editar.html",
+                        templateUrl: "views/cajero/socio/personaJuridica/editarPersonaJuridica.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }

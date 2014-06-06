@@ -1,0 +1,350 @@
+<div ng-controller="PanelSocioController">
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+    <span ng-bind="alert.msg"></span>
+</alert>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default" ng-show="personaNatural">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6">Persona</div>
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            <button type="button" ng-click="editarSocioPN()" class="btn btn-link" style="padding: 0px 12px;">
+                                Editar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-circle center-block" style="max-width: 105px; max-height: 105px;">
+                    </div>
+                    <div class="col-sm-8">
+                        <!--Persona natural-->
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Pais:</td>
+                                <td><strong ng-bind="pais.denominacion"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Doc.:</td>
+                                <td><strong ng-bind-template="{{personaNatural.tipoDocumento.abreviatura}}/{{personaNatural.numeroDocumento}}"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Socio:</td>
+                                <td><strong ng-bind-template="{{personaNatural.apellidoPaterno}} {{personaNatural.apellidoMaterno}},{{personaNatural.nombres}}"></strong></td>
+                            </tr>
+                            <tr><td></td><td></td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-condensed">
+                <tr>
+                    <td>F. nacimiento:</td>
+                    <td><strong ng-bind="personaNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
+                    <td>sexo:</td>
+                    <td><strong ng-bind="personaNatural.sexo"></strong></td>
+                </tr>
+                <tr>
+                    <td>E. civil:</td>
+                    <td><strong ng-bind="personaNatural.estadoCivil"></strong></td>
+                    <td>Ocupacion:</td>
+                    <td><strong ng-bind="personaNatural.ocupacion"></strong></td>
+                </tr>
+                <tr>
+                    <td>Direccion:</td>
+                    <td colspan="3"><strong ng-bind-template="{{personaNatural.direccion}}-{{personaNatural.referencia}}"></strong></td>
+                </tr>
+                <tr>
+                    <td>Telefono:</td>
+                    <td><strong ng-bind="personaNatural.telefono"></strong></td>
+                    <td>Celular:</td>
+                    <td><strong ng-bind="personaNatural.celular"></strong></td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td colspan="3"><strong ng-bind="personaNatural.email"></strong></td>
+                </tr>
+            </table>
+        </div>
+        <div ng-show="personaJuridica">
+            <tabset>
+                <tab heading="Persona juridica">
+                    <div class="panel panel-default">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Doc.:</td>
+                                <td><strong ng-bind-template="{{personaJuridica.tipoDocumento.abreviatura}}/{{personaJuridica.numeroDocumento}}"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Razon social:</td>
+                                <td><strong ng-bind="personaJuridica.razonSocial"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>F. constitucion:</td>
+                                <td><strong ng-bind="personaJuridica.fechaConstitucion | date : 'dd/MM/yyyy'"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Nombre comercial:</td>
+                                <td><strong ng-bind="personaJuridica.nombreComercial"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Tipo Empresa:</td>
+                                <td><strong ng-bind="personaJuridica.tipoEmpresa"></strong></td>
+                                <td>Fin lucro:</td>
+                                <td><strong ng-cloak>{{personaJuridica.finLucro ? 'SI' : 'NO'}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Direccion:</td>
+                                <td colspan="3"><strong ng-bind-template="{{personaJuridica.direccion}}-{{personaJuridica.referencia}}"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Telefono:</td>
+                                <td><strong ng-bind="personaJuridica.telefono"></strong></td>
+                                <td>Celular:</td>
+                                <td><strong ng-bind="personaJuridica.celular"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td colspan="3"><strong ng-bind="personaJuridica.email"></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </tab>
+                <tab heading="Representante">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-6">Persona</div>
+                                <div class="col-md-6">
+                                    <div class="text-right">
+                                        <button type="button" ng-click="editarSocioPN()" class="btn btn-link" style="padding: 0px 12px;">
+                                            Editar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-circle center-block" style="max-width: 105px; max-height: 105px;">
+                                </div>
+                                <div class="col-sm-8">
+                                    <!--Persona natural-->
+                                    <table class="table table-condensed">
+                                        <tr>
+                                            <td>Pais:</td>
+                                            <td><strong ng-bind="pais.denominacion"></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Doc.:</td>
+                                            <td><strong ng-bind-template="{{personaJuridica.representanteLegal.tipoDocumento.abreviatura}}/{{personaJuridica.representanteLegal.numeroDocumento}}"></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Socio:</td>
+                                            <td><strong ng-bind-template="{{personaJuridica.representanteLegal.apellidoPaterno}} {{personaJuridica.representanteLegal.apellidoMaterno}},{{personaJuridica.representanteLegal.nombres}}"></strong></td>
+                                        </tr>
+                                        <tr><td></td><td></td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>F. nacimiento:</td>
+                                <td><strong ng-bind="personaJuridica.representanteLegal.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
+                                <td>sexo:</td>
+                                <td><strong ng-bind="personaJuridica.representanteLegal.sexo"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>E. civil:</td>
+                                <td><strong ng-bind="personaJuridica.representanteLegal.estadoCivil"></strong></td>
+                                <td>Ocupacion:</td>
+                                <td><strong ng-bind="personaJuridica.representanteLegal.ocupacion"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Direccion:</td>
+                                <td colspan="3"><strong ng-bind-template="{{personaJuridica.representanteLegal.direccion}}-{{personaJuridica.representanteLegal.referencia}}"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Telefono:</td>
+                                <td><strong ng-bind="personaJuridica.representanteLegal.telefono"></strong></td>
+                                <td>Celular:</td>
+                                <td><strong ng-bind="personaJuridica.representanteLegal.celular"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td colspan="3"><strong ng-bind="personaJuridica.representanteLegal.email"></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </tab>
+                <tab heading="Accionistas">
+                    <div class="panel-body" ng-show="personaJuridica.accionistas.length == 0">
+                        <p>No se encontraron accionistas....</p>
+                    </div>
+                    <table class="table table-condensed" ng-show="personaJuridica.accionistas.length != 0">
+                        <thead>
+                        <tr>
+                            <th>T.y num.doc </th>
+                            <th>Ap. y nombres</th>
+                            <th>F. nacimiento</th>
+                            <th>%</th>
+                            <th>Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="accionista in personaJuridica.accionistas">
+                            <td><span ng-bind-template="{{accionista.personaNatural.tipoDocumento.abreviatura}}/{{accionista.personaNatural.numeroDocumento}}"></span></td>
+                            <td><span ng-bind-template="{{accionista.personaNatural.apellidoPaterno}} {{accionista.personaNatural.apellidoMaterno}},{{accionista.personaNatural.nombres}}"></span></td>
+                            <td><span ng-bind="accionista.personaNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                            <td><span ng-bind="accionista.porcentajeParticipacion"></span></td>
+                            <td><button type="button" class="btn btn-primary btn-xs">Editar</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6">
+                        Datos de socio
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-condensed">
+                <tr>
+                    <td>Cod. socio:</td>
+                    <td><strong ng-bind="socio.id"></strong></td>
+                    <td>Estado:</td>
+                    <td><strong ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Fecha inic.:</td>
+                    <td><strong ng-bind="socio.fechaInicio | date : 'dd/MM/yyyy'"></strong></td>
+                    <td>Fecha fin:</td>
+                    <td>
+                        <strong ng-cloak>{{socio.fechaFin === undefined ? 'INDEFINIDO' : socio.fechaFin | date : 'dd/MM/yyyy'}}</strong>
+                    </td>
+                </tr>
+            </table>
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6">
+                        Cuenta aporte
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body" ng-show="!cuentaAporte">
+                <p>Cuenta de aportes no encontrado.</p>
+            </div>
+            <table class="table table-condensed" ng-show="cuentaAporte">
+                <tr>
+                    <td>Moneda:</td>
+                    <td><strong ng-bind="cuentaAporte.moneda.denominacion"></strong></td>
+                    <td>Num. cuenta:</td>
+                    <td><strong ng-bind="cuentaAporte.numeroCuenta"></strong></td>
+                </tr>
+                <tr>
+                    <td>Saldo:</td>
+                    <td><strong ng-bind="cuentaAporte.saldo | currency : cuentaAporte.moneda.simbolo"></strong></td>
+                    <td>Estado cuenta:</td>
+                    <td><strong ng-bind="cuentaAporte.estadoCuenta"></strong></td>
+                </tr>
+            </table>
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6">
+                        Apoderado
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body" ng-show="!apoderado">
+                <p>Apoderado no encontrado.</p>
+            </div>
+            <table class="table table-condensed" ng-show="apoderado">
+                <tr>
+                    <td>Documento:</td>
+                    <td colspan="3"><strong ng-bind-template="{{apoderado.tipoDocumento.abreviatura}}/{{apoderado.numeroDocumento}}"></strong></td>
+                </tr>
+                <tr>
+                    <td>Ap. y nombres:</td>
+                    <td colspan="3"><strong ng-bind-template="{{apoderado.apellidoPaterno}} {{apoderado.apellidoMaterno}},{{apoderado.nombres}}"></strong></td>
+                </tr>
+                <tr>
+                    <td>F. nacimiento:</td>
+                    <td><strong ng-bind="apoderado.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
+                    <td>Sexo:</td>
+                    <td><strong ng-bind="apoderado.sexo"></strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Cuentas bancarias</div>
+            <div class="panel-body" ng-show="cuentasBancarias.length == 0">
+                <p>No se encontraron cuentas bancarias....</p>
+            </div>
+            <table class="table table-condensed" ng-show="cuentasBancarias.length != 0">
+                <thead>
+                <tr>
+                    <th>Tipo Cta.</th>
+                    <th>Num. Cta.</th>
+                    <th>Moneda</th>
+                    <th>F. Saldo</th>
+                    <th>F. Apertura</th>
+                    <th>F. Cierre</th>
+                    <th>Cant.Retirantes</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="cuenta in cuentasBancarias">
+                    <td><span ng-bind="cuenta.tipoCuentaBancaria"/></td>
+                    <td><span ng-bind="cuenta.numeroCuenta"/></td>
+                    <td><span ng-bind="cuenta.moneda.denominacion"/></td>
+                    <td><span ng-bind="cuenta.saldo"/></td>
+                    <td><span ng-bind="cuenta.fechaApertura | date : 'dd/MM/yyyy'"/></td>
+                    <td><span ng-bind="cuenta.fechaCierre | date : 'dd/MM/yyyy'"/></td>
+                    <td><span ng-bind="cuenta.cantidadRetirantes | date : 'dd/MM/yyyy'"/></td>
+                    <td><span ng-bind="cuenta.estado"/></td>
+                    <td><button type="button" class="btn btn-primary btn-xs">Editar</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>

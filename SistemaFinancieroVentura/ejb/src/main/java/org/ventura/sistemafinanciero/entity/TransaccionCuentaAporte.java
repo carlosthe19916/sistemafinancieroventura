@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,16 +29,16 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 @Table(name = "TRANSACCION_CUENTA_APORTE", schema = "BDSISTEMAFINANCIERO")
 public class TransaccionCuentaAporte implements java.io.Serializable {
 
-	private BigDecimal idTransaccionCuentaAporte;
+	private BigInteger idTransaccionCuentaAporte;
 	private HistorialCaja historialCaja;
 	private CuentaAporte cuentaAporte;
 	private Date fecha;
 	private Date hora;
-	private BigDecimal numeroOperacion;
+	private BigInteger numeroOperacion;
 	private BigDecimal monto;
-	private BigDecimal mesAfecta;
-	private BigDecimal anioAfecta;
-	private BigDecimal estado;
+	private int mesAfecta;
+	private int anioAfecta;
+	private int estado;
 	private BigDecimal saldoDisponible;
 	private String referencia;
 	private String observacion;
@@ -44,11 +47,11 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 	public TransaccionCuentaAporte() {
 	}
 
-	public TransaccionCuentaAporte(BigDecimal idTransaccionCuentaAporte,
+	public TransaccionCuentaAporte(BigInteger idTransaccionCuentaAporte,
 			HistorialCaja historialCaja, Date fecha, Date hora,
-			BigDecimal numeroOperacion, BigDecimal monto,
-			BigDecimal anioAfecta, BigDecimal estado,
-			BigDecimal saldoDisponible, Tipotransaccionbancaria tipoTransaccion) {
+			BigInteger numeroOperacion, BigDecimal monto, int anioAfecta,
+			boolean estado, BigDecimal saldoDisponible,
+			Tipotransaccionbancaria tipoTransaccion) {
 		this.idTransaccionCuentaAporte = idTransaccionCuentaAporte;
 		this.historialCaja = historialCaja;
 		this.fecha = fecha;
@@ -56,16 +59,16 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 		this.numeroOperacion = numeroOperacion;
 		this.monto = monto;
 		this.anioAfecta = anioAfecta;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 		this.saldoDisponible = saldoDisponible;
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
-	public TransaccionCuentaAporte(BigDecimal idTransaccionCuentaAporte,
+	public TransaccionCuentaAporte(BigInteger idTransaccionCuentaAporte,
 			HistorialCaja historialCaja, Date fecha, Date hora,
-			BigDecimal numeroOperacion, BigDecimal monto, BigDecimal mesAfecta,
-			BigDecimal anioAfecta, BigDecimal estado,
-			BigDecimal saldoDisponible, String referencia, String observacion,
+			BigInteger numeroOperacion, BigDecimal monto, int mesAfecta,
+			int anioAfecta, boolean estado, BigDecimal saldoDisponible,
+			String referencia, String observacion,
 			Tipotransaccionbancaria tipoTransaccion) {
 		this.idTransaccionCuentaAporte = idTransaccionCuentaAporte;
 		this.historialCaja = historialCaja;
@@ -75,21 +78,22 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 		this.monto = monto;
 		this.mesAfecta = mesAfecta;
 		this.anioAfecta = anioAfecta;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 		this.saldoDisponible = saldoDisponible;
 		this.referencia = referencia;
 		this.observacion = observacion;
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_TRANSACCION_CUENTA_APORTE", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdTransaccionCuentaAporte() {
+	public BigInteger getIdTransaccionCuentaAporte() {
 		return this.idTransaccionCuentaAporte;
 	}
 
 	public void setIdTransaccionCuentaAporte(
-			BigDecimal idTransaccionCuentaAporte) {
+			BigInteger idTransaccionCuentaAporte) {
 		this.idTransaccionCuentaAporte = idTransaccionCuentaAporte;
 	}
 
@@ -133,11 +137,11 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 	}
 
 	@Column(name = "NUMERO_OPERACION", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getNumeroOperacion() {
+	public BigInteger getNumeroOperacion() {
 		return this.numeroOperacion;
 	}
 
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
 
@@ -151,30 +155,30 @@ public class TransaccionCuentaAporte implements java.io.Serializable {
 	}
 
 	@Column(name = "MES_AFECTA", precision = 22, scale = 0)
-	public BigDecimal getMesAfecta() {
+	public int getMesAfecta() {
 		return this.mesAfecta;
 	}
 
-	public void setMesAfecta(BigDecimal mesAfecta) {
+	public void setMesAfecta(int mesAfecta) {
 		this.mesAfecta = mesAfecta;
 	}
 
 	@Column(name = "ANIO_AFECTA", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getAnioAfecta() {
+	public int getAnioAfecta() {
 		return this.anioAfecta;
 	}
 
-	public void setAnioAfecta(BigDecimal anioAfecta) {
+	public void setAnioAfecta(int anioAfecta) {
 		this.anioAfecta = anioAfecta;
 	}
 
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
 	}
 
 	@Column(name = "SALDO_DISPONIBLE", nullable = false, precision = 18)

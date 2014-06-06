@@ -1,0 +1,118 @@
+<div>
+    <div class="row">
+        <div class="col-xs-5">
+            <fieldset>
+                <legend>Transaccion</legend>
+                <div>
+                    <div class="form-group" ng-controller="ModalDemoCtrl">
+                        <label>Cuenta bancaria</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"/>
+                            <span class="input-group-btn" ng-click="open()">
+                                <button type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+
+                        <script type="text/ng-template" id="myModalContent.html">
+                            <div class="modal-header">
+                                <h3>I'm a modal!</h3>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li ng-repeat="item in items">
+                                        <a ng-click="selected.item = item">{{ item }}</a>
+                                    </li>
+                                </ul>
+                                Selected: <b>{{ selected.item }}</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                            </div>
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label for="comboTipotransaccion">Tipo transaccion</label>
+                        <select id="comboTipotransaccion" class="form-control">
+                            <option>Deposito</option>
+                            <option>Retiro</option>
+                        </select>
+                    </div>
+                    <div class='row'>
+                        <div class='col-sm-6'>
+                            <div class="form-group">
+                                <label for="comboTipotransaccion">Moneda</label>
+                                <h5>Nuevos soles</h5>
+                            </div>
+                        </div>
+                        <div class='col-sm-6'>
+                            <div class="form-group">
+                                <label for="comboTipotransaccion">Monto</label>
+                                <div class="input-group">
+                                     <span class="input-group-addon">$</span>
+                                    <span class="group"></span>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-default">Cancelar</button>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-xs-4">
+            <fieldset>
+                <legend>Cuenta bancaria</legend>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Informacion requerida</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <h4>Cta. bancaria</h4>
+                                    <div>
+                                        Feria Vila, Carlos Esteban
+                                    </div>
+                                    <div></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>Socio</h4>
+                                    <div>
+                                        Feria Vila, Carlos Esteban
+                                    </div>
+                                    <div></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>Titulares</h4>
+                                    <div>
+                                        <ul>
+                                            <li>sfsdfdsf</li>
+                                            <li>sfsdfdsf</li>
+                                            <li>sfsdfdsf</li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+
+
+
+</div>

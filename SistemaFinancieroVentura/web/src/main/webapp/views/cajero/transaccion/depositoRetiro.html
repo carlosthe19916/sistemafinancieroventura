@@ -1,0 +1,134 @@
+<div ng-controller="CrearTransaccionDepositoRetiroController">
+    <fieldset>
+        <legend>Transaccion Deposito / Retiro</legend>
+
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            {{alert.msg}}
+        </alert>
+
+        <form name="formCrearTransaccion" ng-submit="crearTransaccion()" novalidate>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Datos de transaccion</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && control.submitted}">
+                                        <label>Numero Cuenta</label>
+                                        <div class="input-group">
+                                            <input type="text" name="numeroCuenta" ng-model="transaccion.numeroCuenta" class="form-control" placeholder="Numero de Cuenta" readonly required autofocus/>
+                                              <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()">
+                                                    <span class="glyphicon glyphicon-search"></span>
+                                                </button>
+                                              </span>
+                                        </div>
+                                        <div ng-show="formCrearTransaccion.numeroCuenta.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.numeroCuenta.$error.required">
+                                                Ingrese Numero de Cuenta.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
+                                        <label>Tipo Transaccion</label>
+                                        <select name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="transaccion.tipoTransaccion" class="form-control" required>
+                                        </select>
+                                        <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
+                                                Ingrese Tipo Transaccion.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && control.submitted}">
+                                        <label>Monto</label>
+                                        <div class="input-group">
+                                            <input type="text" name="monto" ng-model="transaccion.monto" class="form-control" placeholder="Monto" required/>
+                                              <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="transaccion.numeroCuenta === undefined">
+                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                </button>
+                                              </span>
+                                        </div>
+                                        <div ng-show="formCrearTransaccion.monto.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.monto.$error.required">
+                                                Ingrese monto valido.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <kbd style="display: block;margin-top: 3px;">
+                                            <span ng-bind="cuenta.moneda.simbolo"/>
+                                            <span ng-bind="transaccion.montoReal | number : 2"/>
+                                        </kbd>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.referencia.$invalid && formCrearTransaccion.submitted}">
+                                        <label>Referencia</label>
+                                        <textarea name="referencia" class="form-control" rows="3" ng-model="transaccion.referencia" placeholder="Referencia"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
+                            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Cuenta bancaria</h3></div>
+                        <table class="table">
+                            <tr>
+                                <td>Socio:</td>
+                                <td><strong ng-bind="cuenta.socio"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Tip. y num: doc.:</td>
+                                <td><strong ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Tipo cuenta:</td>
+                                <td><strong ng-bind="cuenta.tipoCuenta"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Num. cuenta:</td>
+                                <td><strong ng-bind="cuenta.numeroCuenta"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="visible-sm visible-lg">✔ Moneda:</span>
+                                </td>
+                                <td>
+                                    <span class="label label-info">Info</span>
+                                    <strong ng-bind="cuenta.moneda.denominacion"></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Estado cuenta:</td>
+                                <td><strong ng-bind="cuenta.estadoCuenta"></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </fieldset>
+</div>

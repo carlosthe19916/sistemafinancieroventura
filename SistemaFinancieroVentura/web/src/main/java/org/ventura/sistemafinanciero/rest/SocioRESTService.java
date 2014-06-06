@@ -33,11 +33,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
@@ -66,6 +68,29 @@ public class SocioRESTService {
 	private UsuarioService usuarioService;
 	@EJB
 	private TrabajadorService trabajadorService;
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listAll(@QueryParam("mode") String mode) {
+		if(mode == null){
+			List<SocioView> list = socioService.findAllView();
+			return Response.status(Response.Status.OK).entity(list).build();	
+		} else {
+			if(mode.equalsIgnoreCase("all")){
+				List<SocioView> list = socioService.findAllView();
+				return Response.status(Response.Status.OK).entity(list).build();
+			} else {
+				if(mode.equalsIgnoreCase("aporte")){
+					List<SocioView> list = socioService.findAllViewAporte();
+					return Response.status(Response.Status.OK).entity(list).build();
+				} else {
+					JsonObject model = Json.createObjectBuilder().add("message", "no hay resultados").build();
+					return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+				}
+			}
+		}
+		
+	}
 	
 	@GET
 	@Path("/{id}")
@@ -181,14 +206,7 @@ public class SocioRESTService {
 	public Set<SocioView> findByFilterText(@PathParam("filterText") @DefaultValue("") String filterText) {		
 		Set<SocioView> list = socioService.findByFilterText(filterText);	
 		return list;
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listAll() {
-		List<SocioView> list = socioService.findAllView();
-		return Response.status(Response.Status.OK).entity(list).build();
-	}
+	}	
 	
 	@POST
 	@Produces({ "application/xml", "application/json" })

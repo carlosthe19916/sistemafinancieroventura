@@ -1,0 +1,92 @@
+<div ng-controller="CerrarCajaController">
+
+    <div class="alert alert-info" ng-show="alertMessageDisplay()">
+        <p><strong>Info:</strong>La caja ya esta cerrada, o no se pudo cargar correctamente</p>
+    </div>
+
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <span ng-bind-html="alert.msg"></span>
+        <a href ng-click="crearPendiente($index)">Crear pendiente</a>
+    </alert>
+
+    <fieldset>
+        <legend>Cerrar caja</legend>
+        <div class="row">
+            <div class="col-sm-4">
+                <div>
+                    <label>Agencia</label>
+                    <p><span ng-bind="agenciaSession.denominacion"/></p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Caja</label>
+                    <p><span ng-bind="cajaSession.denominacion"/><span>-</span><span ng-bind="cajaSession.abreviatura"/></p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Estado</label>
+                    <p><span ng-bind-template="{{cajaSession.abierto ? 'Abierto' : 'Cerrado'}}"/></p>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Detalle Caja</legend>
+        <form name="abrirCajaForm" ng-submit="cerrarCaja()" novalidate>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-disabled="buttonDisableState()"> Ocultar ceros
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <tabset>
+                        <tab ng-repeat="detalle in detalleCajaInicial" select="updateLayout($index)" heading="Moneda:{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{totalFinal[$index]()}}">
+                            <div class="row" style="padding-top: 10px;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div ng-grid="getTemplateInicial($index, detalle.moneda.simbolo)" style="border: 1px solid rgb(212,212,212); height: 400px;">
+                                        </div>
+                                        <div>
+                                            <div class="ngFooterPanel ng-scope" style="border: 1px solid rgb(212,212,212); width: 100%; height: 55px;">
+                                                <div class="ngTotalSelectContainer">
+                                                    <div class="ngFooterTotalItems ngNoMultiSelect">
+                                                        <span class="ngLabel ng-binding">Total: {{totalInicial[$index]()}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div ng-grid="getTemplateFinal($index,detalle.moneda.simbolo)" style="border: 1px solid rgb(212,212,212); height: 400px;">
+                                        </div>
+                                        <div>
+                                            <div class="ngFooterPanel ng-scope" style="border: 1px solid rgb(212,212,212); width: 100%; height: 55px;">
+                                                <div class="ngTotalSelectContainer">
+                                                    <div class="ngFooterTotalItems ngNoMultiSelect">
+                                                        <span class="ngLabel ng-binding">Total: {{totalFinal[$index]()}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                    </tabset>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
+            <button type="button" class="btn btn-default" ng-click="cancelar()">Cancelar</button>
+        </form>
+    </fieldset>
+</div>

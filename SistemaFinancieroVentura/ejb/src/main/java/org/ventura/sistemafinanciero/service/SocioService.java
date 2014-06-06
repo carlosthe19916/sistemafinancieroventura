@@ -22,6 +22,7 @@ public interface SocioService extends AbstractService<Socio>{
 	public Set<SocioView> findByFilterText(String filterText);
 
 	public List<SocioView> findAllView();
+	public List<SocioView> findAllViewAporte();
 	
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc, String numDoc);
 	

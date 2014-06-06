@@ -81,6 +81,12 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
+	public List<SocioView> findAllViewAporte() {
+		List<SocioView> list = socioViewDAO.findAll();
+		return list;
+	}
+	
+	@Override
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc,String numDoc) {
 		switch (tipoPersona) {
 		case NATURAL:
@@ -275,5 +281,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	protected DAO<Object, Socio> getDAO() {
 		return this.socioDAO;
 	}
+
+	
 
 }

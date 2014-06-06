@@ -8,7 +8,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.ventura.sistemafinanciero.entity.type.TipoPersona;
+
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -31,22 +34,26 @@ public class SocioView implements Serializable {
 	@XmlElement(name = "id")
 	@Id
 	@Column(name = "IDSOCIO", unique = true, nullable = false, precision = 22, scale = 0)
-	private BigDecimal idsocio;
+	private BigInteger idsocio;
 
+	@XmlElement(name = "estado")
+	@Column(name = "ESTADO",nullable = false)
+	private int estado;
+	
 	@XmlElement
 	@Column(name = "SOCIO", nullable = false, length = 192, columnDefinition = "nvarchar2")
 	private String socio;
 
-	@XmlElement
+	@XmlElement(name = "fechaAsociado")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "\"FECHA ASOCIADO\"")
 	private Date fechaasociado;
 
-	@XmlElement
+	@XmlElement(name = "tipoDocumento")
 	@Column(name = "\"TIPO DOCUMENTO\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	private String tipodocumento;
 
-	@XmlElement
+	@XmlElement(name = "numeroDocumento")
 	@Column(name = "\"NUMERO DOCUMENTO\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	private String numerodocumento;
 
@@ -55,15 +62,16 @@ public class SocioView implements Serializable {
 	@Column(name = "\"FEC. NAC. / FEC. CONST.\"")
 	private Date fecNacfecConst;
 
-	@XmlElement
+	@XmlElement(name = "tipoPersona")
+	@Enumerated(EnumType.STRING)
 	@Column(name = "\"TIPO PERSONA\"", nullable = false, length = 20, columnDefinition = "nvarchar2")
-	private String tipopersona;
+	private TipoPersona tipopersona;
 
-	@XmlElement
+	@XmlElement(name = "direccion")
 	@Column(name = "DIRECCION", nullable = false, length = 70, columnDefinition = "nvarchar2")
 	private String direccion;
 
-	@XmlElement
+	@XmlElement(name = "email")
 	@Column(name = "EMAIL", nullable = false, length = 70, columnDefinition = "nvarchar2")
 	private String email;
 
@@ -86,11 +94,11 @@ public class SocioView implements Serializable {
 		this.email = email;
 	}
 
-	public BigDecimal getIdsocio() {
+	public BigInteger getIdsocio() {
 		return this.idsocio;
 	}
 
-	public void setIdsocio(BigDecimal idsocio) {
+	public void setIdsocio(BigInteger idsocio) {
 		this.idsocio = idsocio;
 	}
 
@@ -118,11 +126,11 @@ public class SocioView implements Serializable {
 		this.numerodocumento = numerodocumento;
 	}
 
-	public String getTipopersona() {
+	public TipoPersona getTipopersona() {
 		return tipopersona;
 	}
 
-	public void setTipopersona(String tipopersona) {
+	public void setTipopersona(TipoPersona tipopersona) {
 		this.tipopersona = tipopersona;
 	}
 

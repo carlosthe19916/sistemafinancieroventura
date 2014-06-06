@@ -33,6 +33,7 @@ import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
+import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialBoveda;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
@@ -42,6 +43,7 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
+import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.TrabajadorCaja;
 import org.ventura.sistemafinanciero.entity.TrabajadorUsuario;
@@ -49,6 +51,7 @@ import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
+import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
@@ -108,9 +111,14 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private DAO<Object, CuentaBancaria> cuentaBancariaDAO;
 	@Inject
 	private DAO<Object, TransaccionBancaria> transaccionBancariaDAO;
-	
+	@Inject
+	private DAO<Object, TransaccionCuentaAporte> transaccionCuentaAporteDAO;
 	@Inject
 	private DAO<Object, Moneda> monedaDAO;
+	@Inject
+	private DAO<Object, Socio> socioDAO;
+	@Inject
+	private DAO<Object, CuentaAporte> cuentaAporteDAO;
 	
 	@EJB
 	private MonedaService monedaService;
@@ -600,8 +608,11 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 			//si tiene historiales activos reemplazar por cantidades
 			if(cajaHistorial != null){
 				for (DetalleHistorialCaja d : cajaHistorial.getDetalleHistorialCajas()) {
-					GenericDetalle detalle = new GenericDetalle(d.getMonedaDenominacion().getValor(), d.getCantidad());
-					genericMonedaDetalle.addElementDetalleReplacingIfExist(detalle);
+					Moneda monedaHistorial = d.getMonedaDenominacion().getMoneda();
+					if(monedaHistorial.equals(moneda)){
+						GenericDetalle detalle = new GenericDetalle(d.getMonedaDenominacion().getValor(), d.getCantidad());
+						genericMonedaDetalle.addElementDetalleReplacingIfExist(detalle);	
+					}					
 				};
 			}			
 			result.add(genericMonedaDetalle);
@@ -710,6 +721,8 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		//obteniendo saldo disponible de cuenta
 		BigDecimal saldoDisponible = cuentaBancaria.getSaldo().add(monto);
+		cuentaBancaria.setSaldo(saldoDisponible);
+		cuentaBancariaDAO.update(cuentaBancaria);
 		
 		Calendar calendar = Calendar.getInstance();
 		
@@ -772,6 +785,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		BigDecimal saldoDisponible = cuentaBancaria.getSaldo().add(monto);
 		if(saldoDisponible.compareTo(BigDecimal.ZERO) == -1){
 			throw new RollbackFailureException("Saldo insuficiente para transaccion");
+		} else {
+			cuentaBancaria.setSaldo(saldoDisponible);
+			cuentaBancariaDAO.update(cuentaBancaria);
 		}
 		
 		Calendar calendar = Calendar.getInstance();
@@ -794,6 +810,66 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		this.actualizarSaldoCaja(monto, cuentaBancaria.getMoneda().getIdMoneda());
 		
 		return transaccionBancaria.getIdTransaccionBancaria();	
+	}
+
+	@Override
+	@AllowedTo(Permission.ABIERTO)
+	public BigInteger crearAporte(BigInteger idSocio, BigDecimal monto,
+			int mes, int anio, String referencia)
+			throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		if(socio == null)
+			throw new RollbackFailureException("Socio no encontrado");
+		CuentaAporte cuentaAporte = socio.getCuentaAporte();
+		if(cuentaAporte == null)
+			throw new RollbackFailureException("Socio no tiene cuenta de aportes");
+				
+		if(monto.compareTo(BigDecimal.ZERO) != 1){
+			throw new RollbackFailureException("Monto invalido para transaccion");
+		}	
+		
+		switch (cuentaAporte.getEstadoCuenta()) {
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta CONGELADA, no se pueden realizar transacciones");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta INACTIVO, no se pueden realizar transacciones");
+		default:
+			break;
+		}
+		
+		//obteniendo datos de caja en session
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		Trabajador trabajador = this.getTrabajador();
+		PersonaNatural natural = trabajador.getPersonaNatural();
+		
+		//obteniendo saldo disponible de cuenta
+		BigDecimal saldoDisponible = cuentaAporte.getSaldo().add(monto);
+		cuentaAporte.setSaldo(saldoDisponible);
+		cuentaAporteDAO.update(cuentaAporte);
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		TransaccionCuentaAporte transaccionCuentaAporte = new TransaccionCuentaAporte();
+		transaccionCuentaAporte.setAnioAfecta(anio);
+		transaccionCuentaAporte.setMesAfecta(mes);
+		transaccionCuentaAporte.setCuentaAporte(cuentaAporte);
+		transaccionCuentaAporte.setEstado(true);
+		transaccionCuentaAporte.setFecha(calendar.getTime());
+		transaccionCuentaAporte.setHistorialCaja(historialCaja);
+		transaccionCuentaAporte.setHora(calendar.getTime());
+		transaccionCuentaAporte.setMonto(monto);
+		transaccionCuentaAporte.setNumeroOperacion(this.getNumeroOperacion());
+		transaccionCuentaAporte.setReferencia(referencia);
+		transaccionCuentaAporte.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
+		transaccionCuentaAporte.setSaldoDisponible(saldoDisponible);
+		transaccionCuentaAporte.setTipoTransaccion(Tipotransaccionbancaria.DEPOSITO);
+		
+		transaccionCuentaAporteDAO.create(transaccionCuentaAporte);	
+		
+		//actualizar saldo caja
+		this.actualizarSaldoCaja(monto, cuentaAporte.getMoneda().getIdMoneda());
+		
+		return transaccionCuentaAporte.getIdTransaccionCuentaAporte();	
 	}
 	
 }

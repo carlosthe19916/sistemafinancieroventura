@@ -1,0 +1,135 @@
+<div ng-controller="CrearAporteController">
+    <fieldset>
+        <legend>Aporte de socio</legend>
+
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            {{alert.msg}}
+        </alert>
+
+        <form name="formCrearTransaccion" ng-submit="crearTransaccion()" novalidate>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Datos de aporte</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.socio.$invalid && control.submitted}">
+                                        <label>Socio</label>
+                                        <div class="input-group">
+                                            <input type="text" name="socio" ng-model="transaccion.socio.socio" class="form-control" placeholder="Socio" readonly required/>
+                                              <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openBuscarSocio()" autofocus>
+                                                    <span class="glyphicon glyphicon-search"></span>
+                                                </button>
+                                              </span>
+                                        </div>
+                                        <div ng-show="formCrearTransaccion.socio.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.socio.$error.required">
+                                                Ingrese socio.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && control.submitted}">
+                                        <label>Monto</label>
+                                        <div class="input-group">
+                                            <input type="text" name="monto" ng-model="transaccion.monto" class="form-control" placeholder="Monto" required/>
+                                              <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="transaccion.socio === undefined">
+                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                </button>
+                                              </span>
+                                        </div>
+                                        <div ng-show="formCrearTransaccion.monto.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.monto.$error.required">
+                                                Ingrese monto valido.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <kbd style="display: block;margin-top: 3px;">
+                                            <span ng-bind="cuenta.moneda.simbolo"/>
+                                            <span ng-bind="transaccion.montoReal | number : 2"/>
+                                        </kbd>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.mes.$invalid && control.submitted}">
+                                        <label>Mes</label>
+                                        <select name="mes" ng-options="mes as mes.denominacion for mes in meses" ng-model="transaccion.mes" class="form-control" ng-required="true" required>
+                                        </select>
+                                        <div ng-show="formCrearTransaccion.mes.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.mes.$error.required">
+                                                Ingrese mes.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.anio.$invalid && control.submitted}">
+                                        <label>Año</label>
+                                        <div class="input-group">
+                                            <input type="text" name="anio" ng-model="transaccion.anio" class="form-control" placeholder="Año" required/>
+                                              <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="transaccion.socio === undefined">
+                                                    <span class="glyphicon glyphicon-th-list"></span>
+                                                </button>
+                                              </span>
+                                        </div>
+                                        <div ng-show="formCrearTransaccion.anio.$invalid && control.submitted">
+                                            <p class="help-block" ng-show="formCrearTransaccion.anio.$error.required">
+                                                Ingrese año valido.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.referencia.$invalid && formCrearTransaccion.submitted}">
+                                        <label>Referencia</label>
+                                        <textarea name="referencia" class="form-control" rows="3" ng-model="transaccion.referencia" placeholder="Referencia"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
+                            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Socio</h3></div>
+                        <table class="table">
+                            <tr>
+                                <td>Socio:</td>
+                                <td><strong ng-bind="transaccion.socio.socio"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Tip. y num: doc.:</td>
+                                <td><strong ng-bind-template="{{transaccion.socio.tipoDocumento}}/{{transaccion.socio.numeroDocumento}}"></strong></td>
+                            </tr>
+                            <tr>
+                                <td>Estado socio:</td>
+                                <td><strong ng-bind="transaccion.socio.estado"></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </fieldset>
+</div>

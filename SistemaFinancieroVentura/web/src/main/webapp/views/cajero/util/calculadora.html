@@ -1,0 +1,57 @@
+<div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()">&times;</button>
+            <h4 class="modal-title">Calculadora</h4>
+        </div>
+        <form name="formCalculadora" novalidate>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Denominacion</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="denominacion in denominaciones" ng-cloak>
+                        <td style="width: 20%;">
+                            <span ng-bind="denominacion.valor | currency: moneda"/>
+                        </td>
+                        <td style="width: 35%;">
+                            <ng-form name="cantidadForm">
+                                <div class="form-group" ng-class="{ 'has-error' : cantidadForm.cantidad.$invalid}" style="margin-bottom: 0px;">
+                                    <input type="number" name="cantidad" ng-model="denominacion.cantidad" class="form-control" required style="height: 27px;padding: 0px 12px;"/>
+                                    <div ng-show="cantidadForm.cantidad.$invalid">
+                                        <p class="help-block" ng-show="cantidadForm.cantidad.$error.required">
+                                            Ingrese cantidad.
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </td>
+                        <td style="width: 45%;">
+                            <span ng-bind="denominacion.valor*denominacion.cantidad | currency: moneda"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr ng-class="{'danger': total() == 0 || total() === undefined}">
+                        <td colspan="2">
+                            Total: <span ng-bind="total() | currency : moneda"></span>
+                        </td>
+                        <td ng-show="total() == 0 || total() === undefined">
+                            Invalido
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+                <button type="button" class="btn btn-primary" ng-click="ok()">Guardar</button>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

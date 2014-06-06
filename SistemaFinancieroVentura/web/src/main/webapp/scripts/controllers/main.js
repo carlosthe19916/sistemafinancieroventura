@@ -18,6 +18,7 @@ define([
     './caja/HistorialCajaController',
 
     './caja/transaccion/CrearTransaccionDepositoRetiroController',
+    './caja/transaccion/CrearAporteController',
 
     './cuentaBancaria/BeneficiarioController',
     './cuentaBancaria/TitularController',
@@ -36,6 +37,7 @@ define([
     './socio/CrearSocioController',
     './socio/BuscarSocioController',
     './socio/PanelSocioController',
+    './socio/BuscarSocioPopUpController',
 
     './util/CalculadoraController'
 ], function () {

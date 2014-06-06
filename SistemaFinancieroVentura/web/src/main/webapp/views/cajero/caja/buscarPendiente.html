@@ -1,0 +1,16 @@
+<div ng-controller="BuscarPendienteController">
+    <fieldset>
+        <legend>Pendientes del dia</legend>
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary" ng-click="crear()">Nuevo</button>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-grid="gridOptions" style="border: 1px solid rgb(212,212,212); width: 100%px; height: 300px;"></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
