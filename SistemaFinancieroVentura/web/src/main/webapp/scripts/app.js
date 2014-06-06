@@ -4,7 +4,7 @@ define([
         'uiRouter',
         './controllers/main',
        // './directives/index',
-        //'./filters/index',
+        './filters/main',
         './services/main'
     ]/*deps*/,
     function (angular, MainCtrl)/*invoke*/ {
@@ -13,7 +13,7 @@ define([
         return angular.module('cajaApp', [
             'cajaApp.services',
             'cajaApp.controllers',
-           // 'cajaApp.filters',
+            'cajaApp.filters',
            // 'cajaApp.directives'
             /*angJSDeps*/
             'ui.router',

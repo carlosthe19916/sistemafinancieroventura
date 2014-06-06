@@ -100,8 +100,10 @@ public class PersonanaturalRESTService {
 			@PathParam("idtipodocumento") @DefaultValue("-1") BigInteger idtipodocumento,
 			@PathParam("numerodocumento") @DefaultValue("") String numerodocumento) {
 		try {
+			System.out.println(numerodocumento);
 			PersonaNatural personanatural = personanaturalService.findByTipoNumeroDocumento(idtipodocumento, numerodocumento);
-			 if(personanatural == null){
+			System.out.println(personanatural); 
+			if(personanatural == null){
 				 JsonObject model = Json.createObjectBuilder().add("message", "Persona no encontrada").build();
 				 return Response.status(Response.Status.NOT_FOUND).entity(model).build();
 			 }				
