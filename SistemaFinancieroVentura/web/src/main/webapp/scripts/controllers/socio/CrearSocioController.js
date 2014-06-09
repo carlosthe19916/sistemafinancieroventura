@@ -1,8 +1,8 @@
 
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearSocioController', [ "$scope","$state","$window","focus", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService",
-        function($scope, $state, $window, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
+    controllers.controller('CrearSocioController', [ "$scope","$state","$window","$location", "focus", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService",
+        function($scope, $state, $window,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
 
             focus("firstFocus");
 
@@ -30,21 +30,21 @@ define(['../module'], function (controllers) {
                         $scope.errorNumeroDocumento.socio = false;
                     }
                 }
-                if($scope.transaccion.numeroDocumentoSocio === undefined || $scope.transaccion.numeroDocumentoSocio === null)
+                if($scope.transaccion.numeroDocumentoSocio === undefined || $scope.transaccion.numeroDocumentoSocio === null || $scope.transaccion.numeroDocumentoSocio === "")
                     $scope.errorNumeroDocumento.socio = true;
             });
             $scope.$watch("transaccion.numeroDocumentoApoderado", function(){
                 if($scope.transaccion.tipoDocumentoApoderado !== undefined && $scope.transaccion.tipoDocumentoApoderado !== null){
                     if($scope.transaccion.numeroDocumentoApoderado === undefined || $scope.transaccion.numeroDocumentoApoderado === null){
                         $scope.errorNumeroDocumento.apoderado = true;
-                    } else if($scope.transaccion.tipoDocumentoApoderado.numeroCaracteres != $scope.transaccion.tipoDocumentoApoderado.length){
+                    } else if($scope.transaccion.tipoDocumentoApoderado.numeroCaracteres != $scope.transaccion.numeroDocumentoApoderado.length){
                         $scope.errorNumeroDocumento.apoderado = true;
                     } else {
                         $scope.errorNumeroDocumento.apoderado = false;
                     }
+                } else {
+                    $scope.errorNumeroDocumento.apoderado = false;
                 }
-                if($scope.transaccion.numeroDocumentoApoderado === undefined || $scope.transaccion.numeroDocumentoApoderado === null)
-                    $scope.errorNumeroDocumento.socio = true;
             });
 
             MaestroService.getTipoDocumentoPN().then(function(data){
@@ -66,6 +66,7 @@ define(['../module'], function (controllers) {
 
             $scope.buscarPersonaSocio = function($event){
                 $scope.control.submitted = true;
+
                 var tipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
                 var numDoc = $scope.transaccion.numeroDocumentoSocio;
                 if(tipoDoc === null || tipoDoc === undefined){
@@ -100,19 +101,25 @@ define(['../module'], function (controllers) {
                     $event.preventDefault();
             }
             $scope.buscarPersonaApoderado = function($event){
+                $scope.control.submitted = true;
+                if($scope.transaccion.tipoDocumentoApoderado === undefined || $scope.transaccion.tipoDocumentoApoderado === null){
+                    if($event !== undefined) $event.preventDefault();
+                    return;
+                }
+                if($scope.transaccion.numeroDocumentoApoderado === undefined || $scope.transaccion.numeroDocumentoApoderado === null || $scope.transaccion.numeroDocumentoApoderado === ""){
+                    if($event !== undefined) $event.preventDefault();
+                    return;
+                }
                 var tipoDoc = $scope.transaccion.tipoDocumentoApoderado.id;
                 var numDoc = $scope.transaccion.numeroDocumentoApoderado;
                 if(tipoDoc === null || tipoDoc === undefined){
                     alert("Tipo documento no definido");
-                    return;
-                }
-                if(numDoc === null || numDoc === undefined){
-                    alert("Numero documento no definido");
+                    if($event !== undefined) $event.preventDefault();
                     return;
                 }
 
-                $scope.control.submitted = true;
                 if($scope.errorNumeroDocumento.apoderado == true){
+                    if($event !== undefined) $event.preventDefault();
                     return;
                 }
 
@@ -176,9 +183,18 @@ define(['../module'], function (controllers) {
             $scope.crearPersonaSocio = function(){
                 if($scope.transaccion.tipoPersona !== undefined && $scope.transaccion.tipoPersona !== null){
                     if($scope.transaccion.tipoPersona == "NATURAL"){
-                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural");
+                        var idTipoDoc = undefined;
+                        if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null)
+                            idTipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
+                        var baseLen = $location.absUrl().length - $location.url().length;
+                        var url = $location.absUrl().substring(0, baseLen);
+                        $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
                     } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
-                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaJuridica");
+                        if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null)
+                            idTipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
+                        var baseLen = $location.absUrl().length - $location.url().length;
+                        var url = $location.absUrl().substring(0, baseLen);
+                        $window.open(url + "/app/socio/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
                     }}
                 } else{
                     alert("Seleccione tipo de persona");
@@ -186,7 +202,12 @@ define(['../module'], function (controllers) {
             }
 
             $scope.crearPersonaApoderado = function(){
-                $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural");
+                var idTipoDoc = undefined;
+                if($scope.transaccion.tipoDocumentoApoderado !== undefined && $scope.transaccion.tipoDocumentoApoderado !== null)
+                    idTipoDoc = $scope.transaccion.tipoDocumentoApoderado.id;
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoApoderado);
             }
 
             $scope.buttonDisableState = function(){

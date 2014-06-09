@@ -92,7 +92,7 @@
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && control.submitted}">
                         <label>Tipo documento(*)</label>
-                        <select name="tipodocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in tipodocumentos" ng-model="persona.tipoDocumento.id" class="form-control" required>
+                        <select name="tipodocumento" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipodocumentos" ng-model="persona.tipoDocumento" class="form-control" required>
                         </select>
                         <div ng-show="formCrearPersonanatural.tipodocumento.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.tipodocumento.$error.required">

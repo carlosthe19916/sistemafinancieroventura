@@ -99,10 +99,12 @@ public class PersonanaturalRESTService {
 	public Response findByTipoNumeroDocumento(
 			@PathParam("idtipodocumento") @DefaultValue("-1") BigInteger idtipodocumento,
 			@PathParam("numerodocumento") @DefaultValue("") String numerodocumento) {
-		try {
-			System.out.println(numerodocumento);
+		try {		
+			if(idtipodocumento == null || numerodocumento == null || numerodocumento.isEmpty() || numerodocumento.trim().isEmpty()){
+				 JsonObject model = Json.createObjectBuilder().add("message", "Datos no validos").build();
+				 return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+			}
 			PersonaNatural personanatural = personanaturalService.findByTipoNumeroDocumento(idtipodocumento, numerodocumento);
-			System.out.println(personanatural); 
 			if(personanatural == null){
 				 JsonObject model = Json.createObjectBuilder().add("message", "Persona no encontrada").build();
 				 return Response.status(Response.Status.NOT_FOUND).entity(model).build();

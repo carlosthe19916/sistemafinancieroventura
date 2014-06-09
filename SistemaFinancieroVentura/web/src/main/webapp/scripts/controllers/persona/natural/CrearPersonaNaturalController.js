@@ -7,6 +7,10 @@ define(['../../module'], function (controllers) {
             $scope.ubigeo = {"departamento":"", "provincia":"", "distrito":""};
             $scope.persona.ubigeo = $scope.ubigeo.departamento + $scope.ubigeo.provincia + $scope.ubigeo.distrito;
 
+            //recuperando parametros de url
+            $scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
+            $scope.persona.numeroDocumento = $scope.params.numeroDocumento;
+
             $scope.dateOptions = {
                 formatYear: 'yyyy',
                 startingDay: 1
@@ -24,6 +28,13 @@ define(['../../module'], function (controllers) {
 
             MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
                 $scope.tipodocumentos = tipodocumentos;
+                $scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
+                if($scope.persona.tipoDocumento.id !== undefined && $scope.persona.tipoDocumento.id !== null){
+                    for(var i = 0; i < $scope.tipodocumentos.length; i++){
+                        if($scope.tipodocumentos[i].id == $scope.persona.tipoDocumento.id)
+                            $scope.persona.tipoDocumento = $scope.tipodocumentos[i];
+                    }
+                }
             });
             MaestroService.getSexos().then(function(sexos){
                 $scope.sexos = sexos;
