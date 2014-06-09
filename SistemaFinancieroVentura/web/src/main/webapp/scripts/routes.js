@@ -31,7 +31,7 @@ define(['./app'], function(app) {
                     '<div class="navbar-collapse collapse">' +
                     '<ul class="nav navbar-nav">'+
                     '<li ui-sref-active="active" class="active">'+
-                    '   <a href="#" ui-sref="index">Página principal</a>'+
+                    '   <a href="#" ui-sref="index">Página Principal</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
                     '   <a href="#contact" ui-sref="app.caja">Caja</a>'+
