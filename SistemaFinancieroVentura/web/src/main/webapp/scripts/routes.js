@@ -535,10 +535,15 @@ define(['./app'], function(app) {
             })
 
             .state('app.socio.crearPersonaNatural', {
-                url: "/personaNatural",
+                url: "/personaNatural?tipoDocumento&numeroDocumento",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaNatural/crearPersonaNatural.html"
+                        templateUrl: "views/cajero/socio/personaNatural/crearPersonaNatural.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.params = {};
+                            $scope.params.idTipoDocumento = $stateParams.tipoDocumento;
+                            $scope.params.numeroDocumento = $stateParams.numeroDocumento;
+                        }
                     }
                 }
             })
@@ -554,10 +559,15 @@ define(['./app'], function(app) {
                 }
             })
             .state('app.socio.crearPersonaJuridica', {
-                url: "/personaJuridica",
+                url: "/personaJuridica?tipoDocumento&numeroDocumento",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaJuridica/crearPersonaJuridica.html"
+                        templateUrl: "views/cajero/socio/personaJuridica/crearPersonaJuridica.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.params = {};
+                            $scope.params.idTipoDocumento = $stateParams.tipoDocumento;
+                            $scope.params.numeroDocumento = $stateParams.numeroDocumento;
+                        }
                     }
                 }
             })

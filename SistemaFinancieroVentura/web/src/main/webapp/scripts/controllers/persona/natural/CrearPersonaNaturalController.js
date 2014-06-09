@@ -44,6 +44,7 @@ define(['../../module'], function (controllers) {
             });
             MaestroService.getPaises().then(function(paises){
                 $scope.paises = paises;
+                $scope.persona.codigoPais = "PE";
             });
             MaestroService.getDepartamentos().then(function(departamentos){
                 $scope.departamentos = departamentos;
