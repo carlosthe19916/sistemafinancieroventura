@@ -40,7 +40,7 @@ define(['./app'], function(app) {
                     '<a href="#about" ui-sref="app.transaccion">Transacciones</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
-                    '<a href="#contact" ui-sref="app.socio">Cuentas personales</a>'+
+                    '<a href="#contact" ui-sref="app.socio">Cuentas Personales</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
                     '<a href="#contact" ui-sref="app.administracion">Administracion</a>'+
@@ -244,11 +244,11 @@ define(['./app'], function(app) {
                     "viewMenu":{
                         controller: function($scope){
                             $scope.menus = [
-                                {'name':'Cuenta aporte', submenus:[
+                                {'name':'Cuenta Aporte', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.socio.crearSocio'},
                                     { 'name':'Buscar' , 'state':'app.socio.buscarSocio'}
                                 ]},
-                                {'name':'Cuentas bancarias', submenus:[
+                                {'name':'Cuentas Bancarias', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.socio.crearCuentaBancaria'},
                                     { 'name':'Buscar' , 'state':'app.socio.buscarCuentaBancaria'}
                                 ]}
