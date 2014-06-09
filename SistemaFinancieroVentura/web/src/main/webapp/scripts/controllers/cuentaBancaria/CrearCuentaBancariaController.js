@@ -3,8 +3,8 @@ define(['../module'], function (controllers) {
     controllers.controller("CrearCuentaBancariaController", ["$scope", "$state",
         function($scope, $state) {
             $scope.cuentaSelected;
-            $scope.cuentaAhorro = "modules/caja/views/cuenta/crearCuentaAhorro.html";
-            $scope.cuentaCorriente = "modules/caja/views/cuenta/crearCuentaCorriente.html";
-            $scope.cuentaPlazoFijo = "modules/caja/views/cuenta/crearCuentaPlazoFijo.html";
+            $scope.cuentaAhorro = "views/cajero/cuentaBancaria/crearCuentaAhorro.html";
+            $scope.cuentaCorriente = "views/cajero/cuentaBancaria/crearCuentaCorriente.html";
+            $scope.cuentaPlazoFijo = "views/cajero/cuentaBancaria/crearCuentaPlazoFijo.html";
         }]);
 });

@@ -46,6 +46,7 @@ import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
+import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
@@ -60,6 +61,7 @@ import org.ventura.sistemafinanciero.rest.dto.CuentaPlazoFijoDTO;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
+import org.ventura.sistemafinanciero.service.SocioService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
 
@@ -76,6 +78,8 @@ public class CuentaBancariaRESTService {
 	private PersonaNaturalService personaNaturalService;
 	@EJB
 	private PersonaJuridicaService personaJuridicaService;
+	@EJB
+	private SocioService socioService;
 	
 	@GET
 	@Path("/")
@@ -115,7 +119,21 @@ public class CuentaBancariaRESTService {
 			return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();
 		else 
 			return Response.status(Response.Status.OK).entity(cuentaBancaria).build();
-	}	
+	}
+	
+	@GET
+	@Path("/{id}/socio")
+	@Produces({ "application/xml", "application/json" })
+	public Response findSocioFromCuentaBancaria(@PathParam("id")BigInteger id) {				
+		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
+		if(cuentaBancaria != null) {
+			Socio socio = socioService.findSocioByCuenta(cuentaBancaria.getIdCuentaBancaria());
+			return Response.status(Response.Status.OK).entity(socio).build();	
+		}					
+		else {
+			return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();	
+		}					
+	}
 		
 	@GET
 	@Path("/filtertext/{filterText}")

@@ -52,6 +52,9 @@ define(['./module'], function (services) {
                 },
                 findByFilterTextView: function(text){
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
+                },
+                getSocio: function(idCuenta){
+                    return Restangular.one("cuentaBancaria/"+idCuenta+"/socio").get();
                 }
             }
         }])

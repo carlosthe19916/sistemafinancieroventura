@@ -1,4 +1,4 @@
-<div>
+<div ng-controller="EditarCuentaBancariaController">
     <!--menu de operaciones-->
     <div class="row">
         <div class="col-sm-12" style="text-align: right;">
@@ -16,11 +16,13 @@
         <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Socio</div>
-                <div class="panel-body">
-                    <p>...</p>
+                <div class="panel-body" ng-show="!socio">
+                    <p>Socio no encontrado</p>
                 </div>
                 <table class="table">
-                    ...
+                    <tr>
+                        <td></td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -28,11 +30,40 @@
         <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Cuenta bancaria</div>
-                <div class="panel-body">
-                    <p>...</p>
+                <div class="panel-body" ng-show="!cuentaBancaria">
+                    <p>Cuenta no encontrada</p>
                 </div>
                 <table class="table">
-                    ...
+                    <tr>
+                        <td>Tipo cuenta:</td>
+                        <td><strong ng-bind="cuentaBancaria.tipoCuentaBancaria"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Num. cuenta:</td>
+                        <td><strong ng-bind="cuentaBancaria.numeroCuenta"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Estado:</td>
+                        <td><strong ng-bind="cuentaBancaria.estado"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Fecha apertura:</td>
+                        <td><strong ng-bind="cuentaBancaria.fechaApertura | date:'dd/MM/yyyy'"></strong></td>
+                        <td>Fecha cierre:</td>
+                        <td><strong ng-bind="cuentaBancaria.fechaCierre | date:'dd/MM/yyyy'"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Moneda:</td>
+                        <td><strong ng-bind="cuentaBancaria.moneda.denominacion"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Saldo:</td>
+                        <td><strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Cant.retirantes:</td>
+                        <td><strong ng-bind="cuentaBancaria.cantRetirantes"></strong></td>
+                    </tr>
                 </table>
             </div>
         </div>

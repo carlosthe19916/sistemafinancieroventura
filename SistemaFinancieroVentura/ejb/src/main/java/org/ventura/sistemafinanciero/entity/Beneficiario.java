@@ -3,10 +3,13 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,7 +31,7 @@ public class Beneficiario implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idBeneficiario;
+	private BigInteger idBeneficiario;
 	private CuentaBancaria cuentaBancaria;
 	private String apellidoPaterno;
 	private String apellidoMaterno;
@@ -39,16 +42,17 @@ public class Beneficiario implements java.io.Serializable {
 	public Beneficiario() {
 	}
 
-	public Beneficiario(int idBeneficiario, CuentaBancaria cuentaBancaria,
-			BigDecimal porcentajeBeneficio) {
+	public Beneficiario(BigInteger idBeneficiario,
+			CuentaBancaria cuentaBancaria, BigDecimal porcentajeBeneficio) {
 		this.idBeneficiario = idBeneficiario;
 		this.cuentaBancaria = cuentaBancaria;
 		this.porcentajeBeneficio = porcentajeBeneficio;
 	}
 
-	public Beneficiario(int idBeneficiario, CuentaBancaria cuentaBancaria,
-			String apellidoPaterno, String apellidoMaterno, String nombres,
-			String numeroDocumento, BigDecimal porcentajeBeneficio) {
+	public Beneficiario(BigInteger idBeneficiario,
+			CuentaBancaria cuentaBancaria, String apellidoPaterno,
+			String apellidoMaterno, String nombres, String numeroDocumento,
+			BigDecimal porcentajeBeneficio) {
 		this.idBeneficiario = idBeneficiario;
 		this.cuentaBancaria = cuentaBancaria;
 		this.apellidoPaterno = apellidoPaterno;
@@ -59,13 +63,14 @@ public class Beneficiario implements java.io.Serializable {
 	}
 
 	@XmlElement(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_BENEFICIARIO", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdBeneficiario() {
+	public BigInteger getIdBeneficiario() {
 		return this.idBeneficiario;
 	}
 
-	public void setIdBeneficiario(int idBeneficiario) {
+	public void setIdBeneficiario(BigInteger idBeneficiario) {
 		this.idBeneficiario = idBeneficiario;
 	}
 

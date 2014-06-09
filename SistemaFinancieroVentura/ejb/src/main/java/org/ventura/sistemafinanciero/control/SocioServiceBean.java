@@ -54,6 +54,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	@Inject
 	private DAO<Object, CuentaAporte> cuentaAporteDAO;
 	@Inject
+	private DAO<Object, CuentaBancaria> cuentaBancariaDAO;
+	@Inject
 	private DAO<Object, Agencia> agenciaDAO;
 	
 	@EJB
@@ -225,10 +227,10 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		
 		//verificar si el socio ya existe
 		Socio socio = findSocio(tipoPersona, idDocSocio,numDocSocio);
-		if(socio != null){
-			if(!socio.getEstado()){
+		if(socio != null) {		
+			if(socio.getEstado()) {
 				CuentaAporte aporte = socio.getCuentaAporte();
-				if(aporte != null){
+				if (aporte == null) {
 					CuentaAporte cuentaAporte = new CuentaAporte();
 					cuentaAporte.setNumeroCuenta(agencia.getCodigo());
 					cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.ACTIVO);
@@ -236,11 +238,11 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 					cuentaAporte.setSaldo(BigDecimal.ZERO);
 					cuentaAporte.setSocios(null);
 					cuentaAporteDAO.create(cuentaAporte);
-					
+
 					String numeroCuenta = ProduceObject.getNumeroCuenta(cuentaAporte);
 					cuentaAporte.setNumeroCuenta(numeroCuenta);
 					cuentaAporteDAO.update(cuentaAporte);
-					
+
 					socio.setCuentaAporte(cuentaAporte);
 					socio.setApoderado(apoderado);
 					socioDAO.update(socio);
@@ -248,8 +250,28 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 					throw new RollbackFailureException("Socio ya existente, y tiene cuenta aportes activa");
 				}
 			} else {
-				throw new RollbackFailureException("Socio ya existente, no se puede registrar nuevamente");
-			}
+				CuentaAporte cuentaAporte = new CuentaAporte();
+				cuentaAporte.setNumeroCuenta(agencia.getCodigo());
+				cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.ACTIVO);
+				cuentaAporte.setMoneda(ProduceObject.getMonedaPrincipal());
+				cuentaAporte.setSaldo(BigDecimal.ZERO);
+				cuentaAporte.setSocios(null);
+				cuentaAporteDAO.create(cuentaAporte);					
+				
+				String numeroCuenta = ProduceObject.getNumeroCuenta(cuentaAporte);
+				cuentaAporte.setNumeroCuenta(numeroCuenta);
+				cuentaAporteDAO.update(cuentaAporte);
+				
+				socio = new Socio();
+				socio.setPersonaNatural(personaNatural);
+				socio.setPersonaJuridica(personaJuridica);
+				socio.setApoderado(apoderado);
+				socio.setCuentaAporte(cuentaAporte);
+				socio.setEstado(true);
+				socio.setFechaInicio(calendar.getTime());
+				socio.setFechaFin(null);
+				socioDAO.create(socio);
+			}			
 		} else {			
 			CuentaAporte cuentaAporte = new CuentaAporte();
 			cuentaAporte.setNumeroCuenta(agencia.getCodigo());
@@ -280,6 +302,16 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	@Override
 	protected DAO<Object, Socio> getDAO() {
 		return this.socioDAO;
+	}
+
+	@Override
+	public Socio findSocioByCuenta(BigInteger idCuentaBancaria) {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuentaBancaria == null)
+			return null;
+		Socio socio = cuentaBancaria.getSocio();
+		Hibernate.initialize(socio);
+		return socio;
 	}
 
 	

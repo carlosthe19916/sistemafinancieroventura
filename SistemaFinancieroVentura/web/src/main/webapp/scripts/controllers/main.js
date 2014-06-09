@@ -24,6 +24,7 @@ define([
     './cuentaBancaria/TitularController',
     './cuentaBancaria/BuscarCuentaBancariaController',
     './cuentaBancaria/CrearCuentaBancariaController',
+    './cuentaBancaria/EditarCuentaBancariaController',
     './cuentaBancaria/CrearCuentaAhorroController',
     './cuentaBancaria/CrearCuentaCorrienteController',
     './cuentaBancaria/CrearCuentaPlazoFijoController',

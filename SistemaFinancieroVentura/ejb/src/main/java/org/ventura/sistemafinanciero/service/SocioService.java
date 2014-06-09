@@ -26,6 +26,8 @@ public interface SocioService extends AbstractService<Socio>{
 	
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc, String numDoc);
 	
+	public Socio findSocioByCuenta(BigInteger idCuentaBancaria);
+	
 	public PersonaNatural getPersonaNatural(BigInteger idSocio);
 
 	public PersonaJuridica getPersonaJuridica(BigInteger idSocio);

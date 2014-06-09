@@ -3,8 +3,8 @@ define(['../module'], function (controllers) {
     controllers.controller("BuscarSocioController", ["$scope", "$state", "ngProgress","focus", "SocioService",
         function($scope, $state, ngProgress,focus, SocioService) {
 
-            ngProgress.color("#2d6ca2");
             focus("firstFocus");
+            ngProgress.color("#2d6ca2");
 
             $scope.nuevo = function(){
                 $state.transitionTo("app.socio.crearSocio");
@@ -43,8 +43,10 @@ define(['../module'], function (controllers) {
 
                     } else {
                         if( angular.isUndefined($scope.filterOptions.filterText) || $scope.filterOptions.filterText === null) {
-                            var result = $scope.sociosList = SocioService.getSocios();
-                            $scope.setPagingData(result,page,pageSize);
+                            SocioService.getSocios().then(function(data){
+                                var result = $scope.sociosList = data;
+                                $scope.setPagingData(result, page, pageSize);
+                            });
                         } else {
                             $scope.setPagingData($scope.sociosList,page,pageSize);
                         }
@@ -66,6 +68,9 @@ define(['../module'], function (controllers) {
                     } else {
                         ngProgress.start();
                         $scope.sociosList = SocioService.getSocios();
+                        SocioService.getSocios().then(function(data){
+                            $scope.sociosList = data;
+                        });
                         ngProgress.complete();
                     }
                 }, 100);
@@ -95,11 +100,11 @@ define(['../module'], function (controllers) {
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
                     {field:'id', displayName:'ID SOCIO', width:"10%"},
-                    {field:'tipodocumento', displayName:'TIPO DOC.',width:"15%"},
-                    {field:'numerodocumento', displayName:'NUM. DOC.',width:"12%"},
-                    {field:'tipopersona', displayName:'TIPO PERSONA',width:"12%"},
+                    {field:'tipoDocumento', displayName:'TIPO DOC.',width:"15%"},
+                    {field:'numeroDocumento', displayName:'NUM. DOC.',width:"12%"},
+                    {field:'tipoPersona', displayName:'TIPO PERSONA',width:"12%"},
                     {field:'socio', displayName:'SOCIO',width:"28%"},
-                    {field:"fechaasociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:"14%"},
+                    {field:"fechaAsociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:"14%"},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editSocio(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
             };
