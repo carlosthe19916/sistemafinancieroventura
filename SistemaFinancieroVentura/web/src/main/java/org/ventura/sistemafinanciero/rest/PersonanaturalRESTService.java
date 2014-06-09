@@ -179,5 +179,4 @@ public class PersonanaturalRESTService {
 		}
 		return Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
 	}
-
 }
