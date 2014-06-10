@@ -1,6 +1,6 @@
 <div ng-controller="CrearPersonaNaturalController">
-<form name="formCrearPersonanatural" ng-submit="create()" novalidate>
-<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+<form name="formCrearPersonanatural" ng-submit="crearTransaccion()" novalidate>
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
     <span ng-bind-html="alert.msg"></span>
 </alert>
 <fieldset>

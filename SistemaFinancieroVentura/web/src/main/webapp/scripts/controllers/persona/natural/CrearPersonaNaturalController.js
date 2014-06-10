@@ -62,13 +62,11 @@ define(['../../module'], function (controllers) {
             }
 
             //logic
-            $scope.create = function(){
+            $scope.crearTransaccion = function(){
                 if ($scope.formCrearPersonanatural.$valid) {
                     $scope.buttonDisableState = true;
                     PersonaNaturalService.crear($scope.persona).then(
                         function(persona){
-                            //PersonaNaturalService.guardarPersonaResponse(data.id);
-                            //alert("dato enviado "+PersonaNaturalService.getPersonaResponse());
                             $window.close();
                         },
                         function error(error){
