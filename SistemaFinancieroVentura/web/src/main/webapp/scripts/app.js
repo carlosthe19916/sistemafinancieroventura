@@ -25,7 +25,8 @@ define([
             'ui.utils',
             'blockUI',
             'flow',
-            'focusOn'
+            'focusOn',
+            'cfp.hotkeys'
         ]);
     }
 );

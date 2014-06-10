@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.control;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -77,15 +78,29 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
+	public Set<SocioView> findByFilterTextAporte(String filterText) {
+		if (filterText == null)
+			return new HashSet<SocioView>();
+		if (filterText.isEmpty() || filterText.trim().isEmpty()) {
+			return new HashSet<SocioView>();
+		}
+		List<SocioView> list = null;
+		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
+		list = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), 1000);
+		System.out.println(list.size());
+		return new HashSet<SocioView>(list);
+	}
+	
+	@Override
 	public List<SocioView> findAllView() {		
 		List<SocioView> list = socioViewDAO.findAll();
 		return list;
 	}
 	
 	@Override
-	public List<SocioView> findAllViewAporte() {
-		List<SocioView> list = socioViewDAO.findAll();
-		return list;
+	public List<SocioView> findAllViewAporte() {		
+		Collection<SocioView> list = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte);
+		return new ArrayList<>(list);
 	}
 	
 	@Override
@@ -313,6 +328,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		Hibernate.initialize(socio);
 		return socio;
 	}
+
+	
 
 	
 

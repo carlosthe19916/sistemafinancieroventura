@@ -9,14 +9,20 @@ define(['./module'], function (services) {
                 getSocios: function(mode){
                     if(mode === undefined || mode === null){
                         return _socioService.getList({"mode":"ALL"},{});
-                    } else if(mode == 'ALL'){
+                    } else if(mode.toUpperCase() == 'ALL'){
                         return _socioService.getList({"mode":"ALL"},{});
-                    } else if(mode == 'APORTE'){
+                    } else if(mode.toUpperCase() == 'APORTE'){
                         return _socioService.getList({"mode":"APORTE"},{});
                     }
                 },
-                findByFilterText: function(text){
-                    return Restangular.all("socio/filtertext/"+text).getList();
+                findByFilterText: function(text, mode){
+                    if(mode === undefined || mode === null){
+                        return Restangular.all("socio/filtertext/"+text).getList({"mode":"ALL"},{});
+                    } else if(mode.toUpperCase() == 'ALL'){
+                        return Restangular.all("socio/filtertext/"+text).getList({"mode":"ALL"},{});
+                    } else if(mode.toUpperCase() == 'APORTE'){
+                        return Restangular.all("socio/filtertext/"+text).getList({"mode":"APORTE"},{});
+                    }
                 },
                 crear : function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
                     var socio = {

@@ -17,7 +17,8 @@ require.config({
         'flow': "../bower_components/ng-flow/dist/ng-flow-standalone",
         'ui-utils':"../bower_components/ui-utils-0.1.1/ui-utils",
         'focusOn':"../bower_components/ng-focus-on/ng-focus-on",
-        'ngProgress':"../bower_components/ngProgress/ngProgress"
+        'ngProgress':"../bower_components/ngProgress/ngProgress",
+        'cfp.hotkeys':"../bower_components/angular-hotkeys-master/build/hotkeys"
     },
     shim: {
         angular: {
@@ -60,6 +61,9 @@ require.config({
             deps: ['angular']
         },
         'ngProgress':{
+            deps: ['angular']
+        },
+        'cfp.hotkeys':{
             deps: ['angular']
         },
         'angular-mocks': {
@@ -137,7 +141,8 @@ require([
     'ui-utils',
     'blockUI',
     'flow',
-    'focusOn'
+    'focusOn',
+    'cfp.hotkeys'
 ], function(angular, app) {
     'use strict';
     /* jshint ignore:start */

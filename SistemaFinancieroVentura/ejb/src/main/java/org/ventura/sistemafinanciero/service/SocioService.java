@@ -20,7 +20,8 @@ public interface SocioService extends AbstractService<Socio>{
 
 	//no transaccional
 	public Set<SocioView> findByFilterText(String filterText);
-
+	public Set<SocioView> findByFilterTextAporte(String filterText);
+	
 	public List<SocioView> findAllView();
 	public List<SocioView> findAllViewAporte();
 	

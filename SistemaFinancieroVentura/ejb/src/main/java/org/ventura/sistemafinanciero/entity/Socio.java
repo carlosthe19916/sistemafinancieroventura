@@ -47,6 +47,7 @@ public class Socio implements java.io.Serializable {
 	public final static String FindByPNTipoAndNumeroDocumento = "Socio.FindByPNTipoAndNumeroDocumento";
 	public final static String FindByPJTipoAndNumeroDocumento = "Socio.FindByPJTipoAndNumeroDocumento";
 
+
 	private BigInteger idSocio;
 	private PersonaNatural personaNatural;
 	private PersonaJuridica personaJuridica;
