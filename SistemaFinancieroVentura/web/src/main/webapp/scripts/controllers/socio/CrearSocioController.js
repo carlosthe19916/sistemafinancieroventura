@@ -72,6 +72,8 @@ define(['../module'], function (controllers) {
                 $scope.control.submitted = true;
 
                 if(angular.isUndefined($scope.transaccion.tipoDocumentoSocio || $scope.control.errorForm.socio == true)){
+                    if($event !== undefined)
+                        $event.preventDefault();
                     return;
                 }
 

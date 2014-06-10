@@ -10,7 +10,7 @@
                    <div class="col-sm-4">
                        <div class="form-group" ng-class="{ 'has-error' : formTitular.tipoDocumento.$invalid && control.submitted}">
                            <label>Tipo documento</label>
-                           <select id="cmbTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos" ng-model="titular.idTipoDocumento" class="form-control" required autofocus>
+                           <select id="cmbTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="titular.tipoDocumento" class="form-control" required autofocus>
                            </select>
                            <div ng-show="formTitular.tipoDocumento.$invalid && control.submitted">
                                <p class="help-block" ng-show="formTitular.tipoDocumento.$error.required">
@@ -20,10 +20,17 @@
                        </div>
                    </div>
                    <div class="col-sm-4">
-                       <div class="form-group" ng-class="{ 'has-error' : formTitular.numeroDocumento.$invalid && control.submitted}">
+                       <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formTitular.numeroDocumento.$invalid) && formTitular.numeroDocumento.$dirty}">
                            <label>Numero documento</label>
-                           <input type="text" name="numeroDocumento" ng-model="titular.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
-                           <div ng-show="formTitular.numeroDocumento.$invalid && control.submitted">
+                           <div class="input-group">
+                               <input type="text" name="numeroDocumento" ng-model="titular.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                                 <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="addPersona()" >
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                 </span>
+                           </div>
+                           <div ng-show="formTitular.numeroDocumento.$invalid && formTitular.numeroDocumento.$dirty">
                                <p class="help-block" ng-show="formTitular.numeroDocumento.$error.required">
                                    Ingrese numero documento valido.
                                </p>
@@ -37,14 +44,19 @@
                                    Numero documento invalido.
                                </p>
                            </div>
+                           <div ng-show="control.errorForm.numeroDocumento && formTitular.numeroDocumento.$dirty">
+                               <p class="help-block" ng-show="control.errorForm.numeroDocumento">
+                                   Maximo <span ng-bind="titular.tipoDocumento.numeroCaracteres"></span> caracteres.
+                               </p>
+                           </div>
                        </div>
                    </div>
                    <div class="col-sm-4">
                        <div class="form-group">
                            <label>&nbsp;</label>
                            <div>
-                               <button type="submit" class="btn btn-primary">Añadir</button>
                                <button type="button" class="btn btn-default" ng-click="clear()">Limpiar</button>
+                               <button type="button" class="btn btn-link" ng-click="nuevaPersona()">Registrar persona</button>
                            </div>
                        </div>
                    </div>

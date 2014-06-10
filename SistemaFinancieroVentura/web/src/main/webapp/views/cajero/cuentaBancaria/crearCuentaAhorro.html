@@ -32,7 +32,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoDocumento.$invalid && control.submitted}">
                 <label>Tipo documento</label>
-                <select name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos" ng-model="transaccion.idTipoDocumento" class="form-control" required>
+                <select name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="transaccion.tipoDocumento" class="form-control" required>
                 </select>
                 <div ng-show="formCrearCuenta.tipoDocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoDocumento.$error.required">
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.numeroDocumento.$invalid && control.submitted}">
+            <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formCrearCuenta.numeroDocumento.$invalid) && formCrearCuenta.numeroDocumento.$dirty}">
                 <label>Numero documento</label>
                 <div class="input-group">
                     <input type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
@@ -66,6 +66,11 @@
                         Numero documento invalido.
                     </p>
                 </div>
+                <div ng-show="formCrearCuenta.numeroDocumento.$dirty && control.errorForm.numeroDocumento">
+                    <p class="help-block" ng-show="formCrearCuenta.numeroDocumento ">
+                        Debe tener <span ng-bind="transaccion.tipoDocumento.numeroCaracteres"></span> caracteres.
+                    </p>
+                </div>
             </div>
         </div>
         <div class="col-sm-4" ng-show="!socioNatural && !socioJuridico">
@@ -85,7 +90,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.moneda.$invalid && control.submitted}">
                     <label>Moneda</label>
-                    <select name="moneda" ng-options="moneda.id as moneda.denominacion for moneda in monedas" ng-model="transaccion.idMoneda" ng-change="monedaChange()" class="form-control" required>
+                    <select name="moneda" ng-options="moneda as moneda.denominacion for moneda in monedas | orderBy : 'id'" ng-model="transaccion.moneda" ng-change="monedaChange()" class="form-control" required>
                     </select>
                     <div ng-show="formCrearCuenta.moneda.$invalid && control.submitted">
                         <p class="help-block" ng-show="formCrearCuenta.moneda.$error.required">
@@ -95,10 +100,10 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.cantRetirantes.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.cantRetirantes || formCrearCuenta.cantRetirantes.$invalid) && formCrearCuenta.cantRetirantes.$dirty}">
                     <label>Cantidad retirantes</label>
                     <input type="number" name="cantRetirantes" ng-model="transaccion.cantRetirantes" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Cantidad" required/>
-                    <div ng-show="formCrearCuenta.cantRetirantes.$invalid && control.submitted">
+                    <div ng-show="formCrearCuenta.cantRetirantes.$invalid && formCrearCuenta.cantRetirantes.$dirty">
                         <p class="help-block" ng-show="formCrearCuenta.cantRetirantes.$error.required">
                             Ingrese numero valido.
                         </p>
@@ -109,12 +114,17 @@
                             Numero invalido.
                         </p>
                     </div>
+                    <div ng-show="formCrearCuenta.cantRetirantes.$dirty && control.errorForm.cantRetirantes">
+                        <p class="help-block" ng-show="control.errorForm.cantRetirantes">
+                            Numero invalido.
+                        </p>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Tasa de interes</label>
-                    <kbd style="display: block;margin-top: 3px;">
+                    <kbd style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;">
                         <span ng-bind="(transaccion.tasaInteres * 100)| number : 3"/>
                     </kbd>
                 </div>
