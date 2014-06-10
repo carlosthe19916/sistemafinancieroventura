@@ -35,7 +35,7 @@ import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
 
 @Path("/personanatural")
-public class PersonanaturalRESTService {
+public class PersonaNaturalRESTService {
 
 	private Logger log;
 
@@ -56,6 +56,7 @@ public class PersonanaturalRESTService {
 	@Produces({ "application/xml", "application/json" })
 	public Response create(PersonaNatural personaNatural) {
 		try {
+			System.out.println(personaNatural.getUbigeo());
 			BigInteger idPersona = personanaturalService.crear(personaNatural);
 			JsonObject model = Json.createObjectBuilder()
 					.add("message", "persona creada")
