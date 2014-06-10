@@ -2,8 +2,8 @@
    <form name="formTitular" ng-submit="addPersona()" novalidate>
        <fieldset>
            <legend>Datos de titular</legend>
-           <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-               <span ng-bind-html="alert.msg"></span>
+           <alert ng-repeat="alert in alertsTitulares" type="{{alert.type}}" close="closeAlert($index)">
+               <span ng-bind="alert.msg"></span>
            </alert>
            <div>
                <div class="row">
@@ -55,7 +55,6 @@
                        <div class="form-group">
                            <label>&nbsp;</label>
                            <div>
-                               <button type="button" class="btn btn-default" ng-click="clear()">Limpiar</button>
                                <button type="button" class="btn btn-link" ng-click="nuevaPersona()">Registrar persona</button>
                            </div>
                        </div>

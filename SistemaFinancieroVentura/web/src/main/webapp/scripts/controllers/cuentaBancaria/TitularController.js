@@ -45,12 +45,11 @@ define(['../module'], function (controllers) {
                         function(persona){
                             $scope.control.inProcess = false;
                             $scope.titulares.push(persona);
-                            $scope.clear();
                             $scope.resetFocus();
                         }, function error(error){
                             $scope.control.inProcess = false;
-                            $scope.alerts = [{ type: 'danger', msg: 'Error: persona no encontrada' }];
-                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $scope.alertsTitulares = [{ type: 'danger', msg: 'Error: persona no encontrada' }];
+                            $scope.closeAlert = function(index) {$scope.alertsTitulares.splice(index, 1);};
                         }
                     );
                 } else {
@@ -60,14 +59,6 @@ define(['../module'], function (controllers) {
 
             $scope.removePersona = function(index){
                 $scope.titulares.splice(index, 1);
-                $scope.resetFocus();
-            }
-
-            $scope.clear = function(){
-                $scope.titular = {
-                    "tipoDocumento" : undefined,
-                    "numeroDocumento" : ""
-                }
                 $scope.resetFocus();
             }
 
@@ -82,8 +73,13 @@ define(['../module'], function (controllers) {
 
             $scope.resetFocus = function(){
                 angular.element("#cmbTipoDocumentoTitular").focus();
+                $scope.titular = {
+                    "tipoDocumento" : undefined,
+                    "numeroDocumento" : ""
+                }
                 $scope.control.errorForm.numeroDocumento = false;
                 $scope.control.submitted = false;
+                $scope.formTitular.$setPristine();
             }
 
 
