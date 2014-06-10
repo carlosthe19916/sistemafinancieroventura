@@ -82,7 +82,7 @@
                         </div>
                         <div ng-show="formCrearPersonanatural.pais.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.pais.$error.required">
-                                Ingrese nacionalidad.
+                                Ingrese Nacionalidad.
                             </p>
                         </div>
                     </div>
@@ -91,32 +91,32 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && control.submitted}">
-                        <label>Tipo documento(*)</label>
+                        <label>Tipo Documento(*)</label>
                         <select name="tipodocumento" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipodocumentos" ng-model="persona.tipoDocumento" class="form-control" required>
                         </select>
                         <div ng-show="formCrearPersonanatural.tipodocumento.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.tipodocumento.$error.required">
-                                Ingrese tipo documento.
+                                Ingrese Tipo Documento.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.numerodocumento.$invalid && control.submitted}">
-                        <label>Nro documento(*)</label>
-                        <input name="numerodocumento" type="text" ng-model="persona.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nro documento" required/>
+                        <label>Numero Documento(*)</label>
+                        <input name="numerodocumento" type="text" ng-model="persona.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nº Documento" required/>
                         <div ng-show="formCrearPersonanatural.numerodocumento.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.numerodocumento.$error.required">
-                                Ingrese numero de documento.
+                                Ingrese Numero de Documento.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.numerodocumento.$error.minlength">
-                                Minimo 1 caracter.
+                                Minimo 1 Caracter.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.numerodocumento.$error.maxlength">
-                                Maximo 20 caracteres.
+                                Maximo 20 Caracteres.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.numerodocumento.$error.pattern">
-                                Numero de documento no valido.
+                                Numero de Documento no Valido.
                             </p>
                         </div>
                     </div>
@@ -125,34 +125,34 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.apellidopaterno.$invalid && control.submitted}">
-                        <label>Ap. paterno(*)</label>
-                        <input name="apellidopaterno" type="text" ng-model="persona.apellidoPaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido paterno" required/>
+                        <label>Apellido Paterno(*)</label>
+                        <input name="apellidopaterno" type="text" ng-model="persona.apellidoPaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Paterno" onkeyup="this.value = this.value.toUpperCase();" required/>
                         <div ng-show="formCrearPersonanatural.apellidopaterno.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.apellidopaterno.$error.required">
-                                Ingrese apellido paterno.
+                                Ingrese Apellido Paterno.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.apellidopaterno.$error.minlength">
-                                Minimo 1 caracter.
+                                Minimo 1 Caracter.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.apellidopaterno.$error.maxlength">
-                                Maximo 60 caracteres.
+                                Maximo 60 Caracteres.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.apellidomaterno.$invalid && control.submitted}">
-                        <label>Ap. materno(*)</label>
-                        <input name="apellidomaterno" type="text" ng-model="persona.apellidoMaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido materno" required/>
+                        <label>Apellido Materno(*)</label>
+                        <input name="apellidomaterno" type="text" ng-model="persona.apellidoMaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Materno" onkeyup="this.value = this.value.toUpperCase();" required/>
                         <div ng-show="formCrearPersonanatural.apellidomaterno.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.apellidomaterno.$error.required">
-                                Ingrese apellido materno.
+                                Ingrese Apellido Materno.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.apellidomaterno.$error.minlength">
-                                Minimo 1 caracter.
+                                Minimo 1 Caracter.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.apellidomaterno.$error.maxlength">
-                                Maximo 60 caracteres.
+                                Maximo 60 Caracteres.
                             </p>
                         </div>
                     </div>
@@ -162,23 +162,23 @@
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.nombres.$invalid && control.submitted}">
                         <label>Nombres(*)</label>
-                        <input name="nombres" type="text" ng-model="persona.nombres" ng-minlength="1" ng-maxlength="70" class="form-control" placeholder="Nombres" required  />
+                        <input name="nombres" type="text" ng-model="persona.nombres" ng-minlength="1" ng-maxlength="70" class="form-control" placeholder="Nombres" onkeyup="this.value = this.value.toUpperCase();" required  />
                         <div ng-show="formCrearPersonanatural.nombres.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.nombres.$error.required">
-                                Ingrese nombres.
+                                Ingrese Nombres.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.nombres.$error.minlength">
-                                Minimo 1 caracter.
+                                Minimo 1 Caracter.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.nombres.$error.maxlength">
-                                Maximo 70 caracteres.
+                                Maximo 70 Caracteres.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.fechanacimiento.$invalid && control.submitted}">
-                        <label>Fecha nacimiento(*)</label>
+                        <label>Fecha Nacimiento(*)</label>
                         <div class="input-group">
                             <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="fechaNacimiento" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" required="required">
                     <span class="input-group-btn">
@@ -189,10 +189,10 @@
                         </div>
                         <div ng-show="formCrearPersonanatural.fechanacimiento.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.fechanacimiento.$error.required">
-                                Ingrese fecha.
+                                Ingrese Fecha.
                             </p>
                             <p class="help-block" ng-show="formCrearPersonanatural.fechanacimiento.$invalid">
-                                Fecha no valida.
+                                Fecha no Valida.
                             </p>
                         </div>
                     </div>
@@ -205,18 +205,18 @@
                         <select name="sexo" ng-options="sexo as sexo for sexo in sexos" ng-model="persona.sexo" class="form-control" required></select>
                         <div ng-show="formCrearPersonanatural.sexo.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.sexo.$error.required">
-                                Ingrese sexo.
+                                Ingrese Sexo.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.estadocivil.$invalid && formCrearPersonanatural.submitted}">
-                        <label>Estado civil</label>
+                        <label>Estado Civil</label>
                         <select name="estadocivil" ng-options="estadocivil as estadocivil for estadocivil in estadosciviles" ng-model="persona.estadoCivil" class="form-control"></select>
                         <div ng-show="formCrearPersonanatural.estadocivil.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearPersonanatural.estadocivil.$invalid">
-                                Estado civil invalido.
+                                Estado Civil Invalido.
                             </p>
                         </div>
                     </div>
@@ -227,7 +227,7 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend>Datos adicionales</legend>
+    <legend>Datos Adicionales</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.departamento.$invalid && control.submitted}">
@@ -235,7 +235,7 @@
                 <select name="departamento" ng-options="departamento.codigo as departamento.denominacion for departamento in departamentos" ng-model="ubigeo.departamento" ng-change="changeDepartamento(departamento)" class="form-control"></select>
                 <div ng-show="formCrearPersonanatural.departamento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.departamento.$error.required">
-                        Ingrese departamento.
+                        Ingrese Departamento.
                     </p>
                 </div>
             </div>
@@ -246,7 +246,7 @@
                 <select name="provincia" ng-options="provincia.codigo as provincia.denominacion for provincia in provincias" ng-model="ubigeo.provincia" ng-change="changeProvincia(provincia)" class="form-control"></select>
                 <div ng-show="formCrearPersonanatural.provincia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.provincia.$error.required">
-                        Ingrese provincia.
+                        Ingrese Provincia.
                     </p>
                 </div>
             </div>
@@ -257,7 +257,7 @@
                 <select name="distrito" ng-options="distrito.codigo as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" class="form-control"></select>
                 <div ng-show="formCrearPersonanatural.distrito.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.distrito.$error.required">
-                        Ingrese distrito.
+                        Ingrese Distrito.
                     </p>
                 </div>
             </div>
@@ -267,10 +267,10 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.direccion.$invalid && control.submitted}">
                 <label>Direccion</label>
-                <input name="direccion" type="text" ng-model="persona.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" />
+                <input name="direccion" type="text" ng-model="persona.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" onkeyup="this.value = this.value.toUpperCase();" />
                 <div ng-show="formCrearPersonanatural.direccion.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.direccion.$error.maxlength">
-                        Maximo 70 caracteres.
+                        Maximo 70 Caracteres.
                     </p>
                 </div>
             </div>
@@ -278,10 +278,10 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.referencia.$invalid && control.submitted}">
                 <label>Referencia</label>
-                <input name="referencia" type="text" ng-model="persona.referencia" ng-maxlength="70" class="form-control" placeholder="Referencia" />
+                <input name="referencia" type="text" ng-model="persona.referencia" ng-maxlength="70" class="form-control" placeholder="Referencia" onkeyup="this.value = this.value.toUpperCase();" />
                 <div ng-show="formCrearPersonanatural.referencia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.referencia.$error.maxlength">
-                        Maximo 70 caracteres.
+                        Maximo 70 Caracteres.
                     </p>
                 </div>
             </div>
@@ -289,10 +289,10 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.ocupacion.$invalid && control.submitted}">
                 <label>Ocupacion</label>
-                <input name="ocupacion" type="text" ng-model="persona.ocupacion" ng-maxlength="70" class="form-control" placeholder="Ocupacion" />
+                <input name="ocupacion" type="text" ng-model="persona.ocupacion" ng-maxlength="70" class="form-control" placeholder="Ocupacion" onkeyup="this.value = this.value.toUpperCase();" />
                 <div ng-show="formCrearPersonanatural.nombres.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.ocupacion.$error.maxlength">
-                        Maximo 70 caracteres.
+                        Maximo 70 Caracteres.
                     </p>
                 </div>
             </div>
@@ -305,7 +305,7 @@
                 <input name="telefono" type="text" ng-model="persona.telefono" ng-maxlength="70" class="form-control" placeholder="Telefono" />
                 <div ng-show="formCrearPersonanatural.telefono.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.telefono.$error.maxlength">
-                        Maximo 70 caracteres.
+                        Maximo 70 Caracteres.
                     </p>
                 </div>
             </div>
@@ -316,7 +316,7 @@
                 <input name="celular" type="text" ng-model="persona.celular" ng-maxlength="70" class="form-control" placeholder="Celular" />
                 <div ng-show="formCrearPersonanatural.celular.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.celular.$error.maxlength">
-                        Maximo 70 caracteres.
+                        Maximo 70 Caracteres.
                     </p>
                 </div>
             </div>
@@ -324,13 +324,13 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.email.$invalid && control.submitted}">
                 <label>Email</label>
-                <input name="email" type="email" ng-model="persona.email" ng-maxlength="70" class="form-control" placeholder="correo@dominio.com"/>
+                <input name="email" type="email" ng-model="persona.email" ng-maxlength="70" class="form-control" placeholder="correo@dominio.com" onkeyup="this.value = this.value.toUpperCase();"/>
                 <div ng-show="formCrearPersonanatural.email.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.email.$invalid">
-                        Email incorrecto.
+                        Email Incorrecto.
                     </p>
                     <p class="help-block" ng-show="formCrearPersonanatural.email.$error.maxlength">
-                        Maximo 70 caracteres.
+                        Maximo 70 Caracteres.
                     </p>
                 </div>
             </div>
