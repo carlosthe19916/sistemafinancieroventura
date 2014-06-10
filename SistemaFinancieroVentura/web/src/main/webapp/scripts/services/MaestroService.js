@@ -2,7 +2,11 @@ define(['./module'], function (services) {
     'use strict';
     services.factory("MaestroService",["Restangular",
         function(Restangular){
+            var tipoPersonas= [{"denominacion":"NATURAL"},{"denominacion":"JURIDICA"}];
             return {
+                getTipoPersonas: function(){
+                    return tipoPersonas;
+                },
                 getTipoDocumentoPN: function() {
                     return Restangular.all("tipodocumento/personanatural").getList();
                 },

@@ -6,8 +6,14 @@ define(['../module'], function (controllers) {
 
             focus("firstFocus");
 
-            $scope.control = {"success":false, "inProcess": false, "submitted" : false};
-            $scope.tipoPersonas = [{"denominacion":"NATURAL"},{"denominacion":"JURIDICA"}];
+            $scope.control = {
+                "success":false,
+                "inProcess": false,
+                "submitted" : false,
+                "errorForm" : {"socio" : false, "apoderado" : false}
+            };
+
+            $scope.tipoPersonas = MaestroService.getTipoPersonas();
             $scope.tipoDocumentosSocio = [];
             $scope.tipoDocumentosApoderado = [];
 
@@ -19,38 +25,36 @@ define(['../module'], function (controllers) {
                 "numeroDocumentoApoderado": ""
             };
 
-            $scope.errorNumeroDocumento = {"socio":false,"apoderado":false}
             $scope.$watch("transaccion.numeroDocumentoSocio", function(){
                 if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null){
                     if($scope.transaccion.numeroDocumentoSocio === undefined || $scope.transaccion.numeroDocumentoSocio === null){
-                        $scope.errorNumeroDocumento.socio = true;
+                        $scope.control.errorForm.socio = true;
                     } else if($scope.transaccion.tipoDocumentoSocio.numeroCaracteres != $scope.transaccion.numeroDocumentoSocio.length){
-                        $scope.errorNumeroDocumento.socio = true;
+                        $scope.control.errorForm.socio = true;
                     } else {
-                        $scope.errorNumeroDocumento.socio = false;
+                        $scope.control.errorForm.socio = false;
                     }
                 }
                 if($scope.transaccion.numeroDocumentoSocio === undefined || $scope.transaccion.numeroDocumentoSocio === null || $scope.transaccion.numeroDocumentoSocio === "")
-                    $scope.errorNumeroDocumento.socio = true;
+                    $scope.control.errorForm.socio = true;
             });
             $scope.$watch("transaccion.numeroDocumentoApoderado", function(){
                 if($scope.transaccion.tipoDocumentoApoderado !== undefined && $scope.transaccion.tipoDocumentoApoderado !== null){
                     if($scope.transaccion.numeroDocumentoApoderado === undefined || $scope.transaccion.numeroDocumentoApoderado === null){
-                        $scope.errorNumeroDocumento.apoderado = true;
+                        $scope.control.errorForm.apoderado = true;
                     } else if($scope.transaccion.tipoDocumentoApoderado.numeroCaracteres != $scope.transaccion.numeroDocumentoApoderado.length){
-                        $scope.errorNumeroDocumento.apoderado = true;
+                        $scope.control.errorForm.apoderado = true;
                     } else {
-                        $scope.errorNumeroDocumento.apoderado = false;
+                        $scope.control.errorForm.apoderado = false;
                     }
                 } else {
-                    $scope.errorNumeroDocumento.apoderado = false;
+                    $scope.control.errorForm.apoderado = false;
                 }
             });
 
             MaestroService.getTipoDocumentoPN().then(function(data){
                 $scope.tipoDocumentosApoderado = data;
             });
-
             $scope.tipoPersonaChange = function(){
                 $scope.transaccion.numeroDocumentoSocio = "";
                 if($scope.transaccion.tipoPersona == "NATURAL"){
@@ -67,15 +71,12 @@ define(['../module'], function (controllers) {
             $scope.buscarPersonaSocio = function($event){
                 $scope.control.submitted = true;
 
-                var tipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
-                var numDoc = $scope.transaccion.numeroDocumentoSocio;
-                if(tipoDoc === null || tipoDoc === undefined){
-                    return;
-                }
-                if($scope.errorNumeroDocumento.socio == true){
+                if(angular.isUndefined($scope.transaccion.tipoDocumentoSocio || $scope.control.errorForm.socio == true)){
                     return;
                 }
 
+                var tipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
+                var numDoc = $scope.transaccion.numeroDocumentoSocio;
                 if($scope.transaccion.tipoPersona == "NATURAL"){
                     PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
                         $scope.socio = persona;
@@ -102,26 +103,14 @@ define(['../module'], function (controllers) {
             }
             $scope.buscarPersonaApoderado = function($event){
                 $scope.control.submitted = true;
-                if($scope.transaccion.tipoDocumentoApoderado === undefined || $scope.transaccion.tipoDocumentoApoderado === null){
-                    if($event !== undefined) $event.preventDefault();
-                    return;
-                }
-                if($scope.transaccion.numeroDocumentoApoderado === undefined || $scope.transaccion.numeroDocumentoApoderado === null || $scope.transaccion.numeroDocumentoApoderado === ""){
-                    if($event !== undefined) $event.preventDefault();
+                if(angular.isUndefined($scope.transaccion.tipoDocumentoApoderado
+                    || angular.isUndefined($scope.transaccion.numeroDocumentoApoderado)
+                    || $scope.transaccion.numeroDocumentoApoderado === ""
+                    || $scope.control.errorForm.apoderado == true)){
                     return;
                 }
                 var tipoDoc = $scope.transaccion.tipoDocumentoApoderado.id;
                 var numDoc = $scope.transaccion.numeroDocumentoApoderado;
-                if(tipoDoc === null || tipoDoc === undefined){
-                    alert("Tipo documento no definido");
-                    if($event !== undefined) $event.preventDefault();
-                    return;
-                }
-
-                if($scope.errorNumeroDocumento.apoderado == true){
-                    if($event !== undefined) $event.preventDefault();
-                    return;
-                }
 
                 PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc, numDoc).then(function(persona){
                     $scope.apoderado = persona;
@@ -137,7 +126,7 @@ define(['../module'], function (controllers) {
             }
 
             //transacacion principal
-            $scope.crearSocio = function(){
+            $scope.crearTransaccion = function(){
                 if ($scope.formCrearSocio.$valid) {
                     var tipoPersona = $scope.transaccion.tipoPersona;
                     var idTipoDocumentoSocio = $scope.transaccion.tipoDocumentoSocio.id;
@@ -154,7 +143,7 @@ define(['../module'], function (controllers) {
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         return;
                     }
-                    if($scope.errorNumeroDocumento.socio == true || $scope.errorNumeroDocumento.apoderado == true){
+                    if($scope.control.errorForm.socio == true || $scope.control.errorForm.apoderado == true){
                         return;
                     }
 
@@ -212,6 +201,10 @@ define(['../module'], function (controllers) {
 
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
+            }
+
+            $scope.cancelar = function(){
+                $state.transitionTo("app.socio.buscarSocio");
             }
         }]);
 });

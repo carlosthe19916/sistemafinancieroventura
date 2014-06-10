@@ -39,7 +39,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
@@ -58,7 +57,6 @@ import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
 
 @Path("/socio")
-@Stateless
 public class SocioRESTService {
     
 	@EJB
@@ -203,9 +201,27 @@ public class SocioRESTService {
 	@GET
 	@Path("/filtertext/{filterText}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Set<SocioView> findByFilterText(@PathParam("filterText") @DefaultValue("") String filterText) {		
-		Set<SocioView> list = socioService.findByFilterText(filterText);	
-		return list;
+	public Response findByFilterText(
+			@PathParam("filterText") @DefaultValue("") String filterText, 
+			@QueryParam("mode") String mode) {		
+				
+		if(mode == null){
+			Set<SocioView> list = socioService.findByFilterText(filterText);
+			return Response.status(Response.Status.OK).entity(list).build();	
+		} else {
+			if(mode.equalsIgnoreCase("all")){
+				Set<SocioView> list = socioService.findByFilterText(filterText);
+				return Response.status(Response.Status.OK).entity(list).build();
+			} else {
+				if(mode.equalsIgnoreCase("aporte")){
+					Set<SocioView> list = socioService.findByFilterTextAporte(filterText);					
+					return Response.status(Response.Status.OK).entity(list).build();
+				} else {
+					JsonObject model = Json.createObjectBuilder().add("message", "no hay resultados").build();
+					return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+				}
+			}
+		}
 	}	
 	
 	@POST
