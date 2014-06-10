@@ -36,6 +36,7 @@ define(['./module'], function (services) {
                     };
                 },
                 crear: function(persona){
+                    persona.tipoDocumento = {"id":persona.tipoDocumento.id};
                     return _personanaturalService.post(persona);
                 },
                 crearWithImages: function(persona,foto){
