@@ -46,6 +46,7 @@ define(['../module'], function (controllers) {
                             $scope.control.inProcess = false;
                             $scope.titulares.push(persona);
                             $scope.resetFocus();
+                            $scope.alertsTitulares = [];
                         }, function error(error){
                             $scope.control.inProcess = false;
                             $scope.alertsTitulares = [{ type: 'danger', msg: 'Error: persona no encontrada' }];
