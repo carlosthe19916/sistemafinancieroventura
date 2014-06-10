@@ -87,7 +87,6 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		List<SocioView> list = null;
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
 		list = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), 1000);
-		System.out.println(list.size());
 		return new HashSet<SocioView>(list);
 	}
 	
