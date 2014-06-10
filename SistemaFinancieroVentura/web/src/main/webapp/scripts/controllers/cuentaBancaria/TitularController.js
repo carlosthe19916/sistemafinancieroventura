@@ -1,14 +1,34 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('TitularController', [ "$scope", "MaestroService", "PersonaNaturalService",
-        function($scope, MaestroService, PersonaNaturalService) {
+    controllers.controller('TitularController', [ "$scope", "$location", "$window", "MaestroService", "PersonaNaturalService",
+        function($scope, $location, $window, MaestroService, PersonaNaturalService) {
 
-            $scope.control = {"inProcess": false, "submitted" : false};
+            $scope.control = {
+                "inProcess": false,
+                "submitted" : false,
+                "errorForm" : {"numeroDocumento" : false}
+            };
 
             $scope.titular = {
-                "idTipoDocumento" : undefined,
+                "tipoDocumento" : undefined,
                 "numeroDocumento" : undefined
             }
+
+            $scope.$watch("titular.numeroDocumento", function(){
+                if(!angular.isUndefined($scope.titular.tipoDocumento) && $scope.titular.tipoDocumento !== null){
+                    if(angular.isUndefined($scope.titular.numeroDocumento) || $scope.titular.numeroDocumento === null){
+                        $scope.control.errorForm.numeroDocumento = true;
+                    } else if($scope.titular.tipoDocumento.numeroCaracteres != $scope.titular.numeroDocumento.length){
+                        $scope.control.errorForm.numeroDocumento = true;
+                    } else {
+                        $scope.control.errorForm.numeroDocumento = false;
+                    }
+                } else {
+                    $scope.control.errorForm.numeroDocumento = true;
+                }
+                if(angular.isUndefined($scope.titular.numeroDocumento) || $scope.titular.numeroDocumento === null || $scope.titular.numeroDocumento === "")
+                    $scope.control.errorForm.numeroDocumento = true;
+            });
 
             //$scope.titulares = [];
 
@@ -18,8 +38,10 @@ define(['../module'], function (controllers) {
 
             $scope.addPersona = function() {
                 if($scope.formTitular.$valid){
+                    if($scope.control.errorForm.numeroDocumento)
+                        return;
                     $scope.control.inProcess = true;
-                    PersonaNaturalService.findByTipoNumeroDocumento($scope.titular.idTipoDocumento, $scope.titular.numeroDocumento).then(
+                    PersonaNaturalService.findByTipoNumeroDocumento($scope.titular.tipoDocumento.id, $scope.titular.numeroDocumento).then(
                         function(persona){
                             $scope.control.inProcess = false;
                             $scope.titulares.push(persona);
@@ -43,15 +65,27 @@ define(['../module'], function (controllers) {
 
             $scope.clear = function(){
                 $scope.titular = {
-                    "idTipoDocumento" : undefined,
+                    "tipoDocumento" : undefined,
                     "numeroDocumento" : ""
                 }
                 $scope.resetFocus();
             }
 
+            $scope.nuevaPersona = function(){
+                var idTipoDoc = undefined;
+                if(!angular.isUndefined($scope.titular.tipoDocumento))
+                    idTipoDoc = $scope.titular.tipoDocumento.id;
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.titular.numeroDocumento);
+            }
+
             $scope.resetFocus = function(){
                 angular.element("#cmbTipoDocumentoTitular").focus();
+                $scope.control.errorForm.numeroDocumento = false;
+                $scope.control.submitted = false;
             }
+
 
         }]);
 });

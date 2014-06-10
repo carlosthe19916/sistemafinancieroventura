@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "DEPARTAMENTO", schema = "BDSISTEMAFINANCIERO")
-@XmlRootElement(name = "pais")
+@XmlRootElement(name = "departamento")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Departamento implements java.io.Serializable {
 
