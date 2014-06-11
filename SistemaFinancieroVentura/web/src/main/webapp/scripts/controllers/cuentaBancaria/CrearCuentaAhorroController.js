@@ -222,6 +222,7 @@ define(['../module'], function (controllers) {
                 });
                 modalInstance.result.then(function (result) {
                     $scope.login.result = result;
+                    //angular.element("#txtTasaInteresEdited").focus();
                 }, function () {
                     console.log('Modal dismissed at: ' + new Date());
                 });
@@ -230,8 +231,8 @@ define(['../module'], function (controllers) {
             $scope.setTasaInteres = function($event){
                 if(!angular.isUndefined($scope.login.tasaInteres)){
                     var final = parseFloat($scope.login.tasaInteres.replace(',','.').replace(' ',''));
-                    if(final >= 0 && final <= 1) {
-                        $scope.transaccion.tasaInteres = final;
+                    if(final >= 0 && final <= 100) {
+                        $scope.transaccion.tasaInteres = final / 100;
                         $scope.login.result = false;
                         if(!angular.isUndefined($event))
                             $event.preventDefault();

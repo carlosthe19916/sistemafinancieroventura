@@ -131,7 +131,7 @@
                     </kbd>
                     <div ng-if="login.result" ng-class="{ 'has-error' : formCrearCuenta.tasaInteresEdited.$invalid }">
                         <div class="input-group">
-                            <input type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="login.tasaInteres" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa interes" required/>
+                            <input id="txtTasaInteresEdited" type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="login.tasaInteres" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa interes" required/>
                              <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="setTasaInteres()" >
                                     <span class="glyphicon glyphicon-ok"></span>
