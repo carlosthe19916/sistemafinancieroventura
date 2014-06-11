@@ -16,16 +16,33 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
+import javax.ejb.EJB;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
-@Stateless
+import org.ventura.sistemafinanciero.service.UsuarioService;
+
+
 @Path("/usuario")
 public class UsuarioRESTService {
 
-
+	@EJB
+	private UsuarioService usuarioService;
+	
+	@GET
+	@Path("/authenticate/administrator")
+	public Response authenticateAsAdministrator(@QueryParam("username") String username,
+			@QueryParam("password") String password) {
+		boolean result = usuarioService.authenticateAsAdministrator(username, password);
+		if(result){
+			return Response.status(Response.Status.OK).build();	
+		} else{
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		
+	}
 }

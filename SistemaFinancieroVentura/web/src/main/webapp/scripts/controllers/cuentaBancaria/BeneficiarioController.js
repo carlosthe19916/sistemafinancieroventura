@@ -19,7 +19,7 @@ define(['../module'], function (controllers) {
                 if($scope.formBeneficiario.$valid){
                     var totalActual = $scope.totalPorcentaje();
                     var totalFinal = totalActual + $scope.beneficiario.porcentajeBeneficio;
-                    if(totalFinal != 100){
+                    if(totalFinal <= 100){
                         $scope.beneficiarios.push({
                             "numeroDocumento" : $scope.beneficiario.numeroDocumento,
                             "apellidoPaterno" : $scope.beneficiario.apellidoPaterno,
@@ -30,12 +30,8 @@ define(['../module'], function (controllers) {
                         $scope.clear();
                         $scope.resetFocus();
                     } else {
-                        $scope.alerts = [
-                            { type: 'danger', msg: 'Error: Porcentaje debe ser el 100%' }
-                        ];
-                        $scope.closeAlert = function(index) {
-                            $scope.alerts.splice(index, 1);
-                        };
+                        $scope.alertsBeneficiario = [{ type: 'danger', msg: 'Error: Porcentaje no debe superar el 100%' } ];
+                        $scope.closeAlert = function(index) {$scope.alertsBeneficiario.splice(index, 1);};
                     }
                 } else {
                     $scope.control.submitted = true;
@@ -56,6 +52,7 @@ define(['../module'], function (controllers) {
                     "porcentajeBeneficio" : undefined
                 }
                 $scope.resetFocus();
+                $scope.control.submitted = false;
             }
 
             $scope.resetFocus = function(){

@@ -9,7 +9,7 @@
                <div class="row">
                    <div class="col-sm-4">
                        <div class="form-group" ng-class="{ 'has-error' : formTitular.tipoDocumento.$invalid && control.submitted}">
-                           <label>Tipo documento</label>
+                           <label>Tipo documento(*)</label>
                            <select id="cmbTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="titular.tipoDocumento" class="form-control" required autofocus>
                            </select>
                            <div ng-show="formTitular.tipoDocumento.$invalid && control.submitted">
@@ -21,7 +21,7 @@
                    </div>
                    <div class="col-sm-4">
                        <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formTitular.numeroDocumento.$invalid) && formTitular.numeroDocumento.$dirty}">
-                           <label>Numero documento</label>
+                           <label>Numero documento(*)</label>
                            <div class="input-group">
                                <input type="text" name="numeroDocumento" ng-model="titular.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
                                  <span class="input-group-btn">

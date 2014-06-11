@@ -10,7 +10,8 @@ define([
     './PersonaJuridicaService',
     './SocioService',
     './TasaInteresService',
-    './UsuarioSessionService'
+    './UsuarioSessionService',
+    './UsuarioService'
 ], function () {
 
 });

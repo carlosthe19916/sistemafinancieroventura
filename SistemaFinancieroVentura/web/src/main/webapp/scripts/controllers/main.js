@@ -40,7 +40,8 @@ define([
     './socio/PanelSocioController',
     './socio/BuscarSocioPopUpController',
 
-    './util/CalculadoraController'
+    './util/CalculadoraController',
+    './util/loginPopUpController'
 ], function () {
 
 });

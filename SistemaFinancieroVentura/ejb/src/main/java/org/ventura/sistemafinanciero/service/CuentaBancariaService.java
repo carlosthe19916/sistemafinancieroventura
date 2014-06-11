@@ -28,8 +28,8 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	public Set<CuentaBancariaView> findByFilterTextView(String filterText);
 
 	public BigInteger createCuentaAhorro(BigInteger idAgencia,
-			BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona,
-			int cantRetirantes, List<BigInteger> titulares,
+			BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona, 
+			BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares,
 			List<Beneficiario> beneficiarios) throws RollbackFailureException;
 
 	public BigInteger createCuentaCorriente(BigInteger idAgencia, BigInteger idMoneda,

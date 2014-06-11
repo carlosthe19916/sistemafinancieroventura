@@ -9,4 +9,6 @@ public interface UsuarioService extends AbstractService<Usuario>{
 
 	public Usuario findByUsername(String username);
 
+	public boolean authenticateAsAdministrator(String username, String password);
+
 }

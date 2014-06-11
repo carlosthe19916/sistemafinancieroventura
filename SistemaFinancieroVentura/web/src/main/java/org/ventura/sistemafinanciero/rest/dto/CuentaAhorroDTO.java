@@ -1,6 +1,7 @@
 package org.ventura.sistemafinanciero.rest.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -20,11 +21,12 @@ public class CuentaAhorroDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private BigInteger idMoneda;
 	private TipoPersona tipoPersona;
 	private BigInteger idPersona;
 	private int cantRetirantes;
+	private BigDecimal tasaInteres;
 	private List<BigInteger> titulares;
 	private List<Beneficiario> beneficiarios;
 
@@ -80,6 +82,15 @@ public class CuentaAhorroDTO implements Serializable {
 
 	public void setBeneficiarios(List<Beneficiario> beneficiarios) {
 		this.beneficiarios = beneficiarios;
+	}
+
+	@XmlElement
+	public BigDecimal getTasaInteres() {
+		return tasaInteres;
+	}
+
+	public void setTasaInteres(BigDecimal tasaInteres) {
+		this.tasaInteres = tasaInteres;
 	}
 
 }

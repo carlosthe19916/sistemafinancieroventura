@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$location", "$window", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
-        function($scope, $state, $filter, $location, $window, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
+    controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$location", "$window", "$modal", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
+        function($scope, $state, $filter, $location, $window, $modal, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
 
             $scope.$on('$includeContentLoaded', function(){
                 focus("firstFocus");
@@ -162,6 +162,7 @@ define(['../module'], function (controllers) {
                         "tipoPersona": $scope.transaccion.tipoPersona,
                         "idPersona": $scope.transaccion.persona.id,
                         "cantRetirantes":$scope.transaccion.cantRetirantes,
+                        "tasaInteres" : $scope.transaccion.tasaInteres,
                         "titulares":[],
                         "beneficiarios": ($filter('unique')($scope.beneficiarios))
                     }
@@ -212,5 +213,37 @@ define(['../module'], function (controllers) {
                     alert("Seleccione tipo de persona");
                 }
             }
+
+            $scope.login = {"result":false , "tasaInteres": undefined};
+            $scope.openLoginPopUp = function () {
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/util/loginPopUp.html',
+                    controller: "LoginPopUpController"
+                });
+                modalInstance.result.then(function (result) {
+                    $scope.login.result = result;
+                }, function () {
+                    console.log('Modal dismissed at: ' + new Date());
+                });
+            };
+
+            $scope.setTasaInteres = function($event){
+                if(!angular.isUndefined($scope.login.tasaInteres)){
+                    var final = parseFloat($scope.login.tasaInteres.replace(',','.').replace(' ',''));
+                    if(final >= 0 && final <= 1) {
+                        $scope.transaccion.tasaInteres = final;
+                        $scope.login.result = false;
+                        if(!angular.isUndefined($event))
+                            $event.preventDefault();
+                    } else {
+                        if(!angular.isUndefined($event))
+                            $event.preventDefault();
+                    }
+                }else {
+                    if(!angular.isUndefined($event))
+                        $event.preventDefault();
+                }
+            }
+
         }]);
 });

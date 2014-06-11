@@ -26,10 +26,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "USUARIO", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "usuario")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = Usuario.findByUsername, query = "SELECT u FROM Usuario u WHERE u.username = :username") })
+@NamedQueries({
+		@NamedQuery(name = Usuario.findByUsername, query = "SELECT u FROM Usuario u WHERE u.username = :username"),
+		@NamedQuery(name = Usuario.findByUsernameAndPasswordAndRol, query = "SELECT u FROM Usuario u INNER JOIN u.usuarioRols r WHERE u.username = :username AND u.password = :password AND r.rol.denominacion = :rol") })
 public class Usuario implements java.io.Serializable {
 
-	public final static String findByUsername = "findByUsername";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public final static String findByUsername = "Usuario.findByUsername";
+	public final static String findByUsernameAndPasswordAndRol = "Usuario.findByUsernameAndPasswordAndRol";
 
 	private BigInteger idUsuario;
 	private String username;
@@ -64,7 +72,7 @@ public class Usuario implements java.io.Serializable {
 		this.idUsuario = idUsuario;
 	}
 
-	@Column(name = "USERNAME", nullable = false, length = 60,columnDefinition = "nvarchar2")
+	@Column(name = "USERNAME", nullable = false, length = 60, columnDefinition = "nvarchar2")
 	public String getUsername() {
 		return this.username;
 	}
@@ -73,7 +81,7 @@ public class Usuario implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@Column(name = "PASSWORD", length = 140,columnDefinition = "nvarchar2")
+	@Column(name = "PASSWORD", length = 140, columnDefinition = "nvarchar2")
 	public String getPassword() {
 		return this.password;
 	}
