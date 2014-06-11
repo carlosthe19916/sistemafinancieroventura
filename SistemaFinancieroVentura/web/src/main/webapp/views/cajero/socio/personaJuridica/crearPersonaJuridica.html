@@ -13,7 +13,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipodocumento.$invalid && control.submitted}">
                 <label>Tipo Documento(*)</label>
-                <select name="tipodocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in tipoDocumentosPJ" ng-model="personaJuridica.tipoDocumento.id" class="form-control" required autofocus>
+                <select name="tipodocumento" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipoDocumentosPJ | orderBy : 'id'" ng-model="personaJuridica.tipoDocumento" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipodocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.tipodocumento.$error.required">
@@ -25,7 +25,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numerodocumento.$invalid && control.submitted}">
                 <label>Numero Documento(*)</label>
-                <input name="numerodocumento" type="text" ng-model="personaJuridica.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nº documento" required/>
+                <input name="numerodocumento" type="text" ng-model="personaJuridica.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nï¿½ documento" required/>
                 <div ng-show="formCrearPersonaJuridica.numerodocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.numerodocumento.$error.required">
                         Ingrese Numero de Documento.
@@ -137,7 +137,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.departamento.$invalid && control.submitted}">
                 <label>Departamento</label>
-                <select name="departamento" ng-options="departamento.codigo as departamento.denominacion for departamento in departamentos" ng-model="ubigeo.departamento" ng-change="changeDepartamento(departamento)" class="form-control"></select>
+                <select name="departamento" ng-options="departamento as departamento.denominacion for departamento in departamentos" ng-model="ubigeo.departamento" ng-change="changeDepartamento()" class="form-control"></select>
                 <div ng-show="formCrearPersonaJuridica.departamento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.departamento.$error.required">
                         Ingrese Departamento.
@@ -148,7 +148,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.provincia.$invalid && control.submitted}">
                 <label>Provincia</label>
-                <select name="provincia" ng-options="provincia.codigo as provincia.denominacion for provincia in provincias" ng-model="ubigeo.provincia" ng-change="changeProvincia(provincia)" class="form-control"></select>
+                <select name="provincia" ng-options="provincia as provincia.denominacion for provincia in provincias" ng-model="ubigeo.provincia" ng-change="changeProvincia()" class="form-control"></select>
                 <div ng-show="formCrearPersonaJuridica.provincia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.provincia.$error.required">
                         Ingrese Provincia.
@@ -159,7 +159,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.distrito.$invalid && control.submitted}">
                 <label>Distrito</label>
-                <select name="distrito" ng-options="distrito.codigo as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" class="form-control"></select>
+                <select name="distrito" ng-options="distrito as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" class="form-control"></select>
                 <div ng-show="formCrearPersonaJuridica.distrito.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.distrito.$error.required">
                         Ingrese Distrito.
@@ -311,7 +311,7 @@
 </tab>
 
 <tab heading="Accionistas">
-    <div ng-include="'modules/common/views/personaJuridica/accionista.html'"></div>
+    <div ng-include="'views/cajero/socio/personaJuridica/accionista.html'"></div>
 </tab>
 </tabset>
 </fieldset>
