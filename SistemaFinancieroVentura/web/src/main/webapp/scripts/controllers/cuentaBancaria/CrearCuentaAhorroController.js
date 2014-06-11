@@ -48,7 +48,7 @@ define(['../module'], function (controllers) {
             });
 
             $scope.$watch("transaccion.cantRetirantes", function(){
-                if($scope.titularesFinal.length < $scope.transaccion.cantRetirantes) $scope.control.errorForm.cantRetirantes = true;
+                if($scope.titularesFinal.length < $scope.transaccion.cantRetirantes || $scope.transaccion.cantRetirantes < 1) $scope.control.errorForm.cantRetirantes = true;
                 else $scope.control.errorForm.cantRetirantes = false;
             });
             $scope.$watch("titularesFinal", function(){
