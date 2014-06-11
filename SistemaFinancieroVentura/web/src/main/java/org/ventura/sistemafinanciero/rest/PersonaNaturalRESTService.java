@@ -56,7 +56,6 @@ public class PersonaNaturalRESTService {
 	@Produces({ "application/xml", "application/json" })
 	public Response create(PersonaNatural personaNatural) {
 		try {
-			System.out.println(personaNatural.getUbigeo());
 			BigInteger idPersona = personanaturalService.crear(personaNatural);
 			JsonObject model = Json.createObjectBuilder()
 					.add("message", "persona creada")

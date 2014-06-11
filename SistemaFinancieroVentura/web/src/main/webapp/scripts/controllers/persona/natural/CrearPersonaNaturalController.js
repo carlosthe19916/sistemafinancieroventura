@@ -53,6 +53,8 @@ define(['../../module'], function (controllers) {
                 }
                 if(angular.isUndefined($scope.persona.numeroDocumento) || $scope.persona.numeroDocumento === "")
                     $scope.control.errorForm.numeroDocumento = true;
+                else
+                    $scope.control.errorForm.numeroDocumento = false;
             });
 
             $scope.dateOptions = {
