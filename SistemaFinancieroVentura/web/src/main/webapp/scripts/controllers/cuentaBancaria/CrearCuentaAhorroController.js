@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$location", "$window", "$modal", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
-        function($scope, $state, $filter, $location, $window, $modal, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
+    controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$location", "$window","$timeout", "$modal", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
+        function($scope, $state, $filter, $location, $window,$timeout, $modal, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
 
             $scope.$on('$includeContentLoaded', function(){
                 focus("firstFocus");
@@ -222,7 +222,9 @@ define(['../module'], function (controllers) {
                 });
                 modalInstance.result.then(function (result) {
                     $scope.login.result = result;
-                    //angular.element("#txtTasaInteresEdited").focus();
+                    $timeout(function() {
+                        angular.element("#txtTasaInteresEdited").focus();
+                    }, 100);
                 }, function () {
                     console.log('Modal dismissed at: ' + new Date());
                 });
@@ -234,6 +236,7 @@ define(['../module'], function (controllers) {
                     if(final >= 0 && final <= 100) {
                         $scope.transaccion.tasaInteres = final / 100;
                         $scope.login.result = false;
+                        angular.element("#btnGuardar").focus();
                         if(!angular.isUndefined($event))
                             $event.preventDefault();
                     } else {

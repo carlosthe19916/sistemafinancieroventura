@@ -124,12 +124,12 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label>Tasa de interes
-                        <button type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                        <button ng-show="!login.result" type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                     </label>
                     <kbd ng-show="!login.result" style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;padding-left: 10px;">
                         <span ng-bind="(transaccion.tasaInteres * 100)| number : 3"/>
                     </kbd>
-                    <div ng-if="login.result" ng-class="{ 'has-error' : formCrearCuenta.tasaInteresEdited.$invalid }">
+                    <div ng-if="login.result" ng-class="{ 'has-error' : formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty}">
                         <div class="input-group">
                             <input id="txtTasaInteresEdited" type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="login.tasaInteres" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa interes" required/>
                              <span class="input-group-btn">
@@ -138,7 +138,7 @@
                                 </button>
                              </span>
                         </div>
-                        <div ng-show="formCrearCuenta.tasaInteresEdited.$invalid">
+                        <div ng-show="formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty">
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.required">
                                 Ingrese tasa.
                             </p>
@@ -257,7 +257,7 @@
         </div>
     </div>
 </fieldset>
-<button type="submit" class="btn btn-primary">Guardar</button>
+<button id="btnGuardar" type="submit" class="btn btn-primary">Guardar</button>
 <button type="button" class="btn btn-default">Cancelar</button>
 </ng-form>
 </form>
