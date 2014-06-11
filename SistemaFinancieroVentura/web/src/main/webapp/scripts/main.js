@@ -119,6 +119,13 @@ require.onResourceLoad = function (context, map, depMaps) {
         if (map && map.name) { // we will add one dot ('.') and a currently loaded module name to the indicator
             //loadingStatusEl.innerHTML = loadingStatusEl.innerHTML += '.'; //add one more dot character
             loadingModuleNameEl.innerHTML = map.name + (map.url ? ' at ' + map.url : '');
+            //loadingStatusEl.style.width = loadingStatusEl.style.width + 20;
+            //var total = (parseInt(loadingStatusEl.style["width"].substring(0, loadingStatusEl.style["width"].length - 1))  + 50 );
+            //if(total > 100)
+            //    total = 100
+            //console.log(total);
+            //loadingStatusEl.style["width"] = total + "%";
+            loadingStatusEl.style["width"] = "100%";
         }
     } else {
 
