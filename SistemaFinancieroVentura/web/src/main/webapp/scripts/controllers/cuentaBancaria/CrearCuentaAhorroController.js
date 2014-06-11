@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$window", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
-        function($scope, $state, $filter, $window, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
+    controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$location", "$window", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
+        function($scope, $state, $filter, $location, $window, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
 
             $scope.$on('$includeContentLoaded', function(){
                 focus("firstFocus");
@@ -194,9 +194,19 @@ define(['../module'], function (controllers) {
             $scope.crearPersona = function(){
                 if($scope.transaccion.tipoPersona !== undefined && $scope.transaccion.tipoPersona !== null){
                     if($scope.transaccion.tipoPersona == "NATURAL"){
-                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural");
+                        var idTipoDoc = undefined;
+                        if(!angular.isUndefined($scope.transaccion.tipoDocumento))
+                            idTipoDoc = $scope.transaccion.tipoDocumento.id;
+                        var baseLen = $location.absUrl().length - $location.url().length;
+                        var url = $location.absUrl().substring(0, baseLen);
+                        $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
                     } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
-                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaJuridica");
+                        var idTipoDoc = undefined;
+                        if(!angular.isUndefined($scope.transaccion.tipoDocumento))
+                            idTipoDoc = $scope.transaccion.tipoDocumento.id;
+                        var baseLen = $location.absUrl().length - $location.url().length;
+                        var url = $location.absUrl().substring(0, baseLen);
+                        $window.open(url + "/app/socio/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
                     }}
                 } else{
                     alert("Seleccione tipo de persona");
