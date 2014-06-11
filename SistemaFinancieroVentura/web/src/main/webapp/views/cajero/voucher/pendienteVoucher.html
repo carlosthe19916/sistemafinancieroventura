@@ -3,31 +3,40 @@
         <div class="col-md-6" id="voucher">
             <div>
                 <fieldset>
-                    <legend>Pendiente</legend>
+                    <legend>Pendiente (Voucher)</legend>
                 </fieldset>
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">Voucher</div>
-
+                    <div class="panel-heading" style="text-align: center; font-weight: bold;">
+                    	<label>C.A.C. CAJA VENTURA</label><br />
+                    	<label>PENDIENTE CAJA</label>
+                    </div>
                     <!-- Table -->
-                    <table class="table">
+                    <table class="table" style="">
                         <tbody>
                         <tr>
-                            <td>Fecha:</td>
-                            <td><span ng-bind="pendiente.fecha | date : 'dd/MM/yyyy'"/> </td>
-                            <td>Hora:</td>
-                            <td><span ng-bind="pendiente.hora | date : 'HH:mm:ss'"/></td>
+                            <td>AGENCIA:</td>
+                            <td>
+                            	<span ng-bind="pendiente."/> 
+                            </td>
                         </tr>
                         <tr>
-                            <td>Tipo pendiente:</td>
+                            <td>FECHA:</td>
+                            <td>
+                            	<span ng-bind="pendiente.fecha | date : 'dd/MM/yyyy'"/> 
+                            	<span ng-bind="pendiente.hora | date : 'HH:mm:ss'"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TIPO PENDIENTE:</td>
                             <td><span ng-bind="pendiente.tipoPendiente"/> </td>
                         </tr>
                         <tr>
-                            <td>Moneda:</td>
+                            <td>MONEDA:</td>
                             <td><span ng-bind="pendiente.moneda.denominacion"/> </td>
                         </tr>
                         <tr>
-                            <td>Monto:</td>
+                            <td>MONTO:</td>
                             <td><span ng-bind="pendiente.monto | currency : pendiente.moneda.simbolo"/> </td>
                         </tr>
                         </tbody>
