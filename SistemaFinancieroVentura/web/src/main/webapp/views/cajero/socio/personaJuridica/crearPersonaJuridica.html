@@ -252,7 +252,14 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoRepresentante.$dirty)}">
                 <label>Numero Documento(*)</label>
-                <input name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="representanteLegal.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nro documento" required/>
+                <div class="input-group">
+                    <input id="txtNumeroDocumentoRepresentanteLegal" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="representanteLegal.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nro documento" required/>
+                      <span class="input-group-btn">
+                       <button type="button" class="btn btn-default" ng-click="buscarRepresentanteLegal()" >
+                           <span class="glyphicon glyphicon-search"></span>
+                       </button>
+                     </span>
+                </div>
                 <div ng-show="formCrearPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoRepresentante.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.numeroDocumentoRepresentante.$error.required">
                         Ingrese Numero de Documento.
@@ -275,8 +282,8 @@
         <div class="col-sm-4">
             <div class="form-group">
                 <label>&nbsp;</label>
-                <div class="input-group">
-                    <button type="button" ng-click="buscarRepresentanteLegal()" class="btn btn-primary">Buscar</button>
+                <div>
+                    <button type="button" class="btn btn-link" ng-click="nuevaPersonaRepresentanteLegal()">Registrar persona</button>
                 </div>
             </div>
         </div>

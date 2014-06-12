@@ -45,7 +45,7 @@
             <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formCrearCuenta.numeroDocumento.$invalid) && (formCrearCuenta.numeroDocumento.$dirty || control.submitted)}">
                 <label>Numero documento(*)</label>
                 <div class="input-group">
-                    <input type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                    <input id="txtNumeroDocumentoSocio" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
                      <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="buscarPersonaSocio()" >
                             <span class="glyphicon glyphicon-search"></span>

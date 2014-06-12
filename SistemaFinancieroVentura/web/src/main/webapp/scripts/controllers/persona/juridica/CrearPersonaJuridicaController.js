@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearPersonaJuridicaController', ["$scope", "$state","$window","$timeout", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService",
-        function($scope, $state,$window,$timeout, MaestroService, PersonaNaturalService, PersonaJuridicaService) {
+    controllers.controller('CrearPersonaJuridicaController', ["$scope", "$state","$location", "$window","$timeout", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService",
+        function($scope, $state,$location, $window,$timeout, MaestroService, PersonaNaturalService, PersonaJuridicaService) {
             $scope.control = {"success":false, "inProcess": false, "submitted" : false};
             $scope.personaJuridica = PersonaJuridicaService.getModel();
             $scope.representanteLegal = PersonaNaturalService.getModel();
@@ -131,6 +131,16 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
+            }
+
+            $scope.nuevaPersonaRepresentanteLegal = function(){
+                var idTipoDoc = undefined;
+                if(!angular.isUndefined($scope.representanteLegal.tipoDocumento))
+                    idTipoDoc = $scope.representanteLegal.tipoDocumento.id;
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.representanteLegal.numeroDocumento);
+                $timeout(function() {angular.element("#txtNumeroDocumentoRepresentanteLegal").focus();}, 100);
             }
 
             $scope.$watch("personaJuridica.tipoDocumento", function(){

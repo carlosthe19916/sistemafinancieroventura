@@ -203,6 +203,7 @@ define(['../module'], function (controllers) {
                         var baseLen = $location.absUrl().length - $location.url().length;
                         var url = $location.absUrl().substring(0, baseLen);
                         $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
+                        $timeout(function() {angular.element("#txtNumeroDocumentoSocio").focus();}, 100);
                     } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
                         var idTipoDoc = undefined;
                         if(!angular.isUndefined($scope.transaccion.tipoDocumento))
@@ -210,6 +211,7 @@ define(['../module'], function (controllers) {
                         var baseLen = $location.absUrl().length - $location.url().length;
                         var url = $location.absUrl().substring(0, baseLen);
                         $window.open(url + "/app/socio/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
+                        $timeout(function() {angular.element("#txtNumeroDocumentoSocio").focus();}, 100);
                     }}
                 } else{
                     alert("Seleccione tipo de persona");
