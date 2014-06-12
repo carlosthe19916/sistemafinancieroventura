@@ -30,13 +30,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.dto.CajaCierreMoneda;
 import org.ventura.sistemafinanciero.entity.dto.ResumenOperacionesCaja;
-import org.ventura.sistemafinanciero.service.CajaService;
 import org.ventura.sistemafinanciero.service.HistorialCajaService;
-import org.ventura.sistemafinanciero.service.TrabajadorService;
-import org.ventura.sistemafinanciero.service.UsuarioService;
 
 @Path("/historialcaja")
 @Stateless
