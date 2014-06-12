@@ -9,7 +9,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.numeroDocumento.$invalid && control.submitted}">
                     <label>Numero documento</label>
-                    <input id="txtNumeroDocumentoBeneficiario" type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero documento" autofocus/>
+                    <input id="txtNumeroDocumentoBeneficiario" type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero documento" capitalize autofocus/>
                     <div ng-show="formBeneficiario.numeroDocumento.$invalid && control.submitted">
                         <p class="help-block" ng-show="formCrearSocio.numeroDocumento.$error.maxlength">
                             Maximo 15 caracteres.
@@ -20,7 +20,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.apellidoPaterno.$invalid && control.submitted}">
                     <label>Ap. paterno(*)</label>
-                    <input type="text" name="apellidoPaterno" ng-model="beneficiario.apellidoPaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido paterno" required/>
+                    <input type="text" name="apellidoPaterno" ng-model="beneficiario.apellidoPaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido paterno" capitalize required/>
                     <div ng-show="formBeneficiario.apellidoPaterno.$invalid && control.submitted">
                         <p class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.required">
                             Ingrese apellido paterno.
@@ -37,7 +37,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.apellidoMaterno.$invalid && control.submitted}">
                     <label>Ap. materno(*)</label>
-                    <input type="text" name="apellidoMaterno" ng-model="beneficiario.apellidoMaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido materno" required/>
+                    <input type="text" name="apellidoMaterno" ng-model="beneficiario.apellidoMaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido materno" capitalize required/>
                     <div ng-show="formBeneficiario.apellidoMaterno.$invalid && control.submitted">
                         <p class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.required">
                             Ingrese numero documento valido.
@@ -56,7 +56,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.nombres.$invalid && control.submitted}">
                     <label>Nombres(*)</label>
-                    <input type="text" name="nombres" ng-model="beneficiario.nombres" ng-minlength="1" ng-maxlength="50" class="form-control" placeholder="Nombres" required/>
+                    <input type="text" name="nombres" ng-model="beneficiario.nombres" ng-minlength="1" ng-maxlength="50" class="form-control" placeholder="Nombres" capitalize required/>
                     <div ng-show="formBeneficiario.nombres.$invalid && control.submitted">
                         <p class="help-block" ng-show="formBeneficiario.nombres.$error.required">
                             Ingrese numero documento valido.
@@ -94,7 +94,7 @@
                 <div class="form-group">
                     <label>&nbsp;</label>
                     <div>
-                        <button type="submit" class="btn btn-primary">AÃ±adir</button>
+                        <button type="submit" class="btn btn-primary">Añadir</button>
                         <button type="button" class="btn btn-default" ng-click="clear()">Limpiar</button>
                     </div>
                 </div>

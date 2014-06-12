@@ -311,18 +311,18 @@
                 <table class="table" ng-show="representanteLegal.apellidoPaterno">
                     <tbody>
                     <tr>
-                        <td>Documento:</td>
+                        <td colspan="1" style="font-weight: bold;">Documento:</td>
                         <td colspan="3"><span ng-bind-template="{{representanteLegal.tipoDocumento.abreviatura}}/{{representanteLegal.numeroDocumento}}"></span></td>
                     </tr>
                     <tr>
-                        <td>Ap. y Nombres:</td>
+                        <td colspan="1" style="font-weight: bold;">Apellidos y Nombres:</td>
                         <td colspan="3"><span ng-bind-template="{{representanteLegal.apellidoPaterno}} {{representanteLegal.apellidoMaterno}}, {{representanteLegal.nombres}}"></span></td>
                     </tr>
                     <tr>
-                        <td>F. Nacimiento:</td>
-                        <td><span ng-bind="representanteLegal.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
-                        <td>Sexo:</td>
-                        <td><span ng-bind="representanteLegal.sexo"></span></td>
+                        <td colspan="1" style="width: 170px; font-weight: bold;">Fecha de Nacimiento:</td>
+                        <td colspan="1"><span ng-bind="representanteLegal.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                        <td colspan="1" style="font-weight: bold;">Sexo:</td>
+                        <td colspan="1"><span ng-bind="representanteLegal.sexo"></span></td>
                     </tr>
                     </tbody>
                 </table>
