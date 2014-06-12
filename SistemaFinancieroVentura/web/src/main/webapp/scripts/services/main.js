@@ -11,7 +11,8 @@ define([
     './SocioService',
     './TasaInteresService',
     './UsuarioSessionService',
-    './UsuarioService'
+    './UsuarioService',
+    './PendienteCajaService'
 ], function () {
 
 });

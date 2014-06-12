@@ -1,17 +1,15 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('VoucherPendienteController', ["$scope", "$state", "$filter", "CajaSessionService",
-        function($scope, $state, $filter, CajaSessionService) {
+    controllers.controller('VoucherPendienteController', ["$scope", "$state", "$filter", "PendienteCajaService",
+        function($scope, $state, $filter, PendienteCajaService) {
 
-            CajaSessionService.getPendiente($scope.id).then(
-                function(pendiente){
-                    $scope.pendiente = pendiente;
-                },
-                function error(error){
-                    alert("Pendiente no encontrado");
-                }
-            );
-
+    	PendienteCajaService.getVoucherPendienteCaja($scope.id).then(
+                 function(pendiente){
+                     $scope.pendiente = pendiente;
+                 }
+         );    
+    		
+    		
             $scope.cancelar = function(){
 
             };
@@ -27,10 +25,12 @@ define(['../module'], function (controllers) {
                 																				// \t tabulador
                 qz.append("\x1B\x21\x01");														//texto normal (no negrita)
                 qz.append(String.fromCharCode(27) + "\x61" + "\x30");							//texto a la izquierda
-                qz.append("Fecha:" + "\t" +($filter('date')($scope.pendiente.fecha, 'dd/MM/yyyy'))+ " " + ($filter('date')($scope.pendiente.hora, 'HH:mm:ss')) + "\r\n");
-                qz.append("Tipo:" + "\t" +($scope.pendiente.tipoPendiente) + "\r\n");
-                qz.append("Moneda:" + "\t" +($scope.pendiente.moneda.denominacion) + "\r\n");
-                qz.append("Monto:" + "\t" +($filter('currency')($scope.pendiente.monto, $scope.pendiente.moneda.simbolo)) + "\r\n");
+                
+                qz.append("AGENCIA:" + "\t" +($scope.pendiente.agenciaAbreviatura) + "\r\n");
+                qz.append("FECHA:" + "\t" +($filter('date')($scope.pendiente.fecha, 'dd/MM/yyyy'))+ " " + ($filter('date')($scope.pendiente.hora, 'HH:mm:ss')) + "\r\n");
+                qz.append("TIPO PENDIENTE:" + "\t" +($scope.pendiente.tipoPendiente) + "\r\n");
+                qz.append("MONEDA:" + "\t" +($scope.pendiente.moneda.denominacion) + "\r\n");
+                qz.append("MONTO:" + "\t" +($filter('currency')($scope.pendiente.monto, $scope.pendiente.moneda.simbolo)) + "\r\n");
                 
                 qz.append("\x1D\x56\x41");														//cortar papel
                 qz.append("\x1B\x40");

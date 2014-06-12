@@ -49,6 +49,7 @@ public class PendienteCaja implements java.io.Serializable {
 	private Date fecha;
 	private Date hora;
 	private TipoPendiente tipoPendiente;
+	private String trabajador;
 
 	public PendienteCaja() {
 	}
@@ -164,5 +165,14 @@ public class PendienteCaja implements java.io.Serializable {
 	public void setTipoPendiente(TipoPendiente tipoPendiente) {
 		this.tipoPendiente = tipoPendiente;
 	}
+	
+	@XmlElement
+	@Column(name = "TRABAJADOR", nullable = false, columnDefinition = "nvarchar2")
+	public String getTrabajador() {
+		return this.trabajador;
+	}
 
+	public void setTrabajador(String trabajador) {
+		this.trabajador = trabajador;
+	}
 }

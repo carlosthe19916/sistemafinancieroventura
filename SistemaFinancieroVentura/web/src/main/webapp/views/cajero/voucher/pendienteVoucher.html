@@ -5,20 +5,30 @@
                 <fieldset>
                     <legend>Pendiente (Voucher)</legend>
                 </fieldset>
-                <div class="panel panel-default">
+                <div class="panel panel-default" style="width: 350px;">
                     <!-- Default panel contents -->
                     <div class="panel-heading" style="text-align: center; font-weight: bold;">
                     	<label>C.A.C. CAJA VENTURA</label><br />
                     	<label>PENDIENTE CAJA</label>
                     </div>
                     <!-- Table -->
-                    <table class="table" style="">
+                    <table class="table">
                         <tbody>
                         <tr>
                             <td>AGENCIA:</td>
                             <td>
-                            	<span ng-bind="pendiente."/> 
+                            	<span ng-bind="pendiente.agenciaAbreviatura"/>
                             </td>
+                        </tr>
+                        <tr>
+                            <td>ID PENDIENTE:</td>
+                            <td>
+                            	<span ng-bind="pendiente.idPendienteCaja"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TIPO PENDIENTE:</td>
+                            <td><span ng-bind="pendiente.tipoPendiente"/> </td>
                         </tr>
                         <tr>
                             <td>FECHA:</td>
@@ -28,16 +38,39 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>TIPO PENDIENTE:</td>
-                            <td><span ng-bind="pendiente.tipoPendiente"/> </td>
-                        </tr>
-                        <tr>
                             <td>MONEDA:</td>
                             <td><span ng-bind="pendiente.moneda.denominacion"/> </td>
                         </tr>
                         <tr>
                             <td>MONTO:</td>
                             <td><span ng-bind="pendiente.monto | currency : pendiente.moneda.simbolo"/> </td>
+                        </tr>
+                        <tr>
+                            <td>CAJA:</td>
+                            <td>
+                            	<span ng-bind="pendiente.cajaDenominacion"/>
+                            	<span ng-bind="(pendiente.cajaAbreviatura)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CAJERO:</td>
+                            <td>
+                            	<span ng-bind="pendiente.trabajador"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OBSERVACION:</td>
+                            <td>
+                            	<span ng-bind="pendiente.observacion"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" style="text-align: center;">________________</td>
+                            <td colspan="1" style="text-align: center;">_____________</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" style="text-align: center;">JEFE DE CAJA</td>
+                            <td colspan="1" style="text-align: center;">CAJERO</td>
                         </tr>
                         </tbody>
                     </table>
