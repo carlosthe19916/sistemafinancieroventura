@@ -66,6 +66,21 @@ public class TasaInteresRESTService {
 	}
 	
 	@GET
+	@Path("/corriente/{idMoneda}")
+	@Produces({ "application/xml", "application/json" })
+	public Response findTasaCorrienteByMoneda(@PathParam("idMoneda")BigInteger idMoneda) {				
+		BigDecimal result = tasaInteresService.getTasaInteresCuentaCorriente(idMoneda);
+		if(result != null){
+			JsonObject model = Json.createObjectBuilder().add("valor", result).build();			
+			return Response.status(Response.Status.OK).entity(model).build();
+		}			
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "No se encontró resultados").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}			
+	}
+	
+	@GET
 	@Path("/plazoFijo/{idMoneda}")
 	@Produces({ "application/xml", "application/json" })
 	public Response findTasaPlazoFijoByMoneda(@PathParam("idMoneda")BigInteger idMoneda) {				

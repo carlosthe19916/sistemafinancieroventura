@@ -32,10 +32,10 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 			BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares,
 			List<Beneficiario> beneficiarios) throws RollbackFailureException;
 
-	public BigInteger createCuentaCorriente(BigInteger idAgencia, BigInteger idMoneda,
-			TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes,
-			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
-			throws RollbackFailureException;
+	public BigInteger createCuentaCorriente(BigInteger idAgencia, 
+			BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona,
+			BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares, 
+			List<Beneficiario> beneficiarios) throws RollbackFailureException;
 
 	public BigInteger createCuentaPlazoFijo(BigInteger idAgencia, BigInteger idMoneda,
 			TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes,

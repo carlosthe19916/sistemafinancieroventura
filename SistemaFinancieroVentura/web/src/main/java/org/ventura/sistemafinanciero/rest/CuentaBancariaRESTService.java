@@ -241,12 +241,13 @@ public class CuentaBancariaRESTService {
 				break;
 			}
 														
-			BigInteger idMoneda = cuenta.getIdMoneda();			
+			BigInteger idMoneda = cuenta.getIdMoneda();		
+			BigDecimal tasaInteres = cuenta.getTasaInteres();
 			int cantRetirantes = cuenta.getCantRetirantes();
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 			
-			BigInteger idCuenta = cuentaBancariaService.createCuentaCorriente(agencia.getIdAgencia(), idMoneda, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);			
+			BigInteger idCuenta = cuentaBancariaService.createCuentaCorriente(agencia.getIdAgencia(), idMoneda, tasaInteres, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);			
 			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {
