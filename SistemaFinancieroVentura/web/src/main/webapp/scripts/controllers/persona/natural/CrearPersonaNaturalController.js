@@ -38,7 +38,7 @@ define(['../../module'], function (controllers) {
             }
 
             //recuperando parametros de url
-            $scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
+            //$scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
             $scope.persona.numeroDocumento = $scope.params.numeroDocumento;
 
             $scope.$watch("persona.numeroDocumento", function(){
@@ -74,10 +74,9 @@ define(['../../module'], function (controllers) {
 
             MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
                 $scope.tipodocumentos = tipodocumentos;
-                $scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
-                if($scope.persona.tipoDocumento.id !== undefined && $scope.persona.tipoDocumento.id !== null){
+                if(!angular.isUndefined($scope.params.idTipoDocumento)){
                     for(var i = 0; i < $scope.tipodocumentos.length; i++){
-                        if($scope.tipodocumentos[i].id == $scope.persona.tipoDocumento.id)
+                        if($scope.tipodocumentos[i].id == $scope.params.idTipoDocumento)
                             $scope.persona.tipoDocumento = $scope.tipodocumentos[i];
                     }
                 }
