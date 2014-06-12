@@ -1,8 +1,8 @@
 define(['./module'], function (controllers) {
     'use strict';
 
-    controllers.controller('MainController', [ "$scope", "hotkeys", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService",
-        function($scope, hotkeys,  CajaSessionService, UsuarioSessionService, AgenciaSessionService) {
+    controllers.controller('MainController', [ "$scope", "$window", "hotkeys", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService","HotKeysFunctionsService",
+        function($scope, $window, hotkeys,  CajaSessionService, UsuarioSessionService, AgenciaSessionService, HotKeysFunctionsService) {
 
             $scope.cajaSession = {
                 "denominacion":"undefined",
@@ -42,28 +42,11 @@ define(['./module'], function (controllers) {
                 description: 'Guardar',
                 allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
                 callback: function(event, hotkey) {
-                    $scope.crearTransaccion();
+                    var crearTransaccion = HotKeysFunctionsService.getEnterFunction();
+                    crearTransaccion();
                     event.preventDefault();
                 }
             });
-
-            hotkeys.add({
-                combo: 'ctrl+esc',
-                description: 'Cancelar',
-                allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                callback: function(event, hotkey) {
-                    $scope.cancelar();
-                    event.preventDefault();
-                }
-            });
-
-            $scope.crearTransaccion = function(){
-                console.log("creando transaccion");
-            }
-
-            $scope.cancelar = function(){
-                console.log("cancelar");
-            }
 
         }]);
 });

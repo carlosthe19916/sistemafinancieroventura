@@ -142,7 +142,7 @@ define(['../module'], function (controllers) {
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                     },function error(error){
                         $scope.socioJuridico = undefined;
-                        $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
+                        $scope.alerts = [{ type: "danger", msg: "Persona no encontrada."}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                     });
                 }}
@@ -187,6 +187,7 @@ define(['../module'], function (controllers) {
                             $scope.control.success = false;
                             $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $window.scrollTo(0,0);
                         }
                     );
                 } else {

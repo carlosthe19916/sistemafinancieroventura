@@ -1,8 +1,8 @@
 define(['../../module'], function (controllers) {
     'use strict';
 
-    controllers.controller('AccionistaController', [ "$scope", "$location", "$window","$filter", "MaestroService", "PersonaNaturalService",
-        function($scope, $location, $window,$filter, MaestroService, PersonaNaturalService) {
+    controllers.controller('AccionistaController', [ "$scope", "$location", "$window", "$timeout", "$filter", "MaestroService", "PersonaNaturalService",
+        function($scope, $location, $window,$timeout, $filter, MaestroService, PersonaNaturalService) {
 
             $scope.control = {"inProcess": false, "submitted" : false};
 
@@ -59,6 +59,7 @@ define(['../../module'], function (controllers) {
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
                 $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.accionista.numeroDocumento);
+                $timeout(function() {angular.element("#txtNumeroDocumentoAccionista").focus();}, 100);
             }
 
             $scope.$watch("accionista.numeroDocumento", function(){

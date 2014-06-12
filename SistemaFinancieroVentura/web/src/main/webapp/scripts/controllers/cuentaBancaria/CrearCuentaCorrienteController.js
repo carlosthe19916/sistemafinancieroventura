@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearCuentaCorrienteController', [ "$scope", "$state", "$filter", "$window", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
-        function($scope, $state, $filter, $window, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
+    controllers.controller('CrearCuentaCorrienteController', [ "$scope", "$state","$location", "$filter", "$window","$timeout", "focus","$modal", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
+        function($scope, $state,$location, $filter, $window,$timeout, focus,$modal, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
 
             $scope.$on('$includeContentLoaded', function(){
                 focus("firstFocus");
@@ -38,29 +38,17 @@ define(['../module'], function (controllers) {
             });
 
             $scope.transaccion = {
-                "idMoneda" : undefined,
+                "moneda" : undefined,
                 "tasaInteres" : undefined,
                 "monto" : undefined,
-                "total" : 0.00,
                 "tipoPersona" : undefined,
-                "idTipoDocumento" : undefined,
+                "tipoDocumento" : undefined,
                 "numeroDocumento" : undefined,
-                "idPersona" : undefined,
+                "persona" : undefined,
                 "cantRetirantes" : 1,
-                "periodo" : undefined,
                 "titulares" : {},
                 "beneficiarios" : {}
             };
-
-            $scope.$watch('transaccion.tasaInteres', function () {
-                $scope.transaccion.total = TasaInteresService.getInteresGenerado($scope.transaccion.tasaInteres, $scope.transaccion.periodo, $scope.transaccion.monto);
-            });
-            $scope.$watch('transaccion.monto', function () {
-                $scope.transaccion.total = TasaInteresService.getInteresGenerado($scope.transaccion.tasaInteres, $scope.transaccion.periodo, $scope.transaccion.monto);
-            });
-            $scope.$watch('transaccion.periodo', function () {
-                $scope.transaccion.total = TasaInteresService.getInteresGenerado($scope.transaccion.tasaInteres, $scope.transaccion.periodo, $scope.transaccion.monto);
-            });
 
             $scope.tabCuentaSelected = function(){
                 angular.element("#cmbTipoPersona").focus();
@@ -98,8 +86,8 @@ define(['../module'], function (controllers) {
 
             $scope.actualizarTasaInteres = function($event){
                 $scope.control.submitted = true;
-                if($scope.transaccion.idMoneda !== undefined && $scope.transaccion.idMoneda) {
-                    TasaInteresService.getTasaCuentaCorriente($scope.transaccion.idMoneda).then(function(data){
+                if($scope.transaccion.moneda !== undefined && $scope.transaccion.moneda) {
+                    TasaInteresService.getTasaCuentaCorriente($scope.transaccion.moneda.id).then(function(data){
                         $scope.transaccion.tasaInteres = data.valor;
                     });
                 }
@@ -108,37 +96,36 @@ define(['../module'], function (controllers) {
             }
 
             $scope.buscarPersonaSocio = function($event){
-                var tipoDoc = $scope.transaccion.idTipoDocumento;
-                var numDoc = $scope.transaccion.numeroDocumento;
-                if(tipoDoc === null || tipoDoc === undefined){
-                    alert("Tipo documento no definido");
-                    return;
-                }
-                if(numDoc === null || numDoc === undefined){
-                    alert("Numero documento no definido");
-                    return;
-                }
-                if($scope.transaccion.tipoPersona == "NATURAL"){
-                    $scope.socioJuridico = undefined;
-                    PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
-                        $scope.socioNatural = persona;
-                    },function error(error){
-                        $scope.socioNatural = undefined;
-                        $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                    });
-                }else{if($scope.transaccion.tipoPersona == "JURIDICA"){
-                    $scope.socioNatural = undefined;
-                    PersonaJuridicaService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
-                        $scope.socioJuridico = persona;
-                    },function error(error){
+                if($scope.formCrearCuenta.tipoDocumento.$valid
+                    && $scope.formCrearCuenta.numeroDocumento.$valid){
+                    var tipoDoc = $scope.transaccion.tipoDocumento.id;
+                    var numDoc = $scope.transaccion.numeroDocumento;
+                    if($scope.transaccion.tipoPersona == "NATURAL"){
                         $scope.socioJuridico = undefined;
-                        $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                    });
-                }}
-                if($event !== undefined)
-                    $event.preventDefault();
+                        PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
+                            $scope.socioNatural = persona;
+                            $scope.alerts = [{ type: "success", msg: "Persona encontrada."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        },function error(error){
+                            $scope.socioNatural = undefined;
+                            $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        });
+                    }else{if($scope.transaccion.tipoPersona == "JURIDICA"){
+                        $scope.socioNatural = undefined;
+                        PersonaJuridicaService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
+                            $scope.socioJuridico = persona;
+                            $scope.alerts = [{ type: "danger", msg: "Personan no encontrada."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        },function error(error){
+                            $scope.socioJuridico = undefined;
+                            $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        });
+                    }}
+                    if($event !== undefined)
+                        $event.preventDefault();
+                }
             }
 
             //transacacion principal
@@ -149,10 +136,10 @@ define(['../module'], function (controllers) {
 
                     //poniendo variables
                     var cuenta = {
-                        "idMoneda": $scope.transaccion.idMoneda,
-
+                        "idMoneda": $scope.transaccion.moneda.id,
+                        "tasaInteres" : $scope.transaccion.tasaInteres,
                         "tipoPersona": $scope.transaccion.tipoPersona,
-                        "idTipoDocumento": $scope.transaccion.idTipoDocumento,
+                        "idTipoDocumento": $scope.transaccion.tipoDocumento.id,
                         "numeroDocumento": $scope.transaccion.numeroDocumento,
 
                         "cantRetirantes":$scope.transaccion.cantRetirantes,
@@ -178,6 +165,7 @@ define(['../module'], function (controllers) {
                             $scope.control.success = false;
                             $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $window.scrollTo(0,0);
                         }
                     );
                 } else {
@@ -188,12 +176,81 @@ define(['../module'], function (controllers) {
             $scope.crearPersona = function(){
                 if($scope.transaccion.tipoPersona !== undefined && $scope.transaccion.tipoPersona !== null){
                     if($scope.transaccion.tipoPersona == "NATURAL"){
-                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural");
+                        var idTipoDoc = undefined;
+                        if(!angular.isUndefined($scope.transaccion.tipoDocumento))
+                            idTipoDoc = $scope.transaccion.tipoDocumento.id;
+                        var baseLen = $location.absUrl().length - $location.url().length;
+                        var url = $location.absUrl().substring(0, baseLen);
+                        $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
+                        $timeout(function() {angular.element("#txtNumeroDocumentoSocio").focus();}, 100);
                     } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
-                        $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaJuridica");
+                        var idTipoDoc = undefined;
+                        if(!angular.isUndefined($scope.transaccion.tipoDocumento))
+                            idTipoDoc = $scope.transaccion.tipoDocumento.id;
+                        var baseLen = $location.absUrl().length - $location.url().length;
+                        var url = $location.absUrl().substring(0, baseLen);
+                        $window.open(url + "/app/socio/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
+                        $timeout(function() {angular.element("#txtNumeroDocumentoSocio").focus();}, 100);
                     }}
                 } else{
                     alert("Seleccione tipo de persona");
+                }
+            }
+
+
+            $scope.login = {"result":false , "tasaInteres": undefined};
+            $scope.openLoginPopUp = function () {
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/util/loginPopUp.html',
+                    controller: "LoginPopUpController"
+                });
+                modalInstance.result.then(function (result) {
+                    $scope.login.result = result;
+                    $timeout(function() {
+                        angular.element("#txtTasaInteresEdited").focus();
+                    }, 100);
+                }, function () {
+                    console.log('Modal dismissed at: ' + new Date());
+                });
+            };
+
+            $scope.setTasaInteres = function($event){
+                if(!angular.isUndefined($scope.login.tasaInteres)){
+                    var final = parseFloat($scope.login.tasaInteres.replace(',','.').replace(' ',''));
+                    if(final >= 0 && final <= 100) {
+                        $scope.transaccion.tasaInteres = final / 100;
+                        $scope.login.result = false;
+                        angular.element("#btnGuardar").focus();
+                        if(!angular.isUndefined($event))
+                            $event.preventDefault();
+                    } else {
+                        if(!angular.isUndefined($event))
+                            $event.preventDefault();
+                    }
+                }else {
+                    if(!angular.isUndefined($event))
+                        $event.preventDefault();
+                }
+            }
+
+            $scope.$watch("transaccion.numeroDocumento", function(){$scope.validarNumeroDocumentoSocio();});
+            $scope.$watch("transaccion.tipoDocumento", function(){$scope.validarNumeroDocumentoSocio();});
+            $scope.$watch("transaccion.cantRetirantes", function(){$scope.validarCantidadRetirantes();});
+            $scope.validarNumeroDocumentoSocio = function(){
+                if(!angular.isUndefined($scope.formCrearCuenta.numeroDocumento)){
+                    if(!angular.isUndefined($scope.transaccion.numeroDocumento)){
+                        if(!angular.isUndefined($scope.transaccion.tipoDocumento)){
+                            if($scope.transaccion.numeroDocumento.length == $scope.transaccion.tipoDocumento.numeroCaracteres) {
+                                $scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",true);
+                            } else {$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}
+                        } else{$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}
+                    } else {$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}}
+            }
+            $scope.validarCantidadRetirantes = function(){
+                if(!angular.isUndefined($scope.formCrearCuenta.cantRetirantes)){
+                    if($scope.titularesFinal.length < $scope.transaccion.cantRetirantes){
+                        $scope.formCrearCuenta.cantRetirantes.$setValidity("sgmaxlength",false);
+                    } else {$scope.formCrearCuenta.cantRetirantes.$setValidity("sgmaxlength",true);}
                 }
             }
         }]);

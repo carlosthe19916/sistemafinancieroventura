@@ -201,7 +201,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	}
 	
 	@Override
-	public BigInteger createCuentaCorriente(BigInteger idAgencia, BigInteger idMoneda, TipoPersona tipoPersona,
+	public BigInteger createCuentaCorriente(BigInteger idAgencia, BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona,
 			BigInteger idPersona, int cantRetirantes,
 			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
 			throws RollbackFailureException {
@@ -300,7 +300,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		}
 		
 		//crear intereses
-		BigDecimal tasaInteres = tasaInteresService.getTasaInteresCuentaCorriente(idMoneda);
+		if(tasaInteres == null)
+			tasaInteres = tasaInteresService.getTasaInteresCuentaCorriente(idMoneda);
 		CuentaBancariaTasa cuentaBancariaTasa = new CuentaBancariaTasa();
 		cuentaBancariaTasa.setCuentaBancaria(cuentaBancaria);
 		cuentaBancariaTasa.setValor(tasaInteres);

@@ -12,7 +12,9 @@ define([
     './TasaInteresService',
     './UsuarioSessionService',
     './UsuarioService',
-    './PendienteCajaService'
+    './PendienteCajaService',
+
+    './HotKeysFunctionsService'
 ], function () {
 
 });
