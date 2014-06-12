@@ -17,7 +17,7 @@ define(['./module'], function (services) {
                 getModel: function(){
                     return {
                         "id":undefined,
-                        "tipoDocumento":{"id":undefined},
+                        "tipoDocumento":undefined,
                         "numeroDocumento":undefined,
                         "apellidoPaterno":undefined,
                         "apellidoMaterno":undefined,

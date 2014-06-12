@@ -1,6 +1,7 @@
 package org.ventura.sistemafinanciero.rest;
 
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -23,8 +24,10 @@ import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Accionista;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
+import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.rest.dto.PersonaJuridicaDTO;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 
 @Path("/personaJuridica")
@@ -49,12 +52,45 @@ public class PersonaJuridicaRESTService {
 	@POST
 	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-	public Response create(PersonaJuridica personaJuridica) {
+	public Response create(PersonaJuridicaDTO persona) {
 		try {
-			Set<Accionista> accionistas = personaJuridica.getAccionistas();
-			for (Accionista accionista : accionistas) {
-				accionista.toString();
+
+			
+			PersonaJuridica personaJuridica = new PersonaJuridica();
+			personaJuridica.setIdPersonaJuridica(null);
+			personaJuridica.setActividadPrincipal(persona.getActividadPrincipal());
+			personaJuridica.setCelular(persona.getCelular());
+			personaJuridica.setTelefono(persona.getTelefono());
+			personaJuridica.setDireccion(persona.getDireccion());
+			personaJuridica.setReferencia(persona.getReferencia());
+			personaJuridica.setEmail(persona.getEmail());
+			personaJuridica.setFechaConstitucion(persona.getFechaConstitucion());
+			personaJuridica.setFinLucro(persona.isFinLucro());			
+			personaJuridica.setNombreComercial(persona.getNombreComercial());
+			personaJuridica.setNumeroDocumento(persona.getNumeroDocumento());
+			personaJuridica.setRazonSocial(persona.getRazonSocial());			
+			personaJuridica.setTipoDocumento(persona.getTipoDocumento());
+			personaJuridica.setTipoEmpresa(persona.getTipoEmpresa());
+			personaJuridica.setUbigeo(persona.getUbigeo());
+			
+			PersonaNatural representante = new PersonaNatural();
+			representante.setIdPersonaNatural(persona.getIdRepresentanteLegal());			
+			personaJuridica.setRepresentanteLegal(representante);
+			
+			Set<Accionista> accionistasFinal = new HashSet<Accionista>();
+			Set<org.ventura.sistemafinanciero.rest.dto.PersonaJuridicaDTO.Accionista> accionistas = persona.getAccionistas();
+			for (org.ventura.sistemafinanciero.rest.dto.PersonaJuridicaDTO.Accionista accionista : accionistas) {
+				Accionista accionistaFinal = new Accionista();
+				accionistaFinal.setIdAccionista(null);
+				PersonaNatural person = new PersonaNatural();
+				person.setIdPersonaNatural(accionista.getIdPersona());
+				accionistaFinal.setPersonaNatural(person);
+				accionistaFinal.setPorcentajeParticipacion(accionista.getPorcentaje());
+				
+				accionistasFinal.add(accionistaFinal);
 			}
+			personaJuridica.setAccionistas(accionistasFinal);
+			
 			BigInteger idPersona = personaJuridicaService.crear(personaJuridica);
 			JsonObject model = Json.createObjectBuilder().add("message", "persona creada").add("id", idPersona).build();
 			return Response.status(Response.Status.OK).entity(model).build();
@@ -65,7 +101,8 @@ public class PersonaJuridicaRESTService {
 			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (EJBException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			JsonObject model = Json.createObjectBuilder().add("message", "Error interno").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
 		} 
 	}
 

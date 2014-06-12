@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ public class Accionista implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idAccionista;
+	private BigInteger idAccionista;
 
 	@NotNull(message = "Persona natural is null")
 	private PersonaNatural personaNatural;
@@ -45,7 +46,7 @@ public class Accionista implements java.io.Serializable {
 	public Accionista() {
 	}
 
-	public Accionista(int idAccionista, PersonaNatural personaNatural,
+	public Accionista(BigInteger idAccionista, PersonaNatural personaNatural,
 			PersonaJuridica personaJuridica, BigDecimal porcentajeParticipacion) {
 		this.idAccionista = idAccionista;
 		this.personaNatural = personaNatural;
@@ -57,11 +58,11 @@ public class Accionista implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_ACCIONISTA", unique = true, nullable = false, precision = 22, scale = 0)
-	public int getIdAccionista() {
+	public BigInteger getIdAccionista() {
 		return this.idAccionista;
 	}
 
-	public void setIdAccionista(int idAccionista) {
+	public void setIdAccionista(BigInteger idAccionista) {
 		this.idAccionista = idAccionista;
 	}
 

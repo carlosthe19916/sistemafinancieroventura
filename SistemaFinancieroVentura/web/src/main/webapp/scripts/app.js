@@ -3,7 +3,7 @@ define([
         'angular',
         'uiRouter',
         './controllers/main',
-       // './directives/index',
+        './directives/main',
         './filters/main',
         './services/main'
     ]/*deps*/,
@@ -14,7 +14,8 @@ define([
             'cajaApp.services',
             'cajaApp.controllers',
             'cajaApp.filters',
-           // 'cajaApp.directives'
+            'cajaApp.directives',
+
             /*angJSDeps*/
             'ui.router',
             'restangular',

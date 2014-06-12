@@ -23,7 +23,7 @@
                        <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formTitular.numeroDocumento.$invalid) && formTitular.numeroDocumento.$dirty}">
                            <label>Numero documento(*)</label>
                            <div class="input-group">
-                               <input type="text" name="numeroDocumento" ng-model="titular.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                               <input type="text" name="numeroDocumento" ng-model="titular.numeroDocumento" patternnlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
                                  <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="addPersona()" >
                                         <span class="glyphicon glyphicon-search"></span>

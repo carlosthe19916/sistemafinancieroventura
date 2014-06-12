@@ -8,11 +8,11 @@ define(['./module'], function (services) {
                 getModel: function(){
                     return {
                         "id":undefined,
-                        "tipoDocumento":{"id":undefined},
+                        "tipoDocumento": undefined,
                         "numeroDocumento":undefined,
                         "razonSocial":undefined,
                         "nombreComercial":undefined,
-                        "representanteLegal": {},
+                        "representanteLegal": undefined,
                         "fechaConstitucion":undefined,
                         "actividadPrincipal":undefined,
                         "tipoEmpresa":undefined,
@@ -26,18 +26,7 @@ define(['./module'], function (services) {
                         "accionistas":undefined
                     };
                 },
-                crear: function(personaJuridica, representanteLegal, accionistas){
-                    personaJuridica.representanteLegal = {"id":representanteLegal.id};
-                    var accionistasFinal = [];
-                    for(var i = 0; i < accionistas.length; i++){
-                        var porcentaje = accionistas[i].porcentajeParticipacion;
-                        var personaNatural = {"id":accionistas[i].personaNatural.id};
-                        accionistasFinal[i] = {
-                            "porcentajeParticipacion" : porcentaje,
-                            "personaNatural" : personaNatural
-                        }
-                    }
-                    personaJuridica.accionistas = accionistasFinal;
+                crear: function(personaJuridica){
                     return _personaJuridicaService.post(personaJuridica);
                 },
                 update: function(persona){
