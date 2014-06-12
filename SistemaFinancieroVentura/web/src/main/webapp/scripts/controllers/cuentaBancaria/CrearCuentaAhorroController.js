@@ -138,6 +138,8 @@ define(['../module'], function (controllers) {
                     $scope.socioNatural = undefined;
                     PersonaJuridicaService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
                         $scope.socioJuridico = persona;
+                        $scope.alerts = [{ type: "success", msg: "Persona encontrada."}];
+                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                     },function error(error){
                         $scope.socioJuridico = undefined;
                         $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];

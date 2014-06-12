@@ -131,7 +131,7 @@
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.apellidopaterno.$invalid && control.submitted}">
                 <label>Apellido Paterno(*)</label>
-                <input name="apellidopaterno" type="text" ng-model="persona.apellidoPaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Paterno" onkeyup="this.value = this.value.toUpperCase();" required/>
+                <input name="apellidopaterno" type="text" ng-model="persona.apellidoPaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Paterno" capitalize required/>
                 <div ng-show="formCrearPersonanatural.apellidopaterno.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.apellidopaterno.$error.required">
                         Ingrese Apellido Paterno.
@@ -148,7 +148,7 @@
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.apellidomaterno.$invalid && control.submitted}">
                 <label>Apellido Materno(*)</label>
-                <input name="apellidomaterno" type="text" ng-model="persona.apellidoMaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Materno" onkeyup="this.value = this.value.toUpperCase();" required/>
+                <input name="apellidomaterno" type="text" ng-model="persona.apellidoMaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Materno" capitalize required/>
                 <div ng-show="formCrearPersonanatural.apellidomaterno.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.apellidomaterno.$error.required">
                         Ingrese Apellido Materno.
@@ -167,7 +167,7 @@
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.nombres.$invalid && control.submitted}">
                 <label>Nombres(*)</label>
-                <input name="nombres" type="text" ng-model="persona.nombres" ng-minlength="1" ng-maxlength="70" class="form-control" placeholder="Nombres" onkeyup="this.value = this.value.toUpperCase();" required  />
+                <input name="nombres" type="text" ng-model="persona.nombres" ng-minlength="1" ng-maxlength="70" class="form-control" placeholder="Nombres" capitalize required  />
                 <div ng-show="formCrearPersonanatural.nombres.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.nombres.$error.required">
                         Ingrese Nombres.
@@ -272,7 +272,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.direccion.$invalid && control.submitted}">
                 <label>Direccion</label>
-                <input name="direccion" type="text" ng-model="persona.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" onkeyup="this.value = this.value.toUpperCase();" />
+                <input name="direccion" type="text" ng-model="persona.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" capitalize />
                 <div ng-show="formCrearPersonanatural.direccion.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.direccion.$error.maxlength">
                         Maximo 70 Caracteres.
@@ -283,7 +283,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.referencia.$invalid && control.submitted}">
                 <label>Referencia</label>
-                <input name="referencia" type="text" ng-model="persona.referencia" ng-maxlength="70" class="form-control" placeholder="Referencia" onkeyup="this.value = this.value.toUpperCase();" />
+                <input name="referencia" type="text" ng-model="persona.referencia" ng-maxlength="70" class="form-control" placeholder="Referencia" capitalize />
                 <div ng-show="formCrearPersonanatural.referencia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.referencia.$error.maxlength">
                         Maximo 70 Caracteres.
@@ -294,7 +294,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.ocupacion.$invalid && control.submitted}">
                 <label>Ocupacion</label>
-                <input name="ocupacion" type="text" ng-model="persona.ocupacion" ng-maxlength="70" class="form-control" placeholder="Ocupacion" onkeyup="this.value = this.value.toUpperCase();" />
+                <input name="ocupacion" type="text" ng-model="persona.ocupacion" ng-maxlength="70" class="form-control" placeholder="Ocupacion" capitalize />
                 <div ng-show="formCrearPersonanatural.nombres.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.ocupacion.$error.maxlength">
                         Maximo 70 Caracteres.
@@ -329,7 +329,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.email.$invalid && control.submitted}">
                 <label>Email</label>
-                <input name="email" type="email" ng-model="persona.email" ng-maxlength="70" class="form-control" placeholder="correo@dominio.com" onkeyup="this.value = this.value.toUpperCase();"/>
+                <input name="email" type="email" ng-model="persona.email" ng-maxlength="70" class="form-control" placeholder="correo@dominio.com"/>
                 <div ng-show="formCrearPersonanatural.email.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.email.$invalid">
                         Email Incorrecto.
