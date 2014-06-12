@@ -270,7 +270,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 			historialCajaNew.setFechaApertura(calendar.getTime());
 			historialCajaNew.setHoraApertura(calendar.getTime());
 			historialCajaNew.setEstado(true);			
-			historialCajaNew.setTrabajador(trabajador.getPersonaNatural().getApellidoPaterno()+" "+trabajador.getPersonaNatural().getApellidoMaterno()+","+trabajador.getPersonaNatural().getNombres());
+			historialCajaNew.setTrabajador(trabajador.getPersonaNatural().getApellidoPaterno()+" "+trabajador.getPersonaNatural().getApellidoMaterno()+", "+trabajador.getPersonaNatural().getNombres());
 			Set<ConstraintViolation<HistorialCaja>> violationsHistorialNew = validator.validate(historialCajaNew);
 			if (!violationsHistorialNew.isEmpty()) {
 				throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violationsHistorialNew));
@@ -427,6 +427,10 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	@AllowedTo(Permission.ABIERTO)
 	public BigInteger crearPendiente(BigInteger idBoveda, BigDecimal monto, String observacion) throws RollbackFailureException {
 		Caja caja = getCaja();
+		Trabajador trabajador = getTrabajador();
+		if(trabajador == null)
+			throw new RollbackFailureException("No se encontró un trabajador para la caja");
+		
 		Boveda boveda = bovedaDAO.find(idBoveda);
 		if(boveda == null)
 			throw new RollbackFailureException("Boveda no encontrada");
@@ -457,6 +461,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		pendienteCaja.setMonto(monto);
 		pendienteCaja.setTipoPendiente(monto.compareTo(BigDecimal.ZERO) >= 1 ? TipoPendiente.FALTANTE : TipoPendiente.SOBRANTE);
 		pendienteCaja.setObservacion(observacion);
+		pendienteCaja.setTrabajador(trabajador.getPersonaNatural().getApellidoPaterno()+" "+trabajador.getPersonaNatural().getApellidoMaterno()+", "+trabajador.getPersonaNatural().getNombres());
 		pendienteCajaDAO.create(pendienteCaja);
 		
 		//modificando el saldo de boveda
@@ -583,7 +588,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 
 	@Override
 	public Set<GenericMonedaDetalle> getDetalleCaja() {
-		Set<GenericMonedaDetalle> result = null;				
+		Set<GenericMonedaDetalle> result = null;			
 		Caja caja = getCaja();
 		if (caja == null)
 			return null;			

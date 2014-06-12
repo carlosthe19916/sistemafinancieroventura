@@ -119,7 +119,7 @@ public class HistorialCajaServiceBean extends AbstractServiceBean<HistorialCaja>
 			cajaCierreMoneda.setSobrante(sobrante);
 			cajaCierreMoneda.setFaltante(faltante);
 			
-			/***********AÃ±adiendo el detalle de una moneda***************/
+			/***********Añadiendo el detalle de una moneda***************/
 			result.add(cajaCierreMoneda);
 			
 			//poniendo el detalle
