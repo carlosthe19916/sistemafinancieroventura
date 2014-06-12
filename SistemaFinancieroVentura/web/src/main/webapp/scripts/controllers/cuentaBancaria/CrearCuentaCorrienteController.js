@@ -108,7 +108,7 @@ define(['../module'], function (controllers) {
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         },function error(error){
                             $scope.socioNatural = undefined;
-                            $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
+                            $scope.alerts = [{ type: "danger", msg: "Persona no encontrada."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         });
                     }else{if($scope.transaccion.tipoPersona == "JURIDICA"){
@@ -119,7 +119,7 @@ define(['../module'], function (controllers) {
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         },function error(error){
                             $scope.socioJuridico = undefined;
-                            $scope.alerts = [{ type: "danger", msg: "Socio no encontrado."}];
+                            $scope.alerts = [{ type: "danger", msg: "Persona no encontrada."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         });
                     }}

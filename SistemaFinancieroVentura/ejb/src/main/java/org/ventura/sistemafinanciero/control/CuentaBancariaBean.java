@@ -38,6 +38,7 @@ import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.TasaInteresService;
 import org.ventura.sistemafinanciero.util.ProduceObject;
@@ -73,6 +74,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	
 	@EJB
 	private TasaInteresService tasaInteresService;
+	@EJB
+	private CajaSessionService cajaSessionService;
 	
 	@Override
 	public Set<CuentaBancaria> findByFilterText(String filterText) {
@@ -343,7 +346,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		if(personaNatural != null)
 			socios = personaNatural.getSocios();
 		if(personaJuridica != null)
-			socios = personaNatural.getSocios();
+			socios = personaJuridica.getSocios();
 		for (Socio s : socios) {
 			if(s.getEstado())
 				socio = s;
@@ -361,7 +364,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 				titular.setEstado(true);
 				titular.setPersonaNatural(persona);
 				titular.setFechaInicio(calendar.getTime());
-				titular.setFechaFin(null);				
+				titular.setFechaFin(null);	
+				listTitulares.add(titular);
 			}							
 		}
 		
@@ -420,9 +424,10 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancariaTasaDAO.create(cuentaBancariaTasa);
 		
 		//crear transaccion bancaria
-		
+		cajaSessionService.crearDepositoBancario(cuentaBancaria.getNumeroCuenta(), monto, "APERTURA DE CUENTA A PLAZO FIJO");
 		
 		return cuentaBancaria.getIdCuentaBancaria();
+						
 	}
 	
 	@Override

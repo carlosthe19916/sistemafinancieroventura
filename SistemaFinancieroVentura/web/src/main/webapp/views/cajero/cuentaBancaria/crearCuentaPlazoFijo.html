@@ -16,11 +16,11 @@
     <legend>Socio</legend>
     <div class="row">
         <div class="col-sm-4">
-            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && control.submitted}">
-                <label>Tipo persona</label>
+            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && (control.submitted || formCrearCuenta.tipoPersona.$dirty)}">
+                <label>Tipo persona(*)</label>
                 <select focus-on="firstFocus" id="cmbTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                 </select>
-                <div ng-show="formCrearCuenta.tipoPersona.$invalid && control.submitted">
+                <div ng-show="formCrearCuenta.tipoPersona.$invalid && (control.submitted || formCrearCuenta.tipoPersona.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">
                         Ingrese tipo persona.
                     </p>
@@ -30,11 +30,11 @@
     </div>
     <div class="row">
         <div class="col-sm-4">
-            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoDocumento.$invalid && control.submitted}">
-                <label>Tipo documento</label>
-                <select name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos" ng-model="transaccion.idTipoDocumento" class="form-control" required>
+            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoDocumento.$invalid && (control.submitted || formCrearCuenta.tipoDocumento.$dirty)}">
+                <label>Tipo documento(*)</label>
+                <select name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy:'id'" ng-model="transaccion.tipoDocumento" class="form-control" required>
                 </select>
-                <div ng-show="formCrearCuenta.tipoDocumento.$invalid && control.submitted">
+                <div ng-show="formCrearCuenta.tipoDocumento.$invalid && (control.submitted || formCrearCuenta.tipoDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.tipoDocumento.$error.required">
                         Ingrese tipo documento.
                     </p>
@@ -42,10 +42,17 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.numeroDocumento.$invalid && control.submitted}">
-                <label>Numero documento</label>
-                <input type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
-                <div ng-show="formCrearCuenta.numeroDocumento.$invalid && control.submitted">
+            <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.numeroDocumento.$invalid && (control.submitted || formCrearCuenta.numeroDocumento.$dirty)}">
+                <label>Numero documento(*)</label>
+                <div class="input-group">
+                    <input id="txtNumeroDocumentoSocio" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="buscarPersonaSocio()">
+                          <span class="glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                </div>
+                <div ng-show="formCrearCuenta.numeroDocumento.$invalid && (control.submitted || formCrearCuenta.numeroDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.required">
                         Ingrese numero documento valido.
                     </p>
@@ -58,15 +65,17 @@
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.pattern">
                         Numero documento invalido.
                     </p>
+                    <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.sgmaxlength">
+                        Debe tener <span ng-bind="transaccion.tipoDocumento.numeroCaracteres"></span> caracteres.
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" ng-show="!socioNatural && !socioJuridico">
             <div class="form-group">
                 <label>&nbsp;</label>
-                <div class="input-group">
-                    <button type="button" ng-click="buscarPersonaSocio($event)" class="btn btn-primary">Buscar</button>
-                    <button type="button" ng-click="crearPersona()" class="btn btn-link">Nueva persona</button>
+                <div>
+                    <button type="button" class="btn btn-link" ng-click="crearPersona()">Registrar persona</button>
                 </div>
             </div>
         </div>
@@ -77,11 +86,11 @@
     <div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.moneda.$invalid && control.submitted}">
-                    <label>Moneda</label>
-                    <select name="moneda" ng-options="moneda.id as moneda.denominacion for moneda in monedas" ng-model="transaccion.idMoneda" ng-change="actualizarTasaInteres()" class="form-control" required>
+                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.moneda.$invalid && (control.submitted || formCrearCuenta.moneda.$dirty)}">
+                    <label>Moneda(*)</label>
+                    <select name="moneda" ng-options="moneda as moneda.denominacion for moneda in monedas | orderBy:'id'" ng-model="transaccion.moneda" ng-change="actualizarTasaInteres()" class="form-control" required>
                     </select>
-                    <div ng-show="formCrearCuenta.moneda.$invalid && control.submitted">
+                    <div ng-show="formCrearCuenta.moneda.$invalid && (control.submitted || formCrearCuenta.moneda.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.moneda.$error.required">
                             Ingrese tipo moneda.
                         </p>
@@ -89,10 +98,10 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.periodo.$invalid && control.submitted}">
-                    <label>Periodo</label>
+                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.periodo.$invalid && (control.submitted || formCrearCuenta.periodo.$dirty)}">
+                    <label>Periodo(*)</label>
                     <input type="number" name="periodo" ng-model="transaccion.periodo" ng-minlength="1" ng-maxlength="3" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Periodo" required/>
-                    <div ng-show="formCrearCuenta.periodo.$invalid && control.submitted">
+                    <div ng-show="formCrearCuenta.periodo.$invalid && (control.submitted || formCrearCuenta.periodo.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.periodo.$error.required">
                             Ingrese numero valido.
                         </p>
@@ -103,10 +112,10 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.monto.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.monto.$invalid && (control.submitted || formCrearCuenta.monto.$dirty)}">
                     <label ng-cloak>Monto &rarr; {{transaccion.monto | currency : ''}}</label>
-                    <input type="text" name="monto" ui-keypress="{13:'actualizarTasaInteres($event)'}" ng-model="transaccion.monto" ng-minlength="1" ng-maxlength="30" class="form-control" placeholder="Monto" required/>
-                    <div ng-show="formCrearCuenta.monto.$invalid && control.submitted">
+                    <input type="text" name="monto" ui-keypress="{13:'actualizarTasaInteres($event)'}" ng-model="transaccion.monto" ng-minlength="1" ng-maxlength="30" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
+                    <div ng-show="formCrearCuenta.monto.$invalid && (control.submitted || formCrearCuenta.monto.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.monto.$error.required">
                             Ingrese numero valido.
                         </p>
@@ -123,30 +132,40 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>
-                        Tasa de interes
-                        <button type="button" class="btn btn-link" style="padding: 0px 15px;">Editar</button>
+                    <label>Tasa de interes
+                        <button ng-show="!login.result" type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                     </label>
-                    <div class="row">
-                        <div class="col-sm-10" style="padding-right: 1px;">
-                            <kbd ng-show="!control.tasaEdited" style="display: block;margin-top: 0px; min-height: 34px;padding-top: 8px;padding-left: 10px;">
-                                <span ng-bind="(transaccion.tasaInteres * 100)| number : 3"/>
-                            </kbd>
-                            <input ng-show="control.tasaEdited" type="text" name="monto" ui-keypress="{13:'actualizarTasaInteres($event)'}" ng-model="transaccion.tasaInteres" ng-minlength="1" ng-maxlength="5" class="form-control" placeholder="Tasa interes" required/>
+                    <kbd ng-show="!login.result" style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;padding-left: 10px;">
+                        <span ng-bind="(transaccion.tasaInteres * 100)| number : 3"/>
+                    </kbd>
+                    <div ng-if="login.result" ng-class="{ 'has-error' : formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty}">
+                        <div class="input-group">
+                            <input id="txtTasaInteresEdited" type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="login.tasaInteres" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa interes" required/>
+                             <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="setTasaInteres()" >
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                             </span>
                         </div>
-                        <div class="col-sm-2" style="padding-left: 1px;">
-                            <button type="button" class="btn btn-default" ng-click="actualizarTasaInteres($event)">
-                                <span class="glyphicon glyphicon-refresh"></span>
-                            </button>
+                        <div ng-show="formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty">
+                            <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.required">
+                                Ingrese tasa.
+                            </p>
+                            <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.minlength">
+                                Minimo 1 caracter.
+                            </p>
+                            <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.maxlength">
+                                Maximo 6 caracteres.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.cantRetirantes.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.cantRetirantes.$invalid && (control.submitted || formCrearCuenta.cantRetirantes.$dirty)}">
                     <label>Cantidad retirantes</label>
                     <input type="number" name="cantRetirantes" ng-model="transaccion.cantRetirantes" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Cantidad" required/>
-                    <div ng-show="formCrearSocio.cantRetirantes.$invalid && control.submitted">
+                    <div ng-show="formCrearSocio.cantRetirantes.$invalid && (control.submitted || formCrearCuenta.cantRetirantes.$dirty)">
                         <p class="help-block" ng-show="formCrearSocio.cantRetirantes.$error.required">
                             Ingrese numero valido.
                         </p>
@@ -156,13 +175,16 @@
                         <p class="help-block" ng-show="formCrearSocio.cantRetirantes.$error.pattern">
                             Numero invalido.
                         </p>
+                        <p class="help-block" ng-show="formCrearCuenta.cantRetirantes.$error.sgmaxlength">
+                            Numero invalido.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div>
                     <label>Total interes</label>
-                    <p><strong ng-bind="transaccion.total | currency:''"></strong></p>
+                    <p><strong ng-bind="transaccion.total | currency:''" style="font-size: 1.4em;"></strong></p>
                 </div>
             </div>
         </div>
@@ -177,7 +199,7 @@
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
                     <div class="panel-heading">Socio</div>
-                    <div class="panel-body" ng-show="socioNatural && socioJuridico">
+                    <div class="panel-body" ng-show="!socioNatural && !socioJuridico">
                         <p>Socio no encontrado</p>
                     </div>
                     <table class="table table-condensed" ng-show="socioNatural">
@@ -221,7 +243,10 @@
             <div class="col-sm-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">Titulares</div>
-                    <table class="table table-condensed">
+                    <div class="panel-body" ng-show="titularesFinal.length == 0">
+                        <p>Titulares no existentes.</p>
+                    </div>
+                    <table class="table table-condensed" ng-show="titularesFinal.length != 0">
                         <thead>
                         <tr>
                             <th>Documento</th>
@@ -243,7 +268,10 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">Beneficiarios</div>
-                    <table class="table table-condensed">
+                    <div class="panel-body" ng-show="beneficiarios.length == 0">
+                        <p>Beneficiarios no existentes.</p>
+                    </div>
+                    <table class="table table-condensed" ng-show="beneficiarios.length != 0">
                         <thead>
                         <tr>
                             <th>Documento</th>
@@ -271,10 +299,10 @@
 </div>
 </tab>
 <tab heading="Titulares" select="tabTitularSelected()">
-    <div ng-include="'modules/caja/views/cuenta/titular.html'"></div>
+    <div ng-include="'views/cajero/cuentaBancaria/titular.html'"></div>
 </tab>
 <tab heading="Beneficiarios" select="tabBeneficiarioSelected()">
-    <div ng-include="'modules/caja/views/cuenta/beneficiario.html'"></div>
+    <div ng-include="'views/cajero/cuentaBancaria/beneficiario.html'"></div>
 </tab>
 </tabset>
 </div>
