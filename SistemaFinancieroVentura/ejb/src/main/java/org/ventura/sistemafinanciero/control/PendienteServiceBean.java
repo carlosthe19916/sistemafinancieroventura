@@ -14,7 +14,6 @@ import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
-import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.dto.VoucherPendienteCaja;

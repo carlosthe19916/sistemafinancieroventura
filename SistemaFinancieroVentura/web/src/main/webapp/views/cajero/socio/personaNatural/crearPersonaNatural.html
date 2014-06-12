@@ -4,7 +4,9 @@
     <span ng-bind-html="alert.msg"></span>
 </alert>
 <fieldset>
-<legend>Crear persona natural <h6>Los campos marcados con (*) son obligatorios</h6></legend>
+<legend style="text-align: center;">Registrar Persona Natural</legend>
+<legend style="background: whitesmoke;">Datos Personales</legend>
+<h6 style="color: brown;">Los campos marcados con (*) son obligatorios</h6>
 <div class="row">
 <div class="col-sm-4">
     <div class="row">
@@ -74,7 +76,8 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.pais.$invalid && control.submitted}">
-                <label>Nacionalidad(*)</label>
+                <label>Nacionalidad </label>
+                <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <span class="input-group-addon">{{persona.codigoPais}}</span>
                     <select name="pais" ng-options="pais.abreviatura as pais.denominacion for pais in paises" ng-model="persona.codigoPais" class="form-control" required autofocus>
@@ -82,7 +85,7 @@
                 </div>
                 <div ng-show="formCrearPersonanatural.pais.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.pais.$error.required">
-                        Ingrese Nacionalidad.
+                        Seleccione Nacionalidad.
                     </p>
                 </div>
             </div>
@@ -91,19 +94,21 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipodocumento.$invalid && control.submitted}">
-                <label>Tipo Documento(*)</label>
+                <label>Tipo Documento</label>
+                <label style="color: brown;">(*)</label>
                 <select name="tipodocumento" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipodocumentos | orderBy : 'id'" ng-model="persona.tipoDocumento" class="form-control" required>
                 </select>
                 <div ng-show="formCrearPersonanatural.tipodocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.tipodocumento.$error.required">
-                        Ingrese Tipo Documento.
+                        Seleccione Tipo Documento.
                     </p>
                 </div>
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formCrearPersonanatural.numerodocumento.$invalid) && control.submitted}">
-                <label>Nro documento(*)</label>
+                <label>Numero Documento</label>
+                <label style="color: brown;">(*)</label>
                 <input name="numerodocumento" type="text" ng-model="persona.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nro documento" required/>
                 <div ng-show="formCrearPersonanatural.numerodocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.numerodocumento.$error.required">
@@ -130,7 +135,8 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.apellidopaterno.$invalid && control.submitted}">
-                <label>Apellido Paterno(*)</label>
+                <label>Apellido Paterno</label>
+                <label style="color: brown;">(*)</label>
                 <input name="apellidopaterno" type="text" ng-model="persona.apellidoPaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Paterno" capitalize required/>
                 <div ng-show="formCrearPersonanatural.apellidopaterno.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.apellidopaterno.$error.required">
@@ -147,7 +153,8 @@
         </div>
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.apellidomaterno.$invalid && control.submitted}">
-                <label>Apellido Materno(*)</label>
+                <label>Apellido Materno</label>
+                <label style="color: brown;">(*)</label>
                 <input name="apellidomaterno" type="text" ng-model="persona.apellidoMaterno" ng-minlength="1" ng-maxlength="60" class="form-control" placeholder="Apellido Materno" capitalize required/>
                 <div ng-show="formCrearPersonanatural.apellidomaterno.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.apellidomaterno.$error.required">
@@ -166,7 +173,8 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.nombres.$invalid && control.submitted}">
-                <label>Nombres(*)</label>
+                <label>Nombres</label>
+                <label style="color: brown;">(*)</label>
                 <input name="nombres" type="text" ng-model="persona.nombres" ng-minlength="1" ng-maxlength="70" class="form-control" placeholder="Nombres" capitalize required  />
                 <div ng-show="formCrearPersonanatural.nombres.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.nombres.$error.required">
@@ -183,7 +191,8 @@
         </div>
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.fechanacimiento.$invalid && control.submitted}">
-                <label>Fecha Nacimiento(*)</label>
+                <label>Fecha Nacimiento</label>
+                <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="fechaNacimiento" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" required="required">
                     <span class="input-group-btn">
@@ -206,11 +215,12 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.sexo.$invalid && control.submitted}">
-                <label>Sexo(*)</label>
+                <label>Sexo</label>
+                <label style="color: brown;">(*)</label>
                 <select name="sexo" ng-options="sexo as sexo for sexo in sexos" ng-model="persona.sexo" class="form-control" required></select>
                 <div ng-show="formCrearPersonanatural.sexo.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.sexo.$error.required">
-                        Ingrese Sexo.
+                        Seleccione Sexo.
                     </p>
                 </div>
             </div>
@@ -232,7 +242,7 @@
 </div>
 </fieldset>
 <fieldset>
-    <legend>Datos Adicionales</legend>
+    <legend style="background: whitesmoke;">Datos Adicionales</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.departamento.$invalid && control.submitted}">
@@ -346,3 +356,4 @@
 <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
 </form>
 </div>
+

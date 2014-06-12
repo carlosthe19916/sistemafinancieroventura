@@ -1,18 +1,20 @@
 <div ng-controller="CrearPersonaJuridicaController">
 <fieldset>
-<legend>Crear Persona Juridica <h6>Los campos marcados con (*) son obligatorios</h6></legend>
+<legend style="text-align: center;">Registrar Persona Juridica</legend>
+<h6 style="color: brown;">Los campos marcados con (*) son obligatorios</h6>
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
     <span ng-bind-html="alert.msg"></span>
 </alert>
 <tabset>
-<tab heading="Persona juridica" select="tabPersonaJuridicaSelected()">
+<tab heading="Persona Juridica" select="tabPersonaJuridicaSelected()">
 <ng-form name="$parent.formCrearPersonaJuridica">
 <fieldset>
-    <legend>Datos Principales</legend>
+    <legend style="background: whitesmoke;">Datos Principales</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipodocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipodocumento.$dirty)}">
-                <label>Tipo Documento(*)</label>
+                <label>Tipo Documento</label>
+                <label style="color: brown;">(*)</label>
                 <select id="cmbTipoDocumentoPersonaJuridica" name="tipodocumento" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipoDocumentosPJ | orderBy : 'id'" ng-model="personaJuridica.tipoDocumento" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipodocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipodocumento.$dirty)">
@@ -24,7 +26,8 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numerodocumento.$invalid && (control.submitted || formCrearPersonaJuridica.numerodocumento.$dirty)}">
-                <label>Numero Documento(*)</label>
+                <label>Numero Documento</label>
+                <label style="color: brown;">(*)</label>
                 <input name="numerodocumento" type="text" ng-model="personaJuridica.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
                 <div ng-show="formCrearPersonaJuridica.numerodocumento.$invalid && (control.submitted || formCrearPersonaJuridica.numerodocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.numerodocumento.$error.required">
@@ -47,7 +50,8 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.razonSocial.$invalid && (control.submitted || formCrearPersonaJuridica.razonSocial.$dirty)}">
-                <label>Razon Social(*)</label>
+                <label>Razon Social</label>
+                <label style="color: brown;">(*)</label>
                 <input name="razonSocial" type="text" ng-model="personaJuridica.razonSocial" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Razon Social" capitalize required/>
                 <div ng-show="formCrearPersonaJuridica.razonSocial.$invalid && (control.submitted || formCrearPersonaJuridica.razonSocial.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.razonSocial.$error.required">
@@ -79,8 +83,15 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.actividadPrincipal.$invalid && (control.submitted || formCrearPersonaJuridica.actividadPrincipal.$dirty)}">
                 <label>Actividad Principal</label>
-                <input name="actividadPrincipal" type="text" ng-model="personaJuridica.actividadPrincipal" ng-maxlength="70" class="form-control" placeholder="Actividad Principal" capitalize/>
+                <label style="color: brown;">(*)</label>
+                <input name="actividadPrincipal" type="text" ng-model="personaJuridica.actividadPrincipal" ng-maxlength="70" class="form-control" placeholder="Actividad Principal" capitalize required/>
                 <div ng-show="formCrearPersonaJuridica.actividadPrincipal.$invalid && (control.submitted || formCrearPersonaJuridica.actividadPrincipal.$dirty)">
+                    <p class="help-block" ng-show="formCrearPersonaJuridica.actividadPrincipal.$error.required">
+                        Ingrese Actividad Principal.
+                    </p>
+                    <p class="help-block" ng-show="formCrearPersonaJuridica.actividadPrincipal.$error.minlength">
+                        Minimo 1 Caracter.
+                    </p>
                     <p class="help-block" ng-show="formCrearPersonaJuridica.actividadPrincipal.$error.maxlength">
                         Maximo 70 Caracteres.
                     </p>
@@ -89,7 +100,8 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.fechaConstitucion.$invalid && (control.submitted || formCrearPersonaJuridica.fechaConstitucion.$dirty)}">
-                <label>Fecha Constitucion(*)</label>
+                <label>Fecha Constitucion</label>
+                <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <input type="text" name="fechaConstitucion" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="fechaConstitucion" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" required>
                     <span class="input-group-btn">
@@ -135,7 +147,7 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend>Datos Adicionales</legend>
+    <legend style="background: whitesmoke;">Datos Adicionales</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.departamento.$invalid && control.submitted}">
@@ -235,7 +247,7 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend>Representante legal</legend>
+    <legend style="background: whitesmoke;">Representante legal</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumentoRepresentante.$dirty)}">
@@ -244,7 +256,7 @@
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumentoRepresentante.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.tipoDocumentoRepresentante.$error.required">
-                        Ingrese Tipo Documento.
+                        Seleccione Tipo Documento.
                     </p>
                 </div>
             </div>
@@ -253,7 +265,7 @@
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoRepresentante.$dirty)}">
                 <label>Numero Documento(*)</label>
                 <div class="input-group">
-                    <input id="txtNumeroDocumentoRepresentanteLegal" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="representanteLegal.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nro documento" required/>
+                    <input id="txtNumeroDocumentoRepresentanteLegal" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="representanteLegal.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
                       <span class="input-group-btn">
                        <button type="button" class="btn btn-default" ng-click="buscarRepresentanteLegal()" >
                            <span class="glyphicon glyphicon-search"></span>
