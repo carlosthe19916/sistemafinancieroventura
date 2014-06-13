@@ -142,7 +142,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-8">Titulares</div>
+                        <div class="col-md-8">Titulares&nbsp;
+                        <span ng-cloak ng-show="control.titular.success" ng-bind-html="control.titular.message"></span>
+                        </div>
                         <div ng-if="titulares" class="col-md-4">
                             <div class="text-right">
                                 <button type="button" ng-click="addTitular()" class="btn btn-link" style="padding: 0px 12px;">
@@ -161,7 +163,7 @@
                         <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
                         <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}} {{titular.personaNatural.apellidoMaterno}}, {{titular.personaNatural.nombres}}"></span></td>
                         <td>
-                            <button type="button" class="btn btn-info btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
+                            <button type="button" class="btn btn-info btn-xs" ng-click="editTitular($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-remove"></span>Del</button>
                         </td>
                     </tr>

@@ -44,6 +44,7 @@ import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
+import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.TasaInteresService;
 import org.ventura.sistemafinanciero.util.ProduceObject;
 
@@ -80,6 +81,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	private TasaInteresService tasaInteresService;
 	@EJB
 	private CajaSessionService cajaSessionService;
+	@EJB
+	private PersonaNaturalService personaNaturalService;
 	
 	@Inject
     private Validator validator;
@@ -536,6 +539,43 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		
 		beneficiarioDAO.create(beneficiario);
 		return beneficiario.getIdBeneficiario();
+	}
+
+	@Override
+	public BigInteger addTitular(BigInteger idCuenta, Titular titular)
+			throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuenta);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta bancaria no encotrada");		
+		
+		PersonaNatural personaNatural = titular.getPersonaNatural();
+		personaNatural = personaNaturalService.findByTipoNumeroDocumento(personaNatural.getTipoDocumento().getIdTipoDocumento(), personaNatural.getNumeroDocumento());
+		
+		Set<Titular> titulresDB = cuentaBancaria.getTitulars();
+		for (Titular titDB : titulresDB) {
+			if(titDB.getPersonaNatural().equals(personaNatural))
+				if(titDB.getEstado())
+					throw new RollbackFailureException("Titular ya existente");
+		}
+				
+		if(personaNatural == null)
+			throw new RollbackFailureException("Persona para titular no encontrado");
+		
+		titular.setPersonaNatural(personaNatural);
+		titular.setIdTitular(null);
+		titular.setCuentaBancaria(cuentaBancaria);
+		titular.setEstado(true);
+		titular.setFechaFin(null);
+		titular.setFechaInicio(Calendar.getInstance().getTime());
+		
+		//validar beneficiario
+		Set<ConstraintViolation<Titular>> violations = validator.validate(titular);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
+		}
+
+		titularDAO.create(titular);
+		return titular.getIdTitular();
 	}
 	
 

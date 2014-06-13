@@ -11,6 +11,7 @@ define([
     './PersonaJuridicaService',
     './SocioService',
     './TasaInteresService',
+    './TitularService',
     './UsuarioSessionService',
     './UsuarioService',
     './PendienteCajaService',

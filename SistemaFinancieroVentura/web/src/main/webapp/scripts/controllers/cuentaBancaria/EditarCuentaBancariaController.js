@@ -1,13 +1,16 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('EditarCuentaBancariaController', [ "$scope", "$state", "$location", "$filter", "$window", "focus","$modal", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "CuentaBancariaService", "BeneficiarioService",
-        function($scope, $state, $location, $filter, $window, focus,$modal, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService, CuentaBancariaService, BeneficiarioService) {
+    controllers.controller('EditarCuentaBancariaController', [ "$scope", "$state", "$location", "$filter", "$window", "focus","$modal",
+        "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "CuentaBancariaService", "BeneficiarioService","TitularService",
+        function($scope, $state, $location, $filter, $window, focus,$modal,
+                 MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService, CuentaBancariaService, BeneficiarioService,TitularService) {
 
             $scope.alerts = [];
             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
 
             $scope.control = {
-              "beneficiario": {"success": false, "message": undefined}
+              "beneficiario": {"success": false, "message": undefined},
+              "titular": {"success": false, "message": undefined}
             };
 
             //cargar datos
@@ -76,12 +79,52 @@ define(['../module'], function (controllers) {
                     controller: "TitularPopUpController"
                 });
                 modalInstance.result.then(function (result) {
-                    
-                }, function () {
+                    var titular = {"idTipoDocumento" : result.tipoDocumento.id,"numeroDocumento": result.numeroDocumento};
 
+                    TitularService.crearTitular($scope.id, titular).then(
+                        function(data){
+                            TitularService.getTitular(data.id).then(function(titular){
+                                $scope.titulares.push(titular);
+                            });
+                            $scope.alerts = [{ type: "success", msg: "Titular creado." }];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $scope.control.titular.success = true;
+                            $scope.control.titular.message = '<span class="label label-success">Creado</span>';
+                        }, function error(error){
+                            $scope.alerts = [{ type: "danger", msg: "Error:" + error.data.message +"." }];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $scope.control.titular.success = false;
+                            $scope.control.titular.message = '';
+                            $window.scrollTo(0,0);
+                        }
+                    );
+                }, function () {
                 });
             }
-
+            $scope.deleteTitular = function(index){
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/util/confirmPopUp.html',
+                    controller: "ConfirmPopUpController"
+                });
+                modalInstance.result.then(function (result) {
+                    TitularService.eliminarTitular($scope.titulares[index].id).then(
+                        function(data){
+                            $scope.alerts = [{ type: "success", msg: "Titular eliminado." }];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $scope.control.titular.success = true;
+                            $scope.titulares.splice(index, 1);
+                            $scope.control.titular.message = '<span class="label label-success">Eliminado</span>';
+                        }, function error(error){
+                            $scope.alerts = [{ type: "danger", msg: "Error:" + error.data.message +"." }];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $scope.control.titular.success = false;
+                            $scope.control.titular.message = '';
+                            $window.scrollTo(0,0);
+                        }
+                    );
+                }, function () {
+                });
+            }
 
             //beneficiarios
             $scope.addBeneficiario = function(){
