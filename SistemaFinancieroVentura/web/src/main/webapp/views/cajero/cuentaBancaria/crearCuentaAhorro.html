@@ -1,9 +1,9 @@
 <div ng-controller="CrearCuentaAhorroController">
 <fieldset>
-    <legend>Crear cuenta de ahorro</legend>
+    <legend>Crear Cuenta de Ahorro</legend>
 </fieldset>
 <tabset>
-<tab heading="Cuenta de ahorro" select="tabCuentaSelected()">
+<tab heading="Cuenta de Ahorro" select="tabCuentaSelected()">
 <br/>
 <div>
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
@@ -13,16 +13,17 @@
 <form ng-submit="crearCuenta()" novalidate>
 <ng-form name="$parent.formCrearCuenta">
 <fieldset>
-    <legend>Socio</legend>
+    <legend style="background: whitesmoke;">Socio</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && control.submitted}">
-                <label>Tipo persona(*)</label>
+                <label>Tipo Persona</label>
+                <label style="color: brown;">(*)</label>
                 <select focus-on="firstFocus" id="cmbTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearCuenta.tipoPersona.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">
-                        Ingrese tipo persona.
+                        Seleccione Tipo Persona.
                     </p>
                 </div>
             </div>
@@ -31,19 +32,21 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoDocumento.$invalid && control.submitted}">
-                <label>Tipo documento(*)</label>
+                <label>Tipo Documento</label>
+                <label style="color: brown;">(*)</label>
                 <select name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="transaccion.tipoDocumento" class="form-control" required>
                 </select>
                 <div ng-show="formCrearCuenta.tipoDocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoDocumento.$error.required">
-                        Ingrese tipo documento.
+                        Seleccione Tipo Documento.
                     </p>
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formCrearCuenta.numeroDocumento.$invalid) && (formCrearCuenta.numeroDocumento.$dirty || control.submitted)}">
-                <label>Numero documento(*)</label>
+                <label>Numero Documento</label>
+                <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <input id="txtNumeroDocumentoSocio" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
                      <span class="input-group-btn">
@@ -54,21 +57,21 @@
                 </div>
                 <div ng-show="formCrearCuenta.numeroDocumento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.required">
-                        Ingrese numero documento valido.
+                        Ingrese Numero Documento Valido.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.minlength">
-                        Minimo 1 caracter.
+                        Minimo 1 Caracter.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.maxlength">
-                        Maximo 20 caracteres.
+                        Maximo 20 Caracteres.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.pattern">
-                        Numero documento invalido.
+                        Numero Documento Invalido.
                     </p>
                 </div>
                 <div ng-show="formCrearCuenta.numeroDocumento.$dirty && control.errorForm.numeroDocumento">
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento ">
-                        Debe tener <span ng-bind="transaccion.tipoDocumento.numeroCaracteres"></span> caracteres.
+                        Debe Tener <span ng-bind="transaccion.tipoDocumento.numeroCaracteres"></span> Caracteres.
                     </p>
                 </div>
             </div>
@@ -77,53 +80,55 @@
             <div class="form-group">
                 <label>&nbsp;</label>
                 <div class="input-group">
-                    <button type="button" ng-click="crearPersona()" class="btn btn-link">Registrar persona</button>
+                    <button type="button" ng-click="crearPersona()" class="btn btn-link">Registrar Persona</button>
                 </div>
             </div>
         </div>
     </div>
 </fieldset>
 <fieldset>
-    <legend>Datos de la cuenta</legend>
+    <legend style="background: whitesmoke;">Datos de la Cuenta</legend>
     <div>
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.moneda.$invalid && control.submitted}">
-                    <label>Moneda(*)</label>
+                    <label>Moneda</label>
+                    <label style="color: brown;">(*)</label>
                     <select name="moneda" ng-options="moneda as moneda.denominacion for moneda in monedas | orderBy : 'id'" ng-model="transaccion.moneda" ng-change="monedaChange()" class="form-control" required>
                     </select>
                     <div ng-show="formCrearCuenta.moneda.$invalid && control.submitted">
                         <p class="help-block" ng-show="formCrearCuenta.moneda.$error.required">
-                            Ingrese tipo moneda.
+                            Ingrese Tipo Moneda.
                         </p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.cantRetirantes || formCrearCuenta.cantRetirantes.$invalid) && (formCrearCuenta.cantRetirantes.$dirty|| control.submitted)}">
-                    <label>Cantidad retirantes(*)</label>
+                    <label>Cantidad Retirantes</label>
+                    <label style="color: brown;">(*)</label>
                     <input type="number" name="cantRetirantes" ng-model="transaccion.cantRetirantes" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Cantidad" required/>
                     <div ng-show="formCrearCuenta.cantRetirantes.$invalid && formCrearCuenta.cantRetirantes.$dirty">
                         <p class="help-block" ng-show="formCrearCuenta.cantRetirantes.$error.required">
-                            Ingrese numero valido.
+                            Ingrese Numero Valido.
                         </p>
                         <p class="help-block" ng-show="formCrearCuenta.cantRetirantes.$error.maxlength">
-                            Maximo 1 caracter.
+                            Maximo 1 Caracter.
                         </p>
                         <p class="help-block" ng-show="formCrearCuenta.cantRetirantes.$error.pattern">
-                            Numero invalido.
+                            Numero Invalido.
                         </p>
                     </div>
                     <div ng-show="(formCrearCuenta.cantRetirantes.$dirty || control.submitted) && control.errorForm.cantRetirantes">
                         <p class="help-block" ng-show="control.errorForm.cantRetirantes">
-                            Numero invalido.
+                            Numero Invalido.
                         </p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>Tasa de interes
+                    <label>Tasa de Interes
                         <button ng-show="!login.result" type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                     </label>
                     <kbd ng-show="!login.result" style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;padding-left: 10px;">
@@ -140,13 +145,13 @@
                         </div>
                         <div ng-show="formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty">
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.required">
-                                Ingrese tasa.
+                                Ingrese Tasa.
                             </p>
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.minlength">
-                                Minimo 1 caracter.
+                                Minimo 1 Caracter.
                             </p>
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.maxlength">
-                                Maximo 6 caracteres.
+                                Maximo 6 Caracteres.
                             </p>
                         </div>
                     </div>
@@ -157,7 +162,7 @@
 </fieldset>
 
 <fieldset>
-    <legend>Resumen</legend>
+    <legend style="background: whitesmoke;">Resumen</legend>
     <div>
         <div class="row">
             <div class="col-sm-4">
@@ -165,24 +170,24 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading">Socio</div>
                     <div class="panel-body" ng-show="!socioNatural && !socioJuridico">
-                        <p>Socio no encontrado</p>
+                        <p>Socio no Encontrado</p>
                     </div>
                     <table class="table table-condensed" ng-show="socioNatural">
                         <tbody>
                         <tr>
-                            <td>Documento:</td>
+                            <td style="font-weight: bold;">Documento:</td>
                             <td colspan="3"><span ng-bind-template="{{socioNatural.tipoDocumento.abreviatura}}/{{socioNatural.numeroDocumento}}"></span></td>
                         </tr>
                         <tr>
-                            <td>Socio:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioNatural.apellidoPaterno}} {{socioNatural.apellidoMaterno}},{{socioNatural.nombres}}"></span></td>
+                            <td style="font-weight: bold;">Socio:</td>
+                            <td colspan="3"><span ng-bind-template="{{socioNatural.apellidoPaterno}} {{socioNatural.apellidoMaterno}}, {{socioNatural.nombres}}"></span></td>
                         </tr>
                         <tr>
-                            <td>F. nac.:</td>
+                            <td style="font-weight: bold;">F. Nacimiento:</td>
                             <td><span ng-bind="socioNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
                         </tr>
                         <tr>
-                            <td>Sexo:</td>
+                            <td style="font-weight: bold;">Sexo:</td>
                             <td><span ng-bind="socioNatural.sexo"></span></td>
                         </tr>
                         </tbody>
@@ -198,7 +203,7 @@
                             <td colspan="3"><span ng-bind="socioJuridico.razonSocial"></span></td>
                         </tr>
                         <tr>
-                            <td>F. constitucion.:</td>
+                            <td>F. Constitucion.:</td>
                             <td><span ng-bind="socioJuridico.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
                         </tr>
                         </tbody>
@@ -209,14 +214,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Titulares</div>
                     <div class="panel-body" ng-show="titularesFinal.length == 0">
-                        <p>Titulares no existentes.</p>
+                        <p>Titulares no Existentes.</p>
                     </div>
                     <table class="table table-condensed" ng-show="titularesFinal.length != 0">
                         <thead>
                         <tr>
                             <th>Documento</th>
-                            <th>Ap. y nombres</th>
-                            <th>F. nacimiento</th>
+                            <th>Ap. y Nombres</th>
+                            <th>F. Nacimiento</th>
                             <th>Sexo</th>
                         </tr>
                         </thead>
@@ -234,14 +239,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Beneficiarios</div>
                     <div class="panel-body" ng-show="beneficiarios.length == 0">
-                        <p>Beneficiarios no existentes.</p>
+                        <p>Beneficiarios no Existentes.</p>
                     </div>
                     <table class="table table-condensed" ng-show="beneficiarios.length != 0">
                         <thead>
                         <tr>
                             <th>Documento</th>
-                            <th>Ap. y nombres</th>
-                            <th>Porcentaje</th>
+                            <th>Ap. y Nombres</th>
+                            <th>Porcentaje (%)</th>
                         </tr>
                         </thead>
                         <tbody>
