@@ -88,6 +88,16 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
     private Validator validator;
 	
 	@Override
+	public CuentaBancaria findById(BigInteger idCuenta){
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuenta);
+		if(cuentaBancaria != null){
+			Moneda moneda = cuentaBancaria.getMoneda();
+			Hibernate.initialize(moneda);
+		}
+		return cuentaBancaria;
+	}
+	
+	@Override
 	public Set<CuentaBancaria> findByFilterText(String filterText) {
 		// TODO Auto-generated method stub
 		return null;

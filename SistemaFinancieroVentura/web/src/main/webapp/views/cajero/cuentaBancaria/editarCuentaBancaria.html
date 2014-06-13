@@ -4,7 +4,10 @@
         <span ng-bind="alert.msg"></span>
     </alert>
     <div class="row">
-        <div class="col-sm-12" style="text-align: right;">
+        <div class="col-sm-6">
+            <h3>Cuenta bancaria</h3>
+        </div>
+        <div nf-if="cuentaBancaria" class="col-sm-6" style="text-align: right;">
             <!-- Contextual button for informational alert messages -->
             <button type="button" class="btn btn-info">Renovar cuenta</button>
             <!-- Indicates caution should be taken with this action -->
@@ -104,15 +107,15 @@
                 <table class="table">
                     <tr>
                         <td>Tipo cuenta:</td>
-                        <td><strong ng-bind="cuentaBancaria.tipoCuentaBancaria"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.tipoCuentaBancaria"></strong></td>
                     </tr>
                     <tr>
                         <td>Num. cuenta:</td>
-                        <td><strong ng-bind="cuentaBancaria.numeroCuenta"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.numeroCuenta"></strong></td>
                     </tr>
                     <tr>
                         <td>Estado:</td>
-                        <td><strong ng-bind="cuentaBancaria.estado"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.estado"></strong></td>
                     </tr>
                     <tr>
                         <td>Fecha apertura:</td>
@@ -122,15 +125,15 @@
                     </tr>
                     <tr>
                         <td>Moneda:</td>
-                        <td><strong ng-bind="cuentaBancaria.moneda.denominacion"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.moneda.denominacion"></strong></td>
                     </tr>
                     <tr>
                         <td>Saldo:</td>
-                        <td><strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong></td>
                     </tr>
                     <tr>
                         <td>Cant.retirantes:</td>
-                        <td><strong ng-bind="cuentaBancaria.cantRetirantes"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.cantidadRetirantes"></strong></td>
                     </tr>
                 </table>
             </div>
