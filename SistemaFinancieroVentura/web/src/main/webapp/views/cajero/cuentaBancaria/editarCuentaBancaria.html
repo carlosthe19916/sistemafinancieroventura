@@ -1,5 +1,8 @@
 <div ng-controller="EditarCuentaBancariaController">
     <!--menu de operaciones-->
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <span ng-bind="alert.msg"></span>
+    </alert>
     <div class="row">
         <div class="col-sm-12" style="text-align: right;">
             <!-- Contextual button for informational alert messages -->
@@ -15,13 +18,78 @@
         <!--Datos de socio-->
         <div class="col-sm-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Socio</div>
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6">Socio</div>
+                        <div class="col-md-6">
+                            <div class="text-right">
+                                <button ng-if="socio.personaNatural" type="button" ng-click="editarSocioPersonaNatural()" class="btn btn-link" style="padding: 0px 12px;">
+                                    Editar
+                                </button>
+                                <button ng-if="socio.personaJuridica" type="button" ng-click="editarSocioPersonaJuridica()" class="btn btn-link" style="padding: 0px 12px;">
+                                    Editar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="panel-body" ng-show="!socio">
                     <p>Socio no encontrado</p>
                 </div>
-                <table class="table">
+                <table class="table table-condensed" ng-if="socio.personaNatural">
                     <tr>
-                        <td></td>
+                        <td>Documento :</td>
+                        <td><strong ng-bind-template="{{socio.personaNatural.tipoDocumento.abreviatura}}/{{socio.personaNatural.numeroDocumento}}"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Socio:</td>
+                        <td><strong ng-bind-template="{{socio.personaNatural.apellidoPaterno}} {{socio.personaNatural.apellidoMaterno}}, {{socio.personaNatural.nombres}}"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>F.nac.:</td>
+                        <td><strong ng-bind="socio.personaNatural.fechaNacimiento |date : 'dd/MM/yyyy'"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Sexo</td>
+                        <td><strong ng-bind="socio.personaNatural.sexo"></strong></td>
+                    </tr>
+                </table>
+                <table class="table table-condensed" ng-if="socio.personaJuridica">
+                    <tr>
+                        <td>Documento :</td>
+                        <td><strong ng-bind-template="{{socio.personaJuridica.tipoDocumento.abreviatura}}/{{socio.personaJuridica.numeroDocumento}}"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Socio:</td>
+                        <td><strong ng-bind="socio.personaJuridica.razonSocial"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>N.comercial:</td>
+                        <td>
+                           <strong ng-bind="socio.personaJuridica.nombreComercial"></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>F.const.:</td>
+                        <td><strong ng-bind="socio.personaJuridica.fechaConstitucion | date : 'dd/MM/yyyy'"></strong></td>
+                    </tr>
+                </table>
+                <div class="panel-heading" ng-if="socio">Datos adicionales</div>
+                <table class="table table-condensed" ng-show="socio">
+                    <tr>
+                        <td>Estado:</td>
+                        <td><strong ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>F.asociado:</td>
+                        <td><strong ng-bind="socio.fechaInicio | date : 'dd/MM/yyyy'"></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Fecha fin:</td>
+                        <td>
+                            <strong ng-show="socio.fechaFin" ng-bind="socio.fechaFin | date:'dd/MM/yyyy'" ng-cloak></strong>
+                            <strong ng-show="!socio.fechaFin" ng-cloak>NO REGISTRADO</strong>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -64,6 +132,76 @@
                         <td>Cant.retirantes:</td>
                         <td><strong ng-bind="cuentaBancaria.cantRetirantes"></strong></td>
                     </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Datos de titulares-->
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-8">Titulares</div>
+                        <div ng-if="titulares" class="col-md-4">
+                            <div class="text-right">
+                                <button type="button" ng-click="addTitular()" class="btn btn-link" style="padding: 0px 12px;">
+                                    Nuevo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body" ng-show="!titulares || titulares.length == 0">
+                    <p>Titulares no registrados</p>
+                </div>
+                <table class="table table-striped table-condensed" ng-show="titulares">
+                    <tbody>
+                    <tr ng-repeat="titular in titulares">
+                        <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
+                        <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}} {{titular.personaNatural.apellidoMaterno}}, {{titular.personaNatural.nombres}}"></span></td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-remove"></span>Del</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--Datos de beneficiarios-->
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-8">
+                            Beneficiarios&nbsp;
+                            <span ng-cloak ng-show="control.beneficiario.success" ng-bind-html="control.beneficiario.message"></span>
+                        </div>
+                        <div ng-if="beneficiarios" class="col-md-4">
+                            <div class="text-right">
+                                <button type="button" ng-click="addBeneficiario()" class="btn btn-link" style="padding: 0px 12px;">
+                                    Nuevo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body" ng-show="!beneficiarios || beneficiarios.length == 0">
+                    <p>Beneficiarios no registrados</p>
+                </div>
+                <table class="table table-striped table-condensed" ng-show="beneficiarios">
+                    <tbody>
+                    <tr ng-repeat="beneficiario in beneficiarios">
+                        <td><span ng-bind="beneficiario.numeroDocumento"></span></td>
+                        <td><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
+                        <td><span ng-bind="beneficiario.porcentajeBeneficio"></span></td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-xs" ng-click="editBeneficiario($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="deleteBeneficiario($index)"><span class="glyphicon glyphicon-remove"></span>Del</button>
+                        </td>
+                    </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

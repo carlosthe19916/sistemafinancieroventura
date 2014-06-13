@@ -81,7 +81,7 @@ public class Titular implements java.io.Serializable {
 		this.idTitular = idTitular;
 	}
 
-	@XmlTransient
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_NATURAL", nullable = false)
 	public PersonaNatural getPersonaNatural() {

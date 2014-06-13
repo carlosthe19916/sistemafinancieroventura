@@ -324,7 +324,21 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		if(cuentaBancaria == null)
 			return null;
 		Socio socio = cuentaBancaria.getSocio();
+		PersonaNatural personaNatural = socio.getPersonaNatural();
+		PersonaJuridica personaJuridica = socio.getPersonaJuridica();
 		Hibernate.initialize(socio);
+		if(personaNatural != null){
+			TipoDocumento documento = personaNatural.getTipoDocumento();
+			Hibernate.initialize(personaNatural);	
+			Hibernate.initialize(documento);
+		}			
+		if(personaJuridica != null){
+			TipoDocumento documento = personaJuridica.getTipoDocumento();
+			Set<Accionista> accionistas = personaJuridica.getAccionistas();
+			Hibernate.initialize(personaJuridica);	
+			Hibernate.initialize(documento);
+			Hibernate.initialize(accionistas);
+		}	 	
 		return socio;
 	}
 

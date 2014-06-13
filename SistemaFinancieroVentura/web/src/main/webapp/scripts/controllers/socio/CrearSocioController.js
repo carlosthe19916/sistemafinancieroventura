@@ -4,17 +4,6 @@ define(['../module'], function (controllers) {
     controllers.controller('CrearSocioController', ["$scope","$state","$window","$location", "focus", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService",
         function($scope, $state, $window,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
 
-
-            $scope.decorateScope = this.decorateScope || function () {
-                $scope.decorator = 44;
-                console.log($scope.decorator);
-            }
-
-            $injector.invoke("MainController", this, {
-                $scope: $scope
-            });
-
-
             focus("firstFocus");
 
             $scope.control = {

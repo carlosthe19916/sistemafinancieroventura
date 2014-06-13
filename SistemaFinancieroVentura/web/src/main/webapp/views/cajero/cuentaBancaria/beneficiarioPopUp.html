@@ -1,0 +1,76 @@
+<div>
+    <div>
+        <div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Nuevo beneficiario</h4>
+            </div>
+            <form name="$parent.formBeneficiario" class="form-horizontal" ng-submit="addBeneficiario()" novalidate>
+                <div class="modal-body">
+                    <alert ng-repeat="alert in alertsBeneficiario" type="{{alert.type}}" close="closeAlert($index)">
+                        <span ng-bind-html="alert.msg"></span>
+                    </alert>
+                    <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.numeroDocumento.$invalid && (control.submitted || formBeneficiario.numeroDocumento.$dirty)}">
+                        <label class="col-sm-2 control-label">Nro doc.:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero documento" autofocus/>
+                            <div ng-show="formBeneficiario.numeroDocumento.$invalid && (control.submitted || formBeneficiario.numeroDocumento.$dirty)">
+                                <span class="help-block" ng-show="formBeneficiario.numeroDocumento.$error.maxlength">Maximo 15 caracteres.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' :
+                    (formBeneficiario.apellidoPaterno.$invalid && (control.submitted || formBeneficiario.apellidoPaterno.$dirty)) ||
+                    (formBeneficiario.apellidoMaterno.$invalid && (control.submitted || formBeneficiario.apellidoMaterno.$dirty))
+                    }">
+                        <label class="col-sm-2 control-label">Apellidos(*):</label>
+                        <div class="col-sm-5">
+                            <input type="text" name="apellidoPaterno" ng-model="beneficiario.apellidoPaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido paterno" capitalize required/>
+                            <div ng-show="formBeneficiario.apellidoPaterno.$invalid && (control.submitted || formBeneficiario.apellidoPaterno.$dirty)">
+                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.required">Ingrese apellido paterno.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.minlength">Minimo 1 caracter.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.maxlength">Maximo 40 caracteres.</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" name="apellidoMaterno" ng-model="beneficiario.apellidoMaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido materno" capitalize required/>
+                            <div ng-show="formBeneficiario.apellidoMaterno.$invalid && (control.submitted || formBeneficiario.apellidoMaterno.$dirty)">
+                                <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.required">Ingrese apellido materno.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.minlength">Minimo 1 caracter.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.maxlength">Maximo 40 caracteres.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.nombres.$invalid && (control.submitted || formBeneficiario.nombres.$dirty)}">
+                        <label class="col-sm-2 control-label">Nombres(*):</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="nombres" ng-model="beneficiario.nombres" ng-minlength="1" ng-maxlength="50" class="form-control" placeholder="Nombres" capitalize required/>
+                            <div ng-show="formBeneficiario.nombres.$invalid && (control.submitted || formBeneficiario.nombres.$dirty)">
+                                <span class="help-block" ng-show="formBeneficiario.nombres.$error.required">Ingrese nombres.</span>
+                                <span class="help-block" ng-show="formBeneficiario.nombres.$error.minlength">Minimo 1 caracter.</span>
+                                <span class="help-block" ng-show="formBeneficiario.nombres.$error.maxlength">Maximo 50 caracteres.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.porcentajeBeneficio.$invalid && (control.submitted || formBeneficiario.porcentajeBeneficio.$dirty)}">
+                        <label class="col-sm-2 control-label">Porcentaje(*):</label>
+                        <div class="col-sm-4">
+                            <input type="number" name="porcentajeBeneficio" ng-model="beneficiario.porcentajeBeneficio" ng-minlength="1" ng-maxlength="3" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Porcentaje" required/>
+                            <div ng-show="formBeneficiario.porcentajeBeneficio.$invalid && (control.submitted || formBeneficiario.porcentajeBeneficio.$dirty)">
+                                <span class="help-block" ng-show="formBeneficiario.porcentajeBeneficio.$error.required">Ingrese porcentaje.</span>
+                                <span class="help-block" ng-show="formBeneficiario.porcentajeBeneficio.$error.minlength">Minimo 1 caracter.</span>
+                                <span class="help-block" ng-show="formBeneficiario.porcentajeBeneficio.$error.maxlength">Maximo 3 caracteres.</span>
+                                <span class="help-block" ng-show="formBeneficiario.porcentajeBeneficio.$error.pattern">Ingrese porcentaje valido.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

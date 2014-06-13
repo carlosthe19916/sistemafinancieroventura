@@ -95,7 +95,7 @@ public class Socio implements java.io.Serializable {
 		this.idSocio = idSocio;
 	}
 
-	@XmlTransient
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_NATURAL")
 	public PersonaNatural getPersonaNatural() {
@@ -117,7 +117,7 @@ public class Socio implements java.io.Serializable {
 		this.cuentaAporte = cuentaAporte;
 	}
 
-	@XmlTransient
+	@XmlElement
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PERSONA_JURIDICA")
 	public PersonaJuridica getPersonaJuridica() {

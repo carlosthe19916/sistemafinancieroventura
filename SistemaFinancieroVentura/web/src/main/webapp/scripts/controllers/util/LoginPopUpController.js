@@ -8,6 +8,7 @@ define(['../module'], function (controllers) {
             $scope.usuario = {"username":"", "password":""};
             $scope.login = {"result" : false};
 
+            $scope.formLoginPopUp = {};
             $scope.ok = function () {
                 if($scope.formLoginPopUp.$valid){
                     UsuarioService.authenticationAsAdministrator($scope.usuario.username, $scope.usuario.password).then(

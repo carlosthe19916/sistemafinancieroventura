@@ -16,6 +16,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
@@ -33,6 +36,7 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
+import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
@@ -77,6 +81,9 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	@EJB
 	private CajaSessionService cajaSessionService;
 	
+	@Inject
+    private Validator validator;
+	
 	@Override
 	public Set<CuentaBancaria> findByFilterText(String filterText) {
 		// TODO Auto-generated method stub
@@ -92,6 +99,32 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		}
 		return list;
 	}
+	
+	@Override
+	public Set<Titular> getTitulares(BigInteger idCuentaBancaria, boolean mode) {
+		CuentaBancaria cuenta = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuenta == null)
+			return null;
+		Set<Titular> result = cuenta.getTitulars();
+		for (Titular titular : result) {
+			PersonaNatural persona = titular.getPersonaNatural();
+			TipoDocumento documento = persona.getTipoDocumento();
+			Hibernate.initialize(titular);	
+			Hibernate.initialize(persona);	
+			Hibernate.initialize(documento);	
+		}
+		return result;
+	}
+
+	@Override
+	public Set<Beneficiario> getBeneficiarios(BigInteger idCuentaBancaria) {
+		CuentaBancaria cuenta = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuenta == null)
+			return null;
+		Set<Beneficiario> result = cuenta.getBeneficiarios();
+		Hibernate.initialize(result);
+		return result;
+	}	
 	
 	@Override
 	public BigInteger createCuentaAhorro(BigInteger idAgencia, BigInteger idMoneda, BigDecimal tasaInteres,
@@ -484,6 +517,26 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
 		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters(), 2);
 		return new HashSet<CuentaBancariaView>(list);
-	}	
+	}
+
+	@Override
+	public BigInteger addBeneficiario(BigInteger id, Beneficiario beneficiario)
+			throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(id);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta bancaria no encotrada");
+		beneficiario.setIdBeneficiario(null);
+		beneficiario.setCuentaBancaria(cuentaBancaria);
+		
+		//validar beneficiario
+		Set<ConstraintViolation<Beneficiario>> violations = validator.validate(beneficiario);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
+		}
+		
+		beneficiarioDAO.create(beneficiario);
+		return beneficiario.getIdBeneficiario();
+	}
+	
 
 }

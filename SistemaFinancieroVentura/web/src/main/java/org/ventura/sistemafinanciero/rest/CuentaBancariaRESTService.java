@@ -47,6 +47,7 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
+import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
@@ -134,6 +135,52 @@ public class CuentaBancariaRESTService {
 			return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();	
 		}					
 	}
+	
+	//falta
+	@GET
+	@Path("/{id}/titulares")
+	@Produces({ "application/xml", "application/json" })
+	public Response findTitularesActiveFromCuentaBancaria(@PathParam("id")BigInteger id) {				
+		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
+		if(cuentaBancaria != null) {
+			Set<Titular> titulares = cuentaBancariaService.getTitulares(cuentaBancaria.getIdCuentaBancaria(), true);
+			return Response.status(Response.Status.OK).entity(titulares).build();	
+		}					
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Cuenta no encontrada").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();				
+		}					
+	}
+	
+	@GET
+	@Path("/{id}/titulares/all")
+	@Produces({ "application/xml", "application/json" })
+	public Response findTitularesAllFromCuentaBancaria(@PathParam("id")BigInteger id) {				
+		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
+		if(cuentaBancaria != null) {
+			Set<Titular> beneficiarios = cuentaBancariaService.getTitulares(cuentaBancaria.getIdCuentaBancaria(), false);
+			return Response.status(Response.Status.OK).entity(beneficiarios).build();	
+		}					
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Cuenta no encontrada").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();				
+		}					
+	}
+	
+	@GET
+	@Path("/{id}/beneficiarios")
+	@Produces({ "application/xml", "application/json" })
+	public Response findBeneficiariosFromCuentaBancaria(@PathParam("id")BigInteger id) {				
+		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
+		if(cuentaBancaria != null) {
+			Set<Beneficiario> beneficiarios = cuentaBancariaService.getBeneficiarios(cuentaBancaria.getIdCuentaBancaria());
+			return Response.status(Response.Status.OK).entity(beneficiarios).build();	
+		}					
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Cuenta no encontrada").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();				
+		}					
+	}
 		
 	@GET
 	@Path("/filtertext/{filterText}")
@@ -183,11 +230,14 @@ public class CuentaBancariaRESTService {
 			JsonObject model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (RollbackFailureException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (EJBException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}		
 	}
 	
@@ -334,6 +384,35 @@ public class CuentaBancariaRESTService {
 		}		
 	}
 		
+	@POST
+	@Path("/{id}/beneficiario")
+	@Produces({ "application/xml", "application/json" })
+	public Response createBeneficiario(@PathParam("id")BigInteger id, Beneficiario beneficiario) {	
+		if(id != null && beneficiario != null){
+			CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
+			if(cuentaBancaria != null) {
+				BigInteger idBeneficiario;
+				try {
+					idBeneficiario = cuentaBancariaService.addBeneficiario(id, beneficiario);
+					JsonObject model = Json.createObjectBuilder().add("message", "beneficicario creado").add("id", idBeneficiario).build();
+					return Response.status(Response.Status.OK).entity(model).build();
+				} catch (RollbackFailureException e) {
+					JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+				}					
+			}					
+			else {
+				JsonObject model = Json.createObjectBuilder().add("message", "Cuenta no encontrada").build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();				
+			}	
+		}			
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "solicitud invalida").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		}
+								
+	}
+	
 	@PUT	
 	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })

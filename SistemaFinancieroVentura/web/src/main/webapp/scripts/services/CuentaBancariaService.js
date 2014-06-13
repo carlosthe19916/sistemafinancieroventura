@@ -55,6 +55,12 @@ define(['./module'], function (services) {
                 },
                 getSocio: function(idCuenta){
                     return Restangular.one("cuentaBancaria/"+idCuenta+"/socio").get();
+                },
+                getTitulares: function(idCuenta){
+                    return Restangular.all("cuentaBancaria/"+idCuenta+"/titulares").getList();
+                },
+                getBeneficiarios: function(idCuenta){
+                    return Restangular.all("cuentaBancaria/"+idCuenta+"/beneficiarios").getList();
                 }
             }
         }])
