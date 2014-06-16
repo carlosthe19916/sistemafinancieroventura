@@ -484,6 +484,10 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	@Override
 	public Set<CuentaBancariaView> findAllView() {
 		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findAll();
+		for (CuentaBancariaView cuentaBancariaView : list) {
+			Moneda moneda = cuentaBancariaView.getMoneda();
+			Hibernate.initialize(moneda);
+		}
 		return new HashSet<>(list);
 	}
 	

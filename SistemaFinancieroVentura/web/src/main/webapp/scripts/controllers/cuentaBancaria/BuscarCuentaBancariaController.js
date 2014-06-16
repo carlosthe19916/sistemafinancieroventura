@@ -11,6 +11,8 @@ define(['../module'], function (controllers) {
             }
 
             $scope.cuentasList = [];
+            $scope.cuentasListInicial = [];
+            $scope.bandera = true;
 
             $scope.filterOptions = {
                 filterText: "",
@@ -36,16 +38,23 @@ define(['../module'], function (controllers) {
                     var data;
                     if (searchText) {
                         var ft = searchText.toUpperCase();
-                        data = $scope.cuentasList.filter(function(item) {
+                        data = $scope.cuentasListInicial.filter(function(item) {
                             return JSON.stringify(item).toUpperCase().indexOf(ft) != -1;
                         });
-                        $scope.setPagingData(data,page,pageSize);
 
+                        $scope.pagingOptions.currentPage = 1;
+                        page = 1;
+                        $scope.setPagingData(data,page,pageSize);
                     } else {
-                        if( angular.isUndefined($scope.filterOptions.filterText) || $scope.filterOptions.filterText === null) {
-                            var result = $scope.cuentasList = SocioService.getSocios();
-                            $scope.setPagingData(result,page,pageSize);
+                        if($scope.bandera){
+                            $scope.bandera = false;
+                            CuentaBancariaService.getCuentasBancariasView().then(function(data){
+                                var result = data;
+                                $scope.cuentasListInicial = data;
+                                $scope.setPagingData(result,page,pageSize);
+                            });
                         } else {
+                            $scope.cuentasList = angular.copy($scope.cuentasListInicial);
                             $scope.setPagingData($scope.cuentasList,page,pageSize);
                         }
                     }
@@ -53,25 +62,6 @@ define(['../module'], function (controllers) {
             };
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
-            $scope.getPagedDataSearched = function () {
-                setTimeout(function () {
-                    if ($scope.filterOptions.filterText) {
-                        ngProgress.start();
-                        var ft = $scope.filterOptions.filterText.toUpperCase();
-                        CuentaBancariaService.findByFilterText(ft).then(function (socios){
-                            $scope.cuentasList = socios;
-                        });
-                        ngProgress.complete();
-                    } else {
-                        ngProgress.start();
-                        $scope.cuentasList = CuentaBancariaService.getCuentasBancarias();
-                        ngProgress.complete();
-                    }
-                }, 100);
-            };
-
-            $scope.getPagedDataSearched();
 
             $scope.$watch('pagingOptions', function (newVal, oldVal) {
                 if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
@@ -94,14 +84,14 @@ define(['../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:"tipoCuentaBancaria", displayName:'TIPO CTA.'},
-                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:150},
+                    {field:"tipoCuenta", displayName:'TIPO CTA.', width:80},
+                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:135},
+                    {field:"tipoDocumento", displayName:'T.DOC.', width:60},
+                    {field:"numeroDocumento", displayName:'NUMERO',width:100},
+                    {field:"socio", displayName:'SOCIO',width:220},
                     {field:"moneda.denominacion", displayName:'MONEDA'},
-                    {field:"fechaApertura | date : 'dd/MM/yyyy'", displayName:'F.APERTURA'},
-                    {field:"fechaFin | date : 'dd/MM/yyyy'", displayName:'F.CIERRE'},
-                    {field:"cantidadRetirantes", displayName:'CANT.RETIRANT.'},
-                    {field:"estado", displayName:'ESTADO'},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
+                    {field:"estadoCuenta", displayName:'ESTADO',width:80},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>'}
                 ]
             };
 
