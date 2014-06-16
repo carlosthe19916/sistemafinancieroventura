@@ -47,6 +47,7 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
+import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
@@ -59,6 +60,7 @@ import org.ventura.sistemafinanciero.rest.dto.BuscarCuentaViewDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaAhorroDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaCorrienteDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaPlazoFijoDTO;
+import org.ventura.sistemafinanciero.rest.dto.TitularDTO;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
@@ -383,7 +385,47 @@ public class CuentaBancariaRESTService {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
 		}		
 	}
-		
+	
+	@POST
+	@Path("/{id}/titular")
+	@Produces({ "application/xml", "application/json" })
+	public Response createTitular(@PathParam("id")BigInteger idCuenta, TitularDTO titularDTO) {	
+		if(idCuenta != null && titularDTO != null){
+			CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(idCuenta);
+			if(cuentaBancaria != null) {
+				BigInteger idTitular;
+				try {
+					Titular titular = new Titular();
+					
+					TipoDocumento tipoDocumento = new TipoDocumento();
+					tipoDocumento.setIdTipoDocumento(titularDTO.getIdTipoDocumento());
+					
+					PersonaNatural personaNatural = new PersonaNatural();
+					personaNatural.setNumeroDocumento(titularDTO.getNumeroDocumento());
+					personaNatural.setTipoDocumento(tipoDocumento);
+					
+					titular.setPersonaNatural(personaNatural);
+					
+					idTitular = cuentaBancariaService.addTitular(idCuenta, titular);
+					JsonObject model = Json.createObjectBuilder().add("message", "Titular creado").add("id", idTitular).build();
+					return Response.status(Response.Status.OK).entity(model).build();
+				} catch (RollbackFailureException e) {
+					JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+					return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+				}					
+			}					
+			else {
+				JsonObject model = Json.createObjectBuilder().add("message", "Cuenta no encontrada").build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();				
+			}	
+		}			
+		else {
+			JsonObject model = Json.createObjectBuilder().add("message", "solicitud invalida").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		}
+								
+	}
+	
 	@POST
 	@Path("/{id}/beneficiario")
 	@Produces({ "application/xml", "application/json" })

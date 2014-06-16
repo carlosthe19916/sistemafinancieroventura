@@ -5,11 +5,12 @@ define(['./module'], function (services) {
             var _historialCajaService = Restangular.all("cuentaBancaria");
             return {
                 getCuentasBancarias: function(){
-                    return _historialCajaService.getList().$object;
+                    return _historialCajaService.getList();
                 },
                 getCuentasBancariasView: function(tipoPersonaList, tipoCuentaList, estadoCuentaList, monedaList ){
-                    //return Restangular.all("cuentaBancaria/view").getList();
-                    if (arguments.length == 1) {
+                    if(arguments.length == 0){
+                        return Restangular.all("cuentaBancaria/view").getList();
+                    }else if (arguments.length == 1) {
                         var trans = {"tipoPersonaList":tipoPersonaList}
                         return Restangular.all("cuentaBancaria/view/tipoCuenta/estadoCuenta/").post(trans);
                     } else if (arguments.length == 2) {

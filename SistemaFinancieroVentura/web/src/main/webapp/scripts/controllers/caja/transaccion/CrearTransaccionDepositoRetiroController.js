@@ -45,7 +45,7 @@ define(['../../module'], function (controllers) {
 
             $scope.openBuscarCuentaBancaria = function () {
                 var modalInstance = $modal.open({
-                    templateUrl: 'modules/common/views/util/buscarCuentaBancaria.html',
+                    templateUrl: 'views/cajero/util/buscarCuentaBancaria.html',
                     controller: "BuscarCuentaBancariaPopUpController",
                     size: 'lg'
                 });

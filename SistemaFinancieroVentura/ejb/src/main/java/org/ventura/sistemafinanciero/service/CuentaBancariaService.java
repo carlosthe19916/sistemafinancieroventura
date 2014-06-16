@@ -48,6 +48,7 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	public Set<Titular> getTitulares(BigInteger idCuentaBancaria, boolean mode);
 	public Set<Beneficiario> getBeneficiarios(BigInteger idCuentaBancaria);
 
-	public BigInteger addBeneficiario(BigInteger id, Beneficiario beneficiario) throws RollbackFailureException;;
+	public BigInteger addBeneficiario(BigInteger id, Beneficiario beneficiario) throws RollbackFailureException;
+	public BigInteger addTitular(BigInteger idCuenta, Titular titular) throws RollbackFailureException;
 
 }

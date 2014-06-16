@@ -105,7 +105,6 @@ define(['./app'], function(app) {
                     "</div>"+
                     "</div>"+
 
-
                     '</div>'+
                     '</div>'+
                     '</div>'

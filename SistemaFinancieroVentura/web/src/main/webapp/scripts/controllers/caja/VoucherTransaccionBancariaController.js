@@ -1,20 +1,20 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('VoucherTransaccionBancariaController', ["$scope", "$state", "$filter", "CajaSessionService",
-        function($scope, $state, $filter, CajaSessionService) {
+    controllers.controller('VoucherTransaccionBancariaController', ["$scope", "$state", "$filter", "CuentaBancariaService",
+        function($scope, $state, $filter, CuentaBancariaService) {
 
-            CajaSessionService.getPendiente($scope.id).then(
-                function(pendiente){
-                    $scope.pendiente = pendiente;
+    		CuentaBancariaService.getVoucherCuentaBancaria($scope.id).then(
+                function(transaccionCuentaBancaria){
+                    $scope.transaccionCuentaBancaria = transaccionCuentaBancaria;
                 },
                 function error(error){
-                    alert("pendiente no encontrado");
+                    alert("transaccion Cuenta Bancaria no encontrado");
                 }
             );
 
             $scope.cancelar = function(){
 
-            }
+            };
 
             $scope.imprimir = function(){
 

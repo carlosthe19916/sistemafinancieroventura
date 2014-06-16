@@ -1,0 +1,94 @@
+<div ng-controller="VoucherTransaccionBancariaController">
+    <div class="row">
+        <div class="col-md-6" id="voucher">
+            <div>
+                <fieldset>
+                    <legend>VOUCHER TRANSACCION BANCARIA</legend>
+                </fieldset>
+                <div class="panel panel-default" style="width: 350px;">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading" style="text-align: center; font-weight: bold;">
+                    	<label>C.A.C. CAJA VENTURA</label><br />
+                    	<label> CUENTA </label>
+                    </div>
+                    <!-- Table -->
+                    
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>AGENCIA:</td>
+                            <td>
+                            	<span ng-bind="transaccionCuentaBancaria.agenciaAbreviatura"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ID PENDIENTE:</td>
+                            <td>
+                            	<span ng-bind="pendiente.idPendienteCaja"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TIPO PENDIENTE:</td>
+                            <td><span ng-bind="pendiente.tipoPendiente"/> </td>
+                        </tr>
+                        <tr>
+                            <td>FECHA:</td>
+                            <td>
+                            	<span ng-bind="pendiente.fecha | date : 'dd/MM/yyyy'"/> 
+                            	<span ng-bind="pendiente.hora | date : 'HH:mm:ss'"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MONEDA:</td>
+                            <td><span ng-bind="pendiente.moneda.denominacion"/> </td>
+                        </tr>
+                        <tr>
+                            <td>MONTO:</td>
+                            <td><span ng-bind="pendiente.monto | currency : pendiente.moneda.simbolo"/> </td>
+                        </tr>
+                        <tr>
+                            <td>CAJA:</td>
+                            <td>
+                            	<span ng-bind="pendiente.cajaDenominacion"/>
+                            	<span ng-bind="(pendiente.cajaAbreviatura)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CAJERO:</td>
+                            <td>
+                            	<span ng-bind="pendiente.trabajador"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OBSERVACION:</td>
+                            <td>
+                            	<span ng-bind="pendiente.observacion"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" style="text-align: center;">________________</td>
+                            <td colspan="1" style="text-align: center;">_____________</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" style="text-align: center;">JEFE DE CAJA</td>
+                            <td colspan="1" style="text-align: center;">CAJERO</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-primary" ng-click="imprimir()">Imprimir</button>
+                <button type="button" class="btn btn-default" ng-click="cancelar()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<applet id="qz"
+        archive="bower_components/qz-print/qz-print.jar"
+        name="QZ Print Plugin" code="qz.PrintApplet.class"
+        width="55"
+        height="55">
+    <param name="jnlp_href" value="bower_components/qz-print/qz-print_jnlp.jnlp">
+    <param name="cache_option" value="plugin">
+    <param name="disable_logging" value="false">
+    <param name="initial_focus" value="false">
+</applet>
