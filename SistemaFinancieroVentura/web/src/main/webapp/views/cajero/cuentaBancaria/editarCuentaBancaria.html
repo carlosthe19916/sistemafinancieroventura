@@ -4,7 +4,10 @@
         <span ng-bind="alert.msg"></span>
     </alert>
     <div class="row">
-        <div class="col-sm-12" style="text-align: right;">
+        <div class="col-sm-6">
+            <h3>Cuenta bancaria</h3>
+        </div>
+        <div nf-if="cuentaBancaria" class="col-sm-6" style="text-align: right;">
             <!-- Contextual button for informational alert messages -->
             <button type="button" class="btn btn-info">Renovar cuenta</button>
             <!-- Indicates caution should be taken with this action -->
@@ -104,15 +107,15 @@
                 <table class="table">
                     <tr>
                         <td>Tipo cuenta:</td>
-                        <td><strong ng-bind="cuentaBancaria.tipoCuentaBancaria"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.tipoCuentaBancaria"></strong></td>
                     </tr>
                     <tr>
                         <td>Num. cuenta:</td>
-                        <td><strong ng-bind="cuentaBancaria.numeroCuenta"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.numeroCuenta"></strong></td>
                     </tr>
                     <tr>
                         <td>Estado:</td>
-                        <td><strong ng-bind="cuentaBancaria.estado"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.estado"></strong></td>
                     </tr>
                     <tr>
                         <td>Fecha apertura:</td>
@@ -122,15 +125,15 @@
                     </tr>
                     <tr>
                         <td>Moneda:</td>
-                        <td><strong ng-bind="cuentaBancaria.moneda.denominacion"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.moneda.denominacion"></strong></td>
                     </tr>
                     <tr>
                         <td>Saldo:</td>
-                        <td><strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong></td>
                     </tr>
                     <tr>
                         <td>Cant.retirantes:</td>
-                        <td><strong ng-bind="cuentaBancaria.cantRetirantes"></strong></td>
+                        <td colspan="3"><strong ng-bind="cuentaBancaria.cantidadRetirantes"></strong></td>
                     </tr>
                 </table>
             </div>
@@ -142,7 +145,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-8">Titulares</div>
+                        <div class="col-md-8">Titulares&nbsp;
+                        <span ng-cloak ng-show="control.titular.success" ng-bind-html="control.titular.message"></span>
+                        </div>
                         <div ng-if="titulares" class="col-md-4">
                             <div class="text-right">
                                 <button type="button" ng-click="addTitular()" class="btn btn-link" style="padding: 0px 12px;">
@@ -161,7 +166,7 @@
                         <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
                         <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}} {{titular.personaNatural.apellidoMaterno}}, {{titular.personaNatural.nombres}}"></span></td>
                         <td>
-                            <button type="button" class="btn btn-info btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
+                            <button type="button" class="btn btn-info btn-xs" ng-click="editTitular($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-remove"></span>Del</button>
                         </td>
                     </tr>
