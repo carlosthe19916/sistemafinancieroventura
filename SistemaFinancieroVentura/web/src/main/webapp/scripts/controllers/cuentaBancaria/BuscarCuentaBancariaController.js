@@ -91,7 +91,7 @@ define(['../module'], function (controllers) {
                     {field:"socio", displayName:'SOCIO',width:220},
                     {field:"moneda.denominacion", displayName:'MONEDA'},
                     {field:"estadoCuenta", displayName:'ESTADO',width:80},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>'}
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
             };
 

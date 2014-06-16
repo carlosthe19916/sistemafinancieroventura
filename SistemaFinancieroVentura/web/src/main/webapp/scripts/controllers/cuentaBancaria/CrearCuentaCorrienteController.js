@@ -159,7 +159,7 @@ define(['../module'], function (controllers) {
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
                             var mensaje= data.message;
-                            $state.transitionTo("app.socio.editarCuentaBancaria", { id: data.id });
+                            $state.transitionTo("app.socio.firmasCuentaBancaria", { id: data.id });
                         }, function error(error){
                             $scope.control.inProcess = false;
                             $scope.control.success = false;

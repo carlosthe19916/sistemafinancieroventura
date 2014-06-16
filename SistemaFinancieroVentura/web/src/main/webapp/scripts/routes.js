@@ -454,6 +454,17 @@ define(['./app'], function(app) {
                     }
                 }
             })
+            .state('app.socio.firmasCuentaBancaria', {
+                url: "/cuentaBancaria/:id/firma",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/cuentaBancaria/firmasCuentaBancaria.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
             .state('app.socio.buscarCuentaBancaria', {
                 url: "/buscarCuentaBancaria",
                 views: {

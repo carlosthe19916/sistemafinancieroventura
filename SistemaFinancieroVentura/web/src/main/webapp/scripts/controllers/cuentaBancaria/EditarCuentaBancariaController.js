@@ -73,6 +73,16 @@ define(['../module'], function (controllers) {
 
 
             //titulares
+            $scope.goToFirmas = function(){
+                $state.transitionTo("app.socio.firmasCuentaBancaria", { id: $scope.id });
+            }
+
+            $scope.editTitular = function(index){
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaNatural/" + $scope.titulares[index].personaNatural.id);
+            }
+
             $scope.addTitular = function(){
                 var modalInstance = $modal.open({
                     templateUrl: 'views/cajero/cuentaBancaria/titularPopUp.html',
@@ -226,6 +236,8 @@ define(['../module'], function (controllers) {
                 }, function () {
                 });
             }
+
+
 
         }]);
 });
