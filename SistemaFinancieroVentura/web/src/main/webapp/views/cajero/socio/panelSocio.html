@@ -124,7 +124,7 @@
                                 <div class="col-md-6">Persona</div>
                                 <div class="col-md-6">
                                     <div class="text-right">
-                                        <button type="button" ng-click="editarSocioPN()" class="btn btn-link" style="padding: 0px 12px;">
+                                        <button type="button" ng-click="editarRepresentantePJ()" class="btn btn-link" style="padding: 0px 12px;">
                                             Editar
                                         </button>
                                     </div>
@@ -186,31 +186,6 @@
                         </table>
                     </div>
                 </tab>
-                <tab heading="Accionistas">
-                    <div class="panel-body" ng-show="personaJuridica.accionistas.length == 0">
-                        <p>No se encontraron accionistas....</p>
-                    </div>
-                    <table class="table table-condensed" ng-show="personaJuridica.accionistas.length != 0">
-                        <thead>
-                        <tr>
-                            <th>T.y num.doc </th>
-                            <th>Ap. y nombres</th>
-                            <th>F. nacimiento</th>
-                            <th>%</th>
-                            <th>Edit</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="accionista in personaJuridica.accionistas">
-                            <td><span ng-bind-template="{{accionista.personaNatural.tipoDocumento.abreviatura}}/{{accionista.personaNatural.numeroDocumento}}"></span></td>
-                            <td><span ng-bind-template="{{accionista.personaNatural.apellidoPaterno}} {{accionista.personaNatural.apellidoMaterno}},{{accionista.personaNatural.nombres}}"></span></td>
-                            <td><span ng-bind="accionista.personaNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
-                            <td><span ng-bind="accionista.porcentajeParticipacion"></span></td>
-                            <td><button type="button" class="btn btn-primary btn-xs">Editar</button></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </tab>
             </tabset>
         </div>
     </div>
@@ -219,13 +194,8 @@
             <!-- Default panel contents -->
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         Datos de socio
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-right">
-                            <button type="button" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -251,9 +221,6 @@
                         Cuenta aporte
                     </div>
                     <div class="col-md-6">
-                        <div class="text-right">
-                            <button type="button" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -281,7 +248,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="text-right">
-                            <button type="button" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                            <button type="button" ng-click="editarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                         </div>
                     </div>
                 </div>
@@ -337,10 +304,17 @@
                     <td><span ng-bind="cuenta.moneda.denominacion"/></td>
                     <td><span ng-bind="cuenta.saldo"/></td>
                     <td><span ng-bind="cuenta.fechaApertura | date : 'dd/MM/yyyy'"/></td>
-                    <td><span ng-bind="cuenta.fechaCierre | date : 'dd/MM/yyyy'"/></td>
+                    <td>
+                        <span ng-show="cuenta.fechaCierre" ng-bind="cuenta.fechaCierre | date : 'dd/MM/yyyy'"/>
+                        <span ng-show="!cuenta.fechaCierre">INDEFINIDO</span>
+                    </td>
                     <td><span ng-bind="cuenta.cantidadRetirantes | date : 'dd/MM/yyyy'"/></td>
                     <td><span ng-bind="cuenta.estado"/></td>
-                    <td><button type="button" class="btn btn-primary btn-xs">Editar</button></td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-xs" ng-click="editarCuentaBancaria($index)">
+                            <span class="glyphicon glyphicon-share"></span>Editar
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>

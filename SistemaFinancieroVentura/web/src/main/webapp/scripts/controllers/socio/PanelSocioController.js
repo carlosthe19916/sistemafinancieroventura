@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("PanelSocioController", ["$scope", "$state","$window", "SocioService", "MaestroService",
-        function($scope, $state,$window, SocioService, MaestroService) {
+    controllers.controller("PanelSocioController", ["$scope", "$state","$location", "$window", "SocioService", "MaestroService",
+        function($scope, $state,$location, $window, SocioService, MaestroService) {
 
             SocioService.getSocio($scope.id).then(
                 function(data){
@@ -43,10 +43,31 @@ define(['../module'], function (controllers) {
 
 
             $scope.editarSocioPN = function(){
-                $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.caja.html#/app/socio/personaNatural/"+ $scope.personaNatural.id);
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaNatural/"+$scope.personaNatural.id);
             }
             $scope.editarSocioPJ = function(){
-
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaJuridica/"+$scope.personaJuridica.id);
+            }
+            $scope.editarRepresentantePJ = function(){
+                var baseLen = $location.absUrl().length - $location.url().length;
+                var url = $location.absUrl().substring(0, baseLen);
+                $window.open(url + "/app/socio/personaNatural/"+$scope.personaJuridica.representanteLegal.id);
+            }
+            $scope.editarApoderado = function(){
+                if(!angular.isUndefined($scope.apoderado)){
+                    var baseLen = $location.absUrl().length - $location.url().length;
+                    var url = $location.absUrl().substring(0, baseLen);
+                    $window.open(url + "/app/socio/personaNatural/"+$scope.apoderado.id);
+                }
+            }
+            $scope.editarCuentaBancaria = function(index){
+                if(!angular.isUndefined($scope.cuentasBancarias)){
+                    $state.transitionTo("app.socio.editarCuentaBancaria", { id: $scope.cuentasBancarias[index].id });
+                }
             }
 
         }]);
