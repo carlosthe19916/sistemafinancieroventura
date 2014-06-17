@@ -20,10 +20,6 @@ define(['../module'], function (controllers) {
                 qz.findPrinter("EPSON TM-U220");												//Elegir impresora
                 qz.append("\x1B\x40");															//reset printer
                 
-                //qz.appendImage("images/logo.png", "ESCP");
-               // while (!qz.isDoneAppending()) {} // wait
-               // qz.append("\r\n");
-                
                 qz.append("\x1B\x21\x08");														//texto en negrita
                 qz.append(String.fromCharCode(27) + "\x61" + "\x31");							//texto centrado
                 qz.append("C.A.C. CAJA VENTURA \r\n");											// \r\n salto de linea
@@ -47,14 +43,14 @@ define(['../module'], function (controllers) {
                 	
                 if (($scope.transaccionCuentaBancaria.tipoTransaccion)=="DEPOSITO") {
                 	qz.append("\r\n");
-                    qz.append("IMPORTE RECIBIDO:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
+                    qz.append("IMPORTE RECIBIDO:" + "\t" + ($filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo)) + "\r\n");
                     qz.append("\r\n");
                     qz.append(String.fromCharCode(27) + "\x61" + "\x31");
                 	qz.append("Verifique su dinero antes  de retirarse de ventanilla" + "\r\n");
 				} else {
 					qz.append("\r\n");
-					qz.append("IMPORTE RECIBIDO:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
-	                qz.append("SALDO DISPONIBLE:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.saldoDisponible, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
+					qz.append("IMPORTE PAGADO:" + "\t\t" + ($filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo)) + "\r\n");
+	                qz.append("SALDO DISPONIBLE:" + "\t" + ($filter('currency')($scope.transaccionCuentaBancaria.saldoDisponible, $scope.transaccionCuentaBancaria.moneda.simbolo)) + "\r\n");
 	                qz.append("\r\n");
 	                qz.append("\r\n");
 	                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
