@@ -1,6 +1,6 @@
 <div ng-controller="CrearAporteController">
     <fieldset>
-        <legend>Aporte de socio</legend>
+        <legend>Aporte de Socio</legend>
 
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             {{alert.msg}}
@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Datos de aporte</h3>
+                            <h3 class="panel-title">Datos de Aporte</h3>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -114,15 +114,15 @@
                         <div class="panel-heading"><h3 class="panel-title">Socio</h3></div>
                         <table class="table">
                             <tr>
-                                <td>Socio:</td>
+                                <td style="font-weight: bold;">Socio:</td>
                                 <td><strong ng-bind="transaccion.socio.socio"></strong></td>
                             </tr>
                             <tr>
-                                <td>Tip. y num: doc.:</td>
+                                <td style="font-weight: bold;">Tipo y Nro. Doc.:</td>
                                 <td><strong ng-bind-template="{{transaccion.socio.tipoDocumento}}/{{transaccion.socio.numeroDocumento}}"></strong></td>
                             </tr>
                             <tr>
-                                <td>Estado socio:</td>
+                                <td style="font-weight: bold;">Estado Socio:</td>
                                 <td><strong ng-bind="transaccion.socio.estado"></strong></td>
                             </tr>
                         </table>

@@ -12,15 +12,15 @@
                 <div class="col-sm-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Datos de transaccion</h3>
+                            <h3 class="panel-title">Datos de la Transacci&oacuten</h3>
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && control.submitted}">
-                                        <label>Numero Cuenta</label>
+                                        <label>N&uacutemero Cuenta</label>
                                         <div class="input-group">
-                                            <input type="text" name="numeroCuenta" ng-model="transaccion.numeroCuenta" class="form-control" placeholder="Numero de Cuenta" readonly required autofocus/>
+                                            <input type="text" name="numeroCuenta" ng-model="transaccion.numeroCuenta" class="form-control" placeholder="N&uacutemero de Cuenta" readonly required autofocus/>
                                               <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()">
                                                     <span class="glyphicon glyphicon-search"></span>
@@ -29,7 +29,7 @@
                                         </div>
                                         <div ng-show="formCrearTransaccion.numeroCuenta.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.numeroCuenta.$error.required">
-                                                Ingrese Numero de Cuenta.
+                                                Ingrese N&uacutemero de Cuenta.
                                             </p>
                                         </div>
                                     </div>
@@ -38,12 +38,12 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
-                                        <label>Tipo Transaccion</label>
+                                        <label>Tipo Transacci&oacuten</label>
                                         <select name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="transaccion.tipoTransaccion" class="form-control" required>
                                         </select>
                                         <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
-                                                Ingrese Tipo Transaccion.
+                                                Ingrese Tipo Transacci&oacuten.
                                             </p>
                                         </div>
                                     </div>
@@ -93,36 +93,36 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">Cuenta bancaria</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">Cuenta Bancaria</h3></div>
                         <table class="table">
                             <tr>
-                                <td>Socio:</td>
-                                <td><strong ng-bind="cuenta.socio"></strong></td>
+                                <td style="font-weight: bold;">Socio:</td>
+                                <td><span ng-bind="cuenta.socio"></span></td>
                             </tr>
                             <tr>
-                                <td>Tip. y num: doc.:</td>
-                                <td><strong ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></strong></td>
+                                <td style="font-weight: bold;">Tipo y Nro Doc.:</td>
+                                <td><span ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></span></td>
                             </tr>
                             <tr>
-                                <td>Tipo cuenta:</td>
-                                <td><strong ng-bind="cuenta.tipoCuenta"></strong></td>
+                                <td style="font-weight: bold;">Tipo Cuenta:</td>
+                                <td><span ng-bind="cuenta.tipoCuenta"></span></td>
                             </tr>
                             <tr>
-                                <td>Num. cuenta:</td>
-                                <td><strong ng-bind="cuenta.numeroCuenta"></strong></td>
+                                <td style="font-weight: bold;">Num. Cuenta:</td>
+                                <td><span ng-bind="cuenta.numeroCuenta"></span></td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style="font-weight: bold;">
                                     <span class="visible-sm visible-lg">✔ Moneda:</span>
                                 </td>
                                 <td>
                                     <span class="label label-info">Info</span>
-                                    <strong ng-bind="cuenta.moneda.denominacion"></strong>
+                                    <span ng-bind="cuenta.moneda.denominacion"></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Estado cuenta:</td>
-                                <td><strong ng-bind="cuenta.estadoCuenta"></strong></td>
+                                <td style="font-weight: bold;">Estado Cuenta:</td>
+                                <td><span ng-bind="cuenta.estadoCuenta"></span></td>
                             </tr>
                         </table>
                     </div>
