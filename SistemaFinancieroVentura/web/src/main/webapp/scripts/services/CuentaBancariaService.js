@@ -52,11 +52,7 @@ define(['./module'], function (services) {
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 },
                 findByFilterTextView: function(text){
-<<<<<<< HEAD
 					return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList();
-=======
-                    return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList();
->>>>>>> branch 'master' of https://code.google.com/p/sistemafinancieroventura/
                 },
                 getSocio: function(idCuenta){
                     return Restangular.one("cuentaBancaria/"+idCuenta+"/socio").get();

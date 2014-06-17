@@ -1,57 +1,78 @@
 package org.ventura.sistemafinanciero.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.math.BigDecimal;
-import java.util.Date;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * The persistent class for the ESTADOCUENTA_BANCARIA_VIEW database table.
  * 
  */
 @Entity
-@Table(name="ESTADOCUENTA_BANCARIA_VIEW")
-@NamedQuery(name="EstadocuentaBancariaView.findAll", query="SELECT e FROM EstadocuentaBancariaView e")
+@Table(name = "ESTADOCUENTA_BANCARIA_VIEW")
+@NamedQuery(name = "EstadocuentaBancariaView.findAll", query = "SELECT e FROM EstadocuentaBancariaView e")
 public class EstadocuentaBancariaView implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	private BigDecimal estado;
-
-	@Temporal(TemporalType.DATE)
-	private Date fecha;
-
-	private Timestamp hora;
-
-	@Column(name="ID_TRANSACCION_TRANSFERENCIA")
-	private BigDecimal idTransaccionTransferencia;
-
-	private BigDecimal monto;
-
-	@Column(name="NUMERO_CUENTA")
+	@XmlElement
+	@Id
+	@Column(name = "NUMERO_CUENTA", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	private String numeroCuenta;
 
-	@Column(name="NUMERO_OPERACION")
-	private BigDecimal numeroOperacion;
+	@XmlElement
+	@Column(name = "SALDO", nullable = false, precision = 18)
+	private BigDecimal saldo;
 
-	private String referencia;
+	@Column(name = "ID_TRANSACCION_TRANSFERENCIA")
+	private BigDecimal idTransaccionTransferencia;
 
-	@Column(name="SALDO_DISPONIBLE")
+	@Column(name = "NUMERO_OPERACION")
+	private BigInteger numeroOperacion;
+
+	@Column(name = "TIPO_TRANSACCION_TRANSFERENCIA", columnDefinition="nvarchar2")
+	private String tipoTransaccionTransferencia;
+
+	@XmlElement
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA", nullable = false, length = 7)
+	private Date fecha;
+
+	@XmlElement
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "HORA", nullable = false)
+	private Date hora;
+
+	@XmlElement
+	@Column(name = "MONTO", nullable = false, precision = 18)
+	private BigDecimal monto;
+
+	@XmlElement
+	@Column(name = "SALDO_DISPONIBLE", nullable = false, precision = 18)
 	private BigDecimal saldoDisponible;
 
-	@Column(name="TIPO_TRANSACCION_TRANSFERENCIA")
-	private String tipoTransaccionTransferencia;
+	@XmlElement
+	@Column(name = "REFERENCIA", nullable = true, length = 70, columnDefinition = "nvarchar2")
+	private String referencia;
+
+	@XmlElement
+	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
+	private int estado;
 
 	public EstadocuentaBancariaView() {
 	}
 
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
 	}
 
 	public Date getFecha() {
@@ -62,11 +83,11 @@ public class EstadocuentaBancariaView implements Serializable {
 		this.fecha = fecha;
 	}
 
-	public Timestamp getHora() {
+	public Date getHora() {
 		return this.hora;
 	}
 
-	public void setHora(Timestamp hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 
@@ -74,7 +95,8 @@ public class EstadocuentaBancariaView implements Serializable {
 		return this.idTransaccionTransferencia;
 	}
 
-	public void setIdTransaccionTransferencia(BigDecimal idTransaccionTransferencia) {
+	public void setIdTransaccionTransferencia(
+			BigDecimal idTransaccionTransferencia) {
 		this.idTransaccionTransferencia = idTransaccionTransferencia;
 	}
 
@@ -94,11 +116,11 @@ public class EstadocuentaBancariaView implements Serializable {
 		this.numeroCuenta = numeroCuenta;
 	}
 
-	public BigDecimal getNumeroOperacion() {
+	public BigInteger getNumeroOperacion() {
 		return this.numeroOperacion;
 	}
 
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
 
@@ -122,8 +144,17 @@ public class EstadocuentaBancariaView implements Serializable {
 		return this.tipoTransaccionTransferencia;
 	}
 
-	public void setTipoTransaccionTransferencia(String tipoTransaccionTransferencia) {
+	public void setTipoTransaccionTransferencia(
+			String tipoTransaccionTransferencia) {
 		this.tipoTransaccionTransferencia = tipoTransaccionTransferencia;
+	}
+
+	public BigDecimal getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
 	}
 
 }
