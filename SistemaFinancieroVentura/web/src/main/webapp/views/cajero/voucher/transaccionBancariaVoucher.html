@@ -19,18 +19,12 @@
                         <tbody>
                         <tr>
                         	<td colspan="1" style="font-size: 11px;">AGENCIA:</td>
-                            <td colspan="3" style="font-size: 11px;">
+                            <td colspan="1" style="font-size: 11px;">
                             	<span ng-bind="transaccionCuentaBancaria.agenciaAbreviatura"/>
                             </td>
-                        </tr>
-                        <tr>
                             <td colspan="1" style="font-size: 11px;">N&deg TRANS:</td>
                             <td colspan="1" style="font-size: 11px;">
                             	<span ng-bind="transaccionCuentaBancaria.idTransaccionBancaria"/>
-                            </td>
-                            <td colspan="1" style="font-size: 11px;">N&deg OP:</td>
-                            <td colspan="1" style="font-size: 11px;">
-                            	<span ng-bind="transaccionCuentaBancaria.numeroOperacion"/>
                             </td>
                         </tr>
                         <tr>
@@ -39,8 +33,14 @@
                             	<span ng-bind="transaccionCuentaBancaria.cajaDenominacion"/>
                             	<span ng-bind="'(' + transaccionCuentaBancaria.cajaAbreviatura + ')'"/>
                             </td >
-                           <td colspan="1" style="width: 20px; font-size: 11px;">FECHA:</td>
+                            <td colspan="1" style="font-size: 11px;">N&deg OP:</td>
                             <td colspan="1" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.numeroOperacion"/>
+                            </td>
+                        </tr>
+                        <tr>
+                           <td colspan="1" style="width: 20px; font-size: 11px;">FECHA:</td>
+                            <td colspan="3" style="font-size: 11px;">
                             	<span ng-bind="transaccionCuentaBancaria.fecha | date : 'dd/MM/yyyy'"/> 
                             	<span ng-bind="transaccionCuentaBancaria.hora | date : 'HH:mm:ss'"/>
                             </td>
