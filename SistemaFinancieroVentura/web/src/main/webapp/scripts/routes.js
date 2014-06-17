@@ -119,19 +119,19 @@ define(['./app'], function(app) {
                     "viewMenu":{
                         controller: function($scope){
                             $scope.menus = [
-                                {'name':'Panel control', submenus:[
-                                    { 'name':'Panel control' , 'state':'app.caja.panelControl'}
+                                {'name':'Panel Control', submenus:[
+                                    { 'name':'Panel Control' , 'state':'app.caja.panelControl'}
                                 ]},
-                                {'name':'Abrir / cerrar', submenus:[
-                                    { 'name':'Abrir caja' , 'state':'app.caja.abrirCaja'},
-                                    { 'name':'Cerrar caja' , 'state':'app.caja.cerrarCaja'},
+                                {'name':'Abrir/Cerrar', submenus:[
+                                    { 'name':'Abrir Caja' , 'state':'app.caja.abrirCaja'},
+                                    { 'name':'Cerrar Caja' , 'state':'app.caja.cerrarCaja'},
                                     { 'name':'Pendientes' , 'state':'app.caja.pendiente'},
                                     { 'name':'Historial' , 'state':'app.caja.historial'}
                                 ]},
                                 {
-                                    'name':'Transacciones internas', submenus:[
-                                    { 'name':'Transaccion con boveda' , 'state':'app.caja.buscarTransaccionBovedaCaja'},
-                                    { 'name':'Transaccion con caja' , 'state':'app.caja.buscarTransaccionCajaCaja'}
+                                    'name':'Transacciones Internas', submenus:[
+                                    { 'name':'Transaccion con Boveda' , 'state':'app.caja.buscarTransaccionBovedaCaja'},
+                                    { 'name':'Transaccion con Caja' , 'state':'app.caja.buscarTransaccionCajaCaja'}
                                 ]}
                             ];
                         }
@@ -150,13 +150,13 @@ define(['./app'], function(app) {
                                 {'name':'Socio', submenus:[
                                     { 'name':'Aporte' , 'state':'app.transaccion.aporte'}
                                 ]},
-                                {'name':'Cuenta bancaria', submenus:[
-                                    { 'name':'Deposito/retiro' , 'state':'app.transaccion.depositoRetiro'},
+                                {'name':'Cuenta Bancaria', submenus:[
+                                    { 'name':'Deposito/Retiro' , 'state':'app.transaccion.depositoRetiro'},
                                     { 'name':'Transferencia' , 'state':'app.transaccion.transferencia'},
-                                    { 'name':'Compra/venta' , 'state':'app.transaccion.compraVenta'}
+                                    { 'name':'Compra/Venta' , 'state':'app.transaccion.compraVenta'}
                                 ]},
                                 {'name':'Historial', submenus:[
-                                    { 'name':'Buscar transaccion' , 'state':'app.transaccion.buscarTransaccion'}
+                                    { 'name':'Buscar Transaccion' , 'state':'app.transaccion.buscarTransaccion'}
                                 ]}
                             ];
                         }

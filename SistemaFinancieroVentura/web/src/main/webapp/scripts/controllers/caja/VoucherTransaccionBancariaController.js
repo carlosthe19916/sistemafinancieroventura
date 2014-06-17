@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('VoucherTransaccionBancariaController', ["$scope", "$state", "$filter", "CuentaBancariaService",
-        function($scope, $state, $filter, CuentaBancariaService) {
+    controllers.controller('VoucherTransaccionBancariaController', ["$scope", "$state", "$filter", "CuentaBancariaService", "TransitionService",
+        function($scope, $state, $filter, CuentaBancariaService, TransitionService) {
 
     		CuentaBancariaService.getVoucherCuentaBancaria($scope.id).then(
                 function(transaccionCuentaBancaria){
@@ -12,8 +12,8 @@ define(['../module'], function (controllers) {
                 }
             );
 
-            $scope.cancelar = function(){
-
+            $scope.salir = function(){
+                $state.transitionTo(TransitionService.getUrl(), TransitionService.getParameters());
             };
 
             $scope.imprimir = function(){
