@@ -194,7 +194,7 @@ public class CuentaBancariaRESTService {
 	}
 	
 	@GET
-	@Path("/filtertext/{filterText}")
+	@Path("/view/filtertext/{filterText}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findByFilterTextView(
 			@PathParam("filterText") @DefaultValue("") String filterText) {

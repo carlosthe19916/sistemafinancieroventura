@@ -532,7 +532,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		}
 		List<CuentaBancariaView> list = null;
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters(), 2);
+		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters());
+		for (CuentaBancariaView cuentaBancariaView : list) {
+			Moneda moneda = cuentaBancariaView.getMoneda();
+			Hibernate.initialize(moneda);
+		}
 		return new HashSet<CuentaBancariaView>(list);
 	}
 
