@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("FirmasCuentaBancariaController", ["$scope", "$state","focus", "CuentaBancariaService",
-        function($scope, $state, focus, CuentaBancariaService) {
+    controllers.controller("FirmasCuentaBancariaController", ["$scope", "$state","focus", "CuentaBancariaService", "PersonaNaturalService",
+        function($scope, $state, focus, CuentaBancariaService, PersonaNaturalService) {
 
             $scope.alerts = [];
             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
@@ -43,11 +43,14 @@ define(['../module'], function (controllers) {
                                 y++;
                             }
                         }
+
                     }, function error(error){
                         $scope.titulares = undefined;
                         $scope.alerts.push({ type: "danger", msg: "Titulares no encontrados."});
                     }
                 );
+
+
             }
 
             $scope.goToPanelCuenta = function(){

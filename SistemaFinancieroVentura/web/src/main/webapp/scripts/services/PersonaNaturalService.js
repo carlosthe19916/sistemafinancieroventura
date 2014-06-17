@@ -55,10 +55,10 @@ define(['./module'], function (services) {
                     return Restangular.all("personanatural/"+id).remove();
                 },
                 getPersonas: function(){
-                    return _personanaturalService.getList().$object;
+                    return _personanaturalService.getList();
                 },
                 findById: function(id){
-                    return Restangular.one("personanatural", id).get().$object;
+                    return Restangular.one("personanatural", id).get();
                 },
                 findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
                     return Restangular.one('personanatural'+'/'+idtipodocumento+'/'+numerodocumento).get();
@@ -67,7 +67,10 @@ define(['./module'], function (services) {
                     return Restangular.all("personanatural/filtertext/"+text).getList();
                 },
                 currentSession: function(){
-                    return Restangular.one("personanatural/currentSession").get().$object;
+                    return Restangular.one("personanatural/currentSession").get();
+                },
+                getFirma: function(id){
+                    return Restangular.one("personanatural/"+id+"/firma").get();
                 }
             }
         }])

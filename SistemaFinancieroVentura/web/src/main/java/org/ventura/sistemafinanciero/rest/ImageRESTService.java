@@ -27,22 +27,25 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.util.GenericType;
 
-@Path("/file")
+@Path("/personanatural/image")
 public class ImageRESTService {
 
 	private final String UPLOADED_FILE_PATH = "d:\\fotos\\";
 
 	@GET
-	@Path("/upload")
+	@Path("/firma/upload")
 	public Response uploadFile(
 			@QueryParam("flowChunkNumber") int flowChunkNumber,
 			@QueryParam("flowChunkSize") int flowChunkSize,
@@ -55,11 +58,10 @@ public class ImageRESTService {
 			@QueryParam("id") int id) {
 
 		return Response.status(Response.Status.NOT_FOUND).build();
-
 	}
 
 	@POST
-	@Path("/upload")
+	@Path("/firma/upload")
 	@Consumes("multipart/form-data")
 	public Response uploadFile(MultipartFormDataInput input) {
 
@@ -70,14 +72,15 @@ public class ImageRESTService {
 
 		try {
 			fileName = input.getFormDataPart("id", new GenericType<String>() { });			
-		} catch (IOException e1) {			
+		} catch (IOException e) {			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
 		}
 		
 		for (InputPart inputPart : inputParts) {
 
 			try {
 
-				MultivaluedMap<String, String> header = inputPart.getHeaders();
+				//MultivaluedMap<String, String> header = inputPart.getHeaders();
 				//fileName = getFileName(header);
 
 				// convert the uploaded file to inputstream
@@ -88,32 +91,43 @@ public class ImageRESTService {
 				// constructs upload file path
 				fileName = UPLOADED_FILE_PATH + fileName;
 
-				writeFile(bytes, fileName);
-
-				System.out.println("Done");
+				writeFile(bytes, fileName);				
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
 			}
-
 		}
-
-		return Response
-				.status(200)
-				.entity("uploadFile is called, Uploaded file name : "
-						+ fileName).build();
+		return Response.status(200).entity("uploadFile is called, Uploaded file name : " + fileName).build();
 
 	}
 
+	
+	@GET
+	@Path("{id}/firma")
+	@Produces("image/png")
+	public Response getFile(@PathParam("id") String id) {
+ 
+		File file = new File(this.UPLOADED_FILE_PATH + id);
+
+		if(!file.exists())
+			file = new File(this.UPLOADED_FILE_PATH + "default.gif");
+		
+		ResponseBuilder response = Response.status(Response.Status.OK).entity((Object) file);		
+		
+		response.header("Content-Disposition", "attachment; filename=image"+ id + ".png");
+		return response.build();
+ 
+	}
+	
 	/**
 	 * header sample { Content-Type=[image/png], Content-Disposition=[form-data;
 	 * name="file"; filename="filename.extension"] }
 	 **/
 	// get uploaded filename, is there a easy way in RESTEasy?
+	@SuppressWarnings("unused")
 	private String getFileName(MultivaluedMap<String, String> header) {
 
-		String[] contentDisposition = header.getFirst("Content-Disposition")
-				.split(";");
+		String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
 
 		for (String filename : contentDisposition) {
 			if ((filename.trim().startsWith("filename"))) {
@@ -129,18 +143,14 @@ public class ImageRESTService {
 
 	// save to somewhere
 	private void writeFile(byte[] content, String filename) throws IOException {
-
 		File file = new File(filename);
 
 		if (!file.exists()) {
 			file.createNewFile();
 		}
-
 		FileOutputStream fop = new FileOutputStream(file);
-
 		fop.write(content);
 		fop.flush();
 		fop.close();
-
 	}
 }

@@ -66,6 +66,8 @@ public class PersonaNatural implements java.io.Serializable {
 	private String email;
 	private String ubigeo;
 	private String codigoPais;
+	private String urlFoto;
+	private String urlFirma;
 	private Set titulars = new HashSet(0);
 	private Set personaJuridicas = new HashSet(0);
 	private Set accionistas = new HashSet(0);
@@ -365,6 +367,26 @@ public class PersonaNatural implements java.io.Serializable {
 	@Override
 	public int hashCode() {
 		return this.tipoDocumento.hashCode() * this.numeroDocumento.hashCode();
+	}
+
+	@XmlElement
+	@Column(name = "URL_FOTO", nullable = true, length = 200, columnDefinition = "nvarchar2")
+	public String getUrlFoto() {
+		return urlFoto;
+	}
+
+	public void setUrlFoto(String urlFoto) {
+		this.urlFoto = urlFoto;
+	}
+
+	@XmlElement
+	@Column(name = "URL_FIRMA", nullable = true, length = 200, columnDefinition = "nvarchar2")
+	public String getUrlFirma() {
+		return urlFirma;
+	}
+
+	public void setUrlFirma(String urlFirma) {
+		this.urlFirma = urlFirma;
 	}
 
 }
