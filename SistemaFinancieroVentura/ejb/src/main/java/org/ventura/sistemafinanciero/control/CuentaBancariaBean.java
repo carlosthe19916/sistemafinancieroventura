@@ -16,6 +16,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.IdClass;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -368,7 +369,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	}
 	
 	@Override
-	public BigInteger createCuentaPlazoFijo(BigInteger idAgencia, BigInteger idMoneda, TipoPersona tipoPersona,
+	public BigInteger[] createCuentaPlazoFijo(BigInteger idAgencia, BigInteger idMoneda, TipoPersona tipoPersona,
 			BigInteger idPersona, int cantRetirantes, BigDecimal monto, int periodo, BigDecimal tasaInteres,
 			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
 			throws RollbackFailureException {
@@ -478,9 +479,10 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancariaTasaDAO.create(cuentaBancariaTasa);
 		
 		//crear transaccion bancaria
-		cajaSessionService.crearDepositoBancario(cuentaBancaria.getNumeroCuenta(), monto, "APERTURA DE CUENTA A PLAZO FIJO");
+		BigInteger idTransaccion = cajaSessionService.crearDepositoBancario(cuentaBancaria.getNumeroCuenta(), monto, "APERTURA DE CUENTA A PLAZO FIJO");
+		BigInteger idCuentaBancaria = cuentaBancaria.getIdCuentaBancaria();
 		
-		return cuentaBancaria.getIdCuentaBancaria();
+		return new BigInteger[] {idCuentaBancaria, idTransaccion};		
 						
 	}
 	

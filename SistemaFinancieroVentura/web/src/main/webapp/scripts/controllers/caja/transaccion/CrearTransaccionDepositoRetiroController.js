@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService", "ngProgress",
-        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, ngProgress) {
+    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService", "ngProgress","TransitionService",
+        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, ngProgress, TransitionService) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted":false};
 
@@ -71,6 +71,8 @@ define(['../../module'], function (controllers) {
                         function(data){
                             $scope.control.success = true;
                             $scope.control.inProcess = false;
+                            TransitionService.setUrl("app.transaccion.depositoRetiro");
+                            TransitionService.setParameters({});
                             $state.transitionTo('app.transaccion.depositoRetiroVoucher', { id: data.id });
                         },
                         function error(error){

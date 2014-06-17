@@ -1,6 +1,6 @@
 define(['./module'], function (services) {
     'use strict';
-    services.factory("HotKeysFunctionsService",function(Restangular){
+    services.factory("HotKeysFunctionsService",function(){
 
         var enterFunction = function(){
             console.log("Funcion no definida");
