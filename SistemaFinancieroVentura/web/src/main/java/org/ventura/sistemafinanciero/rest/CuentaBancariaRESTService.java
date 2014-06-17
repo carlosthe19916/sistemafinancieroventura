@@ -18,6 +18,7 @@ package org.ventura.sistemafinanciero.rest;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,6 +45,8 @@ import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
+import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
+import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
@@ -185,6 +189,25 @@ public class CuentaBancariaRESTService {
 		}					
 	}
 		
+	@GET
+	@Path("/{id}/estadoCuenta")
+	@Produces({ "application/xml", "application/json" })
+	public Response getEstadoCuenta(@PathParam("id")BigInteger id, 
+			@QueryParam("desde") Long desde, 
+			@QueryParam("hasta") Long hasta) {	
+		Date dateDesde = (desde != null ? new Date(desde) : null);
+		Date dateHasta = (desde != null ? new Date(hasta) : null);
+		
+		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
+		if(cuentaBancaria != null) {
+			List<EstadocuentaBancariaView> list = cuentaBancariaService.getEstadoCuenta(cuentaBancaria.getIdCuentaBancaria(),dateDesde, dateHasta);
+			return Response.status(Response.Status.OK).entity(list).build();
+		}					
+		else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Cuenta no encontrado").build();	
+		}						
+	}
+	
 	@GET
 	@Path("/filtertext/{filterText}")
 	@Produces(MediaType.APPLICATION_JSON)

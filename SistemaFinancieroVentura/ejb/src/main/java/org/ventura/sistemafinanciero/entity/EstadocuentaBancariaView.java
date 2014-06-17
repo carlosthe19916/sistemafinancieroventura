@@ -16,9 +16,12 @@ import java.util.Date;
 @Entity
 @Table(name = "ESTADOCUENTA_BANCARIA_VIEW")
 @NamedQuery(name = "EstadocuentaBancariaView.findAll", query = "SELECT e FROM EstadocuentaBancariaView e")
+@NamedQueries({ @NamedQuery(name = EstadocuentaBancariaView.findByNumeroCuentaAndDesdeHasta, query = "SELECT e FROM EstadocuentaBancariaView e WHERE e.numeroCuenta = :numeroCuenta AND e.fecha BETWEEN :desde AND :hasta") })
 public class EstadocuentaBancariaView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	public final static String findByNumeroCuentaAndDesdeHasta = "EstadocuentaBancariaView.findByNumeroCuentaAndDesdeHasta";
 
 	@XmlElement
 	@Id
@@ -35,7 +38,8 @@ public class EstadocuentaBancariaView implements Serializable {
 	@Column(name = "NUMERO_OPERACION")
 	private BigInteger numeroOperacion;
 
-	@Column(name = "TIPO_TRANSACCION_TRANSFERENCIA", columnDefinition="nvarchar2")
+	@XmlElement(name = "tipoTransaccion")
+	@Column(name = "TIPO_TRANSACCION_TRANSFERENCIA", columnDefinition = "nvarchar2")
 	private String tipoTransaccionTransferencia;
 
 	@XmlElement

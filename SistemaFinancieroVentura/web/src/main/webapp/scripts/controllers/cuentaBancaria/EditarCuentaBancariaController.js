@@ -54,6 +54,48 @@ define(['../module'], function (controllers) {
                     }
                 );
             }
+            if(!angular.isUndefined($scope.id)){
+                CuentaBancariaService.getEstadoCuenta($scope.id).then(
+                    function(data){
+                        $scope.transacciones = data;
+                    }, function error(error){
+                        $scope.transacciones = undefined;
+                        $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
+                    }
+                );
+            }
+            $scope.estadoCuentaSearcher = false;
+            $scope.today = function() { $scope.desde = new Date(); $scope.hasta = new Date(); };
+            $scope.today();
+            $scope.openDesde = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.openedDesde = true;
+            };
+            $scope.openHasta = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.openedHasta = true;
+            };
+            $scope.dateOptions = {formatYear: 'yy',startingDay: 1};
+            $scope.formats = ['dd/MM/yyyy','dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+            $scope.format = $scope.formats[0];
+
+            $scope.changeEstadoCuentaSearcher = function(){
+                $scope.estadoCuentaSearcher = !$scope.estadoCuentaSearcher;
+            }
+            $scope.buscarEstadoCuenta = function(){
+                CuentaBancariaService.getEstadoCuenta($scope.id, $scope.desde.getTime(),$scope.hasta.getTime()).then(
+                    function(data){
+                        $scope.transacciones = data;
+                    }, function error(error){
+                        $scope.transacciones = undefined;
+                        $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
+                    }
+                );
+            }
+
+
 
             //editar persona socio
             $scope.editarSocioPersonaNatural = function(){

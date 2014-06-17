@@ -21,7 +21,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.hibernate.Hibernate;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,7 @@ import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaTasa;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
+import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
@@ -82,6 +82,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	private DAO<Object, TransaccionBancaria> transaccionBancariaDAO;
 	@Inject
 	private DAO<Object, Agencia> agenciaDAO;
+	@Inject
+	private DAO<Object, EstadocuentaBancariaView> estadocuentaBancariaViewDAO;
 	
 	@EJB
 	private TasaInteresService tasaInteresService;
@@ -661,6 +663,37 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			voucherTransaccion.setSocio(personaJuridica.getRazonSocial());
 		}
 		return voucherTransaccion;
+	}
+
+	@Override
+	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde,
+			Date dateHasta) {
+		CuentaBancaria cuenta = cuentaBancariaDAO.find(idCuenta);
+		if(cuenta == null)
+			return null;
+		
+		Date desdeQuery = null;
+		Date hastaQuery = null;
+		
+		if(dateDesde == null || dateHasta == null){
+			Calendar calendar = Calendar.getInstance();
+			LocalDate localDateHasta = new LocalDate(calendar.getTime());			
+			LocalDate localDateDesde = localDateHasta.minusDays(30);
+			
+			desdeQuery = localDateDesde.toDateTimeAtStartOfDay().toDate();
+			hastaQuery = localDateHasta.toDateTimeAtStartOfDay().toDate();	
+		} else {
+			desdeQuery = dateDesde;
+			hastaQuery = dateHasta;
+		}
+		
+		QueryParameter queryParameter = QueryParameter.with("numeroCuenta", cuenta.getNumeroCuenta())
+				.and("desde", desdeQuery)
+				.and("hasta", hastaQuery);
+		List<EstadocuentaBancariaView> list = estadocuentaBancariaViewDAO.findByNamedQuery(EstadocuentaBancariaView.findByNumeroCuentaAndDesdeHasta, 
+				queryParameter.parameters());
+		
+		return list;
 	}
 
 

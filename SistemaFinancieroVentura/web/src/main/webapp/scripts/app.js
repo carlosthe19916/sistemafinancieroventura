@@ -23,6 +23,7 @@ define([
             'ui.bootstrap',
             'ngGrid',
             'ngSanitize',
+            'ngAnimate',
             'ui.utils',
             'blockUI',
             'flow',

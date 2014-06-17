@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import javax.ejb.Remote;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
+import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
@@ -54,5 +56,7 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	public BigInteger addTitular(BigInteger idCuenta, Titular titular) throws RollbackFailureException;
 	
 	public VoucherTransaccionBancaria getVoucherCuentaBancaria(BigInteger idTransaccionBancaria);
+
+	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);
 
 }

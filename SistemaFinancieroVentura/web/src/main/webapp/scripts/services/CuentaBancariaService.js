@@ -65,6 +65,9 @@ define(['./module'], function (services) {
                 },
                 getVoucherCuentaBancaria: function(id) {
                     return Restangular.one("cuentaBancaria/"+id+"/voucherCuentaBancaria").get();
+                },
+                getEstadoCuenta: function(id, desde, hasta) {
+                    return Restangular.all("cuentaBancaria/"+id+"/estadoCuenta").getList({"desde":desde,"hasta":hasta},{});
                 }
             }
         }])

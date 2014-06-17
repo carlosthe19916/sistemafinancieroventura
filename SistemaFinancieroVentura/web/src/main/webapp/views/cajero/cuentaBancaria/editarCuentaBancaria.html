@@ -186,7 +186,7 @@
                             Beneficiarios&nbsp;
                             <span ng-cloak ng-show="control.beneficiario.success" ng-bind-html="control.beneficiario.message"></span>
                         </div>
-                        <div ng-if="beneficiarios" class="col-md-4">
+                        <div class="col-md-4">
                             <div class="text-right">
                                 <button type="button" ng-click="addBeneficiario()" class="btn btn-link" style="padding: 0px 12px;">
                                     Nuevo
@@ -218,13 +218,74 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Estado cuenta</div>
-                <div class="panel-body">
-                    <p>...</p>
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-9" ng-hide="estadoCuentaSearcher" ng-animate="animate-show">Estado de cuenta</div>
+                        <form ng-submit="buscarEstadoCuenta()">
+                            <div ng-animate="animate-show" ng-show="estadoCuentaSearcher">
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Desde</span>
+                                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="desde" is-open="openedDesde" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="openDesde($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Hasta</span>
+                                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="hasta" is-open="openedHasta" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="openHasta($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-right">
+                                    <button type="button" ng-click="changeEstadoCuentaSearcher()" class="btn btn-link" style="padding: 0px 12px;">
+                                        Pdf
+                                    </button>
+                                    <button type="button" ng-click="changeEstadoCuentaSearcher()" class="btn btn-link" style="padding: 0px 12px;">
+                                        Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <table class="table">
-                    ...
+                <div class="panel-body" ng-show="transacciones.length == 0">
+                    <p>Estado de cuenta no encontrado</p>
+                </div>
+                <table class="table table-striped table-condensed" ng-show="transacciones.length != 0">
+                    <thead>
+                    <th>Fecha</th>
+                    <th>Descripcion</th>
+                    <th>Monto</th>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="transaccion in transacciones">
+                        <td>
+                            <span ng-bind="transaccion.fecha | date : 'dd/MM/yyyy'"></span></td>
+                        <td>
+                            <span ng-bind="transaccion.tipoTransaccion"></span>
+                        </td>
+                        <td>
+                            <span ng-bind="transaccion.monto | currency : ''"></span>
+                        </td>
+                    </tr>
+                    </tbody>
                 </table>
+                <div class="panel-footer">
+                    Saldo disponible:
+                    <strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong>
+                </div>
             </div>
         </div>
     </div>

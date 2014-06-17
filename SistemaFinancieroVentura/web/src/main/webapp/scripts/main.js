@@ -7,6 +7,7 @@ require.config({
         'angular-scenario': '../bower_components/angular-scenario/angular-scenario',
         'angular-mocks': '../bower_components/angular-mocks/angular-mocks',
         'angular-sanitize': "../bower_components/angular/angular-sanitize",
+        'angular-animate': "../bower_components/angular/angular-animate",
         'uiRouter': "../bower_components/angular-ui-router/angular-ui-router",
         'restangular' : "../bower_components/restangular/restangular",
         'underscore' : "../bower_components/restangular/underscore-min",
@@ -28,6 +29,9 @@ require.config({
             'exports' : 'jquery'
         },
         'angular-sanitize':{
+            deps: ['angular']
+        },
+        'angular-animate':{
             deps: ['angular']
         },
         'uiRouter' :{
@@ -140,6 +144,7 @@ require([
     'jquery',
     'routes',
     'angular-sanitize',
+    'angular-animate',
     'restangular',
     'ngProgress',
     'ui.bootstrap',
