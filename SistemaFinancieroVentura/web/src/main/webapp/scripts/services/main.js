@@ -15,6 +15,7 @@ define([
     './UsuarioSessionService',
     './UsuarioService',
     './PendienteCajaService',
+    './TransitionService',
 
     './HotKeysFunctionsService'
 ], function () {

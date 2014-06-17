@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearCuentaPlazoFijoController', [ "$scope", "$state", "$filter", "$window", "$timeout", "$location","$modal", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService",
-        function($scope, $state, $filter, $window,$timeout,$location,$modal, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService) {
+    controllers.controller('CrearCuentaPlazoFijoController', [ "$scope", "$state", "$filter", "$window", "$timeout", "$location","$modal", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService","TransitionService",
+        function($scope, $state, $filter, $window,$timeout,$location,$modal, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService,TransitionService) {
 
             $scope.$on('$includeContentLoaded', function(){
                 focus("firstFocus");
@@ -186,7 +186,10 @@ define(['../module'], function (controllers) {
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
                             var mensaje= data.message;
-                            $state.transitionTo("app.socio.editarCuentaBancaria", { id: data.id });
+
+                            TransitionService.setUrl("app.socio.editarCuentaBancaria");
+                            TransitionService.setParameters({"id":data.id});
+                            $state.transitionTo("app.transaccion.depositoRetiroVoucher", { id: data.idTransaccion });
                         }, function error(error){
                             $scope.control.inProcess = false;
                             $scope.control.success = false;

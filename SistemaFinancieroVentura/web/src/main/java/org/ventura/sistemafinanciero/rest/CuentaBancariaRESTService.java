@@ -395,8 +395,8 @@ public class CuentaBancariaRESTService {
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 			
-			BigInteger idCuenta = cuentaBancariaService.createCuentaPlazoFijo(agencia.getIdAgencia(), idMoneda, tipoPersona, idPersona, cantRetirantes, monto, periodo, tasaInteres, titulares, beneficiarios);			
-			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
+			BigInteger[] result = cuentaBancariaService.createCuentaPlazoFijo(agencia.getIdAgencia(), idMoneda, tipoPersona, idPersona, cantRetirantes, monto, periodo, tasaInteres, titulares, beneficiarios);			
+			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", result[0]).add("idTransaccion", result[1]).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {
 			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
