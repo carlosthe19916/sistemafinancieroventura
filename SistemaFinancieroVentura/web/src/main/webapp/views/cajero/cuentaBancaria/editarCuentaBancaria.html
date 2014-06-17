@@ -145,11 +145,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-8">Titulares&nbsp;
+                        <div class="col-md-7">Titulares&nbsp;
                         <span ng-cloak ng-show="control.titular.success" ng-bind-html="control.titular.message"></span>
                         </div>
-                        <div ng-if="titulares" class="col-md-4">
+                        <div ng-if="titulares" class="col-md-5">
                             <div class="text-right">
+                                <button type="button" ng-click="goToFirmas()" class="btn btn-link" style="padding: 0px 12px;">
+                                    Firmas
+                                </button>
                                 <button type="button" ng-click="addTitular()" class="btn btn-link" style="padding: 0px 12px;">
                                     Nuevo
                                 </button>

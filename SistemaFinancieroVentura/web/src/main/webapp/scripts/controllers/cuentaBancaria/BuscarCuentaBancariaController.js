@@ -63,6 +63,29 @@ define(['../module'], function (controllers) {
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
 
+            $scope.getPagedDataSearched = function () {
+                setTimeout(function () {
+                    if ($scope.filterOptions.filterText) {
+                        ngProgress.start();
+                        var ft = $scope.filterOptions.filterText.toUpperCase();
+                        CuentaBancariaService.findByFilterTextView(ft).then(function(data){
+                            var result = data;
+                            $scope.cuentasListInicial = data;
+                            $scope.setPagingData(result,$scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                        ngProgress.complete();
+                    } else {
+                        ngProgress.start();
+                        CuentaBancariaService.getCuentasBancariasView().then(function(data){
+                            var result = data;
+                            $scope.cuentasListInicial = data;
+                            $scope.setPagingData(result,$scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                        ngProgress.complete();
+                    }
+                }, 100);
+            };
+
             $scope.$watch('pagingOptions', function (newVal, oldVal) {
                 if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
                     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
@@ -91,7 +114,7 @@ define(['../module'], function (controllers) {
                     {field:"socio", displayName:'SOCIO',width:220},
                     {field:"moneda.denominacion", displayName:'MONEDA'},
                     {field:"estadoCuenta", displayName:'ESTADO',width:80},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>'}
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
             };
 

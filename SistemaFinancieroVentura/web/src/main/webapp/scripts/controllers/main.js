@@ -32,6 +32,7 @@ define([
     './cuentaBancaria/BuscarCuentaBancariaPopUpController',
     './cuentaBancaria/BeneficiarioPopUpController',
     './cuentaBancaria/TitularPopUpController',
+    './cuentaBancaria/FirmasCuentaBancariaController',
 
     './persona/natural/BuscarPersonaNaturalController',
     './persona/natural/CrearPersonaNaturalController',
@@ -45,7 +46,8 @@ define([
 
     './util/CalculadoraController',
     './util/LoginPopUpController',
-    './util/ConfirmPopUpController'
+    './util/ConfirmPopUpController',
+    './util/LoadImageController'
 ], function () {
 
 });
