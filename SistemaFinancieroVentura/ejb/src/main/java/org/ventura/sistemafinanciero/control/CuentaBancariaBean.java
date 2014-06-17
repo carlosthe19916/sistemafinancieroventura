@@ -29,6 +29,8 @@ import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
+import org.ventura.sistemafinanciero.entity.BovedaCaja;
+import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaTasa;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
@@ -38,6 +40,8 @@ import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
+import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
@@ -74,6 +78,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	private DAO<Object, Beneficiario> beneficiarioDAO;
 	@Inject
 	private DAO<Object, CuentaBancariaTasa> cuentaBancariaTasaDAO;
+	@Inject
+	private DAO<Object, TransaccionBancaria> transaccionBancariaDAO;
 	@Inject
 	private DAO<Object, Agencia> agenciaDAO;
 	
@@ -532,7 +538,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		}
 		List<CuentaBancariaView> list = null;
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters(), 2);
+		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters());
+		for (CuentaBancariaView cuentaBancariaView : list) {
+			Moneda moneda = cuentaBancariaView.getMoneda();
+			Hibernate.initialize(moneda);
+		}
 		return new HashSet<CuentaBancariaView>(list);
 	}
 
@@ -592,5 +602,66 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		return titular.getIdTitular();
 	}
 	
+	@Override
+	public VoucherTransaccionBancaria getVoucherCuentaBancaria(BigInteger idTransaccionBancaria) {
+		VoucherTransaccionBancaria voucherTransaccion = new VoucherTransaccionBancaria();
+		
+		// recuperando transaccion
+		TransaccionBancaria transaccionBancaria = transaccionBancariaDAO.find(idTransaccionBancaria);
+		CuentaBancaria cuentaBancaria = transaccionBancaria.getCuentaBancaria();
+		Socio socio = cuentaBancaria.getSocio();
+		Caja caja = transaccionBancaria.getHistorialCaja().getCaja();
+		Set<BovedaCaja> list = caja.getBovedaCajas();
+		Agencia agencia = null;
+		for (BovedaCaja bovedaCaja : list) {
+			agencia = bovedaCaja.getBoveda().getAgencia();
+			break;
+		}
+		
+		//Poniendo datos de transaccion
+		voucherTransaccion.setIdTransaccionBancaria(transaccionBancaria.getIdTransaccionBancaria());
+		Moneda moneda = transaccionBancaria.getMoneda();
+		Hibernate.initialize(moneda);
+		voucherTransaccion.setMoneda(moneda);
+		
+		voucherTransaccion.setFecha(transaccionBancaria.getFecha());
+		voucherTransaccion.setHora(transaccionBancaria.getHora());
+		voucherTransaccion.setNumeroOperacion(transaccionBancaria.getNumeroOperacion());
+		voucherTransaccion.setMonto(transaccionBancaria.getMonto());
+		voucherTransaccion.setReferencia(transaccionBancaria.getReferencia());
+		voucherTransaccion.setTipoTransaccion(transaccionBancaria.getTipoTransaccion());				
+		voucherTransaccion.setObservacion(transaccionBancaria.getObservacion());
+		
+		//Poniendo datos de cuenta bancaria
+		voucherTransaccion.setTipoCuentaBancaria(cuentaBancaria.getTipoCuentaBancaria());				
+		voucherTransaccion.setNumeroCuenta(cuentaBancaria.getNumeroCuenta());
+		voucherTransaccion.setSaldoDisponible(cuentaBancaria.getSaldo());
+		
+		//Poniendo datos de agencia
+		voucherTransaccion.setAgenciaDenominacion(agencia.getDenominacion());
+		voucherTransaccion.setAgenciaAbreviatura(agencia.getAbreviatura());
+		
+		//Poniendo datos de caja
+		voucherTransaccion.setCajaDenominacion(caja.getDenominacion());
+		voucherTransaccion.setCajaAbreviatura(caja.getAbreviatura());
+		
+		//Poniendo datos del socio
+		PersonaNatural personaNatural = socio.getPersonaNatural();
+		PersonaJuridica personaJuridica = socio.getPersonaJuridica();
+		if (personaJuridica == null) {
+			voucherTransaccion.setIdSocio(socio.getIdSocio());
+			voucherTransaccion.setTipoDocumento(socio.getPersonaNatural().getTipoDocumento());			//
+			voucherTransaccion.setNumeroDocumento(socio.getPersonaNatural().getNumeroDocumento());
+			voucherTransaccion.setSocio(personaNatural.getApellidoPaterno() + " " + personaNatural.getApellidoMaterno() + ", " + personaNatural.getNombres());
+		}
+		if (personaNatural == null) {
+			voucherTransaccion.setIdSocio(socio.getIdSocio());
+			voucherTransaccion.setTipoDocumento(socio.getPersonaJuridica().getTipoDocumento());			//
+			voucherTransaccion.setNumeroDocumento(socio.getPersonaJuridica().getNumeroDocumento());
+			voucherTransaccion.setSocio(personaJuridica.getRazonSocial());
+		}
+		return voucherTransaccion;
+	}
+
 
 }

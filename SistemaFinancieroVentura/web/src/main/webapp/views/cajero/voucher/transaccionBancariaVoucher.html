@@ -9,69 +9,76 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading" style="text-align: center; font-weight: bold;">
                     	<label>C.A.C. CAJA VENTURA</label><br />
+                    	<span ng-bind="transaccionCuentaBancaria.tipoTransaccion"/>
                     	<label> CUENTA </label>
+                    	<span ng-bind="transaccionCuentaBancaria.tipoCuentaBancaria"/>
                     </div>
                     <!-- Table -->
                     
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>AGENCIA:</td>
-                            <td>
+                        	<td colspan="1" style="font-size: 11px;">AGENCIA:</td>
+                            <td colspan="3" style="font-size: 11px;">
                             	<span ng-bind="transaccionCuentaBancaria.agenciaAbreviatura"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>ID PENDIENTE:</td>
-                            <td>
-                            	<span ng-bind="pendiente.idPendienteCaja"/>
+                            <td colspan="1" style="font-size: 11px;">N&deg TRANS:</td>
+                            <td colspan="1" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.idTransaccionBancaria"/>
+                            </td>
+                            <td colspan="1" style="font-size: 11px;">N&deg OP:</td>
+                            <td colspan="1" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.numeroOperacion"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>TIPO PENDIENTE:</td>
-                            <td><span ng-bind="pendiente.tipoPendiente"/> </td>
-                        </tr>
-                        <tr>
-                            <td>FECHA:</td>
-                            <td>
-                            	<span ng-bind="pendiente.fecha | date : 'dd/MM/yyyy'"/> 
-                            	<span ng-bind="pendiente.hora | date : 'HH:mm:ss'"/>
+                            <td colspan="1" style="font-size: 11px;">CAJA:</td>
+                            <td colspan="1" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.cajaDenominacion"/>
+                            	<span ng-bind="'(' + transaccionCuentaBancaria.cajaAbreviatura + ')'"/>
+                            </td >
+                           <td colspan="1" style="width: 20px; font-size: 11px;">FECHA:</td>
+                            <td colspan="1" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.fecha | date : 'dd/MM/yyyy'"/> 
+                            	<span ng-bind="transaccionCuentaBancaria.hora | date : 'HH:mm:ss'"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>MONEDA:</td>
-                            <td><span ng-bind="pendiente.moneda.denominacion"/> </td>
+                            <td colspan="1" style="font-size: 11px;">CUENTA:</td>
+                            <td colspan="3" style="font-size: 11px;"><span ng-bind="transaccionCuentaBancaria.numeroCuenta"/> </td>
                         </tr>
                         <tr>
-                            <td>MONTO:</td>
-                            <td><span ng-bind="pendiente.monto | currency : pendiente.moneda.simbolo"/> </td>
-                        </tr>
-                        <tr>
-                            <td>CAJA:</td>
-                            <td>
-                            	<span ng-bind="pendiente.cajaDenominacion"/>
-                            	<span ng-bind="(pendiente.cajaAbreviatura)"/>
+                            <td colspan="1" style="font-size: 11px;">SOCIO:</td>
+                            <td colspan="3" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.socio"/> 
                             </td>
                         </tr>
                         <tr>
-                            <td>CAJERO:</td>
-                            <td>
-                            	<span ng-bind="pendiente.trabajador"/>
+                            <td colspan="1" style="font-size: 11px;">MONEDA:</td>
+                            <td colspan="3" style="font-size: 11px;"><span ng-bind="transaccionCuentaBancaria.moneda.denominacion"/> 
+                            	<span ng-bind="'(' + transaccionCuentaBancaria.moneda.simbolo + ')'"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>OBSERVACION:</td>
-                            <td>
-                            	<span ng-bind="pendiente.observacion"/>
+                            <td colspan="1" style="font-size: 11px;">REF:</td>
+                            <td colspan="3" style="font-size: 11px;">
+                            	<span ng-bind="transaccionCuentaBancaria.referencia"/>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="1" style="text-align: center;">________________</td>
-                            <td colspan="1" style="text-align: center;">_____________</td>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+                        <tr>
+                            <td colspan="2" style="font-size: 11px;">IMPORTE RECIBIDO:</td>
+                            <td colspan="2" style="font-size: 11px; text-align: right;"><span ng-bind="transaccionCuentaBancaria.monto | currency : transaccionCuentaBancaria.moneda.simbolo"/></td>
                         </tr>
                         <tr>
-                            <td colspan="1" style="text-align: center;">JEFE DE CAJA</td>
-                            <td colspan="1" style="text-align: center;">CAJERO</td>
+                            <td colspan="4" style="text-align: center;">______________</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-size: 11px; text-align: center;">Firma Titular(es)</td>
                         </tr>
                         </tbody>
                     </table>

@@ -8,7 +8,7 @@ define(['../module'], function (controllers) {
                     $scope.transaccionCuentaBancaria = transaccionCuentaBancaria;
                 },
                 function error(error){
-                    alert("transaccion Cuenta Bancaria no encontrado");
+                    alert("Transaccion Cuenta Bancaria no Encontrado");
                 }
             );
 
@@ -17,31 +17,61 @@ define(['../module'], function (controllers) {
             };
 
             $scope.imprimir = function(){
-
-                qz.findPrinter("EPSON TM-U220");
-
-                qz.append("\x1B\x40"); // 1
-                qz.append("\x1B\x21\x08"); // 2
-                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
-                qz.append("______ C.A.C. CAJA VENTURA ______\r\n");
-                qz.append("\x1B\x21\x01"); // 3
-
-                qz.append("\x1B\x40"); // 1
-                qz.append("\x1B\x21\x08"); // 2
-                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
-                qz.append("PENDIENTE\r\n");
-                qz.append("\x1B\x21\x01"); // 3
-                qz.append("Fecha:"+($filter('date')($scope.pendiente.fecha, 'dd/MM/yyyy'))+ " ");
-                qz.append("Hora:"+($filter('date')($scope.pendiente.hora, 'HH:mm:ss'))+"\r\n");
-                qz.append("Tipo:"+($scope.pendiente.tipoPendiente)+ "\r\n");
-                qz.append("Moneda:"+($scope.pendiente.moneda.denominacion)+ "\r\n");
-                qz.append("Monto:"+($filter('currency')($scope.pendiente.monto, $scope.pendiente.moneda.simbolo))+ "\r\n");
-
-                qz.append("\x1D\x56\x41"); // 4
-                qz.append("\x1B\x40"); // 5
+                qz.findPrinter("EPSON TM-U220");												//Elegir impresora
+                qz.append("\x1B\x40");															//reset printer
+                
+                qz.append("\x1B\x21\x08");														//texto en negrita
+                qz.append(String.fromCharCode(27) + "\x61" + "\x31");							//texto centrado
+                qz.append("C.A.C. CAJA VENTURA \r\n");											// \r\n salto de linea
+                qz.append(($scope.transaccionCuentaBancaria.tipoTransaccion) + " CUENTA " + ($scope.transaccionCuentaBancaria.tipoCuentaBancaria) + "\r\n");
+                																				// \t tabulador
+                qz.append("\x1B\x21\x01");														//texto normal (no negrita)
+                qz.append(String.fromCharCode(27) + "\x61" + "\x30");							//texto a la izquierda
+                
+                qz.append(($scope.transaccionCuentaBancaria.agenciaAbreviatura) + "\t\t" + "TRANS:" + "\t" + ($scope.transaccionCuentaBancaria.idTransaccionBancaria) + "\r\n");
+                qz.append("CAJA:" + "\t" + ($scope.transaccionCuentaBancaria.cajaDenominacion) + "\t\t" + "Nro OP:" + "\t" + ($scope.transaccionCuentaBancaria.numeroOperacion) + "\r\n");
+                //qz.append("CAJA:" + "\t" + ($scope.transaccionCuentaBancaria.cajaDenominacion) + "\t" + "FECHA:" + ($filter('date')($scope.transaccionCuentaBancaria.fecha, 'dd/MM/yy')) + " " + ($filter('date')($scope.transaccionCuentaBancaria.hora, 'HH:mm:ss')) + "\r\n");
+                //qz.append("FECHA:" + "\t" + ($filter('date')($scope.transaccionCuentaBancaria.fecha, 'dd/MM/yyyy')) + "\t" + "HORA:" + ($filter('date')($scope.transaccionCuentaBancaria.hora, 'HH:mm:ss')) + "\r\n");
+                qz.append("FECHA:" + "\t" + ($filter('date')($scope.transaccionCuentaBancaria.fecha, 'dd/MM/yyyy')) + " " + ($filter('date')($scope.transaccionCuentaBancaria.hora, 'HH:mm:ss')) + "\r\n");
+                qz.append("CUENTA:" + "\t" + ($scope.transaccionCuentaBancaria.numeroCuenta) + "\r\n");
+                qz.append("SOCIO:" + "\t" + ($scope.transaccionCuentaBancaria.socio) + "\r\n");
+                qz.append("MONEDA:" + "\t" + ($scope.transaccionCuentaBancaria.moneda.denominacion) + "\r\n");
+                
+                if(!angular.isUndefined($scope.transaccionCuentaBancaria.referencia))
+                	qz.append("REF:" + "\t" + ($scope.transaccionCuentaBancaria.referencia) + "\r\n");
+                else
+                	qz.append(" ");
+                
+                //qz.append("\r\n");
+                //qz.append("IMPORTE RECIBIDO:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
+                
+                //qz.append("\r\n");
+                //qz.append("\r\n");
+                
+                if (($scope.transaccionCuentaBancaria.tipoTransaccion)=="DEPOSITO") {
+                	qz.append("\r\n");
+                    qz.append("IMPORTE RECIBIDO:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
+                    qz.append("\r\n");
+                    qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                	qz.append("Verifique su dinero antes  de retirarse de ventanilla" + "\r\n");
+				} else {
+					qz.append("\r\n");
+	                qz.append("IMPORTE RECIBIDO:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.monto, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
+	                qz.append("SALDO DISPONIBLE:" + "\t" + $filter('currency')($scope.transaccionCuentaBancaria.saldoDisponible, $scope.transaccionCuentaBancaria.moneda.simbolo) + "\r\n");
+	                qz.append("\r\n");
+	                qz.append("\r\n");
+	                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+					qz.append("_________________" + "\r\n");
+					qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+	                qz.append("Firma Titular(es)" + "\r\n");
+	                qz.append("\r\n");
+	                qz.append(String.fromCharCode(27) + "\x61" + "\x31");
+                	qz.append("Verifique su dinero antes de retirarse  de ventanilla" + "\r\n");
+				}
+                
+                qz.append("\x1D\x56\x41");														//cortar papel
+                qz.append("\x1B\x40");
                 qz.print();
-            }
-
-
+            };
         }]);
 });

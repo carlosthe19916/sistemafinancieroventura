@@ -51,6 +51,7 @@ import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
@@ -194,7 +195,7 @@ public class CuentaBancariaRESTService {
 	}
 	
 	@GET
-	@Path("/filtertext/{filterText}")
+	@Path("/view/filtertext/{filterText}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findByFilterTextView(
 			@PathParam("filterText") @DefaultValue("") String filterText) {
@@ -469,4 +470,13 @@ public class CuentaBancariaRESTService {
 	public Response updateCuentaBancaria(@PathParam("id") int id) {				
 		return null;
 	}
+	
+	@GET
+    @Path("{id}/voucherCuentaBancaria")  
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+    public Response getVoucherCuentaBancaria(@PathParam("id") BigInteger idTransaccionBancaria){
+    	VoucherTransaccionBancaria voucherTransaccionBancaria = cuentaBancariaService.getVoucherCuentaBancaria(idTransaccionBancaria);    	
+		return Response.status(Response.Status.OK).entity(voucherTransaccionBancaria).build(); 
+    }
 }

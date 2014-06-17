@@ -350,7 +350,7 @@ define(['./app'], function(app) {
                 url: "/depositoRetiro/:id/voucher",
                 views: {
                     "viewContent": {
-                        templateUrl: "views/cajero/voucher/depositoRetiroVoucher.html",
+                        templateUrl: "views/cajero/voucher/transaccionBancariaVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
@@ -448,6 +448,17 @@ define(['./app'], function(app) {
                 views: {
                     "viewContent": {
                         templateUrl: "views/cajero/cuentaBancaria/editarCuentaBancaria.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
+            .state('app.socio.firmasCuentaBancaria', {
+                url: "/cuentaBancaria/:id/firma",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/cuentaBancaria/firmasCuentaBancaria.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }

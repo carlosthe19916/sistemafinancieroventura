@@ -52,7 +52,7 @@ define(['./module'], function (services) {
                     return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 },
                 findByFilterTextView: function(text){
-                    return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
+					return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList();
                 },
                 getSocio: function(idCuenta){
                     return Restangular.one("cuentaBancaria/"+idCuenta+"/socio").get();
@@ -62,6 +62,9 @@ define(['./module'], function (services) {
                 },
                 getBeneficiarios: function(idCuenta){
                     return Restangular.all("cuentaBancaria/"+idCuenta+"/beneficiarios").getList();
+                },
+                getVoucherCuentaBancaria: function(id) {
+                    return Restangular.one("cuentaBancaria/"+id+"/voucherCuentaBancaria").get();
                 }
             }
         }])

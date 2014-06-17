@@ -12,6 +12,7 @@ import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.Titular;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
@@ -49,6 +50,9 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	public Set<Beneficiario> getBeneficiarios(BigInteger idCuentaBancaria);
 
 	public BigInteger addBeneficiario(BigInteger id, Beneficiario beneficiario) throws RollbackFailureException;
+	
 	public BigInteger addTitular(BigInteger idCuenta, Titular titular) throws RollbackFailureException;
+	
+	public VoucherTransaccionBancaria getVoucherCuentaBancaria(BigInteger idTransaccionBancaria);
 
 }
