@@ -132,7 +132,10 @@
                             <td><span ng-bind="beneficiario.apellidoPaterno"/></td>
                             <td><span ng-bind="beneficiario.apellidoMaterno"/></td>
                             <td><span ng-bind="beneficiario.nombres"/></td>
-                            <td><span ng-bind="beneficiario.porcentajeBeneficio"/></td>
+                            <td>
+                            	<span ng-bind="beneficiario.porcentajeBeneficio"/>
+                            	<span>%</span>
+                            </td>
                             <td><button type="button" ng-click="removeBeneficiario($index)" class="btn btn-danger btn-xs">Delete</button></td>
                         </tr>
                         </tbody>

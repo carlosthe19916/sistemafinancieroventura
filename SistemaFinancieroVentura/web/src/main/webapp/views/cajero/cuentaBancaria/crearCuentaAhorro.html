@@ -253,7 +253,10 @@
                         <tr ng-repeat="beneficiario in beneficiarios | unique">
                             <td style="font-size: 12px;"><span ng-bind="beneficiario.numeroDocumento"></span></td>
                             <td style="font-size: 12px;"><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
-                            <td style="font-size: 12px;"><span ng-bind="beneficiario.porcentajeBeneficio"></span></td>
+                            <td style="font-size: 12px;">
+                            	<span ng-bind="beneficiario.porcentajeBeneficio"></span>
+                            	<span>%</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
