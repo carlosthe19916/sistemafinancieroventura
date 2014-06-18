@@ -1,9 +1,9 @@
 <div ng-controller="CrearCuentaPlazoFijoController">
 <fieldset>
-    <legend>Crear cuenta a plazo fijo</legend>
+    <legend>Apertura Cuenta a Plazo Fijo</legend>
 </fieldset>
 <tabset>
-<tab heading="Cuenta a plazo fijo" select="tabCuentaSelected()">
+<tab heading="Cuenta a Plazo Fijo" select="tabCuentaSelected()">
 <br/>
 <div>
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
@@ -13,16 +13,17 @@
 <form ng-submit="crearCuenta()" novalidate>
 <ng-form name="$parent.formCrearCuenta">
 <fieldset>
-    <legend>Socio</legend>
+    <legend style="background: whitesmoke;">Socio</legend>
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && (control.submitted || formCrearCuenta.tipoPersona.$dirty)}">
-                <label>Tipo persona(*)</label>
+                <label>Tipo Persona</label>
+                <label style="color: brown;">(*)</label>
                 <select focus-on="firstFocus" id="cmbTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in tipoPersonas" ng-model="transaccion.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearCuenta.tipoPersona.$invalid && (control.submitted || formCrearCuenta.tipoPersona.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">
-                        Ingrese tipo persona.
+                        Seleccione Tipo Persona.
                     </p>
                 </div>
             </div>
@@ -31,21 +32,23 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoDocumento.$invalid && (control.submitted || formCrearCuenta.tipoDocumento.$dirty)}">
-                <label>Tipo documento(*)</label>
+                <label>Tipo Documento</label>
+                <label style="color: brown;">(*)</label>
                 <select name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy:'id'" ng-model="transaccion.tipoDocumento" class="form-control" required>
                 </select>
                 <div ng-show="formCrearCuenta.tipoDocumento.$invalid && (control.submitted || formCrearCuenta.tipoDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.tipoDocumento.$error.required">
-                        Ingrese tipo documento.
+                        Seleccione Tipo Documento.
                     </p>
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.numeroDocumento.$invalid && (control.submitted || formCrearCuenta.numeroDocumento.$dirty)}">
-                <label>Numero documento(*)</label>
+                <label>N&uacute;mero Documento</label>
+                <label style="color: brown;">(*)</label>
                 <div class="input-group">
-                    <input id="txtNumeroDocumentoSocio" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                    <input id="txtNumeroDocumentoSocio" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-default" ng-click="buscarPersonaSocio()">
                           <span class="glyphicon glyphicon-search"></span>
@@ -54,19 +57,19 @@
                 </div>
                 <div ng-show="formCrearCuenta.numeroDocumento.$invalid && (control.submitted || formCrearCuenta.numeroDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.required">
-                        Ingrese numero documento valido.
+                        Ingrese Numero Documento Valido.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.minlength">
-                        Minimo 1 caracter.
+                        Minimo 1 Caracter.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.maxlength">
-                        Maximo 20 caracteres.
+                        Maximo 20 Caracteres.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.pattern">
-                        Numero documento invalido.
+                        Numero Documento Invalido.
                     </p>
                     <p class="help-block" ng-show="formCrearCuenta.numeroDocumento.$error.sgmaxlength">
-                        Debe tener <span ng-bind="transaccion.tipoDocumento.numeroCaracteres"></span> caracteres.
+                        Debe Tener <span ng-bind="transaccion.tipoDocumento.numeroCaracteres"></span> Caracteres.
                     </p>
                 </div>
             </div>
@@ -75,55 +78,59 @@
             <div class="form-group">
                 <label>&nbsp;</label>
                 <div>
-                    <button type="button" class="btn btn-link" ng-click="crearPersona()">Registrar persona</button>
+                    <button type="button" class="btn btn-link" ng-click="crearPersona()">Registrar Persona</button>
                 </div>
             </div>
         </div>
     </div>
 </fieldset>
 <fieldset>
-    <legend>Datos de la cuenta</legend>
+    <legend style="background: whitesmoke;">Datos de la Cuenta</legend>
     <div>
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.moneda.$invalid && (control.submitted || formCrearCuenta.moneda.$dirty)}">
-                    <label>Moneda(*)</label>
+                    <label>Moneda</label>
+                    <label style="color: brown;">(*)</label>
                     <select name="moneda" ng-options="moneda as moneda.denominacion for moneda in monedas | orderBy:'id'" ng-model="transaccion.moneda" ng-change="actualizarTasaInteres()" class="form-control" required>
                     </select>
                     <div ng-show="formCrearCuenta.moneda.$invalid && (control.submitted || formCrearCuenta.moneda.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.moneda.$error.required">
-                            Ingrese tipo moneda.
+                            Ingrese Tipo Moneda.
                         </p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.periodo.$invalid && (control.submitted || formCrearCuenta.periodo.$dirty)}">
-                    <label>Periodo(*)</label>
+                    <label>Periodo (D&iacute;as)</label>
+                    <label style="color: brown;">(*)</label>
                     <input type="number" name="periodo" ng-model="transaccion.periodo" ng-minlength="1" ng-maxlength="3" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Periodo" required/>
                     <div ng-show="formCrearCuenta.periodo.$invalid && (control.submitted || formCrearCuenta.periodo.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.periodo.$error.required">
-                            Ingrese numero valido.
+                            Ingrese Numero de Dias valido.
                         </p>
                         <p class="help-block" ng-show="formCrearCuenta.periodo.$error.maxlength">
-                            Maximo 3 caracteres.
+                            Maximo 3 Caracteres.
                         </p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.monto.$invalid && (control.submitted || formCrearCuenta.monto.$dirty)}">
-                    <label ng-cloak>Monto &rarr; {{transaccion.monto | currency : ''}}</label>
+                    <label ng-cloak>Monto</label>
+                    <label style="color: brown;">(*)</label>
+                    <label>&rarr; {{transaccion.monto | currency : transaccion.moneda.simbolo}}</label>
                     <input type="text" name="monto" ui-keypress="{13:'actualizarTasaInteres($event)'}" ng-model="transaccion.monto" ng-minlength="1" ng-maxlength="30" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                     <div ng-show="formCrearCuenta.monto.$invalid && (control.submitted || formCrearCuenta.monto.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.monto.$error.required">
-                            Ingrese numero valido.
+                            Ingrese Monto Valido.
                         </p>
                         <p class="help-block" ng-show="formCrearCuenta.monto.$error.maxlength">
-                            Maximo 30 caracteres.
+                            Maximo 30 Caracteres.
                         </p>
                         <p class="help-block" ng-show="formCrearCuenta.monto.$error.pattern">
-                            Numero invalido.
+                            Numero Invalido.
                         </p>
                     </div>
                 </div>
@@ -132,7 +139,7 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>Tasa de interes
+                    <label>Tasa de Interes (%)
                         <button ng-show="!login.result" type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                     </label>
                     <kbd ng-show="!login.result" style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;padding-left: 10px;">
@@ -149,13 +156,13 @@
                         </div>
                         <div ng-show="formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty">
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.required">
-                                Ingrese tasa.
+                                Ingrese Tasa.
                             </p>
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.minlength">
-                                Minimo 1 caracter.
+                                Minimo 1 Caracter.
                             </p>
                             <p class="help-block" ng-show="formCrearCuenta.tasaInteresEdited.$error.maxlength">
-                                Maximo 6 caracteres.
+                                Maximo 6 Caracteres.
                             </p>
                         </div>
                     </div>
@@ -163,14 +170,16 @@
             </div>
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.cantRetirantes.$invalid && (control.submitted || formCrearCuenta.cantRetirantes.$dirty)}">
-                    <label>Cantidad retirantes</label>
+                    <label>Cantidad Retirantes</label>
                     <p ng-bind="transaccion.cantRetirantes" style="font-size: 1.4em;"></p>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div>
-                    <label>Total interes</label>
-                    <p><strong ng-bind="transaccion.total | currency:''" style="font-size: 1.4em;"></strong></p>
+                    <label>Total Interes</label>
+                    <p>
+                    	<strong ng-bind="transaccion.total | currency: transaccion.moneda.simbolo" style="font-size: 1.4em;"></strong>
+                    </p>
                 </div>
             </div>
         </div>
@@ -178,49 +187,49 @@
 </fieldset>
 
 <fieldset>
-    <legend>Resumen</legend>
+    <legend style="background: whitesmoke;">Resumen</legend>
     <div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="panel panel-default">
+                <div class="panel panel-default" style="width: 315px;">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">Socio</div>
+                    <div class="panel-heading" style="font-weight: bold;">Socio</div>
                     <div class="panel-body" ng-show="!socioNatural && !socioJuridico">
-                        <p>Socio no encontrado</p>
+                        <p>Socio no Encontrado</p>
                     </div>
                     <table class="table table-condensed" ng-show="socioNatural">
                         <tbody>
                         <tr>
-                            <td>Documento:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioNatural.tipoDocumento.abreviatura}}/{{socioNatural.numeroDocumento}}"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Documento:</td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{socioNatural.tipoDocumento.abreviatura}}/{{socioNatural.numeroDocumento}}"></span></td>
                         </tr>
                         <tr>
-                            <td>Socio:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioNatural.apellidoPaterno}} {{socioNatural.apellidoMaterno}},{{socioNatural.nombres}}"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Socio:</td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{socioNatural.apellidoPaterno}} {{socioNatural.apellidoMaterno}}, {{socioNatural.nombres}}"></span></td>
                         </tr>
                         <tr>
-                            <td>F. nac.:</td>
-                            <td><span ng-bind="socioNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Fecha Nac:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
                         </tr>
                         <tr>
-                            <td>Sexo:</td>
-                            <td><span ng-bind="socioNatural.sexo"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Sexo:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioNatural.sexo"></span></td>
                         </tr>
                         </tbody>
                     </table>
                     <table class="table table-condensed" ng-show="socioJuridico">
                         <tbody>
                         <tr>
-                            <td>Documento:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioJuridico.tipoDocumento.abreviatura}}/{{socioJuridico.numeroDocumento}}"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Documento:</td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{socioJuridico.tipoDocumento.abreviatura}}/{{socioJuridico.numeroDocumento}}"></span></td>
                         </tr>
                         <tr>
-                            <td>Socio:</td>
-                            <td colspan="3"><span ng-bind="socioJuridico.razonSocial"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Socio:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioJuridico.razonSocial"></span></td>
                         </tr>
                         <tr>
-                            <td>F. constitucion.:</td>
-                            <td><span ng-bind="socioJuridico.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Fecha Const:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioJuridico.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -228,26 +237,26 @@
             </div>
             <div class="col-sm-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Titulares</div>
+                    <div class="panel-heading" style="font-weight: bold;">Titulares</div>
                     <div class="panel-body" ng-show="titularesFinal.length == 0">
-                        <p>Titulares no existentes.</p>
+                        <p>Titulares no Existentes.</p>
                     </div>
                     <table class="table table-condensed" ng-show="titularesFinal.length != 0">
                         <thead>
                         <tr>
-                            <th>Documento</th>
-                            <th>Ap. y nombres</th>
-                            <th>F. nacimiento</th>
-                            <th>Sexo</th>
+                            <th style="font-size: 12px;">Documento</th>
+                            <th style="font-size: 12px;">Apellidos y Nombres</th>
+                            <th style="font-size: 12px;">Fecha Nac.</th>
+                            <th style="font-size: 12px;">Sexo</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         <tr ng-repeat="titular in titularesFinal | unique">
-                            <td><span ng-bind-template="{{titular.tipoDocumento.abreviatura}}/{{titular.numeroDocumento}}"></span></td>
-                            <td><span ng-bind-template="{{titular.apellidoPaterno}} {{titular.apellidoMaterno}}, {{titular.nombres}}"></span></td>
-                            <td><span ng-bind="titular.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
-                            <td><span ng-bind="titular.sexo"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{titular.tipoDocumento.abreviatura}}/{{titular.numeroDocumento}}"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{titular.apellidoPaterno}} {{titular.apellidoMaterno}}, {{titular.nombres}}"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="titular.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="titular.sexo"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -255,21 +264,24 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Beneficiarios</div>
                     <div class="panel-body" ng-show="beneficiarios.length == 0">
-                        <p>Beneficiarios no existentes.</p>
+                        <p>Beneficiarios no Existentes.</p>
                     </div>
                     <table class="table table-condensed" ng-show="beneficiarios.length != 0">
                         <thead>
                         <tr>
-                            <th>Documento</th>
-                            <th>Ap. y nombres</th>
-                            <th>Porcentaje</th>
+                            <th style="font-size: 12px;">Documento</th>
+                            <th style="font-size: 12px;">Apellidos y nombres</th>
+                            <th style="font-size: 12px;">Porcentaje(%)</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="beneficiario in beneficiarios | unique">
-                            <td><span ng-bind="beneficiario.numeroDocumento"></span></td>
-                            <td><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
-                            <td><span ng-bind="beneficiario.porcentajeBeneficio"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="beneficiario.numeroDocumento"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
+                            <td style="font-size: 12px;">
+                            	<span ng-bind="beneficiario.porcentajeBeneficio"></span>
+                            	<span>%</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
