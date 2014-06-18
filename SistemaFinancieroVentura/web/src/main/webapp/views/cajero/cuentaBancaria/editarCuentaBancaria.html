@@ -5,15 +5,15 @@
     </alert>
     <div class="row">
         <div class="col-sm-6">
-            <h3>Cuenta bancaria</h3>
+            <h3>Resumen Cuenta Bancaria</h3>
         </div>
         <div nf-if="cuentaBancaria" class="col-sm-6" style="text-align: right;">
             <!-- Contextual button for informational alert messages -->
-            <button type="button" class="btn btn-info">Renovar cuenta</button>
+            <button type="button" class="btn btn-info">Renovar Cuenta</button>
             <!-- Indicates caution should be taken with this action -->
-            <button type="button" class="btn btn-warning">Congelar cuenta</button>
+            <button type="button" class="btn btn-warning">Congelar Cuenta</button>
             <!-- Indicates a dangerous or potentially negative action -->
-            <button type="button" class="btn btn-danger">Cancelar cuenta</button>
+            <button type="button" class="btn btn-danger">Cancelar Cuenta</button>
         </div>
     </div>
     <br/>
@@ -23,7 +23,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-6">Socio</div>
+                        <div class="col-md-6" style="font-weight: bold;">Socio</div>
                         <div class="col-md-6">
                             <div class="text-right">
                                 <button ng-if="socio.personaNatural" type="button" ng-click="editarSocioPersonaNatural()" class="btn btn-link" style="padding: 0px 12px;">
@@ -37,61 +37,61 @@
                     </div>
                 </div>
                 <div class="panel-body" ng-show="!socio">
-                    <p>Socio no encontrado</p>
+                    <p>Socio no Encontrado</p>
                 </div>
                 <table class="table table-condensed" ng-if="socio.personaNatural">
                     <tr>
-                        <td>Documento :</td>
-                        <td><strong ng-bind-template="{{socio.personaNatural.tipoDocumento.abreviatura}}/{{socio.personaNatural.numeroDocumento}}"></strong></td>
+                        <td colspan="1" style="width: 130px;"><strong>Documento:</strong></td>
+                        <td colspan="1"><span ng-bind-template="{{socio.personaNatural.tipoDocumento.abreviatura}}/{{socio.personaNatural.numeroDocumento}}"></span></td>
                     </tr>
                     <tr>
-                        <td>Socio:</td>
-                        <td><strong ng-bind-template="{{socio.personaNatural.apellidoPaterno}} {{socio.personaNatural.apellidoMaterno}}, {{socio.personaNatural.nombres}}"></strong></td>
+                        <td colspan="1"><strong>Ap. y Nombres:</strong></td>
+                        <td colspan="1"><span ng-bind-template="{{socio.personaNatural.apellidoPaterno}} {{socio.personaNatural.apellidoMaterno}}, {{socio.personaNatural.nombres}}"></span></td>
                     </tr>
                     <tr>
-                        <td>F.nac.:</td>
-                        <td><strong ng-bind="socio.personaNatural.fechaNacimiento |date : 'dd/MM/yyyy'"></strong></td>
+                        <td colspan="1"><strong>Fecha Nac.:</strong></td>
+                        <td colspan="1"><span ng-bind="socio.personaNatural.fechaNacimiento |date : 'dd/MM/yyyy'"></span></td>
                     </tr>
                     <tr>
-                        <td>Sexo</td>
-                        <td><strong ng-bind="socio.personaNatural.sexo"></strong></td>
+                        <td colspan="1"><strong>Sexo:</strong></td>
+                        <td colspan="1"><span ng-bind="socio.personaNatural.sexo"></span></td>
                     </tr>
                 </table>
                 <table class="table table-condensed" ng-if="socio.personaJuridica">
                     <tr>
-                        <td>Documento :</td>
-                        <td><strong ng-bind-template="{{socio.personaJuridica.tipoDocumento.abreviatura}}/{{socio.personaJuridica.numeroDocumento}}"></strong></td>
+                        <td colspan="1" style="width: 130px;"><strong>Documento:</strong></td>
+                        <td colspan="1"><span ng-bind-template="{{socio.personaJuridica.tipoDocumento.abreviatura}}/{{socio.personaJuridica.numeroDocumento}}"></span></td>
                     </tr>
                     <tr>
-                        <td>Socio:</td>
-                        <td><strong ng-bind="socio.personaJuridica.razonSocial"></strong></td>
+                        <td colspan="1"><strong>Socio:</strong></td>
+                        <td colspan="1"><span ng-bind="socio.personaJuridica.razonSocial"></span></td>
                     </tr>
                     <tr>
-                        <td>N.comercial:</td>
-                        <td>
-                           <strong ng-bind="socio.personaJuridica.nombreComercial"></strong>
+                        <td colspan="1"><strong>Nombre Comercial:</strong></td>
+                        <td colspan="1">
+                           <span ng-bind="socio.personaJuridica.nombreComercial"></span>
                         </td>
                     </tr>
                     <tr>
-                        <td>F.const.:</td>
-                        <td><strong ng-bind="socio.personaJuridica.fechaConstitucion | date : 'dd/MM/yyyy'"></strong></td>
+                        <td colspan="1"><strong>Fecha Const.:</strong></td>
+                        <td colspan="1"><span ng-bind="socio.personaJuridica.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
                     </tr>
                 </table>
-                <div class="panel-heading" ng-if="socio">Datos adicionales</div>
+                <div class="panel-heading" ng-if="socio" style="font-weight: bold;">Datos Adicionales</div>
                 <table class="table table-condensed" ng-show="socio">
                     <tr>
-                        <td>Estado:</td>
-                        <td><strong ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</strong></td>
+                        <td colspan="1" style="width: 130px"><strong>Estado:</strong></td>
+                        <td colspan="1"><span ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</span></td>
                     </tr>
                     <tr>
-                        <td>F.asociado:</td>
-                        <td><strong ng-bind="socio.fechaInicio | date : 'dd/MM/yyyy'"></strong></td>
+                        <td colspan="1"><strong>Fecha Asociado:</strong></td>
+                        <td colspan="1"><span ng-bind="socio.fechaInicio | date : 'dd/MM/yyyy'"></span></td>
                     </tr>
                     <tr>
-                        <td>Fecha fin:</td>
-                        <td>
-                            <strong ng-show="socio.fechaFin" ng-bind="socio.fechaFin | date:'dd/MM/yyyy'" ng-cloak></strong>
-                            <strong ng-show="!socio.fechaFin" ng-cloak>NO REGISTRADO</strong>
+                        <td colspan="1"><strong>Fecha Retiro:</strong></td>
+                        <td colspan="1">
+                            <span ng-show="socio.fechaFin" ng-bind="socio.fechaFin | date:'dd/MM/yyyy'" ng-cloak></span>
+                            <span ng-show="!socio.fechaFin" ng-cloak>NO REGISTRADO</span>
                         </td>
                     </tr>
                 </table>
@@ -100,40 +100,40 @@
         <!--Datos de cuenta-->
         <div class="col-sm-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Cuenta bancaria</div>
+                <div class="panel-heading" style="font-weight: bold;">Cuenta Bancaria</div>
                 <div class="panel-body" ng-show="!cuentaBancaria">
-                    <p>Cuenta no encontrada</p>
+                    <p>Cuenta no Encontrada</p>
                 </div>
                 <table class="table">
                     <tr>
-                        <td>Tipo cuenta:</td>
-                        <td colspan="3"><strong ng-bind="cuentaBancaria.tipoCuentaBancaria"></strong></td>
+                        <td colspan="1" style="width: 115px;"><strong>Tipo Cuenta:</strong></td>
+                        <td colspan="3"><span ng-bind="cuentaBancaria.tipoCuentaBancaria"></span></td>
                     </tr>
                     <tr>
-                        <td>Num. cuenta:</td>
-                        <td colspan="3"><strong ng-bind="cuentaBancaria.numeroCuenta"></strong></td>
+                        <td colspan="1"><strong>N&deg Cuenta:</strong></td>
+                        <td colspan="3"><span ng-bind="cuentaBancaria.numeroCuenta"></span></td>
                     </tr>
                     <tr>
-                        <td>Estado:</td>
-                        <td colspan="3"><strong ng-bind="cuentaBancaria.estado"></strong></td>
+                        <td colspan="1"><strong>Estado:</strong></td>
+                        <td colspan="3"><span ng-bind="cuentaBancaria.estado"></span></td>
                     </tr>
                     <tr>
-                        <td>Fecha apertura:</td>
-                        <td><strong ng-bind="cuentaBancaria.fechaApertura | date:'dd/MM/yyyy'"></strong></td>
-                        <td>Fecha cierre:</td>
-                        <td><strong ng-bind="cuentaBancaria.fechaCierre | date:'dd/MM/yyyy'"></strong></td>
+                        <td colspan="1"><strong>Fec. Apertura:</strong></td>
+                        <td colspan="1" style="width: 100px;"><span ng-bind="cuentaBancaria.fechaApertura | date:'dd/MM/yyyy'"></span></td>
+                        <td colspan="1" style="width: 140px;"><strong>Fec. Cancelaci&oacuten:</strong></td>
+                        <td colspan="1"><span ng-bind="cuentaBancaria.fechaCierre | date:'dd/MM/yyyy'"></span></td>
                     </tr>
                     <tr>
-                        <td>Moneda:</td>
-                        <td colspan="3"><strong ng-bind="cuentaBancaria.moneda.denominacion"></strong></td>
+                        <td colspan="1"><strong>Moneda:</strong></td>
+                        <td colspan="3"><span ng-bind="cuentaBancaria.moneda.denominacion"></span></td>
                     </tr>
                     <tr>
-                        <td>Saldo:</td>
-                        <td colspan="3"><strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong></td>
+                        <td colspan="1"><strong>Saldo:</strong></td>
+                        <td colspan="3"><span ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></span></td>
                     </tr>
                     <tr>
-                        <td>Cant.retirantes:</td>
-                        <td colspan="3"><strong ng-bind="cuentaBancaria.cantidadRetirantes"></strong></td>
+                        <td colspan="1"><strong>N&deg Retirantes:</strong></td>
+                        <td colspan="3"><span ng-bind="cuentaBancaria.cantidadRetirantes"></span></td>
                     </tr>
                 </table>
             </div>
@@ -145,13 +145,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-7">Titulares&nbsp;
+                        <div class="col-md-7" style="font-weight: bold;">Titulares&nbsp;
                         <span ng-cloak ng-show="control.titular.success" ng-bind-html="control.titular.message"></span>
                         </div>
                         <div ng-if="titulares" class="col-md-5">
                             <div class="text-right">
                                 <button type="button" ng-click="goToFirmas()" class="btn btn-link" style="padding: 0px 12px;">
-                                    Firmas
+                                     Firmas
                                 </button>
                                 <button type="button" ng-click="addTitular()" class="btn btn-link" style="padding: 0px 12px;">
                                     Nuevo
@@ -161,13 +161,13 @@
                     </div>
                 </div>
                 <div class="panel-body" ng-show="!titulares || titulares.length == 0">
-                    <p>Titulares no registrados</p>
+                    <p>Titulares no Registrados</p>
                 </div>
                 <table class="table table-striped table-condensed" ng-show="titulares">
                     <tbody>
                     <tr ng-repeat="titular in titulares">
-                        <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
-                        <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}} {{titular.personaNatural.apellidoMaterno}}, {{titular.personaNatural.nombres}}"></span></td>
+                        <td style="font-size: 12px;"><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
+                        <td style="font-size: 12px;"><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}} {{titular.personaNatural.apellidoMaterno}}, {{titular.personaNatural.nombres}}"></span></td>
                         <td>
                             <button type="button" class="btn btn-info btn-xs" ng-click="editTitular($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="deleteTitular($index)"><span class="glyphicon glyphicon-remove"></span>Del</button>
@@ -182,7 +182,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-8" style="font-weight: bold;">
                             Beneficiarios&nbsp;
                             <span ng-cloak ng-show="control.beneficiario.success" ng-bind-html="control.beneficiario.message"></span>
                         </div>
@@ -196,14 +196,17 @@
                     </div>
                 </div>
                 <div class="panel-body" ng-show="!beneficiarios || beneficiarios.length == 0">
-                    <p>Beneficiarios no registrados</p>
+                    <p>Beneficiarios no Registrados</p>
                 </div>
                 <table class="table table-striped table-condensed" ng-show="beneficiarios">
                     <tbody>
                     <tr ng-repeat="beneficiario in beneficiarios">
-                        <td><span ng-bind="beneficiario.numeroDocumento"></span></td>
-                        <td><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
-                        <td><span ng-bind="beneficiario.porcentajeBeneficio"></span></td>
+                        <td style="font-size: 12px;"><span ng-bind="beneficiario.numeroDocumento"></span></td>
+                        <td style="font-size: 12px;"><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
+                        <td style="font-size: 12px;">
+                        	<span ng-bind="beneficiario.porcentajeBeneficio"></span>
+                        	<span>%</span>
+                        </td>
                         <td>
                             <button type="button" class="btn btn-info btn-xs" ng-click="editBeneficiario($index)"><span class="glyphicon glyphicon-share"></span>Edit</button>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="deleteBeneficiario($index)"><span class="glyphicon glyphicon-remove"></span>Del</button>
@@ -220,7 +223,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-9" ng-hide="estadoCuentaSearcher" ng-animate="animate-show">Estado de cuenta</div>
+                        <div class="col-md-9" ng-hide="estadoCuentaSearcher" ng-animate="animate-show" style="font-weight: bold;">Estado de Cuenta</div>
                         <form ng-submit="buscarEstadoCuenta()">
                             <div ng-animate="animate-show" ng-show="estadoCuentaSearcher">
                                 <div class="col-md-3">
@@ -261,12 +264,12 @@
                     </div>
                 </div>
                 <div class="panel-body" ng-show="transacciones.length == 0">
-                    <p>Estado de cuenta no encontrado</p>
+                    <p>Estado de Cuenta no Encontrado</p>
                 </div>
                 <table class="table table-striped table-condensed" ng-show="transacciones.length != 0">
                     <thead>
                     <th>Fecha</th>
-                    <th>Descripcion</th>
+                    <th>Descripci&oacuten</th>
                     <th>Monto</th>
                     </thead>
                     <tbody>
@@ -283,7 +286,7 @@
                     </tbody>
                 </table>
                 <div class="panel-footer">
-                    Saldo disponible:
+                    Saldo Disponible:
                     <strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong>
                 </div>
             </div>

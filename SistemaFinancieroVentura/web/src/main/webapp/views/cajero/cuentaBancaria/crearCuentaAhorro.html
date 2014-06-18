@@ -1,6 +1,6 @@
 <div ng-controller="CrearCuentaAhorroController">
 <fieldset>
-    <legend>Crear Cuenta de Ahorro</legend>
+    <legend>Apertura Cuenta de Ahorro</legend>
 </fieldset>
 <tabset>
 <tab heading="Cuenta de Ahorro" select="tabCuentaSelected()">
@@ -128,7 +128,7 @@
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>Tasa de Interes
+                    <label>Tasa de Interes (%)
                         <button ng-show="!login.result" type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                     </label>
                     <kbd ng-show="!login.result" style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;padding-left: 10px;">
@@ -166,45 +166,45 @@
     <div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="panel panel-default" style="width: 310px;">
+                <div class="panel panel-default" style="width: 315px;">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">Socio</div>
+                    <div class="panel-heading" style="font-weight: bold;">Socio</div>
                     <div class="panel-body" ng-show="!socioNatural && !socioJuridico">
                         <p>Socio no Encontrado</p>
                     </div>
                     <table class="table table-condensed" ng-show="socioNatural">
                         <tbody>
                         <tr>
-                            <td style="font-weight: bold;">Documento:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioNatural.tipoDocumento.abreviatura}}/{{socioNatural.numeroDocumento}}"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Documento:</td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{socioNatural.tipoDocumento.abreviatura}}/{{socioNatural.numeroDocumento}}"></span></td>
                         </tr>
                         <tr>
-                            <td style="font-weight: bold;">Socio:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioNatural.apellidoPaterno}} {{socioNatural.apellidoMaterno}}, {{socioNatural.nombres}}"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Socio:</td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{socioNatural.apellidoPaterno}} {{socioNatural.apellidoMaterno}}, {{socioNatural.nombres}}"></span></td>
                         </tr>
                         <tr>
-                            <td style="font-weight: bold;">F. Nacimiento:</td>
-                            <td><span ng-bind="socioNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Fecha Nac:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
                         </tr>
                         <tr>
-                            <td style="font-weight: bold;">Sexo:</td>
-                            <td><span ng-bind="socioNatural.sexo"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Sexo:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioNatural.sexo"></span></td>
                         </tr>
                         </tbody>
                     </table>
                     <table class="table table-condensed" ng-show="socioJuridico">
                         <tbody>
                         <tr>
-                            <td style="font-weight: bold;">Documento:</td>
-                            <td colspan="3"><span ng-bind-template="{{socioJuridico.tipoDocumento.abreviatura}}/{{socioJuridico.numeroDocumento}}"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Documento:</td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{socioJuridico.tipoDocumento.abreviatura}}/{{socioJuridico.numeroDocumento}}"></span></td>
                         </tr>
                         <tr>
-                            <td style="font-weight: bold;">Socio:</td>
-                            <td colspan="3"><span ng-bind="socioJuridico.razonSocial"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Socio:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioJuridico.razonSocial"></span></td>
                         </tr>
                         <tr>
-                            <td style="font-weight: bold;">F.Constitucion:</td>
-                            <td><span ng-bind="socioJuridico.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
+                            <td style="font-weight: bold; font-size: 12px;">Fecha Const:</td>
+                            <td style="font-size: 12px;"><span ng-bind="socioJuridico.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -212,48 +212,48 @@
             </div>
             <div class="col-sm-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Titulares</div>
+                    <div class="panel-heading" style="font-weight: bold;">Titulares</div>
                     <div class="panel-body" ng-show="titularesFinal.length == 0">
                         <p>Titulares no Existentes.</p>
                     </div>
                     <table class="table table-condensed" ng-show="titularesFinal.length != 0">
                         <thead>
                         <tr>
-                            <th>Documento</th>
-                            <th>Apellidos y Nombres</th>
-                            <th>F. Nacimiento</th>
-                            <th>Sexo</th>
+                            <th style="font-size: 12px;">Documento</th>
+                            <th style="font-size: 12px;">Apellidos y Nombres</th>
+                            <th style="font-size: 12px;">Fecha Nac.</th>
+                            <th style="font-size: 12px;">Sexo</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         <tr ng-repeat="titular in titularesFinal | unique">
-                            <td><span ng-bind-template="{{titular.tipoDocumento.abreviatura}}/{{titular.numeroDocumento}}"></span></td>
-                            <td><span ng-bind-template="{{titular.apellidoPaterno}} {{titular.apellidoMaterno}}, {{titular.nombres}}"></span></td>
-                            <td><span ng-bind="titular.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
-                            <td><span ng-bind="titular.sexo"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{titular.tipoDocumento.abreviatura}}/{{titular.numeroDocumento}}"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{titular.apellidoPaterno}} {{titular.apellidoMaterno}}, {{titular.nombres}}"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="titular.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="titular.sexo"></span></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="panel panel-default">
-                    <div class="panel-heading">Beneficiarios</div>
+                    <div class="panel-heading" style="font-weight: bold;">Beneficiarios</div>
                     <div class="panel-body" ng-show="beneficiarios.length == 0">
                         <p>Beneficiarios no Existentes.</p>
                     </div>
                     <table class="table table-condensed" ng-show="beneficiarios.length != 0">
                         <thead>
                         <tr>
-                            <th>Documento</th>
-                            <th>Apellidos y Nombres</th>
-                            <th>Porcentaje (%)</th>
+                            <th style="font-size: 12px;">Documento</th>
+                            <th style="font-size: 12px;">Apellidos y Nombres</th>
+                            <th style="font-size: 12px;">Porcentaje (%)</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="beneficiario in beneficiarios | unique">
-                            <td><span ng-bind="beneficiario.numeroDocumento"></span></td>
-                            <td><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
-                            <td><span ng-bind="beneficiario.porcentajeBeneficio"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="beneficiario.numeroDocumento"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind-template="{{beneficiario.apellidoPaterno}} {{beneficiario.apellidoMaterno}}, {{beneficiario.nombres}}"></span></td>
+                            <td style="font-size: 12px;"><span ng-bind="beneficiario.porcentajeBeneficio"></span></td>
                         </tr>
                         </tbody>
                     </table>
