@@ -46,6 +46,18 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
     private Validator validator;
 
 	@Override
+	public PersonaNatural findById(BigInteger id){
+		if(id == null)
+			return null;
+		PersonaNatural persona = personanaturalDAO.find(id);
+		if(persona != null){
+			TipoDocumento documento = persona.getTipoDocumento();
+			Hibernate.initialize(documento);
+		}
+		return persona;
+	}
+	
+	@Override
 	public BigInteger crear(PersonaNatural personanatural) throws PreexistingEntityException {	
 		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(personanatural);
 		if (!violations.isEmpty()) {

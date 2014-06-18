@@ -101,13 +101,13 @@ define(['../module'], function (controllers) {
             $scope.editarSocioPersonaNatural = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural/" + $scope.id);
+                $window.open(url + "/app/socio/personaNatural/" + $scope.socio.personaNatural.id);
             }
 
             $scope.editarSocioPersonaJuridica = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaJuridica/" + $scope.id);
+                $window.open(url + "/app/socio/personaJuridica/" + $scope.socio.personaJuridica.id);
             }
 
             //cuenta bancaria

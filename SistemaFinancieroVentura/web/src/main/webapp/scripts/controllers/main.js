@@ -36,6 +36,7 @@ define([
 
     './persona/natural/BuscarPersonaNaturalController',
     './persona/natural/CrearPersonaNaturalController',
+    './persona/natural/EditarPersonaNaturalController',
     './persona/juridica/AccionistaController',
     './persona/juridica/CrearPersonaJuridicaController',
 

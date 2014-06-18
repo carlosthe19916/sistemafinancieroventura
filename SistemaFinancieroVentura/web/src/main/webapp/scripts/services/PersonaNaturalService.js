@@ -49,6 +49,7 @@ define(['./module'], function (services) {
                 },
                 update: function(persona){
                     var copy = Restangular.copy(persona);
+                    copy.tipoDocumento = {"id":copy.tipoDocumento.id}
                     return copy.put();
                 },
                 remove: function(id){

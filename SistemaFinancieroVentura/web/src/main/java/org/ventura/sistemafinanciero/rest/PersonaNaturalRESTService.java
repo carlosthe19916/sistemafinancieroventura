@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
@@ -62,8 +63,7 @@ public class PersonaNaturalRESTService {
 					.add("id", idPersona).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (PreexistingEntityException e) {
-			JsonObject model = Json.createObjectBuilder()
-					.add("message", "Persona ya existente").build();
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona ya existente").build();
 			return Response.status(Response.Status.CONFLICT).entity(model).build();
 		} catch (EJBException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -74,9 +74,18 @@ public class PersonaNaturalRESTService {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") @DefaultValue("-1") int id,
-			PersonaNatural personanatural) {
-		return null;
+	public Response update(@PathParam("id") @DefaultValue("-1") BigInteger id, PersonaNatural personanatural) {
+		try {
+			personanaturalService.update(id, personanatural);
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona actualizada").build();
+			return Response.status(Response.Status.OK).entity(model).build();
+		} catch (NonexistentEntityException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona no encontrada").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		} catch (PreexistingEntityException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona ya existente").build();
+			return Response.status(Response.Status.CONFLICT).entity(model).build();
+		}
 	}
 
 	@DELETE
@@ -88,9 +97,20 @@ public class PersonaNaturalRESTService {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PersonaNatural findById(
+	public Response findById(
 			@PathParam("id") @DefaultValue("-1") BigInteger id) {
-		return null;
+		if(id != null){
+			PersonaNatural persona = personanaturalService.findById(id);
+			if(persona != null){
+				return Response.status(Response.Status.OK).entity(persona).build();	
+			} else {
+				JsonObject model = Json.createObjectBuilder().add("message", "Persona no encontrada").build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();	
+			}
+		} else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Datos no validos").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		}		
 	}
 
 	@GET

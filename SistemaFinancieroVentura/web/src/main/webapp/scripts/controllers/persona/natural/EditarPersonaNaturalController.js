@@ -1,25 +1,57 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearPersonaNaturalController', ["$scope", "$state","$window", "MaestroService", "PersonaNaturalService",
+    controllers.controller('EditarPersonaNaturalController', ["$scope", "$state","$window", "MaestroService", "PersonaNaturalService",
         function($scope, $state,$window, MaestroService, PersonaNaturalService) {
             $scope.control = {
                 "success":false,
                 "inProcess": false,
-                "submitted" : false,
-                "errorForm" : {"numeroDocumento" : false}
+                "submitted" : false
             };
 
-            $scope.persona = PersonaNaturalService.getModel();
+            if(!angular.isUndefined($scope.id)){
+                PersonaNaturalService.findById($scope.id).then(
+                    function(data){
+                        $scope.persona = data;
+                        $scope.$watch("persona.tipoDocumento", function(){
+                            if(!angular.isUndefined($scope.tipodocumentos)){
+                                for(var i = 0; i < $scope.tipodocumentos.length; i++){
+                                    if($scope.tipodocumentos[i].id == $scope.persona.tipoDocumento.id)
+                                        $scope.persona.tipoDocumento = $scope.tipodocumentos[i];
+                                }
+                            }
+                        });
+                        $scope.$watch("persona.numeroDocumento", function(){$scope.validarNumeroDocumento();});
+                        $scope.$watch("persona.tipoDocumento", function(){$scope.validarNumeroDocumento();});
+                        $scope.validarNumeroDocumento = function(){
+                            if(!angular.isUndefined($scope.formEditarPersonanatural.numerodocumento)){
+                                if(!angular.isUndefined($scope.persona.numeroDocumento)){
+                                    if(!angular.isUndefined($scope.persona.tipoDocumento)){
+                                        if($scope.persona.numeroDocumento.length == $scope.persona.tipoDocumento.numeroCaracteres) {
+                                            $scope.formEditarPersonanatural.numerodocumento.$setValidity("sgmaxlength",true);
+                                        } else {$scope.formEditarPersonanatural.numerodocumento.$setValidity("sgmaxlength",false);}
+                                    } else{$scope.formEditarPersonanatural.numerodocumento.$setValidity("sgmaxlength",false);}
+                                } else {$scope.formEditarPersonanatural.numerodocumento.$setValidity("sgmaxlength",false);}}
+                        }
+                    }, function error(error){
+                        $scope.alerts = [{ type: "danger", msg: "Error: No se pudo cargar la persona."}];
+                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                    }
+                );
+            }
+
             $scope.ubigeo = {"departamento": {"codigo":""}, "provincia": {"codigo":""}, "distrito": {"codigo":""}};
-            $scope.persona.ubigeo = $scope.ubigeo.departamento.codigo + $scope.ubigeo.provincia.codigo + $scope.ubigeo.distrito.codigo;
+
             $scope.$watch("ubigeo.departamento", function(){
-                $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
+                if(!angular.isUndefined($scope.persona))
+                    $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
             });
             $scope.$watch("ubigeo.provincia", function(){
-                $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
+                if(!angular.isUndefined($scope.persona))
+                    $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
             });
             $scope.$watch("ubigeo.distrito", function(){
-                $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
+                if(!angular.isUndefined($scope.persona))
+                    $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
             });
             $scope.getDepartamentoCode = function(){
                 if(!angular.isUndefined($scope.ubigeo.departamento))
@@ -37,49 +69,16 @@ define(['../../module'], function (controllers) {
                 else return "";
             }
 
-            //recuperando parametros de url
-            //$scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
-            $scope.persona.numeroDocumento = $scope.params.numeroDocumento;
-
-            $scope.$watch("persona.numeroDocumento", function(){
-                if(!angular.isUndefined($scope.persona.tipoDocumento) && $scope.persona.tipoDocumento !== null){
-                    if(angular.isUndefined($scope.persona.numeroDocumento) || $scope.persona.numeroDocumento === null){
-                        $scope.control.errorForm.numeroDocumento = true;
-                    } else if($scope.persona.tipoDocumento.numeroCaracteres != $scope.persona.numeroDocumento.length){
-                        $scope.control.errorForm.numeroDocumento = true;
-                    } else {
-                        $scope.control.errorForm.numeroDocumento = false;
-                    }
-                }
-                if(angular.isUndefined($scope.persona.numeroDocumento) || $scope.persona.numeroDocumento === "")
-                    $scope.control.errorForm.numeroDocumento = true;
-                else
-                    $scope.control.errorForm.numeroDocumento = false;
-            });
-
-            $scope.dateOptions = {
-                formatYear: 'yyyy',
-                startingDay: 1
-            };
-
-            $scope.fechaNacimiento = new Date();
-            $scope.persona.fechaNacimiento = $scope.fechaNacimiento.getTime();
+            $scope.dateOptions = {formatYear: 'yyyy', startingDay: 1};
 
             $scope.open = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-
                 $scope.opened = true;
             };
 
             MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
                 $scope.tipodocumentos = tipodocumentos;
-                if(!angular.isUndefined($scope.params.idTipoDocumento)){
-                    for(var i = 0; i < $scope.tipodocumentos.length; i++){
-                        if($scope.tipodocumentos[i].id == $scope.params.idTipoDocumento)
-                            $scope.persona.tipoDocumento = $scope.tipodocumentos[i];
-                    }
-                }
             });
             MaestroService.getSexos().then(function(sexos){
                 $scope.sexos = sexos;
@@ -89,7 +88,6 @@ define(['../../module'], function (controllers) {
             });
             MaestroService.getPaises().then(function(paises){
                 $scope.paises = paises;
-                $scope.persona.codigoPais = "PE";
             });
             MaestroService.getDepartamentos().then(function(departamentos){
                 $scope.departamentos = departamentos;
@@ -108,24 +106,20 @@ define(['../../module'], function (controllers) {
 
             //logic
             $scope.crearTransaccion = function(){
-                console.log($scope.persona.ubigeo);
-                if ($scope.formCrearPersonanatural.$valid) {
-                    if($scope.control.errorForm.numeroDocumento == true){
-                        return;
-                    }
-                    $scope.buttonDisableState = true;
-                    PersonaNaturalService.crear($scope.persona).then(
+                if ($scope.formEditarPersonanatural.$valid) {
+                    $scope.control.inProcess = true;
+                    PersonaNaturalService.update($scope.persona).then(
                         function(persona){
                             $window.close();
+                            $scope.control.inProcess = false;
                         },
                         function error(error){
                             $scope.control.inProcess = false;
                             $scope.control.success = false;
-                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.alerts = [{ type: "danger", msg: "Error: No se pudo cargar la persona."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         }
                     );
-                    $scope.buttonDisableState = false;
                 } else {
                     $scope.control.submitted = true;
                 }

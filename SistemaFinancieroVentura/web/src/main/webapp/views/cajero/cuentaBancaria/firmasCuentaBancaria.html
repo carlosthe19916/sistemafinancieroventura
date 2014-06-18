@@ -33,14 +33,14 @@
             <div class="col-sm-6 col-md-4" ng-repeat="titularX in titularY">
                 <div ng-controller="LoadImageController">
                     <div class="thumbnail"
-                         flow-init="config(titularX.personaNatural.id)"
+                         flow-init="configFirma(titularX.personaNatural.id)"
                          flow-files-submitted="$flow.upload()"
                          flow-file-success="$file.msg = $message"
                          flow-name="uploader.flow"
                          flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
 
                         <div ng-show="!$flow.files.length">
-                            <img ng-src="{{getFoto(titularX.personaNatural.id)}}" style="width: 100%; height: 200px">
+                            <img ng-src="{{getFirma(titularX.personaNatural.id)}}" style="width: 100%; height: 200px">
                         </div>
                         <div ng-show="$flow.files.length">
                             <img flow-img="$flow.files[0]" style="width: 100%; height: 200px">

@@ -42,11 +42,12 @@ import org.jboss.resteasy.util.GenericType;
 @Path("/personanatural/image")
 public class ImageRESTService {
 
-	private final String UPLOADED_FILE_PATH = "d:\\fotos\\";
+	private final String UPLOADED_FIRMA_PATH = "d:\\firmas\\";
+	private final String UPLOADED_FOTO_PATH = "d:\\fotos\\";
 
 	@GET
 	@Path("/firma/upload")
-	public Response uploadFile(
+	public Response uploadFirma(
 			@QueryParam("flowChunkNumber") int flowChunkNumber,
 			@QueryParam("flowChunkSize") int flowChunkSize,
 			@QueryParam("flowCurrentChunkSize") int flowCurrentChunkSize,
@@ -56,14 +57,28 @@ public class ImageRESTService {
 			@QueryParam("flowTotalChunks") int flowTotalChunks,
 			@QueryParam("flowTotalSize") int flowTotalSize,
 			@QueryParam("id") int id) {
-
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 
+	@GET
+	@Path("/foto/upload")
+	public Response uploadFoto(
+			@QueryParam("flowChunkNumber") int flowChunkNumber,
+			@QueryParam("flowChunkSize") int flowChunkSize,
+			@QueryParam("flowCurrentChunkSize") int flowCurrentChunkSize,
+			@QueryParam("flowFilename") String flowFilename,
+			@QueryParam("flowIdentifier") String flowIdentifier,
+			@QueryParam("flowRelativePath") String flowRelativePath,
+			@QueryParam("flowTotalChunks") int flowTotalChunks,
+			@QueryParam("flowTotalSize") int flowTotalSize,
+			@QueryParam("id") int id) {
+		return Response.status(Response.Status.NOT_FOUND).build();
+	}
+	
 	@POST
 	@Path("/firma/upload")
 	@Consumes("multipart/form-data")
-	public Response uploadFile(MultipartFormDataInput input) {
+	public Response uploadFirma(MultipartFormDataInput input) {
 
 		String fileName = "";
 
@@ -89,7 +104,7 @@ public class ImageRESTService {
 				byte[] bytes = IOUtils.toByteArray(inputStream);
 
 				// constructs upload file path
-				fileName = UPLOADED_FILE_PATH + fileName;
+				fileName = UPLOADED_FIRMA_PATH + fileName;
 
 				writeFile(bytes, fileName);				
 
@@ -100,17 +115,56 @@ public class ImageRESTService {
 		return Response.status(200).entity("uploadFile is called, Uploaded file name : " + fileName).build();
 
 	}
+	@POST
+	@Path("/foto/upload")
+	@Consumes("multipart/form-data")
+	public Response uploadFoto(MultipartFormDataInput input) {
 
+		String fileName = "";
+
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("file");
+
+		try {
+			fileName = input.getFormDataPart("id", new GenericType<String>() { });			
+		} catch (IOException e) {			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
+		}
+		
+		for (InputPart inputPart : inputParts) {
+
+			try {
+
+				//MultivaluedMap<String, String> header = inputPart.getHeaders();
+				//fileName = getFileName(header);
+
+				// convert the uploaded file to inputstream
+				InputStream inputStream = inputPart.getBody(InputStream.class,null);
+
+				byte[] bytes = IOUtils.toByteArray(inputStream);
+
+				// constructs upload file path
+				fileName = UPLOADED_FOTO_PATH + fileName;
+
+				writeFile(bytes, fileName);				
+
+			} catch (IOException e) {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
+			}
+		}
+		return Response.status(200).entity("uploadFile is called, Uploaded file name : " + fileName).build();
+
+	}
 	
 	@GET
 	@Path("{id}/firma")
 	@Produces("image/png")
-	public Response getFile(@PathParam("id") String id) {
+	public Response getFirma(@PathParam("id") String id) {
  
-		File file = new File(this.UPLOADED_FILE_PATH + id);
+		File file = new File(this.UPLOADED_FIRMA_PATH + id);
 
 		if(!file.exists())
-			file = new File(this.UPLOADED_FILE_PATH + "default.gif");
+			file = new File(this.UPLOADED_FIRMA_PATH + "default.gif");
 		
 		ResponseBuilder response = Response.status(Response.Status.OK).entity((Object) file);		
 		
@@ -118,7 +172,22 @@ public class ImageRESTService {
 		return response.build();
  
 	}
-	
+	@GET
+	@Path("{id}/foto")
+	@Produces("image/png")
+	public Response getFoto(@PathParam("id") String id) {
+ 
+		File file = new File(this.UPLOADED_FOTO_PATH + id);
+
+		if(!file.exists())
+			file = new File(this.UPLOADED_FOTO_PATH + "default.gif");
+		
+		ResponseBuilder response = Response.status(Response.Status.OK).entity((Object) file);		
+		
+		response.header("Content-Disposition", "attachment; filename=image"+ id + ".png");
+		return response.build();
+ 
+	}
 	/**
 	 * header sample { Content-Type=[image/png], Content-Disposition=[form-data;
 	 * name="file"; filename="filename.extension"] }
