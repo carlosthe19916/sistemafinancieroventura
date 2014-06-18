@@ -16,6 +16,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.Response;
 import org.ventura.sistemafinanciero.entity.Accionista;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.rest.dto.PersonaJuridicaDTO;
@@ -48,14 +50,82 @@ public class PersonaJuridicaRESTService {
 		return list;
 	}
 
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findById(@PathParam("id") @DefaultValue("-1") BigInteger id) {
+		if(id != null){
+			PersonaJuridica persona = personaJuridicaService.findById(id);
+			if(persona != null){
+				return Response.status(Response.Status.OK).entity(persona).build();	
+			} else {
+				JsonObject model = Json.createObjectBuilder().add("message", "Persona no encontrada").build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();	
+			}
+		} else {
+			JsonObject model = Json.createObjectBuilder().add("message", "Datos no validos").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		}		
+	}
+	
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("id") @DefaultValue("-1") BigInteger id, PersonaJuridicaDTO persona) {
+		try {
+			PersonaJuridica personaJuridica = new PersonaJuridica();
+			personaJuridica.setIdPersonaJuridica(null);
+			personaJuridica.setActividadPrincipal(persona.getActividadPrincipal());
+			personaJuridica.setCelular(persona.getCelular());
+			personaJuridica.setTelefono(persona.getTelefono());
+			personaJuridica.setDireccion(persona.getDireccion());
+			personaJuridica.setReferencia(persona.getReferencia());
+			personaJuridica.setEmail(persona.getEmail());
+			personaJuridica.setFechaConstitucion(persona.getFechaConstitucion());
+			personaJuridica.setFinLucro(persona.isFinLucro());			
+			personaJuridica.setNombreComercial(persona.getNombreComercial());
+			personaJuridica.setNumeroDocumento(persona.getNumeroDocumento());
+			personaJuridica.setRazonSocial(persona.getRazonSocial());			
+			personaJuridica.setTipoDocumento(persona.getTipoDocumento());
+			personaJuridica.setTipoEmpresa(persona.getTipoEmpresa());
+			personaJuridica.setUbigeo(persona.getUbigeo());
+			
+			PersonaNatural representante = new PersonaNatural();
+			representante.setIdPersonaNatural(persona.getIdRepresentanteLegal());			
+			personaJuridica.setRepresentanteLegal(representante);
+			
+			Set<Accionista> accionistasFinal = new HashSet<Accionista>();
+			Set<org.ventura.sistemafinanciero.rest.dto.PersonaJuridicaDTO.Accionista> accionistas = persona.getAccionistas();
+			for (org.ventura.sistemafinanciero.rest.dto.PersonaJuridicaDTO.Accionista accionista : accionistas) {
+				Accionista accionistaFinal = new Accionista();
+				accionistaFinal.setIdAccionista(null);
+				PersonaNatural person = new PersonaNatural();
+				person.setIdPersonaNatural(accionista.getIdPersona());
+				accionistaFinal.setPersonaNatural(person);
+				accionistaFinal.setPorcentajeParticipacion(accionista.getPorcentaje());
+				
+				accionistasFinal.add(accionistaFinal);
+			}
+			personaJuridica.setAccionistas(accionistasFinal);
+			
+			personaJuridicaService.update(id, personaJuridica);
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona actualizada").build();
+			return Response.status(Response.Status.OK).entity(model).build();
+		} catch (NonexistentEntityException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona no encontrada").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		} catch (PreexistingEntityException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", "Persona ya existente").build();
+			return Response.status(Response.Status.CONFLICT).entity(model).build();
+		}
+	}
 	
 	@POST
 	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
 	public Response create(PersonaJuridicaDTO persona) {
-		try {
-
-			
+		try {			
 			PersonaJuridica personaJuridica = new PersonaJuridica();
 			personaJuridica.setIdPersonaJuridica(null);
 			personaJuridica.setActividadPrincipal(persona.getActividadPrincipal());

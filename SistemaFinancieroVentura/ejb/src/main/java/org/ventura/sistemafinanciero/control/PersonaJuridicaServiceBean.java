@@ -25,6 +25,7 @@ import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
+import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
@@ -47,6 +48,30 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 	@Inject
     private Validator validator;
 
+	@Override
+	public PersonaJuridica findById(BigInteger id){
+		if(id == null)
+			return null;
+		PersonaJuridica persona = personaJuridicaDAO.find(id);
+		if(persona != null){
+			PersonaNatural representante = persona.getRepresentanteLegal();
+			TipoDocumento documentoRepresentante = representante.getTipoDocumento();
+			TipoDocumento documento = persona.getTipoDocumento();
+			Set<Accionista> accionistas = persona.getAccionistas();			
+			Hibernate.initialize(representante);
+			Hibernate.initialize(documentoRepresentante);
+			Hibernate.initialize(documento);
+			for (Accionista accionista : accionistas) {
+				PersonaNatural person = accionista.getPersonaNatural();
+				TipoDocumento docPerson = person.getTipoDocumento();
+				Hibernate.initialize(accionista);
+				Hibernate.initialize(person);
+				Hibernate.initialize(docPerson);
+			}
+		}
+		return persona;
+	}
+	
 	@Override
 	public List<PersonaJuridica> findAll(){
 		List<PersonaJuridica> list = personaJuridicaDAO.findAll();
@@ -100,10 +125,55 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 					}
 				}				
 			}			
-		}
-		
-		
+		}				
 		return personaJuridica.getIdPersonaJuridica();		
+	}
+	
+	@Override
+	public void update(BigInteger id, PersonaJuridica personaJuridica) throws NonexistentEntityException, PreexistingEntityException {	
+		Set<ConstraintViolation<PersonaJuridica>> violations = validator.validate(personaJuridica);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
+		}
+
+		TipoDocumento tipoDocumento = personaJuridica.getTipoDocumento();
+		String numeroDocumento = personaJuridica.getNumeroDocumento();
+		Set<Accionista> accionistas = personaJuridica.getAccionistas();
+		
+		PersonaJuridica personaDB = findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
+		PersonaJuridica personaById = personaJuridicaDAO.find(id);
+		if(personaById == null)
+			throw new PreexistingEntityException("Persona juridica no encontrada");
+		
+		if (personaDB != null){
+			if(personaById.getIdPersonaJuridica().equals(personaDB.getIdPersonaJuridica())){
+				personaJuridicaDAO.update(personaJuridica);
+			} else {
+				throw new PreexistingEntityException("El document ya existe");
+			}
+		}			
+		else {
+			personaJuridicaDAO.update(personaJuridica);
+		}			
+		
+		/*
+		//crear accionistas		
+		for (Accionista accionista : accionistas) {
+			PersonaNatural personaNatural = accionista.getPersonaNatural();
+			if(personaNatural != null){
+				BigInteger idPersona = personaNatural.getIdPersonaNatural();
+				if(idPersona != null){
+					PersonaNatural persona = personaNaturalDAO.find(idPersona);
+					if(persona != null){
+						accionista.setPersonaJuridica(personaJuridica);			
+						accionistaDAO.create(accionista);	
+					} else {
+						throw new RollbackFailureException("Accionista no encontrado");
+					}
+				}				
+			}			
+		}
+			*/		
 	}
 	
 	@Override

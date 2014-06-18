@@ -30,17 +30,16 @@ define(['./module'], function (services) {
                     return _personaJuridicaService.post(personaJuridica);
                 },
                 update: function(persona){
-                    var copy = Restangular.copy(persona);
-                    return copy.put();
+                    return Restangular.one("personaJuridica/"+persona.id).customPUT(persona,'',{},{});
                 },
                 remove: function(id){
                     return Restangular.all("personaJuridica/"+id).remove();
                 },
                 getPersonas: function(){
-                    return _personaJuridicaService.getList().$object;
+                    return _personaJuridicaService.getList();
                 },
                 findById: function(id){
-                    return Restangular.one("personaJuridica", id).get().$object;
+                    return Restangular.one("personaJuridica", id).get();
                 },
                 findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
                     return Restangular.one('personaJuridica'+'/'+idtipodocumento+'/'+numerodocumento).get();
