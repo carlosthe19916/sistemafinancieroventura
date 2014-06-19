@@ -3,7 +3,7 @@
         <div>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Nuevo beneficiario</h4>
+                <h4 class="modal-title">Registrar Beneficiario</h4>
             </div>
             <form name="$parent.formBeneficiario" class="form-horizontal" ng-submit="addBeneficiario()" novalidate>
                 <div class="modal-body">
@@ -11,11 +11,11 @@
                         <span ng-bind-html="alert.msg"></span>
                     </alert>
                     <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.numeroDocumento.$invalid && (control.submitted || formBeneficiario.numeroDocumento.$dirty)}">
-                        <label class="col-sm-2 control-label">Nro doc.:</label>
+                        <label class="col-sm-2 control-label">N&deg; Doc.:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero documento" autofocus/>
+                            <input type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero Documento" autofocus/>
                             <div ng-show="formBeneficiario.numeroDocumento.$invalid && (control.submitted || formBeneficiario.numeroDocumento.$dirty)">
-                                <span class="help-block" ng-show="formBeneficiario.numeroDocumento.$error.maxlength">Maximo 15 caracteres.</span>
+                                <span class="help-block" ng-show="formBeneficiario.numeroDocumento.$error.maxlength">Maximo 15 Caracteres.</span>
                             </div>
                         </div>
                     </div>
@@ -25,17 +25,17 @@
                     }">
                         <label class="col-sm-2 control-label">Apellidos(*):</label>
                         <div class="col-sm-5">
-                            <input type="text" name="apellidoPaterno" ng-model="beneficiario.apellidoPaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido paterno" capitalize required/>
+                            <input type="text" name="apellidoPaterno" ng-model="beneficiario.apellidoPaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido Paterno" capitalize required/>
                             <div ng-show="formBeneficiario.apellidoPaterno.$invalid && (control.submitted || formBeneficiario.apellidoPaterno.$dirty)">
-                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.required">Ingrese apellido paterno.</span>
-                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.minlength">Minimo 1 caracter.</span>
-                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.maxlength">Maximo 40 caracteres.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.required">Ingrese Apellido Paterno.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.minlength">Minimo 1 Caracter.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.maxlength">Maximo 40 Caracteres.</span>
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <input type="text" name="apellidoMaterno" ng-model="beneficiario.apellidoMaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido materno" capitalize required/>
+                            <input type="text" name="apellidoMaterno" ng-model="beneficiario.apellidoMaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido Materno" capitalize required/>
                             <div ng-show="formBeneficiario.apellidoMaterno.$invalid && (control.submitted || formBeneficiario.apellidoMaterno.$dirty)">
-                                <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.required">Ingrese apellido materno.</span>
+                                <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.required">Ingrese Apellido Materno.</span>
                                 <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.minlength">Minimo 1 caracter.</span>
                                 <span class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.maxlength">Maximo 40 caracteres.</span>
                             </div>
