@@ -28,20 +28,15 @@ define(['../module'], function (controllers) {
 
             $scope.buscarPersonaTitular = function($event){
                 if($scope.formTitular.$valid){
-                    if(!angular.isUndefined($scope.titular.titular.persona)){
-                        PersonaNaturalService.findByTipoNumeroDocumento($scope.titular.tipoDocumento.id, $scope.titular.numeroDocumento).then(
-                            function(persona){
-                                $scope.titular.persona = persona;
-                            }, function error(error){
-                                $scope.control.inProcess = false;
-                                $scope.alertsTitular = [{ type: 'danger', msg: 'Error: persona no encontrada' }];
-                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                            }
-                        );
-                    } else {
-                        $scope.alertsTitular = [{ type: 'warning', msg: 'Error: persona no cargada' }];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                    }
+                    PersonaNaturalService.findByTipoNumeroDocumento($scope.titular.tipoDocumento.id, $scope.titular.numeroDocumento).then(
+                        function(persona){
+                            $scope.titular.persona = persona;
+                        }, function error(error){
+                            $scope.control.inProcess = false;
+                            $scope.alertsTitular = [{ type: 'danger', msg: 'Error: persona no encontrada' }];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
                 } else {
                     $scope.control.submitted = true;
                 }
@@ -63,7 +58,9 @@ define(['../module'], function (controllers) {
             }
 
             $scope.ok = function () {
-                $modalInstance.close($scope.titular.persona);
+                if(!angular.isUndefined($scope.titular.persona)){
+                    $modalInstance.close($scope.titular.persona);
+                }
             };
 
             $scope.cancel = function () {

@@ -160,10 +160,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body" ng-show="!titulares || titulares.length == 0">
+                <div class="panel-body" ng-show="!titulares.length">
                     <p>Titulares no Registrados</p>
                 </div>
-                <table class="table table-striped table-condensed" ng-show="titulares">
+                <table class="table table-striped table-condensed" ng-show="titulares.length">
                     <tbody>
                     <tr ng-repeat="titular in titulares">
                         <td style="font-size: 12px;"><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
@@ -195,10 +195,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body" ng-show="!beneficiarios || beneficiarios.length == 0">
+                <div class="panel-body" ng-show="!beneficiarios.length">
                     <p>Beneficiarios no Registrados</p>
                 </div>
-                <table class="table table-striped table-condensed" ng-show="beneficiarios">
+                <table class="table table-striped table-condensed" ng-show="beneficiarios.length">
                     <tbody>
                     <tr ng-repeat="beneficiario in beneficiarios">
                         <td style="font-size: 12px;"><span ng-bind="beneficiario.numeroDocumento"></span></td>
