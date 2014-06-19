@@ -41,7 +41,7 @@
                 </div>
                 <table class="table table-condensed" ng-if="socio.personaNatural">
                     <tr>
-                        <td colspan="1" style="width: 130px;"><strong>Documento:</strong></td>
+                        <td colspan="1" style="width: 150px;"><strong>Documento:</strong></td>
                         <td colspan="1"><span ng-bind-template="{{socio.personaNatural.tipoDocumento.abreviatura}}/{{socio.personaNatural.numeroDocumento}}"></span></td>
                     </tr>
                     <tr>
@@ -59,7 +59,7 @@
                 </table>
                 <table class="table table-condensed" ng-if="socio.personaJuridica">
                     <tr>
-                        <td colspan="1" style="width: 130px;"><strong>Documento:</strong></td>
+                        <td colspan="1" style="width: 150px;"><strong>Documento:</strong></td>
                         <td colspan="1"><span ng-bind-template="{{socio.personaJuridica.tipoDocumento.abreviatura}}/{{socio.personaJuridica.numeroDocumento}}"></span></td>
                     </tr>
                     <tr>
@@ -80,7 +80,7 @@
                 <div class="panel-heading" ng-if="socio" style="font-weight: bold;">Datos Adicionales</div>
                 <table class="table table-condensed" ng-show="socio">
                     <tr>
-                        <td colspan="1" style="width: 130px"><strong>Estado:</strong></td>
+                        <td colspan="1" style="width: 140px"><strong>Estado:</strong></td>
                         <td colspan="1"><span ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</span></td>
                     </tr>
                     <tr>
@@ -128,7 +128,7 @@
                         <td colspan="3"><span ng-bind="cuentaBancaria.moneda.denominacion"></span></td>
                     </tr>
                     <tr>
-                        <td colspan="1"><strong>Saldo:</strong></td>
+                        <td colspan="1"><strong>Saldo Disp.:</strong></td>
                         <td colspan="3"><span ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></span></td>
                     </tr>
                     <tr>
