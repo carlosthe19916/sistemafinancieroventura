@@ -1,10 +1,15 @@
 package org.ventura.sistemafinanciero.control;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -23,10 +28,14 @@ import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Trabajador;
+import org.ventura.sistemafinanciero.entity.type.Sexo;
+import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
+import org.ventura.sistemafinanciero.service.SocioService;
 
 @Named
 @Stateless
@@ -53,7 +62,8 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		if(persona != null){
 			TipoDocumento documento = persona.getTipoDocumento();
 			Hibernate.initialize(documento);
-		}
+		}	
+		
 		return persona;
 	}
 	

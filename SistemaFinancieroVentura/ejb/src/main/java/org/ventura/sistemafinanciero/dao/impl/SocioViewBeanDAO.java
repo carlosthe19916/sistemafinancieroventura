@@ -119,5 +119,17 @@ public class SocioViewBeanDAO implements DAO<Object, SocioView> {
 		}
 		return query.getResultList();
 	}
+	
+	public List<SocioView> findByNamedQuery(String namedQueryName,
+			Map<String, Object> parameters, int[] range) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = this.em.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		query.setFirstResult(range[0]);
+		query.setMaxResults(range[1] - range[0]);		
+		return query.getResultList();
+    }
 
 }

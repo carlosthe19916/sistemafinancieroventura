@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * A common interface for all CRUD-Component implementations. The type of the
  * entity is specified in the implementation.
@@ -54,4 +55,7 @@ public interface DAO<K, T> {
 
 	public List<T> findByNamedQuery(String namedQueryName,
 			Map<String, Object> parameters, int resultLimit);
+	
+	public List<T> findByNamedQuery(String namedQueryName,
+			Map<String, Object> parameters, int[] range);
 }

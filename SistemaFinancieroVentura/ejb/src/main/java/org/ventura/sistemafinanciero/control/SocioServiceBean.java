@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,44 +60,99 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	@EJB
 	private PersonaNaturalService personaNaturalService;
 	@EJB
-	private PersonaJuridicaService personaJuridicaService;
+	private PersonaJuridicaService personaJuridicaService;		
 	
 	@Override
-	public Set<SocioView> findByFilterText(String filterText) {
+	public List<SocioView> findByFilterText(String filterText, BigInteger[] range, Boolean modeSocio, Boolean modeEstado) {
+		List<SocioView> result = null;	
 		if (filterText == null)
-			return new HashSet<SocioView>();
+			return new ArrayList<SocioView>();
 		if (filterText.isEmpty() || filterText.trim().isEmpty()) {
-			return new HashSet<SocioView>();
+			return new ArrayList<SocioView>();
 		}
-		List<SocioView> list = null;
-		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		list = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters(), 1000);
-		return new HashSet<SocioView>(list);
+		if(modeSocio == null)
+			modeSocio = true;
+		
+		List<Boolean> listEstado = new ArrayList<>();
+		if(modeEstado != null){
+			listEstado.add(modeEstado);
+		} else {
+			listEstado.add(true);
+			listEstado.add(false);
+		}		
+		QueryParameter queryParameter = QueryParameter.with("modeEstado", listEstado).and("filtertext", '%' + filterText.toUpperCase() + '%');	
+		if(range != null){
+			if(range.length != 2)
+				return null;
+			if(range[0] == null || range[1] == null)
+				return null;
+			if(range[0].compareTo(BigInteger.ZERO) < 0 )
+				return null;
+			if(range[1].compareTo(BigInteger.ZERO) < 0 )
+				return null;
+			if(range[0].compareTo(range[1]) == 0)
+				return new ArrayList<>();
+			int[] rangeInt = {range[0].intValue(),range[1].intValue()};						
+									
+			if(modeSocio){				
+				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters(), rangeInt);
+			} else {
+				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), rangeInt);
+			}						
+		} else {
+			if(modeSocio){
+				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters());
+			} else {
+				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters());
+			}				
+		}			
+		return result;
 	}
 	
 	@Override
-	public Set<SocioView> findByFilterTextAporte(String filterText) {
-		if (filterText == null)
-			return new HashSet<SocioView>();
-		if (filterText.isEmpty() || filterText.trim().isEmpty()) {
-			return new HashSet<SocioView>();
-		}
-		List<SocioView> list = null;
-		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		list = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), 1000);
-		return new HashSet<SocioView>(list);
-	}
-	
-	@Override
-	public List<SocioView> findAllView() {		
-		List<SocioView> list = socioViewDAO.findAll();
-		return list;
-	}
-	
-	@Override
-	public List<SocioView> findAllViewAporte() {		
-		Collection<SocioView> list = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte);
-		return new ArrayList<>(list);
+	public List<SocioView> findAllView(BigInteger[] range, Boolean modeSocio, Boolean modeEstado) {	
+		List<SocioView> result = null;	
+		if(modeSocio == null)
+			modeSocio = true;
+		
+		List<Boolean> listEstado = new ArrayList<>();
+		if(modeEstado != null){
+			listEstado.add(modeEstado);
+		} else {
+			listEstado.add(true);
+			listEstado.add(false);
+		}		
+		QueryParameter queryParameter = QueryParameter.with("modeEstado", listEstado);		
+		if(range != null){
+			if(range.length != 2)
+				return null;
+			if(range[0] == null || range[1] == null)
+				return null;
+			if(range[0].compareTo(BigInteger.ZERO) < 0 )
+				return null;
+			if(range[1].compareTo(BigInteger.ZERO) < 0 )
+				return null;
+			if(range[0].compareTo(range[1]) == 0)
+				return new ArrayList<>();
+			int[] rangeInt = {range[0].intValue(),range[1].intValue()};						
+									
+			if(modeSocio){
+				//todos
+				result = socioViewDAO.findByNamedQuery(SocioView.findAll, queryParameter.parameters(), rangeInt);
+			} else {
+				//con cuenta aporte
+				result = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte, queryParameter.parameters(), rangeInt);
+			}						
+		} else {
+			if(modeSocio){
+				//todos
+				result = socioViewDAO.findByNamedQuery(SocioView.findAll, queryParameter.parameters());
+			} else {
+				//con cuenta aporte
+				result = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte, queryParameter.parameters());
+			}				
+		}			
+		return result;
 	}
 	
 	@Override
@@ -341,6 +394,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		}	 	
 		return socio;
 	}
+
+	
 
 	
 

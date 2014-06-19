@@ -35,6 +35,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
+import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
 
 /**
  * A minimalistic CRUD implementation. Usually provides the implementation of
@@ -119,5 +120,17 @@ public class TransaccionBovedaCajaDetalleBeanDAO implements DAO<Object, Transacc
 		}
 		return query.getResultList();
 	}
+	
+	public List<TransaccionBovedaCajaDetalle> findByNamedQuery(String namedQueryName,
+			Map<String, Object> parameters, int[] range) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = this.em.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		query.setMaxResults(range[1] - range[0]);
+		query.setFirstResult(range[0]);
+		return query.getResultList();
+    }
 
 }

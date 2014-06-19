@@ -40,6 +40,7 @@ import javax.validation.Validator;
 
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.Socio;
+import org.ventura.sistemafinanciero.entity.TasaInteres;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 
 /**
@@ -135,4 +136,15 @@ public class SocioBeanDAO implements DAO<Object, Socio> {
 		return query.getResultList();
 	}
 
+	public List<Socio> findByNamedQuery(String namedQueryName,
+			Map<String, Object> parameters, int[] range) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = this.em.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		query.setMaxResults(range[1] - range[0]);
+		query.setFirstResult(range[0]);
+		return query.getResultList();
+    }
 }

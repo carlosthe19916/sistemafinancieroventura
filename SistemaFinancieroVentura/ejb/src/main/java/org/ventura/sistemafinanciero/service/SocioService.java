@@ -18,12 +18,29 @@ import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 @Remote
 public interface SocioService extends AbstractService<Socio>{
 
-	//no transaccional
-	public Set<SocioView> findByFilterText(String filterText);
-	public Set<SocioView> findByFilterTextAporte(String filterText);
+	/**
+     * Devuelve la lista de socios buscados por la cadena FILTERTEXT del sistema,
+     * incluyendo socios de Personas naturales y juridicas.
+     *
+     * @param  filterText String cadena a buscar en el sistema.
+     * @param  range BigInteger[] para indicar el rango de resultados.
+     * @param  modeSocio Boolean: TRUE todos los socios, FALSE socios con cuenta aporte, NULL todos los socios
+     * @param  modeEstado Boolean: TRUE socios activos, FALSE socios inactivos, NULL todos los socios
+     * @return List<SocioView> lista de socios.
+     */
+	public List<SocioView> findByFilterText(String filterText,
+			BigInteger[] range, Boolean modeSocio, Boolean modeEstado);	
 	
-	public List<SocioView> findAllView();
-	public List<SocioView> findAllViewAporte();
+	/**
+     * Devuelve la lista de socios del sistema,
+     * incluyendo socios de Personas naturales y juridicas.
+     *
+     * @param  range BigInteger[] para indicar el rango de resultados.
+     * @param  modeSocio Boolean: TRUE todos los socios, FALSE socios con cuenta aporte, NULL todos los socios
+     * @param  modeEstado Boolean: TRUE socios activos, FALSE socios inactivos, NULL todos los socios
+     * @return List<SocioView> lista de socios.
+     */
+	public List<SocioView> findAllView(BigInteger[] range, Boolean modeSocio, Boolean modeEstado);
 	
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc, String numDoc);
 	
@@ -40,6 +57,7 @@ public interface SocioService extends AbstractService<Socio>{
 	public Set<CuentaBancaria> getCuentasBancarias(BigInteger idSocio);
 	
 	//transaccional
-	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona,BigInteger idDocSocio, String numDocSocio,BigInteger idDocApoderado, String numDocApoderado) throws RollbackFailureException;	
+	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona,BigInteger idDocSocio, String numDocSocio,BigInteger idDocApoderado, String numDocApoderado) throws RollbackFailureException;
+	
 	
 }

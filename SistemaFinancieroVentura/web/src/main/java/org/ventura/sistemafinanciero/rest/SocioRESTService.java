@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
@@ -64,31 +63,72 @@ public class SocioRESTService {
 	
 	@EJB
 	private UsuarioService usuarioService;
+	
 	@EJB
 	private TrabajadorService trabajadorService;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listAll(@QueryParam("mode") String mode) {
-		if(mode == null){
-			List<SocioView> list = socioService.findAllView();
-			return Response.status(Response.Status.OK).entity(list).build();	
-		} else {
-			if(mode.equalsIgnoreCase("all")){
-				List<SocioView> list = socioService.findAllView();
-				return Response.status(Response.Status.OK).entity(list).build();
-			} else {
-				if(mode.equalsIgnoreCase("aporte")){
-					List<SocioView> list = socioService.findAllViewAporte();
-					return Response.status(Response.Status.OK).entity(list).build();
-				} else {
-					JsonObject model = Json.createObjectBuilder().add("message", "no hay resultados").build();
-					return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
-				}
-			}
+	public Response listAll(
+			@QueryParam("modeSocio") Boolean modeSocio,
+			@QueryParam("modeEstado") Boolean modeEstado,
+			@QueryParam("desde") BigInteger desde, 
+			@QueryParam("hasta") BigInteger hasta) {
+		if(desde == null || hasta == null){
+			desde = null;
+			hasta = null;
 		}
 		
+		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
+			desde = BigInteger.ZERO;
+		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
+			hasta = BigInteger.ZERO;
+		
+		BigInteger[] range = null;
+		if(desde != null && hasta != null){
+			range = new BigInteger[]{desde, hasta};
+		}
+					
+		List<SocioView> list = socioService.findAllView(range, modeSocio, modeEstado);
+		return Response.status(Response.Status.OK).entity(list).build();				
+		
 	}
+	
+	@GET
+	@Path("/filtertext/{filterText}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findByFilterText(
+			@PathParam("filterText") @DefaultValue("") String filterText, 
+			@QueryParam("modeSocio") Boolean modeSocio,
+			@QueryParam("modeEstado") Boolean modeEstado,
+			@QueryParam("desde") BigInteger desde, 
+			@QueryParam("hasta") BigInteger hasta) {		
+				
+		if(desde == null || hasta == null){
+			desde = null;
+			hasta = null;
+		}
+		
+		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
+			desde = BigInteger.ZERO;
+		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
+			hasta = BigInteger.ZERO;
+		
+		BigInteger[] range = null;
+		if(desde != null && hasta != null){
+			range = new BigInteger[]{desde, hasta};
+		}
+		List<SocioView> list = socioService.findByFilterText(filterText, range, modeSocio, modeEstado);
+		return Response.status(Response.Status.OK).entity(list).build();						
+	}	
+	
+	@GET
+	@Path("/count")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findByFilterText() {								
+		int size = socioService.count();
+		return Response.status(Response.Status.OK).entity(size).build();						
+	}	
 	
 	@GET
 	@Path("/{id}")
@@ -198,31 +238,7 @@ public class SocioRESTService {
 		}	
 	}
      
-	@GET
-	@Path("/filtertext/{filterText}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterText(
-			@PathParam("filterText") @DefaultValue("") String filterText, 
-			@QueryParam("mode") String mode) {		
-				
-		if(mode == null){
-			Set<SocioView> list = socioService.findByFilterText(filterText);
-			return Response.status(Response.Status.OK).entity(list).build();	
-		} else {
-			if(mode.equalsIgnoreCase("all")){
-				Set<SocioView> list = socioService.findByFilterText(filterText);
-				return Response.status(Response.Status.OK).entity(list).build();
-			} else {
-				if(mode.equalsIgnoreCase("aporte")){
-					Set<SocioView> list = socioService.findByFilterTextAporte(filterText);					
-					return Response.status(Response.Status.OK).entity(list).build();
-				} else {
-					JsonObject model = Json.createObjectBuilder().add("message", "no hay resultados").build();
-					return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
-				}
-			}
-		}
-	}	
+	
 	
 	@POST
 	@Produces({ "application/xml", "application/json" })

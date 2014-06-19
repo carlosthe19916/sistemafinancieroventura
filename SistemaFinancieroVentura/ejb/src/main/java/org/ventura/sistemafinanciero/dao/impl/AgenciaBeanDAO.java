@@ -40,6 +40,7 @@ import javax.validation.Validator;
 
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.Agencia;
+import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 
 /**
@@ -134,5 +135,17 @@ public class AgenciaBeanDAO implements DAO<Object, Agencia> {
 		}
 		return query.getResultList();
 	}
+	
+	public List<Agencia> findByNamedQuery(String namedQueryName,
+			Map<String, Object> parameters, int[] range) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = this.em.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		query.setMaxResults(range[1] - range[0]);
+		query.setFirstResult(range[0]);
+		return query.getResultList();
+    }
 
 }

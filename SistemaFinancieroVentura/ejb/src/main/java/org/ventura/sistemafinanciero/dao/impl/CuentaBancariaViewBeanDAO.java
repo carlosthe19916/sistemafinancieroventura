@@ -34,6 +34,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
+import org.ventura.sistemafinanciero.entity.CuentaBancariaTasa;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 
 /**
@@ -120,4 +121,16 @@ public class CuentaBancariaViewBeanDAO implements DAO<Object, CuentaBancariaView
 		return query.getResultList();
 	}
 
+	public List<CuentaBancariaView> findByNamedQuery(String namedQueryName,
+			Map<String, Object> parameters, int[] range) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = this.em.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		query.setMaxResults(range[1] - range[0]);
+		query.setFirstResult(range[0]);
+		return query.getResultList();
+    }
+	
 }

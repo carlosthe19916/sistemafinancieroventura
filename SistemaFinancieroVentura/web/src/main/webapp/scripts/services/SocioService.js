@@ -6,23 +6,36 @@ define(['./module'], function (services) {
             var _socioService = Restangular.all("socio");
 
             return {
-                getSocios: function(mode){
-                    if(mode === undefined || mode === null){
-                        return _socioService.getList({"mode":"ALL"},{});
-                    } else if(mode.toUpperCase() == 'ALL'){
-                        return _socioService.getList({"mode":"ALL"},{});
-                    } else if(mode.toUpperCase() == 'APORTE'){
-                        return _socioService.getList({"mode":"APORTE"},{});
+                getSocios: function(desde, hasta, modeSocio, modeEstado){
+                    if(arguments.length == 0){
+                        return _socioService.getList({},{});
+                    } else if(arguments.length == 1){
+                        return _socioService.getList({"desde":desde},{});
+                    } else if(arguments.length == 2){
+                        return _socioService.getList({"desde":desde,"hasta":hasta},{});
+                    } else if(arguments.length == 3){
+                        return _socioService.getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio},{});
+                    } else if(arguments.length == 4){
+                        return _socioService.getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio,"modeEstado":modeEstado},{});
                     }
                 },
-                findByFilterText: function(text, mode){
-                    if(mode === undefined || mode === null){
-                        return Restangular.all("socio/filtertext/"+text).getList({"mode":"ALL"},{});
-                    } else if(mode.toUpperCase() == 'ALL'){
-                        return Restangular.all("socio/filtertext/"+text).getList({"mode":"ALL"},{});
-                    } else if(mode.toUpperCase() == 'APORTE'){
-                        return Restangular.all("socio/filtertext/"+text).getList({"mode":"APORTE"},{});
+                findByFilterText: function(text, desde, hasta, modeSocio, modeEstado){
+                    if(arguments.length == 0){
+                        return Restangular.all("socio/filtertext/"+"").getList({},{});
+                    } else if(arguments.length == 1){
+                        return Restangular.all("socio/filtertext/"+text).getList({},{});
+                    } else if(arguments.length == 2){
+                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde},{});
+                    } else if(arguments.length == 3){
+                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde,"hasta":hasta},{});
+                    } else if(arguments.length == 4){
+                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio},{});
+                    } else if(arguments.length == 5){
+                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio,"modeEstado":modeEstado},{});
                     }
+                },
+                count: function(){
+                    return Restangular.one("socio/count").get();
                 },
                 crear : function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
                     var socio = {
