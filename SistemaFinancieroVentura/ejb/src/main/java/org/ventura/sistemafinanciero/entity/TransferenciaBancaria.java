@@ -3,10 +3,14 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,55 +25,58 @@ import javax.persistence.TemporalType;
 @Table(name = "TRANSFERENCIA_BANCARIA", schema = "BDSISTEMAFINANCIERO")
 public class TransferenciaBancaria implements java.io.Serializable {
 
-	private BigDecimal idTransferenciaBancaria;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private BigInteger idTransferenciaBancaria;
 	private HistorialCaja historialCaja;
-	private CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen;
-	private CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino;
+	private CuentaBancaria cuentaBancariaOrigen;
+	private CuentaBancaria cuentaBancariaDestino;
 	private Date fecha;
 	private Date hora;
-	private BigDecimal numeroOperacion;
+	private BigInteger numeroOperacion;
 	private BigDecimal monto;
 	private String referencia;
 	private BigDecimal saldoDisponibleOrigen;
 	private BigDecimal saldoDisponibleDestino;
-	private BigDecimal estado;
+	private int estado;
 	private String observacion;
 
 	public TransferenciaBancaria() {
 	}
 
-	public TransferenciaBancaria(BigDecimal idTransferenciaBancaria,
-			HistorialCaja historialCaja,
-			CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen,
-			CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino, Date fecha,
-			Date hora, BigDecimal numeroOperacion, BigDecimal monto,
+	public TransferenciaBancaria(BigInteger idTransferenciaBancaria,
+			HistorialCaja historialCaja, CuentaBancaria cuentaBancariaOrigen,
+			CuentaBancaria cuentaBancariaDestino, Date fecha, Date hora,
+			BigDecimal BigInteger, BigDecimal monto,
 			BigDecimal saldoDisponibleOrigen,
-			BigDecimal saldoDisponibleDestino, BigDecimal estado) {
+			BigDecimal saldoDisponibleDestino, boolean estado) {
 		this.idTransferenciaBancaria = idTransferenciaBancaria;
 		this.historialCaja = historialCaja;
-		this.cuentaBancariaByIdCuentaBancariaOrigen = cuentaBancariaByIdCuentaBancariaOrigen;
-		this.cuentaBancariaByIdCuentaBancariaDestino = cuentaBancariaByIdCuentaBancariaDestino;
+		this.cuentaBancariaOrigen = cuentaBancariaOrigen;
+		this.cuentaBancariaDestino = cuentaBancariaDestino;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.numeroOperacion = numeroOperacion;
 		this.monto = monto;
 		this.saldoDisponibleOrigen = saldoDisponibleOrigen;
 		this.saldoDisponibleDestino = saldoDisponibleDestino;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 	}
 
-	public TransferenciaBancaria(BigDecimal idTransferenciaBancaria,
-			HistorialCaja historialCaja,
-			CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen,
-			CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino, Date fecha,
-			Date hora, BigDecimal numeroOperacion, BigDecimal monto,
-			String referencia, BigDecimal saldoDisponibleOrigen,
-			BigDecimal saldoDisponibleDestino, BigDecimal estado,
+	public TransferenciaBancaria(BigInteger idTransferenciaBancaria,
+			HistorialCaja historialCaja, CuentaBancaria cuentaBancariaOrigen,
+			CuentaBancaria cuentaBancariaDestino, Date fecha, Date hora,
+			BigInteger numeroOperacion, BigDecimal monto, String referencia,
+			BigDecimal saldoDisponibleOrigen,
+			BigDecimal saldoDisponibleDestino, boolean estado,
 			String observacion) {
 		this.idTransferenciaBancaria = idTransferenciaBancaria;
 		this.historialCaja = historialCaja;
-		this.cuentaBancariaByIdCuentaBancariaOrigen = cuentaBancariaByIdCuentaBancariaOrigen;
-		this.cuentaBancariaByIdCuentaBancariaDestino = cuentaBancariaByIdCuentaBancariaDestino;
+		this.cuentaBancariaOrigen = cuentaBancariaOrigen;
+		this.cuentaBancariaDestino = cuentaBancariaDestino;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.numeroOperacion = numeroOperacion;
@@ -77,17 +84,18 @@ public class TransferenciaBancaria implements java.io.Serializable {
 		this.referencia = referencia;
 		this.saldoDisponibleOrigen = saldoDisponibleOrigen;
 		this.saldoDisponibleDestino = saldoDisponibleDestino;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);;
 		this.observacion = observacion;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_TRANSFERENCIA_BANCARIA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdTransferenciaBancaria() {
+	public BigInteger getIdTransferenciaBancaria() {
 		return this.idTransferenciaBancaria;
 	}
 
-	public void setIdTransferenciaBancaria(BigDecimal idTransferenciaBancaria) {
+	public void setIdTransferenciaBancaria(BigInteger idTransferenciaBancaria) {
 		this.idTransferenciaBancaria = idTransferenciaBancaria;
 	}
 
@@ -103,24 +111,22 @@ public class TransferenciaBancaria implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CUENTA_BANCARIA_ORIGEN", nullable = false)
-	public CuentaBancaria getCuentaBancariaByIdCuentaBancariaOrigen() {
-		return this.cuentaBancariaByIdCuentaBancariaOrigen;
+	public CuentaBancaria getCuentaBancariaOrigen() {
+		return this.cuentaBancariaOrigen;
 	}
 
-	public void setCuentaBancariaByIdCuentaBancariaOrigen(
-			CuentaBancaria cuentaBancariaByIdCuentaBancariaOrigen) {
-		this.cuentaBancariaByIdCuentaBancariaOrigen = cuentaBancariaByIdCuentaBancariaOrigen;
+	public void setCuentaBancariaOrigen(CuentaBancaria cuentaBancariaOrigen) {
+		this.cuentaBancariaOrigen = cuentaBancariaOrigen;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CUENTA_BANCARIA_DESTINO", nullable = false)
-	public CuentaBancaria getCuentaBancariaByIdCuentaBancariaDestino() {
-		return this.cuentaBancariaByIdCuentaBancariaDestino;
+	public CuentaBancaria getCuentaBancariaDestino() {
+		return this.cuentaBancariaDestino;
 	}
 
-	public void setCuentaBancariaByIdCuentaBancariaDestino(
-			CuentaBancaria cuentaBancariaByIdCuentaBancariaDestino) {
-		this.cuentaBancariaByIdCuentaBancariaDestino = cuentaBancariaByIdCuentaBancariaDestino;
+	public void setCuentaBancariaDestino(CuentaBancaria cuentaBancariaDestino) {
+		this.cuentaBancariaDestino = cuentaBancariaDestino;
 	}
 
 	@Temporal(TemporalType.DATE)
@@ -143,11 +149,11 @@ public class TransferenciaBancaria implements java.io.Serializable {
 	}
 
 	@Column(name = "NUMERO_OPERACION", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getNumeroOperacion() {
+	public BigInteger getNumeroOperacion() {
 		return this.numeroOperacion;
 	}
 
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
 
@@ -160,7 +166,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 		this.monto = monto;
 	}
 
-	@Column(name = "REFERENCIA", length = 100,columnDefinition = "nvarchar2")
+	@Column(name = "REFERENCIA", length = 100, columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
 	}
@@ -188,15 +194,15 @@ public class TransferenciaBancaria implements java.io.Serializable {
 	}
 
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
 	}
 
-	@Column(name = "OBSERVACION", length = 100,columnDefinition = "nvarchar2")
+	@Column(name = "OBSERVACION", length = 100, columnDefinition = "nvarchar2")
 	public String getObservacion() {
 		return this.observacion;
 	}

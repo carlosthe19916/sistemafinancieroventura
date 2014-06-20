@@ -366,7 +366,7 @@ define(['./app'], function(app) {
                 }
             })
             .state('app.transaccion.transferenciaVoucher', {
-                url: "/depositoRetiro/:id/voucher",
+                url: "/transferencia/:id/voucher",
                 views: {
                     "viewContent": {
                         templateUrl: "views/cajero/voucher/transferenciaVoucher.html",

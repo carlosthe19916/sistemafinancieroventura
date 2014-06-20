@@ -7,6 +7,8 @@ define(['./module'], function (services) {
             var tipoCuentasBancarias = ["AHORRO", "PLAZO_FIJO", "CORRIENTE"];
             var tipoEstadoCuentasBancarias = ["ACTIVO", "CONGELADO", "INACTIVO"];
 
+            var tipoTransaccionBancarias = ["DEPOSITO", "RETIRO"];
+
             return {
                 getTipoPersonas: function(){
                     return tipoPersonas;
@@ -42,6 +44,10 @@ define(['./module'], function (services) {
                 },
                 getEstadoBancarioInactivo: function(){
                     return tipoEstadoCuentasBancarias[2];
+                },
+
+                getTipoTransaccionesBancarias: function(){
+                    return tipoTransaccionBancarias;
                 }
             }
         }])

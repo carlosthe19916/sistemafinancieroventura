@@ -20,6 +20,7 @@ define([
 
     './caja/transaccion/CrearTransaccionDepositoRetiroController',
     './caja/transaccion/CrearAporteController',
+    './caja/transaccion/CrearTransferenciaController',
 
     './cuentaBancaria/BeneficiarioController',
     './cuentaBancaria/TitularController',

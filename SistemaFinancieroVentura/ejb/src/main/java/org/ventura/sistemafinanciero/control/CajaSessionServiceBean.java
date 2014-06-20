@@ -52,6 +52,7 @@ import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
+import org.ventura.sistemafinanciero.entity.TransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
@@ -119,6 +120,8 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private DAO<Object, Socio> socioDAO;
 	@Inject
 	private DAO<Object, CuentaAporte> cuentaAporteDAO;
+	@Inject
+	private DAO<Object, TransferenciaBancaria> transferenciaBancariaDAO;
 	
 	@EJB
 	private MonedaService monedaService;
@@ -875,6 +878,90 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		this.actualizarSaldoCaja(monto, cuentaAporte.getMoneda().getIdMoneda());
 		
 		return transaccionCuentaAporte.getIdTransaccionCuentaAporte();	
+	}
+
+	@Override
+	public BigInteger crearTransferenciaBancaria(String numeroCuentaOrigen,
+			String numeroCuentaDestino, BigDecimal monto, String referencia)
+			throws RollbackFailureException {
+		
+		CuentaBancaria cuentaBancariaOrigen = null;
+		CuentaBancaria cuentaBancariaDestino = null;
+		
+		if(monto.compareTo(BigDecimal.ZERO) != 1){
+			throw new RollbackFailureException("Monto invalido para transaccion");
+		}
+		try {
+			QueryParameter queryParameter1 = QueryParameter.with("numerocuenta", numeroCuentaOrigen);
+			List<CuentaBancaria> list1 = cuentaBancariaDAO.findByNamedQuery(CuentaBancaria.findByNumeroCuenta, queryParameter1.parameters());
+			QueryParameter queryParameter2 = QueryParameter.with("numerocuenta", numeroCuentaDestino);
+			List<CuentaBancaria> list2 = cuentaBancariaDAO.findByNamedQuery(CuentaBancaria.findByNumeroCuenta, queryParameter2.parameters());
+			
+			if(list1.size() == 1)
+				cuentaBancariaOrigen = list1.get(0);
+			else
+				throw new IllegalResultException("Existen mas de una cuenta con el numero de cuenta indicado");
+			if(list2.size() == 1)
+				cuentaBancariaDestino = list2.get(0);
+			else
+				throw new IllegalResultException("Existen mas de una cuenta con el numero de cuenta indicado");						
+		} catch (IllegalResultException e) {
+			LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
+			throw new EJBAccessException("Error de inconsistencia de datos");
+		}
+		
+		switch (cuentaBancariaOrigen.getEstado()) {
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta CONGELADA, no se pueden realizar transacciones");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta INACTIVO, no se pueden realizar transacciones");
+		default:
+			break;
+		}
+		switch (cuentaBancariaDestino.getEstado()) {
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta CONGELADA, no se pueden realizar transacciones");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta INACTIVO, no se pueden realizar transacciones");
+		default:
+			break;
+		}
+		
+		//obteniendo datos de caja en session
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		Trabajador trabajador = this.getTrabajador();
+		PersonaNatural natural = trabajador.getPersonaNatural();
+		
+		//obteniendo saldo disponible de cuenta
+		BigDecimal saldoDisponibleOrigen = cuentaBancariaOrigen.getSaldo().subtract(monto);
+		BigDecimal saldoDisponibleDestino = cuentaBancariaOrigen.getSaldo().add(monto);
+		if(saldoDisponibleOrigen.compareTo(BigDecimal.ZERO) == -1)
+			throw new RollbackFailureException("Saldo insuficiente para transferencia");
+		
+		cuentaBancariaOrigen.setSaldo(saldoDisponibleOrigen);
+		cuentaBancariaDestino.setSaldo(saldoDisponibleDestino);
+		cuentaBancariaDAO.update(cuentaBancariaOrigen);
+		cuentaBancariaDAO.update(cuentaBancariaDestino);
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		TransferenciaBancaria transferenciaBancaria = new TransferenciaBancaria();
+		transferenciaBancaria.setIdTransferenciaBancaria(null);
+		transferenciaBancaria.setCuentaBancariaOrigen(cuentaBancariaOrigen);
+		transferenciaBancaria.setCuentaBancariaDestino(cuentaBancariaDestino);
+		transferenciaBancaria.setEstado(true);
+		transferenciaBancaria.setFecha(calendar.getTime());
+		transferenciaBancaria.setHora(calendar.getTime());
+		transferenciaBancaria.setHistorialCaja(historialCaja);
+		transferenciaBancaria.setMonto(monto);
+		transferenciaBancaria.setNumeroOperacion(this.getNumeroOperacion());
+		transferenciaBancaria.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
+		transferenciaBancaria.setReferencia(referencia);
+		transferenciaBancaria.setSaldoDisponibleOrigen(saldoDisponibleOrigen);
+		transferenciaBancaria.setSaldoDisponibleDestino(saldoDisponibleDestino);
+		
+		transferenciaBancariaDAO.create(transferenciaBancaria);
+		return transferenciaBancaria.getIdTransferenciaBancaria();	
 	}
 	
 }

@@ -242,7 +242,7 @@ public class CuentaBancaria implements java.io.Serializable {
 	}
 
 	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancariaByIdCuentaBancariaOrigen")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancariaOrigen")
 	public Set<TransferenciaBancaria> getTransferenciaBancariasForIdCuentaBancariaOrigen() {
 		return this.transferenciaBancariasForIdCuentaBancariaOrigen;
 	}
@@ -253,7 +253,7 @@ public class CuentaBancaria implements java.io.Serializable {
 	}
 
 	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancariaByIdCuentaBancariaDestino")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaBancariaDestino")
 	public Set<TransferenciaBancaria> getTransferenciaBancariasForIdCuentaBancariaDestino() {
 		return this.transferenciaBancariasForIdCuentaBancariaDestino;
 	}

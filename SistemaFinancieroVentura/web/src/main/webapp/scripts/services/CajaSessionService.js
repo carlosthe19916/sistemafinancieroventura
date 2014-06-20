@@ -66,6 +66,9 @@ define(['./module'], function (services) {
                 crearTransaccionBancaria: function(transaccion){
                     return Restangular.all("caja/session/transaccionBancaria").post(transaccion);
                 },
+                crearTransferenciaBancaria: function(transaccion){
+                    return Restangular.all("caja/session/transferenciaBancaria").post(transaccion);
+                },
                 crearAporte: function(transaccion){
                     return Restangular.all("caja/session/transaccionCuentaAporte").post(transaccion);
                 }
