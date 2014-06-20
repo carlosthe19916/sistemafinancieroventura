@@ -131,6 +131,6 @@ public class DepartamentoDAO implements DAO<Object, Departamento> {
 		query.setMaxResults(range[1] - range[0]);
 		query.setFirstResult(range[0]);
 		return query.getResultList();
-    }
+    }		
 
 }

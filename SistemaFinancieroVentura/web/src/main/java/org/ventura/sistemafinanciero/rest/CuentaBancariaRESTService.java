@@ -46,7 +46,6 @@ import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
-import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
@@ -57,11 +56,9 @@ import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
-import org.ventura.sistemafinanciero.entity.type.TipoEmpresa;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
-import org.ventura.sistemafinanciero.rest.dto.BuscarCuentaViewDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaAhorroDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaCorrienteDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaPlazoFijoDTO;
@@ -97,13 +94,14 @@ public class CuentaBancariaRESTService {
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 	
+	/*
 	@GET
 	@Path("/view")
 	@Produces({ "application/xml", "application/json" })
 	public Response findAllView() {					
 		List<CuentaBancariaView> list = cuentaBancariaService.findAllView();
 		return Response.status(Response.Status.OK).entity(list).build();
-	}
+	}*/
 	
 	@GET
 	@Path("/view")
@@ -257,13 +255,14 @@ public class CuentaBancariaRESTService {
 		}						
 	}
 	
+	/*
 	@GET
 	@Path("/filtertext/{filterText}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findByFilterText(@PathParam("filterText") @DefaultValue("") String filterText) {
 		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText);
 		return Response.status(Response.Status.OK).entity(list).build();
-	}
+	}*/
 	
 	
 		

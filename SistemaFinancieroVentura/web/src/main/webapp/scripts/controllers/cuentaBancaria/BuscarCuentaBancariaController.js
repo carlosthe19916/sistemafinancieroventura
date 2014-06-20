@@ -1,7 +1,12 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarCuentaBancariaController", ["$scope", "$state", "ngProgress","focus", "CuentaBancariaService",
-        function($scope, $state, ngProgress,focus, CuentaBancariaService) {
+    controllers.controller("BuscarCuentaBancariaController", ["$scope", "$state", "ngProgress","focus", "CuentaBancariaService","VariablesService",
+        function($scope, $state, ngProgress,focus, CuentaBancariaService, VariablesService) {
+
+            //variables para busqueda de cuentas
+            $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();
+            $scope.tipoPersonas = VariablesService.getTipoPersonas();
+            $scope.tipoEstadoCuenta = VariablesService.getEstadosCuentaBancaria();
 
             ngProgress.color("#2d6ca2");
             focus("firstFocus");
@@ -11,8 +16,6 @@ define(['../module'], function (controllers) {
             }
 
             $scope.cuentasList = [];
-            $scope.cuentasListInicial = [];
-            $scope.bandera = true;
 
             $scope.filterOptions = {
                 filterText: "",
@@ -25,79 +28,73 @@ define(['../module'], function (controllers) {
                 currentPage: 1
             };
             $scope.setPagingData = function(data, page, pageSize){
-                var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
-                $scope.cuentasList = pagedData;
-                $scope.totalServerItems = data.length;
+                $scope.cuentasList = data;
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
             };
-
-            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
+            $scope.getDesde = function(){
+                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
+            }
+            $scope.getHasta = function(){
+                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
+            }
+            $scope.getPagedDataInitial = function () {
                 setTimeout(function () {
-                    var data;
-                    if (searchText) {
-                        var ft = searchText.toUpperCase();
-                        data = $scope.cuentasListInicial.filter(function(item) {
-                            return JSON.stringify(item).toUpperCase().indexOf(ft) != -1;
-                        });
-
-                        $scope.pagingOptions.currentPage = 1;
-                        page = 1;
-                        $scope.setPagingData(data,page,pageSize);
-                    } else {
-                        if($scope.bandera){
-                            $scope.bandera = false;
-                            CuentaBancariaService.getCuentasBancariasView().then(function(data){
-                                var result = data;
-                                $scope.cuentasListInicial = data;
-                                $scope.setPagingData(result,page,pageSize);
-                            });
-                        } else {
-                            $scope.cuentasList = angular.copy($scope.cuentasListInicial);
-                            $scope.setPagingData($scope.cuentasList,page,pageSize);
-                        }
-                    }
+                    $scope.pagingOptions.currentPage = 1;
+                    CuentaBancariaService.getCuentasBancariasView($scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function(data){
+                        $scope.cuentasList = data;
+                        $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                    });
+                    CuentaBancariaService.count().then(function(data){
+                        $scope.totalServerItems = data;
+                    });
                 }, 100);
             };
-
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
+            $scope.getPagedDataInitial();
             $scope.getPagedDataSearched = function () {
                 setTimeout(function () {
                     if ($scope.filterOptions.filterText) {
-                        ngProgress.start();
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        CuentaBancariaService.findByFilterTextView(ft).then(function(data){
-                            var result = data;
-                            $scope.cuentasListInicial = data;
-                            $scope.setPagingData(result,$scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        CuentaBancariaService.findByFilterTextView(ft, $scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function (data){
+                            $scope.cuentasList = data;
+                            $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
-                        ngProgress.complete();
+                        CuentaBancariaService.count().then(function(data){
+                            $scope.totalServerItems = data;
+                        });
                     } else {
-                        ngProgress.start();
-                        CuentaBancariaService.getCuentasBancariasView().then(function(data){
-                            var result = data;
-                            $scope.cuentasListInicial = data;
-                            $scope.setPagingData(result,$scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        });
-                        ngProgress.complete();
+                        $scope.getPagedDataInitial();
                     }
                 }, 100);
             };
 
-            $scope.$watch('pagingOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
+            $scope.$watch(
+                function () {
+                    return {
+                        currentPage: $scope.pagingOptions.currentPage,
+                        pageSize: $scope.pagingOptions.pageSize
+                    };
+                },
+                function (newVal, oldVal) {
+                    if (newVal.pageSize !== oldVal.pageSize) {
+                        $scope.pagingOptions.currentPage = 1;
+                    }
+                    if ($scope.filterOptions.filterText) {
+                        var ft = $scope.filterOptions.filterText.toUpperCase();
+                        CuentaBancariaService.findByFilterTextView(ft, $scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function (data){
+                            $scope.cuentasList = data;
+                            $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                    } else {
+                        CuentaBancariaService.getCuentasBancariasView($scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function(data){
+                            $scope.cuentasList = data;
+                            $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                    }
+                },true);
 
-            $scope.$watch('filterOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
-
+            var gridLayoutPlugin = new ngGridLayoutPlugin();
             $scope.gridOptions = {
                 data: 'cuentasList',
                 multiSelect: false,
@@ -106,6 +103,7 @@ define(['../module'], function (controllers) {
                 totalServerItems: 'totalServerItems',
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
+                plugins: [gridLayoutPlugin],
                 columnDefs: [
                     {field:"tipoCuenta", displayName:'TIPO CTA.', width:80},
                     {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:135},
@@ -117,6 +115,9 @@ define(['../module'], function (controllers) {
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
             };
+            $scope.updateGridLayout = function(){
+                gridLayoutPlugin.updateGridLayout();
+            }
 
             $scope.editCuenta = function(row){
                 $state.transitionTo("app.socio.editarCuentaBancaria", { id: row.id });

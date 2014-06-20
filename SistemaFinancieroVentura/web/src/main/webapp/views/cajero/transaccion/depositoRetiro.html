@@ -39,7 +39,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
                                         <label>Tipo Transacci&oacute;n</label>
-                                        <select name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="transaccion.tipoTransaccion" class="form-control" required>
+                                        <select id="cmbTipoTransaccion" name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="transaccion.tipoTransaccion" class="form-control" required>
                                         </select>
                                         <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
@@ -139,7 +139,7 @@
                                         <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
                                         <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}}&nbsp;{{titular.personaNatural.apellidoMaterno}},{{titular.personaNatural.nombres}}"></span></td>
                                         <td>
-                                            <button type="button" class="btn btn-info btn-xs">
+                                            <button type="button" ng-click="showFirma($index)" class="btn btn-info btn-xs">
                                                 <span class="glyphicon glyphicon-picture"></span> Firma
                                             </button>
                                         </td>

@@ -65,6 +65,9 @@ define(['../../module'], function (controllers) {
                     size: 'lg'
                 });
                 modalInstance.result.then(function (cuenta) {
+                    setTimeout(function () {
+                        angular.element(document.querySelector('#cmbTipoTransaccion')).focus();
+                    }, 10);
                     $scope.cuenta = cuenta;
                     $scope.transaccion.numeroCuenta = $scope.cuenta.numeroCuenta;
                     $scope.loadTitulares();
@@ -79,6 +82,27 @@ define(['../../module'], function (controllers) {
                         $scope.titulares = data;
                     }
                 );
+            }
+            $scope.showFirma = function(index){
+                if(!angular.isUndefined($scope.titulares)){
+                    if(!angular.isUndefined($scope.titulares[index])){
+                        var modalInstance = $modal.open({
+                            templateUrl: 'views/cajero/util/firmaPopUp.html',
+                            controller: "FirmaPopUpController",
+                            resolve: {
+                                idPersona: function () {
+                                    return $scope.titulares[index].personaNatural.id;
+                                },
+                                descripcion: function(){
+                                    return ($scope.titulares[index].personaNatural.apellidoPaterno+" "+$scope.titulares[index].personaNatural.apellidoMaterno+","+$scope.titulares[index].personaNatural.nombres);
+                                }
+                            }
+                        });
+                        modalInstance.result.then(function (cuenta) {
+                        }, function () {
+                        });
+                    }
+                }
             }
 
             //transaccion

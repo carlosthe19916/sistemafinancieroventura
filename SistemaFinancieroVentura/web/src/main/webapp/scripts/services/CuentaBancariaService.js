@@ -23,7 +23,7 @@ define(['./module'], function (services) {
                         return Restangular.all("cuentaBancaria/view").getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList},{});
                     }
                 },
-                findByFilterTextView: function(text,desde,hasta,tipoPersonaList,tipoCuentaList,estadoCuentaList){
+                findByFilterTextView: function(text,desde,hasta,tipoCuentaList,tipoPersonaList,estadoCuentaList){
                     if(arguments.length == 0){
                         return Restangular.all("cuentaBancaria/view").getList();
                     } else if (arguments.length == 1) {
@@ -54,9 +54,6 @@ define(['./module'], function (services) {
                 },
                 crearCuentaPlazoFijo: function(transaccion){
                     return Restangular.all("cuentaBancaria/plazoFijo").post(transaccion);
-                },
-                findByFilterText: function(text){
-                    return Restangular.all("cuentaBancaria/filtertext/"+text).getList();
                 },
                 getSocio: function(idCuenta){
                     return Restangular.one("cuentaBancaria/"+idCuenta+"/socio").get();

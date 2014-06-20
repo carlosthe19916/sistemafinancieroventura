@@ -638,22 +638,22 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 
 	@Override
 	public List<CuentaBancariaView> findAllView() {
-		TipoCuentaBancaria[] tipoCuenta = (TipoCuentaBancaria[]) EnumSet.allOf(TipoCuentaBancaria.class).toArray();
-		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
-		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		TipoCuentaBancaria[] tipoCuenta = EnumSet.allOf(TipoCuentaBancaria.class).toArray(new TipoCuentaBancaria[0]);
+		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
+		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
 		return findAllView(tipoCuenta, persona, estadoCuenta, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta) {
-		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
-		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
+		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
 		return findAllView(tipoCuenta, persona, estadoCuenta, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona) {
-		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
 		return findAllView(tipoCuenta, persona, estadoCuenta, null);
 	}
 
@@ -669,22 +669,22 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 
 	@Override
 	public List<CuentaBancariaView> findAllView(String filterText) {
-		TipoCuentaBancaria[] tipoCuenta = (TipoCuentaBancaria[]) EnumSet.allOf(TipoCuentaBancaria.class).toArray();
-		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
-		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		TipoCuentaBancaria[] tipoCuenta = EnumSet.allOf(TipoCuentaBancaria.class).toArray(new TipoCuentaBancaria[0]);
+		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
+		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
 		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta) {
-		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
-		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
+		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
 		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona) {		
-		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
 		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
 	}
 

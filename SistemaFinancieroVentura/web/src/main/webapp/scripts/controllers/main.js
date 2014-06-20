@@ -49,7 +49,8 @@ define([
     './util/CalculadoraController',
     './util/LoginPopUpController',
     './util/ConfirmPopUpController',
-    './util/LoadImageController'
+    './util/LoadImageController',
+    './util/FirmaPopUpController'
 ], function () {
 
 });
