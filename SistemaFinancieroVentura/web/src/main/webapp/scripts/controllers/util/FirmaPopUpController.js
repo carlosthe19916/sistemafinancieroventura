@@ -1,11 +1,15 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('FirmaPopUpController', function ($scope, $modalInstance, idPersona, descripcion) {
+    controllers.controller('FirmaPopUpController', function ($scope, $modalInstance, idPersonas, nombres) {
 
-        $scope.descripcion = descripcion;
+        $scope.idPersonas = idPersonas;
+        $scope.nombres = nombres;
 
-        $scope.getUrlFirma = function(){
-            return "http://localhost:8080/SistemaFinancieroVentura-web/services/personanatural/image/"+idPersona+"/firma";
+        $scope.getUrlFirma = function(index) {
+            return "http://localhost:8080/SistemaFinancieroVentura-web/services/personanatural/image/"+$scope.idPersonas[index]+"/firma";
+        }
+        $scope.getNombre = function(index){
+            return $scope.nombres[index];
         }
 
         $scope.ok = function () {

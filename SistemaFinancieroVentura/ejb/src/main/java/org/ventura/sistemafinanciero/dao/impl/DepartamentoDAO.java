@@ -114,7 +114,7 @@ public class DepartamentoDAO implements DAO<Object, Departamento> {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
 		if (resultLimit > 0)
-			query.setMaxResults(resultLimit);
+			query.setMaxResults(resultLimit);		
 		for (Entry<String, Object> entry : rawParameters) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}

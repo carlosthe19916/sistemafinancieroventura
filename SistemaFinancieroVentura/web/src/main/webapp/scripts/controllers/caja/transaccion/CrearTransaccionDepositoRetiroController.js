@@ -90,11 +90,15 @@ define(['../../module'], function (controllers) {
                             templateUrl: 'views/cajero/util/firmaPopUp.html',
                             controller: "FirmaPopUpController",
                             resolve: {
-                                idPersona: function () {
-                                    return $scope.titulares[index].personaNatural.id;
+                                idPersonas: function () {
+                                    var idPersonas = [];
+                                    idPersonas.push($scope.titulares[index].personaNatural.id);
+                                    return idPersonas;
                                 },
-                                descripcion: function(){
-                                    return ($scope.titulares[index].personaNatural.apellidoPaterno+" "+$scope.titulares[index].personaNatural.apellidoMaterno+","+$scope.titulares[index].personaNatural.nombres);
+                                nombres: function(){
+                                    var nombres = [];
+                                    nombres.push($scope.titulares[index].personaNatural.apellidoPaterno+" "+$scope.titulares[index].personaNatural.apellidoMaterno+","+$scope.titulares[index].personaNatural.nombres);
+                                    return nombres;
                                 }
                             }
                         });
@@ -102,6 +106,31 @@ define(['../../module'], function (controllers) {
                         }, function () {
                         });
                     }
+                }
+            }
+            $scope.showFirmaTodos = function(){
+                if(!angular.isUndefined($scope.titulares)){
+                    var modalInstance = $modal.open({
+                        templateUrl: 'views/cajero/util/firmaPopUp.html',
+                        controller: "FirmaPopUpController",
+                        resolve: {
+                            idPersonas: function () {
+                                var idPersonas = [];
+                                for(var i = 0; i < $scope.titulares.length; i++)
+                                    idPersonas.push($scope.titulares[i].personaNatural.id);
+                                return idPersonas;
+                            },
+                            nombres: function(){
+                                var nombres = [];
+                                for(var i = 0; i < $scope.titulares.length; i++)
+                                    nombres.push($scope.titulares[i].personaNatural.apellidoPaterno+" "+$scope.titulares[i].personaNatural.apellidoMaterno+","+$scope.titulares[i].personaNatural.nombres);
+                                return nombres;
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (cuenta) {
+                    }, function () {
+                    });
                 }
             }
 
