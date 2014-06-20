@@ -934,7 +934,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		//obteniendo saldo disponible de cuenta
 		BigDecimal saldoDisponibleOrigen = cuentaBancariaOrigen.getSaldo().subtract(monto);
-		BigDecimal saldoDisponibleDestino = cuentaBancariaOrigen.getSaldo().add(monto);
+		BigDecimal saldoDisponibleDestino = cuentaBancariaDestino.getSaldo().add(monto);
 		if(saldoDisponibleOrigen.compareTo(BigDecimal.ZERO) == -1)
 			throw new RollbackFailureException("Saldo insuficiente para transferencia");
 		
