@@ -121,13 +121,15 @@ define(['../module'], function (controllers) {
 
             $scope.selectSocio = function(row){
                 $scope.socioSelected = row;
-                $scope.ok();
+                if ($scope.socioSelected !== undefined && $scope.socioSelected !== null) {
+                    $modalInstance.close($scope.socioSelected);
+                }
             }
 
             $scope.ok = function () {
                 var socio = $scope.gridOptions.selectedItems[0];
                 if(socio !== undefined && socio !== null){
-                    $scope.socioSelected = cta;
+                    $scope.socioSelected = socio;
                 }
                 if ($scope.socioSelected !== undefined && $scope.socioSelected !== null) {
                     $modalInstance.close($scope.socioSelected);
