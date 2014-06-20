@@ -5,7 +5,6 @@ define(['../module'], function (controllers) {
 
             //configurar tabla
             $scope.sociosList = [];
-            $scope.sociosListAuxiliar = [];
 
             $scope.filterOptions = {
                 filterText: "",
@@ -24,22 +23,6 @@ define(['../module'], function (controllers) {
                 }
             };
 
-            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-                setTimeout(function () {
-                    var data;
-                    if (searchText) {
-                        var ft = searchText.toUpperCase();
-                        data = $scope.sociosListAuxiliar.filter(function(item) {
-                            return JSON.stringify(item).toUpperCase().indexOf(ft) != -1;
-                        });
-                        $scope.setPagingData(data,page,pageSize);
-                    } else {
-                        $scope.sociosList = angular.copy($scope.sociosListAuxiliar);
-                        $scope.setPagingData($scope.sociosList, page, pageSize);
-                    }
-                }, 100);
-            };
-
             $scope.getDesde = function(){
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
             }
@@ -56,7 +39,6 @@ define(['../module'], function (controllers) {
                     SocioService.getSocios($scope.getDesde(), $scope.getHasta(), false, true).then(function(data){
                         $scope.sociosList = data;
                         $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        $scope.sociosListAuxiliar = angular.copy(data);
                     });
                     SocioService.count().then(function(data){
                         $scope.totalServerItems = data;
@@ -73,7 +55,6 @@ define(['../module'], function (controllers) {
                         SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), false, true).then(function (data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                            $scope.sociosListAuxiliar = angular.copy(data);
                         });
                         SocioService.count().then(function(data){
                             $scope.totalServerItems = data;
@@ -100,25 +81,15 @@ define(['../module'], function (controllers) {
                         SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), false, true).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                            $scope.sociosListAuxiliar = angular.copy(data);
                         });
                     } else {
                         SocioService.getSocios($scope.getDesde(), $scope.getHasta(), false, true).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                            $scope.sociosListAuxiliar = angular.copy(data);
                         });
                     }
                 },true);
 
-
-
-            //cambio del filtertext
-            $scope.$watch('filterOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
 
             var gridLayoutPlugin = new ngGridLayoutPlugin();
             $scope.gridOptions = {

@@ -23,71 +23,78 @@ define(['../module'], function (controllers) {
                 currentPage: 1
             };
             $scope.setPagingData = function(data, page, pageSize){
-                var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
-                $scope.sociosList = pagedData;
-                $scope.totalServerItems = data.length;
+                $scope.sociosList = data;
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
             };
 
-            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-                setTimeout(function () {
-                    var data;
-                    if (searchText) {
-                        var ft = searchText.toUpperCase();
-                        data = $scope.sociosList.filter(function(item) {
-                            return JSON.stringify(item).toUpperCase().indexOf(ft) != -1;
-                        });
-                        $scope.setPagingData(data,page,pageSize);
+            $scope.getDesde = function(){
+                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
+            }
+            $scope.getHasta = function(){
+                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
+            }
 
-                    } else {
-                        if( angular.isUndefined($scope.filterOptions.filterText) || $scope.filterOptions.filterText === null) {
-                            SocioService.getSocios("APORTE").then(function(data){
-                                var result = $scope.sociosList = data;
-                                $scope.setPagingData(result, page, pageSize);
-                            });
-                        } else {
-                            $scope.setPagingData($scope.sociosList,page,pageSize);
-                        }
-                    }
+            //eventos
+
+            //cargar datos por primera vez
+            $scope.getPagedDataInitial = function () {
+                setTimeout(function () {
+                    $scope.pagingOptions.currentPage = 1;
+                    SocioService.getSocios($scope.getDesde(), $scope.getHasta(), true).then(function(data){
+                        $scope.sociosList = data;
+                        $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                    });
+                    SocioService.count().then(function(data){
+                        $scope.totalServerItems = data;
+                    });
                 }, 100);
             };
+            $scope.getPagedDataInitial();
 
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
+            //buscar con enter
             $scope.getPagedDataSearched = function () {
                 setTimeout(function () {
                     if ($scope.filterOptions.filterText) {
-                        ngProgress.start();
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft, "APORTE").then(function (socios){
-                            $scope.sociosList = socios;
-                        });
-                        ngProgress.complete();
-                    } else {
-                        ngProgress.start();
-                        SocioService.getSocios("APORTE").then(function(data){
+                        SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), true).then(function (data){
                             $scope.sociosList = data;
+                            $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
-                        ngProgress.complete();
+                        SocioService.count().then(function(data){
+                            $scope.totalServerItems = data;
+                        });
+                    } else {
+                        $scope.getPagedDataInitial();
                     }
                 }, 100);
             };
 
-            $scope.getPagedDataSearched();
-
-            $scope.$watch('pagingOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
-
-            $scope.$watch('filterOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
+            $scope.$watch(
+                function () {
+                    return {
+                        currentPage: $scope.pagingOptions.currentPage,
+                        pageSize: $scope.pagingOptions.pageSize
+                    };
+                },
+                function (newVal, oldVal) {
+                    if (newVal.pageSize !== oldVal.pageSize) {
+                        $scope.pagingOptions.currentPage = 1;
+                    }
+                    if ($scope.filterOptions.filterText) {
+                        var ft = $scope.filterOptions.filterText.toUpperCase();
+                        SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), true).then(function(data){
+                            $scope.sociosList = data;
+                            $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                    } else {
+                        SocioService.getSocios($scope.getDesde(), $scope.getHasta(), true).then(function(data){
+                            $scope.sociosList = data;
+                            $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                    }
+                },true);
 
             $scope.gridOptions = {
                 data: 'sociosList',
