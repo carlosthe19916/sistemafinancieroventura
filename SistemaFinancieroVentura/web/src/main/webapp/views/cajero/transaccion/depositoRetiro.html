@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Datos de la Transacci&oacuten</h3>
+                            <h3 class="panel-title" style="font-weight: bold;">Datos de la Transacci&oacute;n</h3>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -29,7 +29,7 @@
                                         </div>
                                         <div ng-show="formCrearTransaccion.numeroCuenta.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.numeroCuenta.$error.required">
-                                                Ingrese N&uacutemero de Cuenta.
+                                                Ingrese N&uacute;mero de Cuenta.
                                             </p>
                                         </div>
                                     </div>
@@ -38,12 +38,12 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
-                                        <label>Tipo Transacci&oacuten</label>
+                                        <label>Tipo Transacci&oacute;n</label>
                                         <select name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="transaccion.tipoTransaccion" class="form-control" required>
                                         </select>
                                         <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
-                                                Ingrese Tipo Transacci&oacuten.
+                                                Ingrese Tipo Transacci&oacute;n.
                                             </p>
                                         </div>
                                     </div>
@@ -93,14 +93,14 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">Cuenta Bancaria</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title" style="font-weight: bold;">Cuenta Bancaria</h3></div>
                         <table class="table">
                             <tr>
                                 <td style="font-weight: bold;">Socio:</td>
                                 <td><span ng-bind="cuenta.socio"></span></td>
                             </tr>
                             <tr>
-                                <td style="font-weight: bold;">Tipo y Nro Doc.:</td>
+                                <td style="font-weight: bold;">Tipo y N&deg; Doc.:</td>
                                 <td><span ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></span></td>
                             </tr>
                             <tr>
@@ -108,7 +108,7 @@
                                 <td><span ng-bind="cuenta.tipoCuenta"></span></td>
                             </tr>
                             <tr>
-                                <td style="font-weight: bold;">Num. Cuenta:</td>
+                                <td style="font-weight: bold;">N&deg; Cuenta:</td>
                                 <td><span ng-bind="cuenta.numeroCuenta"></span></td>
                             </tr>
                             <tr>
