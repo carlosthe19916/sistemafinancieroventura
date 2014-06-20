@@ -21,6 +21,7 @@ define([
     './caja/transaccion/CrearTransaccionDepositoRetiroController',
     './caja/transaccion/CrearAporteController',
     './caja/transaccion/CrearTransferenciaController',
+    './caja/transaccion/CompraVentaController',
 
     './cuentaBancaria/BeneficiarioController',
     './cuentaBancaria/TitularController',

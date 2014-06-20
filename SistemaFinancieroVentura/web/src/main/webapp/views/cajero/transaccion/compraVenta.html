@@ -1,10 +1,185 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div ng-controller="CompraVentaController">
+<fieldset>
+<legend>Compra venta de moneda extrangera</legend>
 
-</body>
-</html>
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+    <span ng-bind="alert.msg"></span>
+</alert>
+
+<form name="formCrearCompraVenta" ng-submit="crearTransaccion()" novalidate>
+
+<div class="row">
+    <div class="col-sm-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-weight: bold;">Datos de la Transacci&oacute;n</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.numeroDocumento.$invalid && (control.submitted || formCrearCompraVenta.numeroDocumento.$dirty)}">
+                            <label>DNI/RUC</label>
+                            <label style="color: brown;">(*)</label>
+                            <div class="input-group">
+                                <input type="text" name="numeroDocumento" ui-keypress="{13:'buscarCliente($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required autofocus/>
+                                <span class="input-group-btn">
+                                  <button type="button" class="btn btn-default" ng-click="buscarCliente()">
+                                      <span class="glyphicon glyphicon-search"></span>
+                                  </button>
+                                </span>
+                            </div>
+                            <div ng-show="formCrearCompraVenta.numeroDocumento.$invalid && (control.submitted || formCrearCompraVenta.numeroDocumento.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.numeroDocumento.$error.required">
+                                    Ingrese Numero Documento Valido.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.numeroDocumento.$error.minlength">
+                                    Minimo 1 Caracter.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.numeroDocumento.$error.maxlength">
+                                    Maximo 20 Caracteres.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.numeroDocumento.$error.pattern">
+                                    Numero Documento Invalido.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.nombreCliente.$invalid && (control.submitted || formCrearCompraVenta.nombreCliente.$dirty)}">
+                            <label>Apellidos y nombres/Razon social</label>
+                            <input type="text" name="nombreCliente" ng-model="view.nombreCliente" class="form-control" ng-minlength="1" ng-maxlength="40" placeholder="Nombre/razon social" required autofocus/>
+                            <div ng-show="formCrearCompraVenta.nombreCliente.$invalid && (control.submitted || formCrearCompraVenta.nombreCliente.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.nombreCliente.$error.required">
+                                    Ingrese Numero Documento Valido.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.nombreCliente.$error.minlength">
+                                    Minimo 1 Caracter.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.nombreCliente.$error.maxlength">
+                                    Maximo 50 Caracteres.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.monedaRecibida.$invalid && (control.submitted || formCrearCompraVenta.monedaRecibida.$dirty)}">
+                            <label>Moneda recibida</label>
+                            <select name="monedaRecibida" ng-options="moneda as moneda.denominacion for moneda in view.monedasRecibidas" ng-model="view.monedaRecibida" class="form-control" required>
+                            </select>
+                            <div ng-show="formCrearCompraVenta.monedaRecibida.$invalid && (control.submitted || formCrearCompraVenta.monedaRecibida.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.monedaRecibida.$error.required">
+                                    Ingrese moneda recibida.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.monedaEntregada.$invalid && (control.submitted || formCrearCompraVenta.monedaEntregada.$dirty)}">
+                            <label>Moneda entregada</label>
+                            <select name="monedaEntregada" ng-options="moneda as moneda.denominacion for moneda in view.monedasEntregadas" ng-model="view.monedaEntregada" class="form-control" required>
+                            </select>
+                            <div ng-show="formCrearCompraVenta.monedaEntregada.$invalid && (control.submitted || formCrearCompraVenta.monedaEntregada.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.monedaEntregada.$error.required">
+                                    Ingrese moneda entregada.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Tasa de Cambio
+                                <button ng-show="!view.login.result" type="button" ng-click="openLoginPopUp()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                            </label>
+                            <kbd ng-show="!view.login.result" style="display: block;margin-top: 0px; min-height: 32px;padding-top: 8px;padding-left: 10px;">
+                                <span ng-bind="(view.tasaCambio * 100)| number : 3"/>
+                            </kbd>
+                            <div ng-if="view.login.result" ng-class="{ 'has-error' : formCrearCompraVenta.tasaInteresEdited.$invalid && formCrearCompraVenta.tasaInteresEdited.$dirty}">
+                                <div class="input-group">
+                                    <input id="txtTasaInteresEdited" type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="view.login.tasaCambio" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa interes" required/>
+                             <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="setTasaInteres()" >
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                             </span>
+                                </div>
+                                <div ng-show="formCrearCompraVenta.tasaInteresEdited.$invalid && formCrearCompraVenta.tasaInteresEdited.$dirty">
+                                    <p class="help-block" ng-show="formCrearCompraVenta.tasaInteresEdited.$error.required">
+                                        Ingrese Tasa.
+                                    </p>
+                                    <p class="help-block" ng-show="formCrearCompraVenta.tasaInteresEdited.$error.minlength">
+                                        Minimo 1 Caracter.
+                                    </p>
+                                    <p class="help-block" ng-show="formCrearCompraVenta.tasaInteresEdited.$error.maxlength">
+                                        Maximo 6 Caracteres.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)}">
+                            <label>Monto Recibido</label>
+                            <div class="input-group">
+                                <input type="text" name="montoRecibido" ng-model="view.montoRecibido" class="form-control" placeholder="Monto" required/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="!view.cuentaBancariaOrigen">
+                                        <span class="glyphicon glyphicon-th-list"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <div ng-show="formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.montoRecibido.$error.required">
+                                    Ingrese monto valido.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)}">
+                            <label>Monto Entregado</label>
+                            <div class="input-group">
+                                <input type="text" name="montoEntregado" ng-model="view.montoEntregado" class="form-control" placeholder="Monto entregado" required/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="!view.cuentaBancariaOrigen">
+                                        <span class="glyphicon glyphicon-th-list"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <div ng-show="formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.montoEntregado.$error.required">
+                                    Ingrese monto valido.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <kbd style="display: block;margin-top: 3px;min-height: 22px;">
+                                <span ng-bind="view.monto | currency : view.cuentaBancariaOrigen.moneda.simbolo"/>
+                            </kbd>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.referencia.$invalid && (control.submitted || formCrearCompraVenta.referencia.$invalid)}">
+                            <label>Observacion</label>
+                            <textarea name="referencia" class="form-control" rows="3" ng-model="view.referencia" placeholder="Referencia"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
+                <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</form>
+</fieldset>
+</div>
