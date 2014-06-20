@@ -8,7 +8,6 @@ define(['../../module'], function (controllers) {
             $scope.tipotransacciones = [{"denominacion":"DEPOSITO","factor":1},{"denominacion":"RETIRO","factor":-1}];
 
             $scope.cuenta;
-            $scope.monto;
 
             $scope.transaccion = {
                 "numeroCuenta" : undefined,
@@ -53,7 +52,7 @@ define(['../../module'], function (controllers) {
                 });
 
                 modalInstance.result.then(function (total) {
-                    $scope.monto = total;
+                    $scope.transaccion.monto = total;
                 }, function () {
                     //$log.info('Modal dismissed at: ' + new Date());
                 });
@@ -68,10 +67,19 @@ define(['../../module'], function (controllers) {
                 modalInstance.result.then(function (cuenta) {
                     $scope.cuenta = cuenta;
                     $scope.transaccion.numeroCuenta = $scope.cuenta.numeroCuenta;
+                    $scope.loadTitulares();
                     $scope.loadDenominacionesMoneda();
                 }, function () {
                 });
             };
+
+            $scope.loadTitulares = function(){
+                CuentaBancariaService.getTitulares($scope.cuenta.id).then(
+                    function(data){
+                        $scope.titulares = data;
+                    }
+                );
+            }
 
             //transaccion
             $scope.crearTransaccion = function(){

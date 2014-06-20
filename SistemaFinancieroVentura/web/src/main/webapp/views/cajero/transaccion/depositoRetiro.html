@@ -92,40 +92,63 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title" style="font-weight: bold;">Cuenta Bancaria</h3></div>
-                        <table class="table">
-                            <tr>
-                                <td style="font-weight: bold;">Socio:</td>
-                                <td><span ng-bind="cuenta.socio"></span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">Tipo y N&deg; Doc.:</td>
-                                <td><span ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">Tipo Cuenta:</td>
-                                <td><span ng-bind="cuenta.tipoCuenta"></span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">N&deg; Cuenta:</td>
-                                <td><span ng-bind="cuenta.numeroCuenta"></span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">
-                                    <span class="visible-sm visible-lg">✔ Moneda:</span>
-                                </td>
-                                <td>
-                                    <span class="label label-info">Info</span>
-                                    <span ng-bind="cuenta.moneda.denominacion"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">Estado Cuenta:</td>
-                                <td><span ng-bind="cuenta.estadoCuenta"></span></td>
-                            </tr>
-                        </table>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title" style="font-weight: bold;">Cuenta Bancaria</h3></div>
+                                <table class="table">
+                                    <tr>
+                                        <td style="font-weight: bold;">Socio:</td>
+                                        <td><span ng-bind="cuenta.socio"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">Tipo y N&deg; Doc.:</td>
+                                        <td><span ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">Tipo Cuenta:</td>
+                                        <td><span ng-bind="cuenta.tipoCuenta"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">N&deg; Cuenta:</td>
+                                        <td><span ng-bind="cuenta.numeroCuenta"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">
+                                            <span class="visible-sm visible-lg">✔ Moneda:</span>
+                                        </td>
+                                        <td>
+                                            <span class="label label-info">Info</span>
+                                            <span ng-bind="cuenta.moneda.denominacion"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;">Estado Cuenta:</td>
+                                        <td><span ng-bind="cuenta.estadoCuenta"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title" style="font-weight: bold;">Titulares</h3></div>
+                                <table class="table table-condensed table-striped">
+                                    <tr ng-repeat="titular in titulares | filter:{ estado: true }">
+                                        <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
+                                        <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}}&nbsp;{{titular.personaNatural.apellidoMaterno}},{{titular.personaNatural.nombres}}"></span></td>
+                                        <td>
+                                            <button type="button" class="btn btn-info btn-xs">
+                                                <span class="glyphicon glyphicon-picture"></span> Firma
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
