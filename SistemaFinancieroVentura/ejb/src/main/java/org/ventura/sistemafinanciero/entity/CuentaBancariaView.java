@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
@@ -25,13 +26,13 @@ import java.util.Date;
 @XmlRootElement(name = "cuentabancariaview")
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
-		@NamedQuery(name = CuentaBancariaView.FindByFilterTextCuentaBancariaView, query = "SELECT cbv FROM CuentaBancariaView cbv WHERE cbv.numerocuenta LIKE :filtertext OR cbv.numerodocumento LIKE :filtertext OR cbv.socio LIKE :filtertext"),
-		@NamedQuery(name = CuentaBancariaView.FindByLists, query = "SELECT cbv FROM CuentaBancariaView cbv INNER JOIN cbv.moneda m WHERE cbv.tipopersona IN :listTipoPersona AND cbv.tipocuenta IN :listTipoCuenta AND cbv.estadocuenta IN :listEstadoCuenta") })
+		//@NamedQuery(name = CuentaBancariaView.FindByLists, query = "SELECT cbv FROM CuentaBancariaView cbv WHERE cbv.tipocuenta IN :tipoCuenta AND cbv.tipopersona IN :tipoPersona AND cbv.estadocuenta IN :tipoEstadoCuenta ORDER BY cbv.socio, cbv.idcuentabancaria"),	
+		@NamedQuery(name = CuentaBancariaView.FindByFilterTextCuentaBancariaView, query = "SELECT cbv FROM CuentaBancariaView cbv WHERE cbv.tipocuenta IN :tipoCuenta AND cbv.tipopersona IN :tipoPersona AND cbv.estadocuenta IN :tipoEstadoCuenta AND (cbv.numerocuenta LIKE :filtertext OR cbv.numerodocumento LIKE :filtertext OR UPPER(cbv.socio) LIKE :filtertext)") })
 public class CuentaBancariaView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public final static String FindByFilterTextCuentaBancariaView = "CuentaBancariaView.FindByFilterTextCuentaBancariaView";
-	public final static String FindByLists = "CuentaBancariaView.FindByLists";
+	//public final static String FindByLists = "CuentaBancariaView.FindByLists";
 
 	private String numerocuenta;
 	private BigDecimal idcuentabancaria;
@@ -59,7 +60,7 @@ public class CuentaBancariaView implements Serializable {
 		this.idcuentabancaria = idcuentabancaria;
 	}
 
-	@XmlElement(name="numeroCuenta")
+	@XmlElement(name = "numeroCuenta")
 	@Column(name = "NUMEROCUENTA", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumerocuenta() {
 		return this.numerocuenta;
@@ -69,7 +70,7 @@ public class CuentaBancariaView implements Serializable {
 		this.numerocuenta = numerocuenta;
 	}
 
-	@XmlElement(name="estadoCuenta")
+	@XmlElement(name = "estadoCuenta")
 	@Enumerated(EnumType.STRING)
 	@Column(name = "ESTADOCUENTA", nullable = false, columnDefinition = "nvarchar2")
 	public EstadoCuentaBancaria getEstadocuenta() {
@@ -80,7 +81,7 @@ public class CuentaBancariaView implements Serializable {
 		this.estadocuenta = estadocuenta;
 	}
 
-	@XmlElement(name="fecha")
+	@XmlElement(name = "fecha")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECNAC_FECCONST", nullable = false, length = 7)
 	public Date getFecnac_fecconst() {
@@ -91,7 +92,7 @@ public class CuentaBancariaView implements Serializable {
 		this.fecnac_fecconst = fecnac_fecconst;
 	}
 
-	@XmlElement(name="moneda")
+	@XmlElement(name = "moneda")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDMONEDA", nullable = false)
 	public Moneda getMoneda() {
@@ -112,7 +113,7 @@ public class CuentaBancariaView implements Serializable {
 		this.idsocio = idsocio;
 	}
 
-	@XmlElement(name="numeroDocumento")
+	@XmlElement(name = "numeroDocumento")
 	@Column(name = "NUMERODOCUMENTO", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumerodocumento() {
 		return this.numerodocumento;
@@ -122,7 +123,7 @@ public class CuentaBancariaView implements Serializable {
 		this.numerodocumento = numerodocumento;
 	}
 
-	@XmlElement(name="socio")
+	@XmlElement(name = "socio")
 	@Column(name = "SOCIO", nullable = false, columnDefinition = "nvarchar2")
 	public String getSocio() {
 		return this.socio;
@@ -132,7 +133,7 @@ public class CuentaBancariaView implements Serializable {
 		this.socio = socio;
 	}
 
-	@XmlElement(name="tipoCuenta")
+	@XmlElement(name = "tipoCuenta")
 	@Enumerated(EnumType.STRING)
 	@Column(name = "TIPOCUENTA", nullable = false, columnDefinition = "nvarchar2")
 	public TipoCuentaBancaria getTipocuenta() {
@@ -143,7 +144,7 @@ public class CuentaBancariaView implements Serializable {
 		this.tipocuenta = tipocuenta;
 	}
 
-	@XmlElement(name="tipoDocumento")
+	@XmlElement(name = "tipoDocumento")
 	@Column(name = "TIPODOCUMENTO", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	public String getTipoDocumento() {
 		return this.tipodocumento;
@@ -153,7 +154,7 @@ public class CuentaBancariaView implements Serializable {
 		this.tipodocumento = tipoDocumento;
 	}
 
-	@XmlElement(name="tipoPersona")
+	@XmlElement(name = "tipoPersona")
 	@Enumerated(EnumType.STRING)
 	@Column(name = "TIPOPERSONA", columnDefinition = "nvarchar2")
 	public TipoPersona getTipopersona() {

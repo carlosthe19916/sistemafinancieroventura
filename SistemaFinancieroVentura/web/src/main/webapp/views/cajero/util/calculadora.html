@@ -1,11 +1,16 @@
 <div>
-    <div class="modal-content">
+    <div>
         <div class="modal-header">
             <button type="button" class="close" ng-click="cancel()">&times;</button>
             <h4 class="modal-title">Calculadora</h4>
         </div>
         <form name="formCalculadora" novalidate>
-            <div class="modal-body">
+            <div class="modal-body" style="padding-bottom: 0px;">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="control.mode"> Modo normal
+                    </label>
+                </div>
                 <table class="table table-bordered table-striped table-condensed">
                     <thead>
                     <tr>
@@ -19,8 +24,8 @@
                         <td style="width: 20%;">
                             <span ng-bind="denominacion.valor | currency: moneda"/>
                         </td>
-                        <td style="width: 35%;">
-                            <ng-form name="cantidadForm">
+                        <td style="width: 35%; padding: 1px;">
+                            <ng-form ng-show="control.mode" name="cantidadForm">
                                 <div class="form-group" ng-class="{ 'has-error' : cantidadForm.cantidad.$invalid}" style="margin-bottom: 0px;">
                                     <input type="number" name="cantidad" ng-model="denominacion.cantidad" class="form-control" required style="height: 27px;padding: 0px 12px;"/>
                                     <div ng-show="cantidadForm.cantidad.$invalid">
@@ -30,9 +35,20 @@
                                     </div>
                                 </div>
                             </ng-form>
+                            <span ng-show="!control.mode" ng-bind="denominacion.cantidad"></span>
                         </td>
-                        <td style="width: 45%;">
-                            <span ng-bind="denominacion.valor*denominacion.cantidad | currency: moneda"/>
+                        <td style="width: 45%; padding: 1px;">
+                            <span ng-show="control.mode" ng-bind="denominacion.subtotal | currency: moneda"/>
+                            <ng-form ng-show="!control.mode" name="cantidadForm">
+                                <div class="form-group" ng-class="{ 'has-error' : cantidadForm.subtotal.$invalid}" style="margin-bottom: 0px;">
+                                    <input type="text" name="subtotal" ng-model="denominacion.subtotal" class="form-control" required style="height: 27px;padding: 0px 12px;"/>
+                                    <div ng-show="cantidadForm.subtotal.$invalid">
+                                        <p class="help-block" ng-show="cantidadForm.subtotal.$error.required">
+                                            Ingrese cantidad.
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-form>
                         </td>
                     </tr>
                     </tbody>
@@ -48,9 +64,9 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+            <div class="modal-footer" style="margin-top: 0px;">
                 <button type="button" class="btn btn-primary" ng-click="ok()">Guardar</button>
+                <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
             </div>
         </form>
     </div><!-- /.modal-content -->

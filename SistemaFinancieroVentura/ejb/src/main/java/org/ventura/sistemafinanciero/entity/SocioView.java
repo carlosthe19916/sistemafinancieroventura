@@ -36,8 +36,8 @@ import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 @NamedQueries({
 		@NamedQuery(name = SocioView.findAll, query = "SELECT sv FROM SocioView sv WHERE sv.estado IN :modeEstado ORDER BY sv.socio, sv.idsocio ASC"),
 		@NamedQuery(name = SocioView.FindAllHaveCuentaAporte, query = "SELECT sv FROM SocioView sv WHERE sv.cuentaAporte IS NOT NULL AND sv.estado IN :modeEstado ORDER BY sv.socio, sv.idsocio ASC"),
-		@NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.estado IN :modeEstado AND sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext"),
-		@NamedQuery(name = SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, query = "SELECT sv FROM SocioView sv WHERE sv.cuentaAporte IS NOT NULL AND sv.estado IN :modeEstado AND (sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext) ORDER BY sv.idsocio ASC") })
+		@NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.estado IN :modeEstado AND sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext ORDER BY sv.socio, sv.idsocio ASC"),
+		@NamedQuery(name = SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, query = "SELECT sv FROM SocioView sv WHERE sv.cuentaAporte IS NOT NULL AND sv.estado IN :modeEstado AND (sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext) ORDER BY sv.socio, sv.idsocio ASC") })
 public class SocioView implements Serializable {
 	private static final long serialVersionUID = 1L;
 

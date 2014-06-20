@@ -46,7 +46,6 @@ import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
-import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
@@ -58,6 +57,7 @@ import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
+import org.ventura.sistemafinanciero.entity.type.TipoEmpresa;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
@@ -100,22 +100,71 @@ public class CuentaBancariaRESTService {
 	@GET
 	@Path("/view")
 	@Produces({ "application/xml", "application/json" })
-	public Response findAllView() {
-		Set<CuentaBancariaView> list = cuentaBancariaService.findAllView();
+	public Response findAllView() {					
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView();
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 	
-	@POST
-	@Path("/view/tipoCuenta/estadoCuenta")
+	@GET
+	@Path("/view")
 	@Produces({ "application/xml", "application/json" })
-	public Response findAllViewByTipoEstadoCuenta(BuscarCuentaViewDTO dto) {
-		List<TipoPersona> tipoPersonaList = dto.getTipoPersonaList();
-		List<TipoCuentaBancaria> tipoCuentaList = dto.getTipoCuentaList();		
-		List<EstadoCuentaBancaria> estadoCuentaList = dto.getEstadoCuentaList();
-		List<Moneda> monedaList = dto.getMonedaList();
+	public Response findAllViewByTipoEstadoCuenta(
+			@QueryParam("desde") BigInteger desde,
+			@QueryParam("hasta") BigInteger hasta,
+			@QueryParam("tipoCuenta") TipoCuentaBancaria[] tipoCuenta,
+			@QueryParam("tipoPersona") TipoPersona[] tipoPersona,
+			@QueryParam("tipoEstadoCuenta") EstadoCuentaBancaria[]  tipoEstadoCuenta) {
+				
+		if(desde == null || hasta == null){
+			desde = null;
+			hasta = null;
+		}	
+		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
+			desde = BigInteger.ZERO;
+		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
+			hasta = BigInteger.ZERO;
+		BigInteger[] range = null;
+		if(desde != null && hasta != null){
+			range = new BigInteger[]{desde, hasta};
+		}
+						
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(tipoCuenta, tipoPersona, tipoEstadoCuenta, range);
+		return Response.status(Response.Status.OK).entity(list).build();				
+	}
+	
+	@GET
+	@Path("/view/filtertext/{filterText}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findByFilterTextView(
+			@PathParam("filterText") @DefaultValue("") String filterText,
+			@QueryParam("desde") BigInteger desde,
+			@QueryParam("hasta") BigInteger hasta,
+			@QueryParam("tipoCuenta") TipoCuentaBancaria[] tipoCuenta,
+			@QueryParam("tipoPersona") TipoPersona[] tipoPersona,
+			@QueryParam("tipoEstadoCuenta") EstadoCuentaBancaria[] tipoEstadoCuenta) {
+		if(desde == null || hasta == null){
+			desde = null;
+			hasta = null;
+		}	
+		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
+			desde = BigInteger.ZERO;
+		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
+			hasta = BigInteger.ZERO;
+		BigInteger[] range = null;
+		if(desde != null && hasta != null){
+			range = new BigInteger[]{desde, hasta};
+		}
 		
-		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(tipoPersonaList, tipoCuentaList, estadoCuentaList, monedaList);
-		return Response.status(Response.Status.OK).entity(list).build();
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText, tipoCuenta, tipoPersona, tipoEstadoCuenta, range);
+		return Response.status(Response.Status.OK).entity(list).build();				
+	}
+	
+	@GET
+	@Path("/view/count")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findByFilterText() {								
+		int size = cuentaBancariaService.count();
+		return Response.status(Response.Status.OK).entity(size).build();						
 	}
 	
 	@GET
@@ -211,20 +260,12 @@ public class CuentaBancariaRESTService {
 	@GET
 	@Path("/filtertext/{filterText}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterText(
-			@PathParam("filterText") @DefaultValue("") String filterText) {
-		Set<CuentaBancaria> list = cuentaBancariaService.findByFilterText(filterText);
+	public Response findByFilterText(@PathParam("filterText") @DefaultValue("") String filterText) {
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText);
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 	
-	@GET
-	@Path("/view/filtertext/{filterText}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterTextView(
-			@PathParam("filterText") @DefaultValue("") String filterText) {
-		Set<CuentaBancariaView> list = cuentaBancariaService.findByFilterTextView(filterText);
-		return Response.status(Response.Status.OK).entity(list).build();
-	}
+	
 		
 	@POST
 	@Path("/ahorro")

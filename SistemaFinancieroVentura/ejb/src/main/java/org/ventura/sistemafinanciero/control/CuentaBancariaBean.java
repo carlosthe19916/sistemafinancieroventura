@@ -3,8 +3,10 @@ package org.ventura.sistemafinanciero.control;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +41,7 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
+import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
@@ -104,13 +107,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			Hibernate.initialize(moneda);
 		}
 		return cuentaBancaria;
-	}
-	
-	@Override
-	public Set<CuentaBancaria> findByFilterText(String filterText) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}	
 	
 	@Override
 	public List<CuentaBancaria> findAll() {
@@ -492,65 +489,6 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	}
 	
 	@Override
-	public Set<CuentaBancariaView> findAllView() {
-		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findAll();
-		for (CuentaBancariaView cuentaBancariaView : list) {
-			Moneda moneda = cuentaBancariaView.getMoneda();
-			Hibernate.initialize(moneda);
-		}
-		return new HashSet<>(list);
-	}
-	
-	@Override
-	public List<CuentaBancariaView> findAllView(
-			List<TipoPersona> tipoPersonaList,
-			List<TipoCuentaBancaria> tipoCuentaList,
-			List<EstadoCuentaBancaria> estadoCuentaList, List<Moneda> monedaList) {
-		if(tipoPersonaList == null) {
-			tipoPersonaList = new ArrayList<>();
-		}
-			
-		if(tipoCuentaList == null){
-			tipoCuentaList = new ArrayList<>();
-		}
-		if(estadoCuentaList == null) {
-			estadoCuentaList = new ArrayList<>();
-		}			
-		if(monedaList == null) {
-			monedaList = new ArrayList<>();
-		}
-						
-						
-		QueryParameter queryParameter = QueryParameter.with("listTipoPersona", tipoPersonaList).
-				and("listTipoCuenta", tipoCuentaList).
-				and("listEstadoCuenta", estadoCuentaList);//.and("listMoneda", monedaList);
-		
-		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByLists, queryParameter.parameters(), 200);
-		for (CuentaBancariaView cuentaBancariaView : list) {
-			Moneda moneda = cuentaBancariaView.getMoneda();
-			Hibernate.initialize(moneda);
-		}
-		return list;
-	}
-
-	@Override
-	public Set<CuentaBancariaView> findByFilterTextView(String filterText) {
-		if (filterText == null)
-			return new HashSet<CuentaBancariaView>();
-		if (filterText.isEmpty() || filterText.trim().isEmpty()) {
-			return new HashSet<CuentaBancariaView>();
-		}
-		List<CuentaBancariaView> list = null;
-		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView, queryParameter.parameters());
-		for (CuentaBancariaView cuentaBancariaView : list) {
-			Moneda moneda = cuentaBancariaView.getMoneda();
-			Hibernate.initialize(moneda);
-		}
-		return new HashSet<CuentaBancariaView>(list);
-	}
-
-	@Override
 	public BigInteger addBeneficiario(BigInteger id, Beneficiario beneficiario)
 			throws RollbackFailureException {
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(id);
@@ -696,6 +634,116 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 				queryParameter.parameters());
 		
 		return list;
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView() {
+		TipoCuentaBancaria[] tipoCuenta = (TipoCuentaBancaria[]) EnumSet.allOf(TipoCuentaBancaria.class).toArray();
+		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
+		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta) {
+		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
+		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona) {
+		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta) {
+		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range) {
+		return findAllView(null, tipoCuenta, persona, estadoCuenta, range);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(String filterText) {
+		TipoCuentaBancaria[] tipoCuenta = (TipoCuentaBancaria[]) EnumSet.allOf(TipoCuentaBancaria.class).toArray();
+		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
+		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta) {
+		TipoPersona[] persona = (TipoPersona[]) EnumSet.allOf(TipoPersona.class).toArray();
+		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona) {		
+		EstadoCuentaBancaria[] estadoCuenta = (EstadoCuentaBancaria[]) EnumSet.allOf(EstadoCuentaBancaria.class).toArray();
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta) {
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+	}
+
+	@Override
+	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range) {
+		List<CuentaBancariaView> result = null;
+
+		if(filterText == null)
+			filterText = "";
+		if (tipoCuenta == null)
+			return new ArrayList<>();
+		if (tipoCuenta.length == 0)
+			return new ArrayList<>();
+		if (persona == null)
+			return new ArrayList<>();
+		if (persona.length == 0)
+			return new ArrayList<>();
+		if (estadoCuenta == null)
+			return new ArrayList<>();
+		if (estadoCuenta.length == 0)
+			return new ArrayList<>();
+
+			
+		ArrayList<TipoCuentaBancaria> uno = new ArrayList<>(Arrays.asList(tipoCuenta));
+		ArrayList<TipoPersona> dos = new ArrayList<>(Arrays.asList(persona));
+		ArrayList<EstadoCuentaBancaria> tres = new ArrayList<>(Arrays.asList(estadoCuenta));
+		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%')
+				.and("tipoCuenta", uno)
+				.and("tipoPersona", dos)
+				.and("tipoEstadoCuenta", tres);
+
+		if (range != null) {
+			if (range.length != 2)
+				return null;
+			if (range[0] == null || range[1] == null)
+				return null;
+			if (range[0].compareTo(BigInteger.ZERO) < 0)
+				return null;
+			if (range[1].compareTo(BigInteger.ZERO) < 0)
+				return null;
+			if (range[0].compareTo(range[1]) == 0)
+				return new ArrayList<>();
+			int[] rangeInt = { range[0].intValue(), range[1].intValue() };
+
+			result = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView,queryParameter.parameters(), rangeInt);
+		} else {
+			result = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView,queryParameter.parameters());
+		}
+		if (result != null)
+			for (CuentaBancariaView cuentaBancariaView : result) {
+				Moneda moneda = cuentaBancariaView.getMoneda();
+				Hibernate.initialize(moneda);
+			}
+		return result;
 	}
 
 

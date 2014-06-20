@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService", "ngProgress","TransitionService",
-        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, ngProgress, TransitionService) {
+    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService","MonedaService","TransitionService",
+        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, MonedaService, TransitionService) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted":false};
 
@@ -30,10 +30,26 @@ define(['../../module'], function (controllers) {
                 }
             });
 
+            $scope.loadDenominacionesMoneda = function(){
+                if(!angular.isUndefined($scope.cuenta)){
+                    MonedaService.getDenominaciones($scope.cuenta.moneda.id).then(function(data){
+                        $scope.denominacionesMoneda = data;
+                    });
+                }
+            }
+
             $scope.openCalculadora = function () {
                 var modalInstance = $modal.open({
-                    templateUrl: 'modules/common/views/util/calculadora.html',
-                    controller: "CalculadoraController"
+                    templateUrl: 'views/cajero/util/calculadora.html',
+                    controller: "CalculadoraController",
+                    resolve: {
+                        denominaciones: function () {
+                            return !angular.isUndefined($scope.denominacionesMoneda) ? $scope.denominacionesMoneda : [];
+                        },
+                        moneda: function () {
+                            return !angular.isUndefined($scope.cuenta) ? $scope.cuenta.moneda.simbolo : '';
+                        }
+                    }
                 });
 
                 modalInstance.result.then(function (total) {
@@ -45,16 +61,15 @@ define(['../../module'], function (controllers) {
 
             $scope.openBuscarCuentaBancaria = function () {
                 var modalInstance = $modal.open({
-                    templateUrl: 'views/cajero/util/buscarCuentaBancaria.html',
+                    templateUrl: 'views/cajero/util/buscarCuentaBancariaPopUp.html',
                     controller: "BuscarCuentaBancariaPopUpController",
                     size: 'lg'
                 });
-
                 modalInstance.result.then(function (cuenta) {
                     $scope.cuenta = cuenta;
                     $scope.transaccion.numeroCuenta = $scope.cuenta.numeroCuenta;
+                    $scope.loadDenominacionesMoneda();
                 }, function () {
-                    //$log.info('Modal dismissed at: ' + new Date());
                 });
             };
 

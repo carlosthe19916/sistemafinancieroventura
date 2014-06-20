@@ -17,7 +17,8 @@ define([
     './PendienteCajaService',
     './TransitionService',
 
-    './HotKeysFunctionsService'
+    './HotKeysFunctionsService',
+    './VariablesService'
 ], function () {
 
 });

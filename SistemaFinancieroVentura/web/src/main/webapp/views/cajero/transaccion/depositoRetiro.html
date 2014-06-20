@@ -3,7 +3,7 @@
         <legend>Transaccion Deposito / Retiro</legend>
 
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-            {{alert.msg}}
+            <span ng-bind="alert.msg"></span>
         </alert>
 
         <form name="formCrearTransaccion" ng-submit="crearTransaccion()" novalidate>
@@ -18,9 +18,9 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && control.submitted}">
-                                        <label>N&uacutemero Cuenta</label>
+                                        <label>N&uacute;mero Cuenta</label>
                                         <div class="input-group">
-                                            <input type="text" name="numeroCuenta" ng-model="transaccion.numeroCuenta" class="form-control" placeholder="N&uacutemero de Cuenta" readonly required autofocus/>
+                                            <input type="text" name="numeroCuenta" ng-model="transaccion.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta" readonly required autofocus/>
                                               <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()">
                                                     <span class="glyphicon glyphicon-search"></span>

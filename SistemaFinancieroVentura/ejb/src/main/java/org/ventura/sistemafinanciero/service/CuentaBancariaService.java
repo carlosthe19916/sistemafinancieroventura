@@ -12,7 +12,6 @@ import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
-import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
@@ -21,16 +20,112 @@ import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
 @Remote
-public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
-
-	public Set<CuentaBancaria> findByFilterText(String filterText);
+public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {	
 	
-	public Set<CuentaBancariaView> findAllView();
-	public List<CuentaBancariaView> findAllView(List<TipoPersona> tipoPersonaList, List<TipoCuentaBancaria> tipoCuentaList,
-			List<EstadoCuentaBancaria> estadoCuentaList, List<Moneda> monedaList);
-
-	public Set<CuentaBancariaView> findByFilterTextView(String filterText);
-
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView();
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @param  persona TipoPersona[] para indicar el tipo de personas incluidas en el resultado. 
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @param  persona TipoPersona[] para indicar el tipo de personas incluidas en el resultado.
+     * @param  estadoCuenta EstadoCuentaBancaria[] para indicar el tipo de estado de cuenta en el resultado  
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta);
+			
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @param  persona TipoPersona[] para indicar el tipo de personas incluidas en el resultado.
+     * @param  estadoCuenta EstadoCuentaBancaria[] para indicar el tipo de estado de cuenta en el resultado  
+     * @param  range BigInteger[] para indicar el rango de resultados.   
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     * @param  filterText String texto a buscar.
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(String filterText);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  filterText String texto a buscar.
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  filterText String texto a buscar.
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @param  persona TipoPersona[] para indicar el tipo de personas incluidas en el resultado. 
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  filterText String texto a buscar.
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @param  persona TipoPersona[] para indicar el tipo de personas incluidas en el resultado.
+     * @param  estadoCuenta EstadoCuentaBancaria[] para indicar el tipo de estado de cuenta en el resultado  
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta);
+	
+	/**
+     * Devuelve la lista de cuentas bancarias que cumplan con los datos 
+     * de condiciones enviados
+     *
+     * @param  filterText String texto a buscar.
+     * @param  tipoCuenta TipoCuentaBancaria[] lista de tipos de cuentas bancarias.
+     * @param  persona TipoPersona[] para indicar el tipo de personas incluidas en el resultado.
+     * @param  estadoCuenta EstadoCuentaBancaria[] para indicar el tipo de estado de cuenta en el resultado  
+     * @param  range BigInteger[] para indicar el rango de resultados.   
+     * @return List<CuentaBancariaView> lista de cuentas bancarias.
+     */
+	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range);		
+		
 	public BigInteger createCuentaAhorro(BigInteger idAgencia,
 			BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona, 
 			BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares,
