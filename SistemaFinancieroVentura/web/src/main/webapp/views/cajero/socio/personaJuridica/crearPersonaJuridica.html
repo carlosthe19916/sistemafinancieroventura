@@ -124,7 +124,8 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipoEmpresa.$invalid && (control.submitted || formCrearPersonaJuridica.tipoEmpresa.$dirty)}">
-                <label>Tipo Empresa(*)</label>
+                <label>Tipo Empresa</label>
+                <label style="color: brown;">(*)</label>
                 <select name="tipoEmpresa" ng-options="tipoEmpresa as tipoEmpresa for tipoEmpresa in tiposEmpresa" ng-model="personaJuridica.tipoEmpresa" class="form-control" required>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoEmpresa.$invalid && (control.submitted || formCrearPersonaJuridica.tipoEmpresa.$dirty)">
