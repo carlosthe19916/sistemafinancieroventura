@@ -1,53 +1,73 @@
 package org.ventura.sistemafinanciero.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.util.Date;
-
 
 /**
  * The persistent class for the HISTORIAL_TRANSACCION_CAJA database table.
  * 
  */
 @Entity
-@Table(name="HISTORIAL_TRANSACCION_CAJA")
-@NamedQuery(name="HistorialTransaccionCaja.findAll", query="SELECT h FROM HistorialTransaccionCaja h")
+@Table(name = "HISTORIAL_TRANSACCION_CAJA")
+@NamedQuery(name = "HistorialTransaccionCaja.findAll", query = "SELECT h FROM HistorialTransaccionCaja h")
+@XmlRootElement(name = "moneda")
+@XmlAccessorType(XmlAccessType.NONE)
 public class HistorialTransaccionCaja implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	private BigDecimal estado;
+	HistorialTransaccionCajaId id;
 
-	@Temporal(TemporalType.DATE)
 	private Date fecha;
 
-	private Timestamp hora;
-
-	@Column(name="ID_HISTORIAL_CAJA")
-	private BigDecimal idHistorialCaja;
+	private Date hora;
 
 	private String moneda;
 
 	private String monto;
 
-	@Column(name="NUMERO_OPERACION")
-	private BigDecimal numeroOperacion;
-
-	@Column(name="TIPO_TRANSACCION")
 	private String tipoTransaccion;
+
+	private int estado;
 
 	public HistorialTransaccionCaja() {
 	}
 
-	public BigDecimal getEstado() {
-		return this.estado;
+	@EmbeddedId
+	@AttributeOverrides({
+			@AttributeOverride(name = "idHistorialCaja", column = @Column(name = "ID_HISTORIAL_CAJA", nullable = false, precision = 22, scale = 0)),
+			@AttributeOverride(name = "numeroOperacion", column = @Column(name = "NUMERO_OPERACION", nullable = false, precision = 22, scale = 0)) })
+	public HistorialTransaccionCajaId getId() {
+		return id;
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setId(HistorialTransaccionCajaId id) {
+		this.id = id;
 	}
 
+	@XmlElement
+	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
+	}
+
+	@XmlElement
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA", nullable = false, length = 7)
 	public Date getFecha() {
 		return this.fecha;
 	}
@@ -56,22 +76,19 @@ public class HistorialTransaccionCaja implements Serializable {
 		this.fecha = fecha;
 	}
 
-	public Timestamp getHora() {
+	@XmlElement
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "HORA", nullable = false)
+	public Date getHora() {
 		return this.hora;
 	}
 
-	public void setHora(Timestamp hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 
-	public BigDecimal getIdHistorialCaja() {
-		return this.idHistorialCaja;
-	}
-
-	public void setIdHistorialCaja(BigDecimal idHistorialCaja) {
-		this.idHistorialCaja = idHistorialCaja;
-	}
-
+	@XmlElement
+	@Column(name = "MONEDA", nullable = false, length = 50, columnDefinition = "nvarchar2")
 	public String getMoneda() {
 		return this.moneda;
 	}
@@ -80,6 +97,8 @@ public class HistorialTransaccionCaja implements Serializable {
 		this.moneda = moneda;
 	}
 
+	@XmlElement
+	@Column(name = "MONTO", nullable = false, length = 60, columnDefinition = "nvarchar2")
 	public String getMonto() {
 		return this.monto;
 	}
@@ -88,14 +107,8 @@ public class HistorialTransaccionCaja implements Serializable {
 		this.monto = monto;
 	}
 
-	public BigDecimal getNumeroOperacion() {
-		return this.numeroOperacion;
-	}
-
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
-		this.numeroOperacion = numeroOperacion;
-	}
-
+	@XmlElement
+	@Column(name = "TIPO_TRANSACCION", columnDefinition = "nvarchar2")
 	public String getTipoTransaccion() {
 		return this.tipoTransaccion;
 	}
