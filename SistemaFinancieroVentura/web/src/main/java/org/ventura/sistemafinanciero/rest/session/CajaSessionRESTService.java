@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import org.hibernate.Hibernate;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
+import org.ventura.sistemafinanciero.entity.HistorialTransaccionCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
@@ -138,6 +140,15 @@ public class CajaSessionRESTService {
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 
+	@RolesAllowed("CAJERO")
+	@GET
+	@Path("/historialTransaccion")
+	@Produces({ "application/xml", "application/json" })
+	public Response getHistorialTransaccionCaja(){		
+		List<HistorialTransaccionCaja> list = cajaSessionService.getHistorialTransaccion();
+		return Response.status(Response.Status.OK).entity(list).build();
+	}
+	
 	@RolesAllowed("CAJERO")
 	@POST
 	@Path("/abrir")

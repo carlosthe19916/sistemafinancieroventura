@@ -2,6 +2,7 @@ package org.ventura.sistemafinanciero.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,24 +12,24 @@ public class HistorialTransaccionCajaId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(unique = false, nullable = false)
-	private BigDecimal idHistorialCaja;
+	private BigInteger idHistorialCaja;
 
 	@Column(unique = false, nullable = false)
-	private BigDecimal numeroOperacion;
+	private BigInteger numeroOperacion;
 
-	public BigDecimal getIdHistorialCaja() {
+	public BigInteger getIdHistorialCaja() {
 		return idHistorialCaja;
 	}
 
-	public void setIdHistorialCaja(BigDecimal idHistorialCaja) {
+	public void setIdHistorialCaja(BigInteger idHistorialCaja) {
 		this.idHistorialCaja = idHistorialCaja;
 	}
 
-	public BigDecimal getNumeroOperacion() {
+	public BigInteger getNumeroOperacion() {
 		return numeroOperacion;
 	}
 
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
 

@@ -19,14 +19,16 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "HISTORIAL_TRANSACCION_CAJA")
-@NamedQuery(name = "HistorialTransaccionCaja.findAll", query = "SELECT h FROM HistorialTransaccionCaja h")
 @XmlRootElement(name = "moneda")
 @XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({ @NamedQuery(name = HistorialTransaccionCaja.findByHistorialCaja, query = "SELECT h FROM HistorialTransaccionCaja h WHERE h.id.idHistorialCaja = :idHistorialCaja ORDER BY h.id.numeroOperacion") })
 public class HistorialTransaccionCaja implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	HistorialTransaccionCajaId id;
+	public final static String findByHistorialCaja = "findByHistorialCaja";
+
+	private HistorialTransaccionCajaId id;
 
 	private Date fecha;
 
@@ -43,6 +45,7 @@ public class HistorialTransaccionCaja implements Serializable {
 	public HistorialTransaccionCaja() {
 	}
 
+	@XmlElement(name = "id")
 	@EmbeddedId
 	@AttributeOverrides({
 			@AttributeOverride(name = "idHistorialCaja", column = @Column(name = "ID_HISTORIAL_CAJA", nullable = false, precision = 22, scale = 0)),

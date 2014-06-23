@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import javax.ejb.Remote;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
+import org.ventura.sistemafinanciero.entity.HistorialTransaccionCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
@@ -32,6 +34,7 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	public Set<TransaccionCajaCaja> getTransaccionesRecibidasCajaCaja();
 	public Set<PendienteCaja> getPendientesCaja();
 	public Set<HistorialCaja> getHistorialCaja(Date dateDesde, Date dateHasta);
+	public List<HistorialTransaccionCaja> getHistorialTransaccion();
 	
 	//transacciones
 	public BigInteger abrirCaja() throws RollbackFailureException;

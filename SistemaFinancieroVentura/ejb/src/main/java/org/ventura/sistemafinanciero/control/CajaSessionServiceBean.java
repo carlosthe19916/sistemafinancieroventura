@@ -39,6 +39,7 @@ import org.ventura.sistemafinanciero.entity.DetalleHistorialBoveda;
 import org.ventura.sistemafinanciero.entity.DetalleHistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialBoveda;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
+import org.ventura.sistemafinanciero.entity.HistorialTransaccionCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.MonedaDenominacion;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
@@ -126,6 +127,8 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private DAO<Object, TransferenciaBancaria> transferenciaBancariaDAO;
 	@Inject
 	private DAO<Object, TransaccionCompraVenta> transaccionCompraVentaDAO;
+	@Inject
+	private DAO<Object, HistorialTransaccionCaja> historialTransaccionCajaDAO;
 	
 	@EJB
 	private MonedaService monedaService;
@@ -201,7 +204,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private BigInteger getNumeroOperacion(){
 		//falta modificar
 		Caja caja = this.getCaja();
-		QueryParameter queryParameter = QueryParameter.with("idcaja", caja.getIdCaja());
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		
+		QueryParameter queryParameter = QueryParameter.with("idcaja", caja.getIdCaja()).and("idHistorial", historialCaja.getIdHistorialCaja());
 		List<TransaccionBancaria> list = transaccionBancariaDAO.findByNamedQuery(TransaccionBancaria.findNumeroOperacion, queryParameter.parameters(), 1);
 		if(list.size() == 0) {
 			return BigInteger.ONE;	
@@ -694,7 +699,15 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		List<HistorialCaja> list = historialCajaDAO.findByNamedQuery(HistorialCaja.findByHistorialDateRange, queryParameter.parameters());		
 		return new HashSet<HistorialCaja>(list);
 	}
-
+	
+	@Override
+	public List<HistorialTransaccionCaja> getHistorialTransaccion() {
+		HistorialCaja historial = this.getHistorialActivo();
+		QueryParameter queryParameter = QueryParameter.with("idHistorialCaja", historial.getIdHistorialCaja());
+		List<HistorialTransaccionCaja> list = historialTransaccionCajaDAO.findByNamedQuery(HistorialTransaccionCaja.findByHistorialCaja, queryParameter.parameters());		
+		return list;
+	}
+	
 	@Override
 	@AllowedTo(Permission.ABIERTO)
 	public BigInteger crearDepositoBancario(String numeroCuenta,
@@ -1005,5 +1018,6 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		return transaccionCompraVenta.getIdTransaccionCompraVenta();
 	}
-	
+
+
 }

@@ -74,6 +74,12 @@ define(['./module'], function (services) {
                 },
                 crearTransaccionCompraVenta: function(transaccion){
                     return Restangular.all("caja/session/transaccionCompraVenta").post(transaccion);
+                },
+                getHistorialTransaccion: function(){
+                    return Restangular.all("caja/session/historialTransaccion").getList();
+                },
+                getCountHistorialTransaccion: function(){
+                    return Restangular.all("caja/session/historialTransaccion/count").getList();
                 }
             }
         }])

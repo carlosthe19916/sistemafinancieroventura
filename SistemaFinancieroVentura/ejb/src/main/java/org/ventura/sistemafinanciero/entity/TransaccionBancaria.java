@@ -36,7 +36,7 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 @Table(name = "TRANSACCION_BANCARIA", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "transaccionBancaria")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = TransaccionBancaria.findNumeroOperacion, query = "SELECT t FROM TransaccionBancaria t INNER JOIN t.historialCaja hc INNER JOIN hc.caja c WHERE c.idCaja = :idcaja ORDER BY t.numeroOperacion DESC") })
+@NamedQueries({ @NamedQuery(name = TransaccionBancaria.findNumeroOperacion, query = "SELECT t FROM TransaccionBancaria t INNER JOIN t.historialCaja hc INNER JOIN hc.caja c WHERE c.idCaja = :idcaja AND hc.idHistorialCaja = :idHistorial ORDER BY t.numeroOperacion DESC") })
 public class TransaccionBancaria implements java.io.Serializable {
 
 	/**
