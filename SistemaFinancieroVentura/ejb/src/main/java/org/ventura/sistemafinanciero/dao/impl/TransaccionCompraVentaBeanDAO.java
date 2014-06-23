@@ -34,8 +34,8 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
-import org.ventura.sistemafinanciero.entity.Accionista;
-import org.ventura.sistemafinanciero.entity.Agencia;
+import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
+import org.ventura.sistemafinanciero.entity.Boveda;
 
 /**
  * A minimalistic CRUD implementation. Usually provides the implementation of
@@ -46,40 +46,40 @@ import org.ventura.sistemafinanciero.entity.Agencia;
 @Stateless
 @Local(DAO.class)
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class AccionistaBeanDAO implements DAO<Object, Accionista> {
+public class TransaccionCompraVentaBeanDAO implements DAO<Object, TransaccionCompraVenta> {
 
 	@PersistenceContext
 	private EntityManager em;
 
-	public Accionista create(Accionista t) {
+	public TransaccionCompraVenta create(TransaccionCompraVenta t) {
 		this.em.persist(t);
 		return t;
 	}
 
-	public void delete(Accionista t) {
+	public void delete(TransaccionCompraVenta t) {
 		t = this.em.merge(t);
 		this.em.remove(t);
 	}
 
-	public Accionista find(Object id) {
-		return this.em.find(Accionista.class, id);
+	public TransaccionCompraVenta find(Object id) {
+		return this.em.find(TransaccionCompraVenta.class, id);
 	}
 
-	public Accionista update(Accionista t) {
+	public TransaccionCompraVenta update(TransaccionCompraVenta t) {
 		return this.em.merge(t);
 	}
 
-	public List<Accionista> findAll() {
-		List<Accionista> list = null;
+	public List<TransaccionCompraVenta> findAll() {
+		List<TransaccionCompraVenta> list = null;
 		CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
-		cq.select(cq.from(Accionista.class));
+		cq.select(cq.from(TransaccionCompraVenta.class));
 		list = this.em.createQuery(cq).getResultList();
 		return list;
 	}
 	
-	public List<Accionista> findRange(int[] range) {
+	public List<TransaccionCompraVenta> findRange(int[] range) {
         javax.persistence.criteria.CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(Accionista.class));
+        cq.select(cq.from(TransaccionCompraVenta.class));
         javax.persistence.Query q = this.em.createQuery(cq);
         q.setMaxResults(range[1] - range[0]);
         q.setFirstResult(range[0]);
@@ -88,42 +88,28 @@ public class AccionistaBeanDAO implements DAO<Object, Accionista> {
 
     public int count() {
         javax.persistence.criteria.CriteriaQuery cq = this.em.getCriteriaBuilder().createQuery();
-        javax.persistence.criteria.Root<Accionista> rt = cq.from(Accionista.class);
+        javax.persistence.criteria.Root<TransaccionCompraVenta> rt = cq.from(TransaccionCompraVenta.class);
         cq.select(this.em.getCriteriaBuilder().count(rt));
         javax.persistence.Query q = this.em.createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
     
-    public int countByNamedQuery(String namedQueryName) {
-		Query query = this.em.createNamedQuery(namedQueryName);
-		return ((Long)query.getSingleResult()).intValue();
-	}
-
-	public int countByNamedQuery(String namedQueryName, Map<String, Object> parameters) {
-		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
-		Query query = this.em.createNamedQuery(namedQueryName);
-		for (Entry<String, Object> entry : rawParameters) {
-			query.setParameter(entry.getKey(), entry.getValue());
-		}
-		return ((Long)query.getSingleResult()).intValue();
-	}
-    
-	public List<Accionista> findByNamedQuery(String namedQueryName) {
+	public List<TransaccionCompraVenta> findByNamedQuery(String namedQueryName) {
 		return this.em.createNamedQuery(namedQueryName).getResultList();
 	}
 
-	public List<Accionista> findByNamedQuery(String namedQueryName,
+	public List<TransaccionCompraVenta> findByNamedQuery(String namedQueryName,
 			Map<String, Object> parameters) {
 		return findByNamedQuery(namedQueryName, parameters, 0);
 	}
 
-	public List<Accionista> findByNamedQuery(String queryName,
+	public List<TransaccionCompraVenta> findByNamedQuery(String queryName,
 			int resultLimit) {
 		return this.em.createNamedQuery(queryName).setMaxResults(resultLimit)
 				.getResultList();
 	}
 
-	public List<Accionista> findByNamedQuery(String namedQueryName,
+	public List<TransaccionCompraVenta> findByNamedQuery(String namedQueryName,
 			Map<String, Object> parameters, int resultLimit) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
@@ -134,8 +120,8 @@ public class AccionistaBeanDAO implements DAO<Object, Accionista> {
 		}
 		return query.getResultList();
 	}
-	
-	public List<Accionista> findByNamedQuery(String namedQueryName,
+
+	public List<TransaccionCompraVenta> findByNamedQuery(String namedQueryName,
 			Map<String, Object> parameters, int[] range) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
@@ -146,5 +132,4 @@ public class AccionistaBeanDAO implements DAO<Object, Accionista> {
 		query.setFirstResult(range[0]);
 		return query.getResultList();
     }
-	
 }

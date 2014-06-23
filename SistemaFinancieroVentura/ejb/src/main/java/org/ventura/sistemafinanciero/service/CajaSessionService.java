@@ -17,6 +17,7 @@ import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
+import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
 
@@ -42,6 +43,7 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	
 	public BigInteger crearDepositoBancario(String numeroCuenta, BigDecimal monto, String referencia) throws RollbackFailureException;
 	public BigInteger crearRetiroBancario(String numeroCuenta, BigDecimal monto, String referencia) throws RollbackFailureException;
+	public BigInteger crearCompraVenta(Tipotransaccioncompraventa tipoTransaccion,BigInteger idMonedaRecibido, BigInteger idMonedaEntregado, BigDecimal montoRecibido, BigDecimal montoEntregado, BigDecimal tasaCambio, String referencia) throws RollbackFailureException;
 	
 	public BigInteger crearAporte(BigInteger idSocio, BigDecimal monto, int mes, int anio, String referencia) throws RollbackFailureException;
 	public BigInteger crearTransferenciaBancaria(String numeroCuentaOrigen, String numeroCuentaDestino, BigDecimal monto, String referencia) throws RollbackFailureException;

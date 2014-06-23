@@ -259,7 +259,7 @@ define(['../module'], function (controllers) {
                     if(!angular.isUndefined($event))
                         $event.preventDefault();
                 }
-            }
+            };
 
             $scope.$watch("transaccion.numeroDocumento", function(){$scope.validarNumeroDocumentoSocio();});
             $scope.$watch("transaccion.tipoDocumento", function(){$scope.validarNumeroDocumentoSocio();});

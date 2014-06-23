@@ -71,6 +71,9 @@ define(['./module'], function (services) {
                 },
                 crearAporte: function(transaccion){
                     return Restangular.all("caja/session/transaccionCuentaAporte").post(transaccion);
+                },
+                crearTransaccionCompraVenta: function(transaccion){
+                    return Restangular.all("caja/session/transaccionCompraVenta").post(transaccion);
                 }
             }
         }])

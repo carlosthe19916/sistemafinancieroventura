@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,55 +29,60 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
 @Table(name = "TRANSACCION_COMPRA_VENTA", schema = "BDSISTEMAFINANCIERO")
 public class TransaccionCompraVenta implements java.io.Serializable {
 
-	private BigDecimal idTransaccionCompraVenta;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private BigInteger idTransaccionCompraVenta;
 	private HistorialCaja historialCaja;
-	private Moneda monedaByIdMonedaRecibido;
-	private Moneda monedaByIdMonedaEntregado;
+	private Moneda monedaRecibida;
+	private Moneda monedaEntregada;
 	private Date fecha;
 	private Date hora;
-	private BigDecimal numeroOperacion;
+	private BigInteger numeroOperacion;
 	private BigDecimal montoRecibido;
 	private BigDecimal montoEntregado;
 	private BigDecimal tipoCambio;
 	private String referencia;
-	private BigDecimal estado;
+	private int estado;
 	private String observacion;
 	private Tipotransaccioncompraventa tipoTransaccion;
 
 	public TransaccionCompraVenta() {
 	}
 
-	public TransaccionCompraVenta(BigDecimal idTransaccionCompraVenta,
-			HistorialCaja historialCaja, Moneda monedaByIdMonedaRecibido,
-			Moneda monedaByIdMonedaEntregado, Date fecha, Date hora,
-			BigDecimal numeroOperacion, BigDecimal montoRecibido,
-			BigDecimal montoEntregado, BigDecimal tipoCambio,
-			BigDecimal estado, Tipotransaccioncompraventa tipoTransaccion) {
+	public TransaccionCompraVenta(BigInteger idTransaccionCompraVenta,
+			HistorialCaja historialCaja, Moneda monedaRecibida,
+			Moneda monedaEntregada, Date fecha, Date hora,
+			BigInteger numeroOperacion, BigDecimal montoRecibido,
+			BigDecimal montoEntregado, BigDecimal tipoCambio, boolean estado,
+			Tipotransaccioncompraventa tipoTransaccion) {
 		this.idTransaccionCompraVenta = idTransaccionCompraVenta;
 		this.historialCaja = historialCaja;
-		this.monedaByIdMonedaRecibido = monedaByIdMonedaRecibido;
-		this.monedaByIdMonedaEntregado = monedaByIdMonedaEntregado;
+		this.monedaRecibida = monedaRecibida;
+		this.monedaEntregada = monedaEntregada;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.numeroOperacion = numeroOperacion;
 		this.montoRecibido = montoRecibido;
 		this.montoEntregado = montoEntregado;
 		this.tipoCambio = tipoCambio;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
-	public TransaccionCompraVenta(BigDecimal idTransaccionCompraVenta,
-			HistorialCaja historialCaja, Moneda monedaByIdMonedaRecibido,
-			Moneda monedaByIdMonedaEntregado, Date fecha, Date hora,
-			BigDecimal numeroOperacion, BigDecimal montoRecibido,
+	public TransaccionCompraVenta(BigInteger idTransaccionCompraVenta,
+			HistorialCaja historialCaja, Moneda monedaRecibida,
+			Moneda monedaEntregada, Date fecha, Date hora,
+			BigInteger numeroOperacion, BigDecimal montoRecibido,
 			BigDecimal montoEntregado, BigDecimal tipoCambio,
-			String referencia, BigDecimal estado, String observacion,
+			String referencia, boolean estado, String observacion,
 			Tipotransaccioncompraventa tipoTransaccion) {
 		this.idTransaccionCompraVenta = idTransaccionCompraVenta;
 		this.historialCaja = historialCaja;
-		this.monedaByIdMonedaRecibido = monedaByIdMonedaRecibido;
-		this.monedaByIdMonedaEntregado = monedaByIdMonedaEntregado;
+		this.monedaRecibida = monedaRecibida;
+		this.monedaEntregada = monedaEntregada;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.numeroOperacion = numeroOperacion;
@@ -82,18 +90,20 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 		this.montoEntregado = montoEntregado;
 		this.tipoCambio = tipoCambio;
 		this.referencia = referencia;
-		this.estado = estado;
+		this.estado = (estado ? 1 : 0);
+		;
 		this.observacion = observacion;
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_TRANSACCION_COMPRA_VENTA", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdTransaccionCompraVenta() {
+	public BigInteger getIdTransaccionCompraVenta() {
 		return this.idTransaccionCompraVenta;
 	}
 
-	public void setIdTransaccionCompraVenta(BigDecimal idTransaccionCompraVenta) {
+	public void setIdTransaccionCompraVenta(BigInteger idTransaccionCompraVenta) {
 		this.idTransaccionCompraVenta = idTransaccionCompraVenta;
 	}
 
@@ -109,22 +119,22 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_MONEDA_RECIBIDO", nullable = false)
-	public Moneda getMonedaByIdMonedaRecibido() {
-		return this.monedaByIdMonedaRecibido;
+	public Moneda getMonedaRecibida() {
+		return this.monedaRecibida;
 	}
 
-	public void setMonedaByIdMonedaRecibido(Moneda monedaByIdMonedaRecibido) {
-		this.monedaByIdMonedaRecibido = monedaByIdMonedaRecibido;
+	public void setMonedaRecibida(Moneda monedaRecibida) {
+		this.monedaRecibida = monedaRecibida;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_MONEDA_ENTREGADO", nullable = false)
-	public Moneda getMonedaByIdMonedaEntregado() {
-		return this.monedaByIdMonedaEntregado;
+	public Moneda getMonedaEntregada() {
+		return this.monedaEntregada;
 	}
 
-	public void setMonedaByIdMonedaEntregado(Moneda monedaByIdMonedaEntregado) {
-		this.monedaByIdMonedaEntregado = monedaByIdMonedaEntregado;
+	public void setMonedaEntregada(Moneda monedaEntregada) {
+		this.monedaEntregada = monedaEntregada;
 	}
 
 	@Temporal(TemporalType.DATE)
@@ -147,11 +157,11 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 	}
 
 	@Column(name = "NUMERO_OPERACION", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getNumeroOperacion() {
+	public BigInteger getNumeroOperacion() {
 		return this.numeroOperacion;
 	}
 
-	public void setNumeroOperacion(BigDecimal numeroOperacion) {
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
 
@@ -192,12 +202,13 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 	}
 
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
-	public BigDecimal getEstado() {
-		return this.estado;
+	public boolean getEstado() {
+		return (this.estado == 1 ? true : false);
 	}
 
-	public void setEstado(BigDecimal estado) {
-		this.estado = estado;
+	public void setEstado(boolean estado) {
+		this.estado = (estado ? 1 : 0);
+		;
 	}
 
 	@Column(name = "OBSERVACION", length = 100, columnDefinition = "nvarchar2")
