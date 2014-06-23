@@ -61,7 +61,7 @@ public class Moneda implements java.io.Serializable {
 	private BigDecimal estado;
 
 	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaRecibido")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaRecibida")
 	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaRecibido = new HashSet(
 			0);
 
@@ -70,7 +70,7 @@ public class Moneda implements java.io.Serializable {
 	private Set<Boveda> bovedas = new HashSet(0);
 
 	@XmlTransient
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaByIdMonedaEntregado")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "monedaEntregada")
 	private Set<TransaccionCompraVenta> transaccionCompraVentasForIdMonedaEntregado = new HashSet(
 			0);
 

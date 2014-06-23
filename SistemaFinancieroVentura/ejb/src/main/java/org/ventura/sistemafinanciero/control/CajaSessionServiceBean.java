@@ -51,6 +51,7 @@ import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
+import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
 import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.TransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.Usuario;
@@ -58,6 +59,7 @@ import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
 import org.ventura.sistemafinanciero.entity.type.TipoPendiente;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
+import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
 import org.ventura.sistemafinanciero.entity.type.TransaccionBovedaCajaOrigen;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
@@ -122,6 +124,8 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private DAO<Object, CuentaAporte> cuentaAporteDAO;
 	@Inject
 	private DAO<Object, TransferenciaBancaria> transferenciaBancariaDAO;
+	@Inject
+	private DAO<Object, TransaccionCompraVenta> transaccionCompraVentaDAO;
 	
 	@EJB
 	private MonedaService monedaService;
@@ -962,6 +966,44 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		transferenciaBancariaDAO.create(transferenciaBancaria);
 		return transferenciaBancaria.getIdTransferenciaBancaria();	
+	}
+
+	@Override
+	public BigInteger crearCompraVenta(Tipotransaccioncompraventa tipoTransaccion,
+			BigInteger idMonedaRecibido,
+			BigInteger idMonedaEntregado, BigDecimal montoRecibido,
+			BigDecimal montoEntregado, BigDecimal tasaCambio, String referencia)
+			throws RollbackFailureException {
+		Moneda monedaRecibida = monedaDAO.find(idMonedaRecibido);
+		Moneda monedaEntregada = monedaDAO.find(idMonedaEntregado);
+		if(monedaRecibida == null || monedaEntregada == null)
+			throw new RollbackFailureException("Monedas no encontradas");
+		
+		Calendar calendar = Calendar.getInstance();		
+		
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		Trabajador trabajador = this.getTrabajador();
+		PersonaNatural natural = trabajador.getPersonaNatural();
+		
+		TransaccionCompraVenta transaccionCompraVenta = new TransaccionCompraVenta();
+		transaccionCompraVenta.setIdTransaccionCompraVenta(null);
+		transaccionCompraVenta.setEstado(true);
+		transaccionCompraVenta.setFecha(calendar.getTime());
+		transaccionCompraVenta.setHora(calendar.getTime());
+		transaccionCompraVenta.setHistorialCaja(historialCaja);
+		transaccionCompraVenta.setMonedaEntregada(monedaEntregada);
+		transaccionCompraVenta.setMonedaRecibida(monedaRecibida);
+		transaccionCompraVenta.setMontoEntregado(montoEntregado);
+		transaccionCompraVenta.setMontoRecibido(montoRecibido);
+		transaccionCompraVenta.setNumeroOperacion(this.getNumeroOperacion());
+		transaccionCompraVenta.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
+		transaccionCompraVenta.setReferencia(referencia);
+		transaccionCompraVenta.setTipoCambio(tasaCambio);
+		transaccionCompraVenta.setTipoTransaccion(tipoTransaccion);
+		
+		transaccionCompraVentaDAO.create(transaccionCompraVenta);
+		
+		return transaccionCompraVenta.getIdTransaccionCompraVenta();
 	}
 	
 }

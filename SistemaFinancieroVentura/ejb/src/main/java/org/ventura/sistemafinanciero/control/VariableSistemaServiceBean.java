@@ -1,5 +1,7 @@
 package org.ventura.sistemafinanciero.control;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.ejb.Remote;
@@ -16,6 +18,7 @@ import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.VariableSistema;
 import org.ventura.sistemafinanciero.entity.type.Variable;
 import org.ventura.sistemafinanciero.service.VariableSistemaService;
+import org.ventura.sistemafinanciero.util.ProduceObject;
 
 @Named
 @Stateless
@@ -41,6 +44,12 @@ public class VariableSistemaServiceBean extends AbstractServiceBean<VariableSist
 	@Override
 	protected DAO<Object, VariableSistema> getDAO() {
 		return variableSistemaDAO;
+	}
+
+	@Override
+	public BigDecimal getTasaCambio(BigInteger idMonedaRecibida, BigInteger idMonedaEntregada) {
+		//ProduceObject.getMonedaPrincipal().getd
+		return null;
 	}
 	
 }

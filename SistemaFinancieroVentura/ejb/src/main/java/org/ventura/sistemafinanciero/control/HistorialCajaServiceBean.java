@@ -165,8 +165,8 @@ public class HistorialCajaServiceBean extends AbstractServiceBean<HistorialCaja>
 				}				
 			}
 			for (TransaccionCompraVenta transCompVent : transComVent) {
-				Moneda monedaRecibida = transCompVent.getMonedaByIdMonedaRecibido();
-				Moneda monedaEntregada = transCompVent.getMonedaByIdMonedaEntregado();
+				Moneda monedaRecibida = transCompVent.getMonedaRecibida();
+				Moneda monedaEntregada = transCompVent.getMonedaEntregada();
 				if(moneda.equals(monedaRecibida)){
 					entradas = entradas.add(transCompVent.getMontoRecibido());
 				}

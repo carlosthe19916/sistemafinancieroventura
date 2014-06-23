@@ -1,22 +1,32 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CompraVentaController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService","MonedaService",
-        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, MonedaService) {
+    controllers.controller('CompraVentaController', ["$scope", "$state", "$window","$timeout","$filter", "$modal", "CuentaBancariaService", "CajaSessionService","MonedaService",
+        function($scope, $state, $window,$timeout,$filter, $modal, CuentaBancariaService, CajaSessionService, MonedaService) {
 
             $scope.control = {"success":false, "inProcess": false, "submitted":false};
 
             $scope.view = {
                 "numeroDocumento": undefined,
                 "nombreCliente": undefined,
+                "tipoOperacion": undefined,
                 "monedaRecibida": undefined,
                 "monedaEntregada": undefined,
+                "montoRecibido": 0,
+                "montoEntregado": 0,
+                "tipoOperaciones":[{"denominacion": "COMPRA"},{"denominacion":"VENTA"}],
                 "monedasRecibidas": undefined,
                 "monedasEntregadas": undefined,
                 "tasaCambio":0,
                 "login":{"result":false, "tasaCambio": undefined}
             };
             $scope.transaccion = {
-
+                "tipoOperacion":undefined,
+                "idMonedaRecibida":undefined,
+                "idMonedaEntregada":undefined,
+                "montoRecibido":undefined,
+                "montoEntregado":undefined,
+                "tasaCambio":undefined,
+                "referencia":undefined
             };
 
             $scope.$watch("view.monedaRecibida",function (newVal, oldVal) {
@@ -26,6 +36,23 @@ define(['../../module'], function (controllers) {
                         if($scope.view.monedaRecibida.id == $scope.view.monedasEntregadas[i].id){
                             $scope.view.monedasEntregadas.splice(i,1);
                         }
+                    }
+                }
+            },true);
+            $scope.$watch("view.monedaEntregada",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    if(!angular.isUndefined($scope.view.monedaRecibida)){
+
+                    }
+                }
+            },true);
+            $scope.$watch("view.montoRecibido",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.view.montoRecibido = Math.abs($scope.view.montoRecibido);
+                    if(!angular.isUndefined($scope.view.tasaCambio)){
+                        $scope.view.montoEntregado = $scope.view.montoRecibido*$scope.view.tasaCambio;
+                    } else {
+                        $scope.view.montoEntregado = 0;
                     }
                 }
             },true);
@@ -45,70 +72,53 @@ define(['../../module'], function (controllers) {
 
             };
             $scope.openLoginPopUp = function(){
-
-            };
-            $scope.setTasaInteres = function(){
-
-            };
-
-
-            $scope.$watch("view.monto",function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                   $scope.view.monto = Math.abs($scope.view.monto);
-                }
-            },true);
-
-
-            $scope.loadDenominacionesMoneda = function(){
-                if(!angular.isUndefined($scope.view.cuentaBancariaOrigen)){
-                    MonedaService.getDenominaciones($scope.view.cuentaBancariaOrigen.moneda.id).then(function(data){
-                        $scope.view.denominacionesMoneda = data;
-                    });
-                }
-            };
-
-            $scope.openCalculadora = function () {
                 var modalInstance = $modal.open({
-                    templateUrl: 'views/cajero/util/calculadora.html',
-                    controller: "CalculadoraController",
-                    resolve: {
-                        denominaciones: function () {
-                            return !angular.isUndefined($scope.view.denominacionesMoneda) ? $scope.view.denominacionesMoneda : [];
-                        },
-                        moneda: function () {
-                            return !angular.isUndefined($scope.view.cuentaBancariaOrigen) ? $scope.view.cuentaBancariaOrigen.moneda.simbolo : '';
-                        }
-                    }
+                    templateUrl: 'views/cajero/util/loginPopUp.html',
+                    controller: "LoginPopUpController"
                 });
-                modalInstance.result.then(function (total) {
-                    $scope.view.monto = total;
+                modalInstance.result.then(function (result) {
+                    $scope.view.login.result = result;
+                    $timeout(function() {
+                        angular.element(document.querySelector('#txtTasaInteresEdited')).focus();
+                    }, 100);
                 }, function () {
+
                 });
+            };
+            $scope.setTasaInteres = function($event){
+                if(!angular.isUndefined($scope.view.login.tasaCambio)){
+                    var final = parseFloat($scope.view.login.tasaCambio.replace(',','.').replace(' ',''));
+                    if(final >= 0 && final <= 100) {
+                        $scope.view.tasaCambio = final / 100;
+                        $scope.view.login.result = false;
+                        $timeout(function() {
+                            angular.element(document.querySelector('#txtMontoRecibido')).focus();
+                        }, 100);
+                    }
+                }
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
             };
 
             //transaccion
             $scope.crearTransaccion = function(){
-                if($scope.formCrearTransferencia.$valid){
-                    if($scope.view.cuentaBancariaOrigen.numeroCuenta == $scope.view.cuentaBancariaDestino.numeroCuenta){
-                        $scope.alerts = [{ type: "danger", msg: "Error: el origen y el destino son los mismos."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                        return;
-                    }
+                if($scope.formCrearCompraVenta.$valid){
 
-                    $scope.transaccion = {
-                        "numeroCuentaOrigen" : $scope.view.cuentaBancariaOrigen.numeroCuenta,
-                        "numeroCuentaDestino" : $scope.view.cuentaBancariaDestino.numeroCuenta,
-                        "monto" : $scope.view.monto,
-                        "referencia" : $scope.view.referencia
-                    };
+                    $scope.transaccion.tipoOperacion = $scope.view.tipoOperacion.denominacion;
+                    $scope.transaccion.idMonedaRecibida = $scope.view.monedaRecibida.id;
+                    $scope.transaccion.idMonedaEntregada = $scope.view.monedaEntregada.id;
+                    $scope.transaccion.montoRecibido = $scope.view.montoRecibido;
+                    $scope.transaccion.montoEntregado = $scope.view.montoEntregado;
+                    $scope.transaccion.tasaCambio = $scope.view.tasaCambio;
+                    $scope.transaccion.referencia = $scope.view.numeroDocumento+"/"+$scope.view.nombreCliente;
 
                     $scope.control.inProcess = true;
 
-                    CajaSessionService.crearTransferenciaBancaria($scope.transaccion).then(
+                    CajaSessionService.crearTransaccionCompraVenta($scope.transaccion).then(
                         function(data){
                             $scope.control.success = true;
                             $scope.control.inProcess = false;
-                            $state.transitionTo('app.transaccion.transferenciaVoucher', { id: data.id });
+                            $state.transitionTo('app.transaccion.compraVentaVoucher', { id: data.id });
                         },
                         function error(error){
                             $scope.control.inProcess = false;
