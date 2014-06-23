@@ -9,6 +9,7 @@
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<jta-data-source>java:jboss/datasources/OracleDS</jta-data-source>
 		<class>org.ventura.sistemafinanciero.entity.CuentaBancariaView</class>
+		<class>org.ventura.sistemafinanciero.entity.HistorialTransaccionCaja</class>
 		<properties>
 			<!-- Properties for Hibernate -->			
 			<property name="hibernate.show_sql" value="false" />			

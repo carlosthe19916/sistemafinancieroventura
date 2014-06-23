@@ -27,16 +27,16 @@
                         <!--Persona natural-->
                         <table class="table table-condensed">
                             <tr>
-                                <td>Pais:</td>
-                                <td><strong ng-bind="pais.denominacion"></strong></td>
+                                <td><strong>Pais:</strong></td>
+                                <td><span ng-bind="pais.denominacion"></span></td>
                             </tr>
                             <tr>
-                                <td>Doc.:</td>
-                                <td><strong ng-bind-template="{{personaNatural.tipoDocumento.abreviatura}}/{{personaNatural.numeroDocumento}}"></strong></td>
+                                <td><strong>Doc.:</strong></td>
+                                <td><span ng-bind-template="{{personaNatural.tipoDocumento.abreviatura}}/{{personaNatural.numeroDocumento}}"></span></td>
                             </tr>
                             <tr>
-                                <td>Socio:</td>
-                                <td><strong ng-bind-template="{{personaNatural.apellidoPaterno}} {{personaNatural.apellidoMaterno}},{{personaNatural.nombres}}"></strong></td>
+                                <td><strong>Socio:</strong></td>
+                                <td><span ng-bind-template="{{personaNatural.apellidoPaterno}} {{personaNatural.apellidoMaterno}},{{personaNatural.nombres}}"></span></td>
                             </tr>
                             <tr><td></td><td></td></tr>
                         </table>
