@@ -51,18 +51,18 @@ define(['../module'], function (controllers) {
             };
 
             $scope.tabCuentaSelected = function(){
-                angular.element("#cmbTipoPersona").focus();
-            }
+                angular.element(document.querySelector('#cmbTipoPersona')).focus();
+            };
             $scope.tabTitularSelected = function(){
-                angular.element("#cmbTipoDocumentoTitular").focus();
-            }
+                angular.element(document.querySelector('#cmbTipoDocumentoTitular')).focus();
+            };
             $scope.tabBeneficiarioSelected = function(){
-                angular.element("#txtNumeroDocumentoBeneficiario").focus();
-            }
+                angular.element(document.querySelector('#txtNumeroDocumentoBeneficiario')).focus();
+            };
 
             $scope.editarTasaInteres = function(){
                 $scope.control.tasaEdited = true;
-            }
+            };
 
             MonedaService.getMonedas().then(function(monedas){
                 $scope.monedas = monedas;
@@ -82,7 +82,7 @@ define(['../module'], function (controllers) {
                         $scope.transaccion.numeroDocumento = "";
                     });
                 }}
-            }
+            };
 
             $scope.actualizarTasaInteres = function($event){
                 $scope.control.submitted = true;
@@ -93,7 +93,7 @@ define(['../module'], function (controllers) {
                 }
                 if($event !== undefined)
                     $event.preventDefault();
-            }
+            };
 
             $scope.buscarPersonaSocio = function($event){
                 if($scope.formCrearCuenta.tipoDocumento.$valid
@@ -171,7 +171,7 @@ define(['../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
 
             $scope.crearPersona = function(){
                 if($scope.transaccion.tipoPersona !== undefined && $scope.transaccion.tipoPersona !== null){
@@ -181,21 +181,21 @@ define(['../module'], function (controllers) {
                             idTipoDoc = $scope.transaccion.tipoDocumento.id;
                         var baseLen = $location.absUrl().length - $location.url().length;
                         var url = $location.absUrl().substring(0, baseLen);
-                        $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
-                        $timeout(function() {angular.element("#txtNumeroDocumentoSocio").focus();}, 100);
+                        $window.open(url + "/app/administracion/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
+                        $timeout(function() {angular.element(document.querySelector('#txtNumeroDocumentoSocio')).focus();}, 100);
                     } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
                         var idTipoDoc = undefined;
                         if(!angular.isUndefined($scope.transaccion.tipoDocumento))
                             idTipoDoc = $scope.transaccion.tipoDocumento.id;
                         var baseLen = $location.absUrl().length - $location.url().length;
                         var url = $location.absUrl().substring(0, baseLen);
-                        $window.open(url + "/app/socio/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
-                        $timeout(function() {angular.element("#txtNumeroDocumentoSocio").focus();}, 100);
+                        $window.open(url + "/app/administracion/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumento);
+                        $timeout(function() {angular.element(document.querySelector('#txtNumeroDocumentoSocio')).focus();}, 100);
                     }}
                 } else{
                     alert("Seleccione tipo de persona");
                 }
-            }
+            };
 
 
             $scope.login = {"result":false , "tasaInteres": undefined};
@@ -207,10 +207,10 @@ define(['../module'], function (controllers) {
                 modalInstance.result.then(function (result) {
                     $scope.login.result = result;
                     $timeout(function() {
-                        angular.element("#txtTasaInteresEdited").focus();
+                        angular.element(document.querySelector('#txtTasaInteresEdited')).focus();
                     }, 100);
                 }, function () {
-                    console.log('Modal dismissed at: ' + new Date());
+
                 });
             };
 
@@ -220,7 +220,7 @@ define(['../module'], function (controllers) {
                     if(final >= 0 && final <= 100) {
                         $scope.transaccion.tasaInteres = final / 100;
                         $scope.login.result = false;
-                        angular.element("#btnGuardar").focus();
+                        angular.element(document.querySelector('#btnGuardar')).focus();
                         if(!angular.isUndefined($event))
                             $event.preventDefault();
                     } else {
@@ -231,7 +231,7 @@ define(['../module'], function (controllers) {
                     if(!angular.isUndefined($event))
                         $event.preventDefault();
                 }
-            }
+            };
 
             $scope.$watch("transaccion.numeroDocumento", function(){$scope.validarNumeroDocumentoSocio();});
             $scope.$watch("transaccion.tipoDocumento", function(){$scope.validarNumeroDocumentoSocio();});
@@ -245,13 +245,13 @@ define(['../module'], function (controllers) {
                             } else {$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}
                         } else{$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}}
-            }
+            };
             $scope.validarCantidadRetirantes = function(){
                 if(!angular.isUndefined($scope.formCrearCuenta.cantRetirantes)){
                     if($scope.titularesFinal.length < $scope.transaccion.cantRetirantes){
                         $scope.formCrearCuenta.cantRetirantes.$setValidity("sgmaxlength",false);
                     } else {$scope.formCrearCuenta.cantRetirantes.$setValidity("sgmaxlength",true);}
                 }
-            }
+            };
         }]);
 });

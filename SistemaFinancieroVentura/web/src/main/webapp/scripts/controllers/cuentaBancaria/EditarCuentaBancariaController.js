@@ -23,7 +23,7 @@ define(['../module'], function (controllers) {
                         $scope.alerts.push({ type: "danger", msg: "Cuenta bancaria no encontrada."});
                     }
                 );
-            }
+            };
             if(!angular.isUndefined($scope.id)){
                 CuentaBancariaService.getSocio($scope.id).then(
                     function(data){
@@ -33,7 +33,7 @@ define(['../module'], function (controllers) {
                         $scope.alerts.push({ type: "danger", msg: "Socio no encontrado."});
                     }
                 );
-            }
+            };
             if(!angular.isUndefined($scope.id)){
                 CuentaBancariaService.getBeneficiarios($scope.id).then(
                     function(data){
@@ -43,7 +43,7 @@ define(['../module'], function (controllers) {
                         $scope.alerts.push({ type: "danger", msg: "Beneficiarios no encontrados."});
                     }
                 );
-            }
+            };
             if(!angular.isUndefined($scope.id)){
                 CuentaBancariaService.getTitulares($scope.id).then(
                     function(data){
@@ -53,7 +53,7 @@ define(['../module'], function (controllers) {
                         $scope.alerts.push({ type: "danger", msg: "Titulares no encontrados."});
                     }
                 );
-            }
+            };
             if(!angular.isUndefined($scope.id)){
                 CuentaBancariaService.getEstadoCuenta($scope.id).then(
                     function(data){
@@ -63,7 +63,7 @@ define(['../module'], function (controllers) {
                         $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
                     }
                 );
-            }
+            };
             $scope.estadoCuentaSearcher = false;
             $scope.today = function() { $scope.desde = new Date(); $scope.hasta = new Date(); };
             $scope.today();
@@ -83,7 +83,7 @@ define(['../module'], function (controllers) {
 
             $scope.changeEstadoCuentaSearcher = function(){
                 $scope.estadoCuentaSearcher = !$scope.estadoCuentaSearcher;
-            }
+            };
             $scope.buscarEstadoCuenta = function(){
                 CuentaBancariaService.getEstadoCuenta($scope.id, $scope.desde.getTime(),$scope.hasta.getTime()).then(
                     function(data){
@@ -93,7 +93,7 @@ define(['../module'], function (controllers) {
                         $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
                     }
                 );
-            }
+            };
 
 
 
@@ -101,14 +101,14 @@ define(['../module'], function (controllers) {
             $scope.editarSocioPersonaNatural = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural/" + $scope.socio.personaNatural.id);
-            }
+                $window.open(url + "/app/administracion/personaNatural/" + $scope.socio.personaNatural.id);
+            };
 
             $scope.editarSocioPersonaJuridica = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaJuridica/" + $scope.socio.personaJuridica.id);
-            }
+                $window.open(url + "/app/administracion/personaJuridica/" + $scope.socio.personaJuridica.id);
+            };
 
             //cuenta bancaria
 
@@ -117,13 +117,13 @@ define(['../module'], function (controllers) {
             //titulares
             $scope.goToFirmas = function(){
                 $state.transitionTo("app.socio.firmasCuentaBancaria", { id: $scope.id });
-            }
+            };
 
             $scope.editTitular = function(index){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural/" + $scope.titulares[index].personaNatural.id);
-            }
+                $window.open(url + "/app/administracion/personaNatural/" + $scope.titulares[index].personaNatural.id);
+            };
 
             $scope.addTitular = function(){
                 var modalInstance = $modal.open({
@@ -152,7 +152,7 @@ define(['../module'], function (controllers) {
                     );
                 }, function () {
                 });
-            }
+            };
             $scope.deleteTitular = function(index){
                 var modalInstance = $modal.open({
                     templateUrl: 'views/cajero/util/confirmPopUp.html',
@@ -176,7 +176,7 @@ define(['../module'], function (controllers) {
                     );
                 }, function () {
                 });
-            }
+            };
 
             //beneficiarios
             $scope.addBeneficiario = function(){
@@ -216,7 +216,7 @@ define(['../module'], function (controllers) {
                     );
                 }, function () {
                 });
-            }
+            };
             $scope.deleteBeneficiario = function(index){
                 var modalInstance = $modal.open({
                     templateUrl: 'views/cajero/util/confirmPopUp.html',
@@ -240,7 +240,7 @@ define(['../module'], function (controllers) {
                     );
                 }, function () {
                 });
-            }
+            };
             $scope.editBeneficiario = function(index){
                 var modalInstance = $modal.open({
                     templateUrl: 'views/cajero/cuentaBancaria/beneficiarioPopUp.html',
@@ -277,7 +277,7 @@ define(['../module'], function (controllers) {
                     );
                 }, function () {
                 });
-            }
+            };
 
 
 

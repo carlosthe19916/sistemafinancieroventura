@@ -45,30 +45,30 @@ define(['../module'], function (controllers) {
             $scope.editarSocioPN = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural/"+$scope.personaNatural.id);
-            }
+                $window.open(url + "/app/administracion/personaNatural/"+$scope.personaNatural.id);
+            };
             $scope.editarSocioPJ = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaJuridica/"+$scope.personaJuridica.id);
-            }
+                $window.open(url + "/app/administracion/personaJuridica/"+$scope.personaJuridica.id);
+            };
             $scope.editarRepresentantePJ = function(){
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural/"+$scope.personaJuridica.representanteLegal.id);
-            }
+                $window.open(url + "/app/administracion/personaNatural/"+$scope.personaJuridica.representanteLegal.id);
+            };
             $scope.editarApoderado = function(){
                 if(!angular.isUndefined($scope.apoderado)){
                     var baseLen = $location.absUrl().length - $location.url().length;
                     var url = $location.absUrl().substring(0, baseLen);
-                    $window.open(url + "/app/socio/personaNatural/"+$scope.apoderado.id);
+                    $window.open(url + "/app/administracion/personaNatural/"+$scope.apoderado.id);
                 }
-            }
+            };
             $scope.editarCuentaBancaria = function(index){
                 if(!angular.isUndefined($scope.cuentasBancarias)){
                     $state.transitionTo("app.socio.editarCuentaBancaria", { id: $scope.cuentasBancarias[index].id });
                 }
-            }
+            };
 
         }]);
 });

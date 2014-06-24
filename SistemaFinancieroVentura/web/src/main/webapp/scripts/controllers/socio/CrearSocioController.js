@@ -1,8 +1,8 @@
 
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearSocioController', ["$scope","$state","$window","$location", "focus", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService",
-        function($scope, $state, $window,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
+    controllers.controller('CrearSocioController', ['$scope','$state','$window','$timeout','$location','focus', 'MaestroService', 'PersonaNaturalService', 'PersonaJuridicaService', 'SocioService',
+        function($scope, $state,$window,$timeout,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
 
             focus("firstFocus");
 
@@ -179,13 +179,19 @@ define(['../module'], function (controllers) {
                             idTipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
                         var baseLen = $location.absUrl().length - $location.url().length;
                         var url = $location.absUrl().substring(0, baseLen);
-                        $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
+                        $window.open(url + "/app/administracion/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
+                        $timeout(function() {
+                            angular.element(document.querySelector('#txtNumeroDocumentoSocio')).focus();
+                        }, 100);
                     } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
                         if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null)
                             idTipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
                         var baseLen = $location.absUrl().length - $location.url().length;
                         var url = $location.absUrl().substring(0, baseLen);
-                        $window.open(url + "/app/socio/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
+                        $window.open(url + "/app/administracion/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
+                        $timeout(function() {
+                            angular.element(document.querySelector('#txtNumeroDocumentoSocio')).focus();
+                        }, 100);
                     }}
                 } else{
                     alert("Seleccione tipo de persona");
@@ -198,7 +204,10 @@ define(['../module'], function (controllers) {
                     idTipoDoc = $scope.transaccion.tipoDocumentoApoderado.id;
                 var baseLen = $location.absUrl().length - $location.url().length;
                 var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoApoderado);
+                $window.open(url + "/app/administracion/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoApoderado);
+                $timeout(function() {
+                    angular.element(document.querySelector('#txtNumeroDocumentoApoderado')).focus();
+                }, 100);
             }
 
             $scope.buttonDisableState = function(){

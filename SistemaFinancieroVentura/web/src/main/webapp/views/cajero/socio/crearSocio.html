@@ -37,7 +37,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : (formCrearSocio.numeroDocumentoSocio.$invalid || control.errorForm.socio) && control.submitted}">
                     <label>N&uacute;mero Documento Socio</label>
                     <div class="input-group">
-                        <input type="text" name="numeroDocumentoSocio" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumentoSocio" ng-minlength="1" ng-maxlength="20" ng-trim="false" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
+                        <input type="text" id="txtNumeroDocumentoSocio" name="numeroDocumentoSocio" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="transaccion.numeroDocumentoSocio" ng-minlength="1" ng-maxlength="20" ng-trim="false" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="buscarPersonaSocio()" >
                                 <span class="glyphicon glyphicon-search"></span>
@@ -91,7 +91,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : (formCrearSocio.numeroDocumentoApoderado.$invalid || control.errorForm.apoderado) && control.submitted}">
                     <label>Numero Documento Apoderado</label>
                     <div class="input-group">
-                        <input type="text" name="numeroDocumentoApoderado" ui-keypress="{13:'buscarPersonaApoderado($event)'}" ng-model="transaccion.numeroDocumentoApoderado" ng-minlength="1" ng-maxlength="{{tipoDocumentoApoderado.numeroCaracteres}}" ng-trim="true" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento"/>
+                        <input type="text" id="txtNumeroDocumentoApoderado" name="numeroDocumentoApoderado" ui-keypress="{13:'buscarPersonaApoderado($event)'}" ng-model="transaccion.numeroDocumentoApoderado" ng-minlength="1" ng-maxlength="{{tipoDocumentoApoderado.numeroCaracteres}}" ng-trim="true" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="buscarPersonaApoderado()" >
                                 <span class="glyphicon glyphicon-search"></span>
