@@ -281,7 +281,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 					throw new RollbackFailureException("Apoderado y socio deben de ser diferentes");
 			break;
 		case JURIDICA:
-			personaJuridica = personaJuridicaService.findByTipoNumeroDocumento(idDocSocio, numDocSocio);
+			personaJuridica = personaJuridicaService.find(idDocSocio, numDocSocio);
 			if(personaJuridica == null)
 				throw new RollbackFailureException("Persona para socio no encontrado");
 			if(apoderado != null)

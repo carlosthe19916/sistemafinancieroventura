@@ -533,7 +533,8 @@ define(['./app'], function(app) {
                 url: "/personaJuridica/buscar",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaJuridica/buscarPersonaJuridica.html"
+                        templateUrl: "views/cajero/persona/juridica/buscarPersonaJuridica.html",
+                        controller: 'BuscarPersonaJuridicaController'
                     }
                 }
             })
@@ -541,7 +542,7 @@ define(['./app'], function(app) {
                 url: "/personaJuridica?tipoDocumento&numeroDocumento",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaJuridica/crearPersonaJuridica.html",
+                        templateUrl: "views/cajero/persona/juridica/crearPersonaJuridica.html",
                         controller: function($scope, $stateParams) {
                             $scope.params = {};
                             $scope.params.idTipoDocumento = $stateParams.tipoDocumento;
@@ -554,7 +555,7 @@ define(['./app'], function(app) {
                 url: "/personaJuridica/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaJuridica/editarPersonaJuridica.html",
+                        templateUrl: "views/cajero/persona/juridica/editarPersonaJuridica.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }

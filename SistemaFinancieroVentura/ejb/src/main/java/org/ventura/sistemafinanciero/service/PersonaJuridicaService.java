@@ -1,21 +1,22 @@
 package org.ventura.sistemafinanciero.service;
 
 import java.math.BigInteger;
-import java.util.Set;
+import java.util.List;
 
 import javax.ejb.Remote;
 
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
-import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
-import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
 @Remote
-public interface PersonaJuridicaService extends AbstractService<PersonaJuridica>{
+public interface PersonaJuridicaService extends AbstractService<PersonaJuridica> {
 
-	public BigInteger crear(PersonaJuridica personaJuridica) throws PreexistingEntityException, RollbackFailureException;
+	public PersonaJuridica find(BigInteger idTipodocumento, String numerodocumento);
 	
-	public PersonaJuridica findByTipoNumeroDocumento(BigInteger idTipodocumento, String numerodocumento);
+	public List<PersonaJuridica> findAll();
 
-	public Set<PersonaJuridica> findByFilterText(String filterText);
-	
+	public List<PersonaJuridica> findAll(BigInteger offset, BigInteger limit);
+
+	public List<PersonaJuridica> findAll(String filterText);
+
+	public List<PersonaJuridica> findAll(String filterText, BigInteger offset, BigInteger limit);
 }

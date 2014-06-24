@@ -346,7 +346,7 @@ public class CuentaBancariaRESTService {
 				idPersona = personaNatural.getIdPersonaNatural();
 				break;
 			case JURIDICA:
-				PersonaJuridica personaJuridica = personaJuridicaService.findByTipoNumeroDocumento(idTipoDocumento, numeroDocumento);
+				PersonaJuridica personaJuridica = personaJuridicaService.find(idTipoDocumento, numeroDocumento);
 				if(personaJuridica == null){
 					model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
 					return Response.status(Response.Status.NOT_FOUND).entity(model).build();
@@ -416,7 +416,7 @@ public class CuentaBancariaRESTService {
 				idPersona = personaNatural.getIdPersonaNatural();
 				break;
 			case JURIDICA:
-				PersonaJuridica personaJuridica = personaJuridicaService.findByTipoNumeroDocumento(idTipoDocumento, numeroDocumento);
+				PersonaJuridica personaJuridica = personaJuridicaService.find(idTipoDocumento, numeroDocumento);
 				if(personaJuridica == null){
 					model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
 					return Response.status(Response.Status.NOT_FOUND).entity(model).build();

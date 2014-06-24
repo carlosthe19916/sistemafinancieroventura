@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJBException;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -27,7 +28,6 @@ import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
-import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 
 @Named
@@ -40,8 +40,10 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 
 	@Inject
 	private DAO<Object, PersonaJuridica> personaJuridicaDAO;
+	
 	@Inject
 	private DAO<Object, PersonaNatural> personaNaturalDAO;
+	
 	@Inject
 	private DAO<Object, Accionista> accionistaDAO;
 	
@@ -73,28 +75,89 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 	}
 	
 	@Override
-	public List<PersonaJuridica> findAll(){
-		List<PersonaJuridica> list = personaJuridicaDAO.findAll();
-		for (PersonaJuridica personaJuridica : list) {
-			Set<Accionista> accionistas = personaJuridica.getAccionistas();
-			PersonaNatural representante = personaJuridica.getRepresentanteLegal();
-			TipoDocumento tipoDocumento = personaJuridica.getTipoDocumento();			
-			Hibernate.initialize(representante);
-			Hibernate.initialize(tipoDocumento);	
-			for (Accionista accionista : accionistas) {				
-				PersonaNatural p = accionista.getPersonaNatural();
-				TipoDocumento doc = p.getTipoDocumento();
-				Hibernate.initialize(accionista);
-				Hibernate.initialize(p);
-				Hibernate.initialize(doc);
-			}
+	public PersonaJuridica find(BigInteger idTipodocumento, String numerodocumento) {
+		if(idTipodocumento == null || numerodocumento == null)
+			return null;
+		if(numerodocumento.isEmpty() || numerodocumento.trim().isEmpty())
+			return null;
+		PersonaJuridica result = null;
+		try {
+			QueryParameter queryParameter = QueryParameter.with("idtipodocumento",idTipodocumento).and("numerodocumento", numerodocumento);
+			List<PersonaJuridica> list = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByTipoAndNumeroDocumento,queryParameter.parameters());
+			if (list.size() > 1)
+				throw new IllegalResultException("Se encontró mas de una persona con idDocumento:" + idTipodocumento + " y numero de documento:" + numerodocumento);
+			else 
+				for (PersonaJuridica personaJuridica : list) {
+					result = personaJuridica;
+					TipoDocumento tipoDocumento = result.getTipoDocumento();
+					PersonaNatural representante = result.getRepresentanteLegal();
+					TipoDocumento documentoRepre = representante.getTipoDocumento();
+					Set<Accionista> accionistas = result.getAccionistas();
+					Hibernate.initialize(representante);
+					Hibernate.initialize(accionistas);
+					Hibernate.initialize(tipoDocumento);
+					Hibernate.initialize(documentoRepre);
+				}
+		} catch (IllegalResultException e) {
+			LOGGER.error(e.getMessage(), e.getLocalizedMessage(), e.getCause());
 		}
-		return list;
+		return result;
 	}
 	
-	
 	@Override
-	public BigInteger crear(PersonaJuridica personaJuridica) throws PreexistingEntityException, RollbackFailureException {	
+	public List<PersonaJuridica> findAll(){
+		return findAll(null, null);
+	}
+
+	@Override
+	public List<PersonaJuridica> findAll(BigInteger offset, BigInteger limit) {
+		return findAll(null, offset, limit);
+	}
+
+	@Override
+	public List<PersonaJuridica> findAll(String filterText) {
+		return findAll(filterText, null, null);
+	}
+
+	@Override
+	public List<PersonaJuridica> findAll(String filterText, BigInteger offset, BigInteger limit) {
+		List<PersonaJuridica> result = null;
+		
+		if(filterText == null)
+			filterText = "";
+		if(offset == null || limit == null){
+			offset = null;
+			limit = null;
+		}
+		
+		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
+		if(offset != null){
+			int[] rangeInt = { offset.intValue(), offset.add(limit).intValue() };
+			result = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByFilterText, queryParameter.parameters(), rangeInt);
+		} else {
+			result = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByFilterText, queryParameter.parameters());
+		}			
+		if(result != null){
+			for (PersonaJuridica personaJuridica : result) {
+				Set<Accionista> accionistas = personaJuridica.getAccionistas();
+				PersonaNatural representante = personaJuridica.getRepresentanteLegal();
+				TipoDocumento tipoDocumento = personaJuridica.getTipoDocumento();			
+				Hibernate.initialize(representante);
+				Hibernate.initialize(tipoDocumento);	
+				for (Accionista accionista : accionistas) {				
+					PersonaNatural p = accionista.getPersonaNatural();
+					TipoDocumento doc = p.getTipoDocumento();
+					Hibernate.initialize(accionista);
+					Hibernate.initialize(p);
+					Hibernate.initialize(doc);
+				}
+			}
+		}
+		return result;	
+	}
+
+	@Override
+	public PersonaJuridica create(PersonaJuridica personaJuridica) throws PreexistingEntityException {	
 		Set<ConstraintViolation<PersonaJuridica>> violations = validator.validate(personaJuridica);
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
@@ -104,7 +167,7 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 		String numeroDocumento = personaJuridica.getNumeroDocumento();
 		Set<Accionista> accionistas = personaJuridica.getAccionistas();
 		
-		Object obj = findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
+		Object obj = find(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
 		if (obj == null)
 			personaJuridicaDAO.create(personaJuridica);
 		else
@@ -121,12 +184,12 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 						accionista.setPersonaJuridica(personaJuridica);			
 						accionistaDAO.create(accionista);	
 					} else {
-						throw new RollbackFailureException("Accionista no encontrado");
+						throw new EJBException("Accionista no encontrado");
 					}
 				}				
 			}			
 		}				
-		return personaJuridica.getIdPersonaJuridica();		
+		return personaJuridica;		
 	}
 	
 	@Override
@@ -140,7 +203,7 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 		String numeroDocumento = personaJuridica.getNumeroDocumento();
 		Set<Accionista> accionistas = personaJuridica.getAccionistas();
 		
-		PersonaJuridica personaDB = findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
+		PersonaJuridica personaDB = find(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
 		PersonaJuridica personaById = personaJuridicaDAO.find(id);
 		if(personaById == null)
 			throw new PreexistingEntityException("Persona juridica no encontrada");
@@ -177,51 +240,8 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 	}
 	
 	@Override
-	public PersonaJuridica findByTipoNumeroDocumento(BigInteger idTipodocumento, String numerodocumento) {		
-		if(idTipodocumento == null || numerodocumento == null)
-			return null;
-		if(numerodocumento.isEmpty() || numerodocumento.trim().isEmpty())
-			return null;
-		PersonaJuridica result = null;
-		try {
-			QueryParameter queryParameter = QueryParameter.with("idtipodocumento",idTipodocumento).and("numerodocumento", numerodocumento);
-			List<PersonaJuridica> list = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByTipoAndNumeroDocumento,queryParameter.parameters());
-			if (list.size() > 1)
-				throw new IllegalResultException("Se encontró mas de una persona con idDocumento:" + idTipodocumento + " y numero de documento:" + numerodocumento);
-			else 
-				for (PersonaJuridica personaJuridica : list) {
-					result = personaJuridica;
-					TipoDocumento tipoDocumento = result.getTipoDocumento();
-					PersonaNatural representante = result.getRepresentanteLegal();
-					TipoDocumento documentoRepre = representante.getTipoDocumento();
-					Set<Accionista> accionistas = result.getAccionistas();
-					Hibernate.initialize(representante);
-					Hibernate.initialize(accionistas);
-					Hibernate.initialize(tipoDocumento);
-					Hibernate.initialize(documentoRepre);
-				}
-		} catch (IllegalResultException e) {
-			LOGGER.error(e.getMessage(), e.getLocalizedMessage(), e.getCause());
-		}
-		return result;
-	}
-
-	@Override
-	public Set<PersonaJuridica> findByFilterText(String filterText) {		
-		if(filterText == null)
-			return new HashSet<PersonaJuridica>();
-		if(filterText.isEmpty() || filterText.trim().isEmpty()){
-			return new HashSet<PersonaJuridica>();
-		}
-		List<PersonaJuridica> list = null;
-		QueryParameter queryParameter = QueryParameter.with("filtertext", filterText.toLowerCase());
-		list = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByFilterText, queryParameter.parameters(), 1000);												
-		return new HashSet<PersonaJuridica>(list);
-	}
-
-	@Override
 	protected DAO<Object, PersonaJuridica> getDAO() {
-		return personaJuridicaDAO;
+		return this.personaJuridicaDAO;
 	}
 
 }

@@ -13,29 +13,7 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div flow-name="foto" flow-init="{singleFile:true}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
-                        <div ng-show="!$flow.files.length">
-                            <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-circle center-block" style="max-width: 105px; max-height: 105px;">
-                        </div>
-                        <div ng-show="$flow.files.length">
-                            <img flow-img="$flow.files[0]" class="img-circle center-block" style="max-width: 105px; max-height: 105px;">
-                        </div>
-                        <div>
-                                <span class="btn btn-link center-block" ng-show="!$flow.files.length" flow-btn>
-                                    Seleccionar foto
-                                    <input type="file" style="visibility: hidden; position: absolute;">
-                                </span>
-                            <div style="text-align: center;">
-                                    <span class="btn btn-info" ng-show="$flow.files.length" flow-btn>
-                                        Cambiar
-                                        <input type="file" style="visibility: hidden; position: absolute;">
-                                    </span>
-                                    <span class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">
-                                        Eliminar
-                                    </span>
-                            </div>
-                        </div>
-                    </div>
+                    <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-circle center-block" style="max-width: 105px; max-height: 105px;">
                 </div>
             </div>
         </div>
@@ -44,29 +22,7 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div flow-init="{singleFile:true}" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
-                        <div ng-show="!$flow.files.length">
-                            <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-thumbnail center-block" style="max-width: 200px; max-height: 100px;">
-                        </div>
-                        <div ng-show="$flow.files.length">
-                            <img flow-img="$flow.files[0]" class="img-thumbnail center-block" style="max-width: 200px; max-height: 100px;">
-                        </div>
-                        <div>
-                                <span class="btn btn-link center-block" ng-show="!$flow.files.length" flow-btn>
-                                    Seleccionar firma
-                                    <input type="file" style="visibility: hidden; position: absolute;">
-                                </span>
-                            <div style="text-align: center;">
-                                    <span class="btn btn-info" ng-show="$flow.files.length" flow-btn>
-                                        Cambiar
-                                        <input type="file" style="visibility: hidden; position: absolute;">
-                                    </span>
-                                    <span class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">
-                                        Eliminar
-                                    </span>
-                            </div>
-                        </div>
-                    </div>
+                    <img src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="img-thumbnail center-block" style="max-width: 200px; max-height: 100px;">
                 </div>
             </div>
         </div>

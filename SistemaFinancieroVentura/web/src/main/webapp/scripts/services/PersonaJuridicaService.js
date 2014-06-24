@@ -35,8 +35,16 @@ define(['./module'], function (services) {
                 remove: function(id){
                     return Restangular.all("personaJuridica/"+id).remove();
                 },
-                getPersonas: function(){
-                    return _personaJuridicaService.getList();
+                getPersonas: function(offset, limit){
+                    if(arguments.length == 0){
+                        return _personaJuridicaService.getList();
+                    } else if(arguments.length == 1){
+                        return _personaJuridicaService.getList({"offset":offset},{});
+                    } else if(arguments.length == 2){
+                        return _personaJuridicaService.getList({"offset":offset,"limit":limit},{});
+                    } else if(arguments.length > 2){
+                        return _personaJuridicaService.getList({"offset":offset,"limit":limit},{});
+                    }
                 },
                 findById: function(id){
                     return Restangular.one("personaJuridica", id).get();
