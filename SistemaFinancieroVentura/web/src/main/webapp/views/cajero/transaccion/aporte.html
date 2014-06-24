@@ -114,16 +114,16 @@
                         <div class="panel-heading"><h3 class="panel-title">Socio</h3></div>
                         <table class="table">
                             <tr>
-                                <td style="font-weight: bold;">Socio:</td>
-                                <td><strong ng-bind="transaccion.socio.socio"></strong></td>
+                                <td><strong>Socio:</strong></td>
+                                <td><span ng-bind="transaccion.socio.socio"></span></td>
                             </tr>
                             <tr>
-                                <td style="font-weight: bold;">Tipo y Nro. Doc.:</td>
-                                <td><strong ng-bind-template="{{transaccion.socio.tipoDocumento}}/{{transaccion.socio.numeroDocumento}}"></strong></td>
+                                <td><strong>Documento:</strong></td>
+                                <td><span ng-bind-template="{{transaccion.socio.tipoDocumento}}/{{transaccion.socio.numeroDocumento}}"></span></td>
                             </tr>
                             <tr>
-                                <td style="font-weight: bold;">Estado Socio:</td>
-                                <td><strong ng-bind="transaccion.socio.estado"></strong></td>
+                                <td><strong>Estado Socio:</strong></td>
+                                <td><span ng-cloak>{{transaccion.socio.estado ? 'ACTIVO' : 'INACTIVO'}}</span></td>
                             </tr>
                         </table>
                     </div>
