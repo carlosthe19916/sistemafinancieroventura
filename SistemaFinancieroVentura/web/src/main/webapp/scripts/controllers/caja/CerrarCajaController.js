@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CerrarCajaController', ["$scope", "$state","$window", "$filter", "CajaSessionService",
-        function($scope, $state,$window, $filter, CajaSessionService) {
+    controllers.controller('CerrarCajaController', ["$scope", "$state","$window", "$location","$filter", "CajaSessionService",
+        function($scope, $state,$window, $location, $filter, CajaSessionService) {
 
             $scope.control = {"success":false, "inProcess": false};
 
@@ -127,9 +127,11 @@ define(['../module'], function (controllers) {
                             $scope.alerts = mensajes;
 
                             $scope.crearPendiente = function(index){
-                                $scope.closeAlert(index);
-                                $window.open("http://localhost:8080/SistemaFinancieroVentura-web/index.html#/app/caja/pendiente/crear/?idboveda="+$scope.pendiente[index].idboveda+"&monto="+$scope.pendiente[index].monto);
-                            }
+                                //$scope.closeAlert(index);
+                                var baseLen = $location.absUrl().length - $location.url().length;
+                                var url = $location.absUrl().substring(0, baseLen);
+                                $window.open(url + "/app/caja/pendiente/crear" + "?idboveda="+$scope.pendiente[index].idboveda+"&monto="+$scope.pendiente[index].monto);
+                            };
 
                             $window.scrollTo(0,0);
 

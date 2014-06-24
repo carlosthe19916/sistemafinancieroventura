@@ -243,7 +243,7 @@ define(['./app'], function(app) {
                 }
             })
             .state('app.caja.pendienteCrear', {
-                url: "/pendiente/crear/?idboveda&monto",
+                url: "/pendiente/crear?idboveda&monto",
                 views: {
                     "viewContent":{
                         templateUrl: "views/cajero/caja/crearPendiente.html",

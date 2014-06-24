@@ -47,7 +47,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <tabset>
-                        <tab ng-repeat="detalle in detalleCajaInicial" select="updateLayout($index)" heading="Moneda:{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{totalFinal[$index]()}}">
+                        <tab ng-repeat="detalle in detalleCajaInicial" select="updateLayout($index)" heading="{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{totalFinal[$index]()}}">
                             <div class="row" style="padding-top: 10px;">
                                 <div class="col-md-6">
                                     <div class="form-group">

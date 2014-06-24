@@ -22,7 +22,6 @@ import javax.ws.rs.core.SecurityContext;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.rest.dto.TranferenciaBancariaDTO;
-import org.ventura.sistemafinanciero.rest.dto.TransaccionBancariaDTO;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 
 @RolesAllowed("CAJERO")
