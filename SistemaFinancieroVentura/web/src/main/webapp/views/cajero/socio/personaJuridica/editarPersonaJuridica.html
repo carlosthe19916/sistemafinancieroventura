@@ -1,0 +1,344 @@
+<div ng-controller="EditarPersonaJuridicaController">
+<fieldset>
+<legend style="text-align: center;">Registrar Persona Juridica</legend>
+<h6 style="color: brown;">Los campos marcados con (*) son obligatorios</h6>
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+    <span ng-bind="alert.msg"></span>
+</alert>
+<tabset>
+<tab heading="Persona Juridica" select="tabPersonaJuridicaSelected()">
+<ng-form name="$parent.formEditarPersonaJuridica">
+<fieldset>
+    <legend style="background: whitesmoke;">Datos Principales</legend>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.tipodocumento.$invalid && (control.submitted || formEditarPersonaJuridica.tipodocumento.$dirty)}">
+                <label>Tipo Documento</label>
+                <label style="color: brown;">(*)</label>
+                <select id="cmbTipoDocumentoPersonaJuridica" name="tipodocumento" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipoDocumentosPJ | orderBy : 'id'" ng-model="personaJuridica.tipoDocumento" class="form-control" required autofocus>
+                </select>
+                <div ng-show="formEditarPersonaJuridica.tipodocumento.$invalid && (control.submitted || formEditarPersonaJuridica.tipodocumento.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.tipodocumento.$error.required">
+                        Ingrese Tipo Documento.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.numerodocumento.$invalid && (control.submitted || formEditarPersonaJuridica.numerodocumento.$dirty)}">
+                <label>Numero Documento</label>
+                <label style="color: brown;">(*)</label>
+                <input name="numerodocumento" type="text" ng-model="personaJuridica.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
+                <div ng-show="formEditarPersonaJuridica.numerodocumento.$invalid && (control.submitted || formEditarPersonaJuridica.numerodocumento.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numerodocumento.$error.required">
+                        Ingrese Numero de Documento.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numerodocumento.$error.minlength">
+                        Minimo 1 Caracter.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numerodocumento.$error.maxlength">
+                        Maximo 20 Caracteres.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numerodocumento.$error.pattern">
+                        Numero de Documento no Valido.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numerodocumento.$error.sgmaxlength">
+                        Debe tener <span ng-bind="personaJuridica.tipoDocumento.numeroCaracteres"></span> caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.razonSocial.$invalid && (control.submitted || formEditarPersonaJuridica.razonSocial.$dirty)}">
+                <label>Razon Social</label>
+                <label style="color: brown;">(*)</label>
+                <input name="razonSocial" type="text" ng-model="personaJuridica.razonSocial" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Razon Social" capitalize required/>
+                <div ng-show="formEditarPersonaJuridica.razonSocial.$invalid && (control.submitted || formEditarPersonaJuridica.razonSocial.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.razonSocial.$error.required">
+                        Ingrese Razon Social.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.razonSocial.$error.minlength">
+                        Minimo 1 Caracter.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.razonSocial.$error.maxlength">
+                        Maximo 40 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.nombreComercial.$invalid && (control.submitted || formEditarPersonaJuridica.nombreComercial.$dirty)}">
+                <label>Nombre Comercial</label>
+                <input name="nombreComercial" type="text" ng-model="personaJuridica.nombreComercial" ng-maxlength="40" class="form-control" placeholder="Nombre Comercial" capitalize/>
+                </select>
+                <div ng-show="formEditarPersonaJuridica.nombreComercial.$invalid && (control.submitted || formEditarPersonaJuridica.nombreComercial.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.nombreComercial.$error.maxlength">
+                        Maximo 40 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.actividadPrincipal.$invalid && (control.submitted || formEditarPersonaJuridica.actividadPrincipal.$dirty)}">
+                <label>Actividad Principal</label>
+                <label style="color: brown;">(*)</label>
+                <input name="actividadPrincipal" type="text" ng-model="personaJuridica.actividadPrincipal" ng-maxlength="70" class="form-control" placeholder="Actividad Principal" capitalize required/>
+                <div ng-show="formEditarPersonaJuridica.actividadPrincipal.$invalid && (control.submitted || formEditarPersonaJuridica.actividadPrincipal.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.actividadPrincipal.$error.required">
+                        Ingrese Actividad Principal.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.actividadPrincipal.$error.minlength">
+                        Minimo 1 Caracter.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.actividadPrincipal.$error.maxlength">
+                        Maximo 70 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.fechaConstitucion.$invalid && (control.submitted || formEditarPersonaJuridica.fechaConstitucion.$dirty)}">
+                <label>Fecha Constitucion</label>
+                <label style="color: brown;">(*)</label>
+                <div class="input-group">
+                    <input type="text" name="fechaConstitucion" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="personaJuridica.fechaConstitucion" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" required>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="open($event)">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </button>
+                    </span>
+                </div>
+                <div ng-show="formEditarPersonaJuridica.fechaConstitucion.$invalid && (control.submitted || formEditarPersonaJuridica.fechaConstitucion.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.fechaConstitucion.$error.required">
+                        Ingrese Fecha.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.fechaConstitucion.$invalid">
+                        Fecha no Valida.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.tipoEmpresa.$invalid && (control.submitted || formEditarPersonaJuridica.tipoEmpresa.$dirty)}">
+                <label>Tipo Empresa(*)</label>
+                <select name="tipoEmpresa" ng-options="tipoEmpresa as tipoEmpresa for tipoEmpresa in tiposEmpresa" ng-model="personaJuridica.tipoEmpresa" class="form-control" required>
+                </select>
+                <div ng-show="formEditarPersonaJuridica.tipoEmpresa.$invalid && (control.submitted || formEditarPersonaJuridica.tipoEmpresa.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.tipoEmpresa.$error.required">
+                        Ingrese Tipo Empresa.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label>Fin de Lucro</label>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="personaJuridica.finLucro">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <legend style="background: whitesmoke;">Datos Adicionales</legend>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.departamento.$invalid && control.submitted}">
+                <label>Departamento</label>
+                <select name="departamento" ng-options="departamento as departamento.denominacion for departamento in departamentos" ng-model="ubigeo.departamento" ng-change="changeDepartamento()" class="form-control"></select>
+                <div ng-show="formEditarPersonaJuridica.departamento.$invalid && control.submitted">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.departamento.$error.required">
+                        Ingrese Departamento.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.provincia.$invalid && control.submitted}">
+                <label>Provincia</label>
+                <select name="provincia" ng-options="provincia as provincia.denominacion for provincia in provincias" ng-model="ubigeo.provincia" ng-change="changeProvincia()" class="form-control"></select>
+                <div ng-show="formEditarPersonaJuridica.provincia.$invalid && control.submitted">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.provincia.$error.required">
+                        Ingrese Provincia.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.distrito.$invalid && control.submitted}">
+                <label>Distrito</label>
+                <select name="distrito" ng-options="distrito as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" class="form-control"></select>
+                <div ng-show="formEditarPersonaJuridica.distrito.$invalid && control.submitted">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.distrito.$error.required">
+                        Ingrese Distrito.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.direccion.$invalid && (control.submitted || formEditarPersonaJuridica.direccion.$dirty)}">
+                <label>Direccion</label>
+                <input name="direccion" type="text" ng-model="personaJuridica.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" capitalize/>
+                <div ng-show="formEditarPersonaJuridica.direccion.$invalid && (control.submitted || formEditarPersonaJuridica.direccion.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.direccion.$error.maxlength">
+                        Maximo 70 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.referencia.$invalid && (control.submitted || formEditarPersonaJuridica.referencia.$dirty)}">
+                <label>Referencia</label>
+                <input name="referencia" type="text" ng-model="personaJuridica.referencia" ng-maxlength="70" class="form-control" placeholder="Referencia" capitalize/>
+                <div ng-show="formEditarPersonaJuridica.referencia.$invalid && (control.submitted || formEditarPersonaJuridica.referencia.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.referencia.$error.maxlength">
+                        Maximo 70 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.telefono.$invalid && (control.submitted || formEditarPersonaJuridica.telefono.$dirty)}">
+                <label>Telefono</label>
+                <input name="telefono" type="text" ng-model="personaJuridica.telefono" ng-maxlength="20" class="form-control" placeholder="Telefono" />
+                <div ng-show="formEditarPersonaJuridica.telefono.$invalid && (control.submitted || formEditarPersonaJuridica.telefono.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.telefono.$error.maxlength">
+                        Maximo 20 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.celular.$invalid && (control.submitted || formEditarPersonaJuridica.celular.$dirty)}">
+                <label>Celular</label>
+                <input name="celular" type="text" ng-model="personaJuridica.celular" ng-maxlength="20" class="form-control" placeholder="Celular" />
+                <div ng-show="formEditarPersonaJuridica.celular.$invalid && (control.submitted || formEditarPersonaJuridica.celular.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.celular.$error.maxlength">
+                        Maximo 20 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.email.$invalid && (control.submitted || formEditarPersonaJuridica.email.$dirty)}">
+                <label>Email</label>
+                <input name="email" type="email" ng-model="personaJuridica.email" ng-maxlength="30" class="form-control" placeholder="correo@dominio.com" capitalize/>
+                <div ng-show="formEditarPersonaJuridica.email.$invalid && (control.submitted || formEditarPersonaJuridica.email.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.email.$invalid">
+                        Email Incorrecto.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.email.$error.maxlength">
+                        Maximo 30 Caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <legend style="background: whitesmoke;">Representante legal</legend>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formEditarPersonaJuridica.tipoDocumentoRepresentante.$dirty)}">
+                <label>Tipo Documento(*)</label>
+                <select name="tipoDocumentoRepresentante" ng-options="tipodocumento as tipodocumento.abreviatura for tipodocumento in tipoDocumentosPN | orderBy : 'id'" ng-model="representanteLegal.tipoDocumento" class="form-control" required>
+                </select>
+                <div ng-show="formEditarPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formEditarPersonaJuridica.tipoDocumentoRepresentante.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.tipoDocumentoRepresentante.$error.required">
+                        Seleccione Tipo Documento.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formEditarPersonaJuridica.numeroDocumentoRepresentante.$dirty)}">
+                <label>Numero Documento(*)</label>
+                <div class="input-group">
+                    <input id="txtNumeroDocumentoRepresentanteLegal" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="representanteLegal.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
+                      <span class="input-group-btn">
+                       <button type="button" class="btn btn-default" ng-click="buscarRepresentanteLegal()" >
+                           <span class="glyphicon glyphicon-search"></span>
+                       </button>
+                     </span>
+                </div>
+                <div ng-show="formEditarPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formEditarPersonaJuridica.numeroDocumentoRepresentante.$dirty)">
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numeroDocumentoRepresentante.$error.required">
+                        Ingrese Numero de Documento.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numeroDocumentoRepresentante.$error.minlength">
+                        Minimo 1 Caracter.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numeroDocumentoRepresentante.$error.maxlength">
+                        Maximo 20 Caracteres.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numeroDocumentoRepresentante.$error.pattern">
+                        Numero de Documento no Valido.
+                    </p>
+                    <p class="help-block" ng-show="formEditarPersonaJuridica.numeroDocumentoRepresentante.$error.sgmaxlength">
+                        Debe tener <span ng-bind="representanteLegal.tipoDocumento.numeroCaracteres"></span> caracteres.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <div>
+                    <button type="button" class="btn btn-link" ng-click="nuevaPersonaRepresentanteLegal()">Registrar persona</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Representante Legal</div>
+                <div class="panel-body" ng-show="!representanteLegal.apellidoPaterno">
+                    <p>Representante Legal no Encontrado</p>
+                </div>
+                <!-- Table -->
+                <table class="table" ng-show="representanteLegal.apellidoPaterno">
+                    <tbody>
+                    <tr>
+                        <td colspan="1" style="font-weight: bold;">Documento:</td>
+                        <td colspan="3"><span ng-bind-template="{{representanteLegal.tipoDocumento.abreviatura}}/{{representanteLegal.numeroDocumento}}"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" style="font-weight: bold;">Apellidos y Nombres:</td>
+                        <td colspan="3"><span ng-bind-template="{{representanteLegal.apellidoPaterno}} {{representanteLegal.apellidoMaterno}}, {{representanteLegal.nombres}}"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" style="width: 170px; font-weight: bold;">Fecha de Nacimiento:</td>
+                        <td colspan="1"><span ng-bind="representanteLegal.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                        <td colspan="1" style="font-weight: bold;">Sexo:</td>
+                        <td colspan="1"><span ng-bind="representanteLegal.sexo"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<button type="button" class="btn btn-primary" ng-click="crearTransaccion()" ng-disabled="buttonDisableState()">Guardar</button>
+<button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+</ng-form>
+</tab>
+
+<tab heading="Accionistas" select="tabAccionistaSelected()">
+    <div ng-include="'views/cajero/socio/personaJuridica/accionista.html'"></div>
+</tab>
+</tabset>
+</fieldset>
+
+</div>
