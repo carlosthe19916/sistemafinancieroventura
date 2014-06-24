@@ -201,9 +201,11 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		
 			Set<Accionista> accionistas = persona.getAccionistas();
 			PersonaNatural personaNatural = persona.getRepresentanteLegal();
+			TipoDocumento docRepresentante = personaNatural.getTipoDocumento();
 			TipoDocumento tipoDocumento = persona.getTipoDocumento();
 			Hibernate.initialize(accionistas);
 			Hibernate.initialize(personaNatural);
+			Hibernate.initialize(docRepresentante);
 			Hibernate.initialize(tipoDocumento);
 		}
 		return persona;
