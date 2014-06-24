@@ -8,7 +8,7 @@
             <!-- Default panel contents -->
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-6">Persona</div>
+                    <div class="col-md-6" style="font-weight: bold;">Persona</div>
                     <div class="col-md-6">
                         <div class="text-right">
                             <button type="button" ng-click="editarSocioPN()" class="btn btn-link" style="padding: 0px 12px;">
@@ -27,16 +27,16 @@
                         <!--Persona natural-->
                         <table class="table table-condensed">
                             <tr>
-                                <td><strong>Pais:</strong></td>
-                                <td><span ng-bind="pais.denominacion"></span></td>
+                                <td colspan="1" style="font-size: 12px; width: 80px;"><strong>Pa&iacute;s:</strong></td>
+                                <td colspan="1" style="font-size: 12px;"><span ng-bind="pais.denominacion"></span></td>
                             </tr>
                             <tr>
-                                <td><strong>Doc.:</strong></td>
-                                <td><span ng-bind-template="{{personaNatural.tipoDocumento.abreviatura}}/{{personaNatural.numeroDocumento}}"></span></td>
+                                <td style="font-size: 12px;"><strong>Documento:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind-template="{{personaNatural.tipoDocumento.abreviatura}}/{{personaNatural.numeroDocumento}}"></span></td>
                             </tr>
                             <tr>
-                                <td><strong>Socio:</strong></td>
-                                <td><span ng-bind-template="{{personaNatural.apellidoPaterno}} {{personaNatural.apellidoMaterno}},{{personaNatural.nombres}}"></span></td>
+                                <td style="font-size: 12px;"><strong>Socio:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind-template="{{personaNatural.apellidoPaterno}} {{personaNatural.apellidoMaterno}}, {{personaNatural.nombres}}"></span></td>
                             </tr>
                             <tr><td></td><td></td></tr>
                         </table>
@@ -45,30 +45,30 @@
             </div>
             <table class="table table-condensed">
                 <tr>
-                    <td>F. nacimiento:</td>
-                    <td><strong ng-bind="personaNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
-                    <td>sexo:</td>
-                    <td><strong ng-bind="personaNatural.sexo"></strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 80px;"><strong>Fecha Nac.:</strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 130px;"><span ng-bind="personaNatural.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                    <td colspan="1" style="font-size: 12px; width: 60px;"><strong>Sexo:</strong></td>
+                    <td colspan="1" style="font-size: 12px;"><span ng-bind="personaNatural.sexo"></span></td>
                 </tr>
                 <tr>
-                    <td>E. civil:</td>
-                    <td><strong ng-bind="personaNatural.estadoCivil"></strong></td>
-                    <td>Ocupacion:</td>
-                    <td><strong ng-bind="personaNatural.ocupacion"></strong></td>
+                    <td style="font-size: 12px;"><strong>E. Civil:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="personaNatural.estadoCivil"></span></td>
+                    <td style="font-size: 12px;"><strong>Ocupaci&oacute;n:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="personaNatural.ocupacion"></span></td>
                 </tr>
                 <tr>
-                    <td>Direccion:</td>
-                    <td colspan="3"><strong ng-bind-template="{{personaNatural.direccion}}-{{personaNatural.referencia}}"></strong></td>
+                    <td colspan="1" style="font-size: 12px;"><strong>Direcci&oacute;n:</strong></td>
+                    <td colspan="3" style="font-size: 12px;"><span ng-bind-template="{{personaNatural.direccion}} - {{personaNatural.referencia}}"></span></td>
                 </tr>
                 <tr>
-                    <td>Telefono:</td>
-                    <td><strong ng-bind="personaNatural.telefono"></strong></td>
-                    <td>Celular:</td>
-                    <td><strong ng-bind="personaNatural.celular"></strong></td>
+                    <td style="font-size: 12px;"><strong>Telefono:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="personaNatural.telefono"></span></td>
+                    <td style="font-size: 12px;"><strong>Celular:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="personaNatural.celular"></span></td>
                 </tr>
                 <tr>
-                    <td>Email:</td>
-                    <td colspan="3"><strong ng-bind="personaNatural.email"></strong></td>
+                    <td colspan="1" style="font-size: 12px;"><strong>Email:</strong></td>
+                    <td colspan="3" style="font-size: 12px;"><span ng-bind="personaNatural.email"></span></td>
                 </tr>
             </table>
         </div>
@@ -194,56 +194,56 @@
             <!-- Default panel contents -->
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-12">
-                        Datos de socio
+                    <div class="col-md-12" style="font-weight: bold;">
+                        Datos del Socio
                     </div>
                 </div>
             </div>
             <table class="table table-condensed">
                 <tr>
-                    <td>Cod. socio:</td>
-                    <td><strong ng-bind="socio.id"></strong></td>
-                    <td>Estado:</td>
-                    <td><strong ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 95px;"><strong>Cod. Socio:</strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 100px;"><span ng-bind="socio.id"></span></td>
+                    <td colspan="1" style="font-size: 12px; width: 100px;"><strong>Estado:</strong></td>
+                    <td colspan="1" style="font-size: 12px;"><span ng-cloak>{{socio.estado ? 'ACTIVO' : 'INACTIVO'}}</span></td>
                 </tr>
                 <tr>
-                    <td>Fecha inic.:</td>
-                    <td><strong ng-bind="socio.fechaInicio | date : 'dd/MM/yyyy'"></strong></td>
-                    <td>Fecha fin:</td>
-                    <td>
-                        <strong ng-cloak>{{socio.fechaFin === undefined ? 'INDEFINIDO' : socio.fechaFin | date : 'dd/MM/yyyy'}}</strong>
+                    <td style="font-size: 12px;"><strong>Fec. Apertura:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="socio.fechaInicio | date : 'dd/MM/yyyy'"></span></td>
+                    <td style="font-size: 12px;"><strong>Fecha Retiro:</strong></td>
+                    <td style="font-size: 12px;">
+                        <span ng-cloak>{{socio.fechaFin === undefined ? 'INDEFINIDO' : socio.fechaFin | date : 'dd/MM/yyyy'}}</span>
                     </td>
                 </tr>
             </table>
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-6">
-                        Cuenta aporte
+                    <div class="col-md-6" style="font-weight: bold;">
+                        Cuenta Aporte
                     </div>
                     <div class="col-md-6">
                     </div>
                 </div>
             </div>
             <div class="panel-body" ng-show="!cuentaAporte">
-                <p>Cuenta de aportes no encontrado.</p>
+                <p>Cuenta de Aportes no Encontrado.</p>
             </div>
             <table class="table table-condensed" ng-show="cuentaAporte">
                 <tr>
-                    <td>Moneda:</td>
-                    <td><strong ng-bind="cuentaAporte.moneda.denominacion"></strong></td>
-                    <td>Num. cuenta:</td>
-                    <td><strong ng-bind="cuentaAporte.numeroCuenta"></strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 95px;"><strong>Moneda:</strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 100px;"><span ng-bind="cuentaAporte.moneda.denominacion"></span></td>
+                    <td colspan="1" style="font-size: 12px; width: 100px;"><strong>Num. Cuenta:</strong></td>
+                    <td colspan="1" style="font-size: 12px;"><span ng-bind="cuentaAporte.numeroCuenta"></span></td>
                 </tr>
                 <tr>
-                    <td>Saldo:</td>
-                    <td><strong ng-bind="cuentaAporte.saldo | currency : cuentaAporte.moneda.simbolo"></strong></td>
-                    <td>Estado cuenta:</td>
-                    <td><strong ng-bind="cuentaAporte.estadoCuenta"></strong></td>
+                    <td style="font-size: 12px;"><strong>Saldo:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuentaAporte.saldo | currency : cuentaAporte.moneda.simbolo"></span></td>
+                    <td style="font-size: 12px;"><strong>Estado Cuenta:</strong></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuentaAporte.estadoCuenta"></span></td>
                 </tr>
             </table>
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="font-weight: bold;">
                         Apoderado
                     </div>
                     <div class="col-md-6">
@@ -254,22 +254,22 @@
                 </div>
             </div>
             <div class="panel-body" ng-show="!apoderado">
-                <p>Apoderado no encontrado.</p>
+                <p>Apoderado no Encontrado.</p>
             </div>
             <table class="table table-condensed" ng-show="apoderado">
                 <tr>
-                    <td>Documento:</td>
-                    <td colspan="3"><strong ng-bind-template="{{apoderado.tipoDocumento.abreviatura}}/{{apoderado.numeroDocumento}}"></strong></td>
+                    <td style="font-size: 12px;"><strong>Documento:</strong></td>
+                    <td colspan="3" style="font-size: 12px;"><span ng-bind-template="{{apoderado.tipoDocumento.abreviatura}}/{{apoderado.numeroDocumento}}"></span></td>
                 </tr>
                 <tr>
-                    <td>Ap. y nombres:</td>
-                    <td colspan="3"><strong ng-bind-template="{{apoderado.apellidoPaterno}} {{apoderado.apellidoMaterno}},{{apoderado.nombres}}"></strong></td>
+                    <td style="font-size: 12px;"><strong>Ap. y Nombres:</strong></td>
+                    <td colspan="3" style="font-size: 12px;"><span ng-bind-template="{{apoderado.apellidoPaterno}} {{apoderado.apellidoMaterno}}, {{apoderado.nombres}}"></span></td>
                 </tr>
                 <tr>
-                    <td>F. nacimiento:</td>
-                    <td><strong ng-bind="apoderado.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
-                    <td>Sexo:</td>
-                    <td><strong ng-bind="apoderado.sexo"></strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 95px;"><strong>Fecha Nac.:</strong></td>
+                    <td colspan="1" style="font-size: 12px; width: 100px;"><span ng-bind="apoderado.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                    <td colspan="1" style="font-size: 12px; width: 100px;"><strong>Sexo:</strong></td>
+                    <td colspan="1" style="font-size: 12px;"><span ng-bind="apoderado.sexo"></span></td>
                 </tr>
             </table>
         </div>
@@ -279,9 +279,9 @@
     <div class="col-sm-12">
         <div class="panel panel-default">
             <!-- Default panel contents -->
-            <div class="panel-heading">Cuentas bancarias</div>
+            <div class="panel-heading" style="font-weight: bold;">Cuentas Bancarias</div>
             <div class="panel-body" ng-show="cuentasBancarias.length == 0">
-                <p>No se encontraron cuentas bancarias....</p>
+                <p>No se Encontraron Cuentas Bancarias....</p>
             </div>
             <table class="table table-condensed" ng-show="cuentasBancarias.length != 0">
                 <thead>

@@ -233,7 +233,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formEditarPersonaJuridica.email.$invalid && (control.submitted || formEditarPersonaJuridica.email.$dirty)}">
                 <label>Email</label>
-                <input name="email" type="email" ng-model="personaJuridica.email" ng-maxlength="30" class="form-control" placeholder="correo@dominio.com"/>
+                <input name="email" type="email" ng-model="personaJuridica.email" ng-maxlength="30" class="form-control" placeholder="correo@dominio.com" capitalize/>
                 <div ng-show="formEditarPersonaJuridica.email.$invalid && (control.submitted || formEditarPersonaJuridica.email.$dirty)">
                     <p class="help-block" ng-show="formEditarPersonaJuridica.email.$invalid">
                         Email Incorrecto.
