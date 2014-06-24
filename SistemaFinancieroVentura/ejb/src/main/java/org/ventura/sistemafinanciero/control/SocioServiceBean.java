@@ -265,7 +265,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			throw new RollbackFailureException("Agencia no encontrada");
 		
 		if(idDocApoderado != null && numDocApoderado != null) {
-			apoderado = personaNaturalService.findByTipoNumeroDocumento(idDocApoderado, numDocApoderado);
+			apoderado = personaNaturalService.find(idDocApoderado, numDocApoderado);
 			if(apoderado == null)
 				throw new RollbackFailureException("Apoderado no encontrado");
 		}
@@ -273,7 +273,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		Calendar calendar = Calendar.getInstance();
 		switch (tipoPersona) {
 		case NATURAL:
-			personaNatural = personaNaturalService.findByTipoNumeroDocumento(idDocSocio, numDocSocio);
+			personaNatural = personaNaturalService.find(idDocSocio, numDocSocio);
 			if(personaNatural == null)
 				throw new RollbackFailureException("Persona para socio no encontrado");
 			if(apoderado != null)

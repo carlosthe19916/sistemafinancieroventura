@@ -41,7 +41,7 @@ import org.ventura.sistemafinanciero.entity.type.Sexo;
 @NamedQueries({
 		@NamedQuery(name = PersonaNatural.FindAll, query = "SELECT p FROM PersonaNatural p"),
 		@NamedQuery(name = PersonaNatural.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaNatural p WHERE p.tipoDocumento.idTipoDocumento = :idtipodocumento AND p.numeroDocumento = :numerodocumento"),
-		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filtertext OR LOWER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE '%:filtertext%'") })
+		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filtertext OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filtertext ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
 public class PersonaNatural implements java.io.Serializable {
 
 	/**
@@ -358,8 +358,8 @@ public class PersonaNatural implements java.io.Serializable {
 			return false;
 		}
 		final PersonaNatural other = (PersonaNatural) obj;
-		if(other.getNumeroDocumento().equalsIgnoreCase(this.numeroDocumento)){
-			if(other.getTipoDocumento().equals(this.tipoDocumento)){
+		if (other.getNumeroDocumento().equalsIgnoreCase(this.numeroDocumento)) {
+			if (other.getTipoDocumento().equals(this.tipoDocumento)) {
 				return true;
 			} else {
 				return false;

@@ -338,7 +338,7 @@ public class CuentaBancariaRESTService {
 			BigInteger idPersona = null;
 			switch (tipoPersona) {
 			case NATURAL:
-				PersonaNatural personaNatural = personaNaturalService.findByTipoNumeroDocumento(idTipoDocumento, numeroDocumento);
+				PersonaNatural personaNatural = personaNaturalService.find(idTipoDocumento, numeroDocumento);
 				if(personaNatural == null){
 					model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
 					return Response.status(Response.Status.NOT_FOUND).entity(model).build();
@@ -408,7 +408,7 @@ public class CuentaBancariaRESTService {
 			BigInteger idPersona = null;
 			switch (tipoPersona) {
 			case NATURAL:
-				PersonaNatural personaNatural = personaNaturalService.findByTipoNumeroDocumento(idTipoDocumento, numeroDocumento);
+				PersonaNatural personaNatural = personaNaturalService.find(idTipoDocumento, numeroDocumento);
 				if(personaNatural == null){
 					model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
 					return Response.status(Response.Status.NOT_FOUND).entity(model).build();

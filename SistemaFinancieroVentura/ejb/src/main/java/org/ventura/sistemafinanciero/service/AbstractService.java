@@ -8,7 +8,7 @@ import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 
 public interface AbstractService<T> {
 
-	public void create(T t) throws PreexistingEntityException;
+	public T create(T t) throws PreexistingEntityException;
 	
 	public void update(BigInteger id, T t) throws NonexistentEntityException, PreexistingEntityException;
 

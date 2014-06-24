@@ -1,15 +1,11 @@
 package org.ventura.sistemafinanciero.control;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -28,14 +24,10 @@ import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Trabajador;
-import org.ventura.sistemafinanciero.entity.type.Sexo;
-import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
-import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
-import org.ventura.sistemafinanciero.service.SocioService;
 
 @Named
 @Stateless
@@ -50,10 +42,10 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 
 	@Inject
 	private DAO<Object, Trabajador> trabajadorDAO;
-	
-	@Inject
-    private Validator validator;
 
+	@Inject
+	private Validator validator;	
+	
 	@Override
 	public PersonaNatural findById(BigInteger id){
 		if(id == null)
@@ -62,51 +54,25 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		if(persona != null){
 			TipoDocumento documento = persona.getTipoDocumento();
 			Hibernate.initialize(documento);
-		}	
-		
+		}		
 		return persona;
 	}
 	
 	@Override
-	public BigInteger crear(PersonaNatural personanatural) throws PreexistingEntityException {	
-		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(personanatural);
-		if (!violations.isEmpty()) {
-			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
-		}
-
-		TipoDocumento tipoDocumento = personanatural.getTipoDocumento();
-		String numeroDocumento = personanatural.getNumeroDocumento();
-
-		Object obj = findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
-		if (obj == null)
-			personanaturalDAO.create(personanatural);
-		else
-			throw new PreexistingEntityException("La persona con el Tipo y Numero de documento ya existe");
-		return personanatural.getIdPersonaNatural();		
-	}
-	
-	@Override
-	public void update(BigInteger idPersona, PersonaNatural persona) throws NonexistentEntityException, PreexistingEntityException {
-		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(persona);
-		if (!violations.isEmpty()) {
-			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
+	public PersonaNatural find(BigInteger idTrabajador) {
+		Trabajador trabajador = trabajadorDAO.find(idTrabajador);
+		if(trabajador == null){
+			return null;
 		}		
-		PersonaNatural personaNaturalFromDB = personanaturalDAO.find(idPersona);
-		if (personaNaturalFromDB == null)
-			throw new NonexistentEntityException("La persona con id " + idPersona + " no fue encontrado");
-					
-		TipoDocumento tipoDocumento = persona.getTipoDocumento();
-		PersonaNatural p = this.findByTipoNumeroDocumento(tipoDocumento.getIdTipoDocumento(), persona.getNumeroDocumento());
-		if(p != null)
-			if(p.getIdPersonaNatural() != idPersona)
-				throw new PreexistingEntityException("Tipo y numero de documento ya existente");
-				
-		persona.setIdPersonaNatural(idPersona);
-		personanaturalDAO.update(persona);
+		else {
+			PersonaNatural persona = trabajador.getPersonaNatural();
+			Hibernate.initialize(persona);
+			return persona;
+		}			
 	}
-	
+
 	@Override
-	public PersonaNatural findByTipoNumeroDocumento(BigInteger idTipodocumento, String numerodocumento) {		
+	public PersonaNatural find(BigInteger idTipodocumento, String numerodocumento) {
 		if(idTipodocumento == null || numerodocumento == null)
 			return null;
 		if(numerodocumento.isEmpty() || numerodocumento.trim().isEmpty())
@@ -130,30 +96,93 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 	}
 
 	@Override
-	public Set<PersonaNatural> findByFilterText(String filterText) {		
-		if(filterText == null)
-			return new HashSet<PersonaNatural>();
-		if(filterText.isEmpty() || filterText.trim().isEmpty()){
-			return new HashSet<PersonaNatural>();
-		}
-		List<PersonaNatural> list = null;
-		QueryParameter queryParameter = QueryParameter.with("filtertext", filterText.toLowerCase());
-		list = personanaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters(), 1000);												
-		return new HashSet<PersonaNatural>(list);
+	public List<PersonaNatural> findAll() {
+		BigInteger[] range = null;
+		return findAll(range);
 	}
 	
 	@Override
-	public PersonaNatural findByTrabajador(BigInteger idTrabajador) {
-		Trabajador trabajador = trabajadorDAO.find(idTrabajador);
-		if(trabajador == null)
-			return null;
-		else
-			return trabajador.getPersonaNatural();
+	public List<PersonaNatural> findAll(BigInteger[] range) {
+		return findAll(null, range);
 	}
 
 	@Override
+	public List<PersonaNatural> findAll(String filterText) {
+		return findAll(filterText, null);
+	}
+
+	@Override
+	public List<PersonaNatural> findAll(String filterText, BigInteger[] range) {
+		List<PersonaNatural> result = null;
+		
+		if(filterText == null)
+			filterText = "";
+		
+		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
+		if (range != null) {
+			if (range.length != 2)
+				return null;
+			if (range[0] == null || range[1] == null)
+				return null;
+			if (range[0].compareTo(BigInteger.ZERO) < 0)
+				return null;
+			if (range[1].compareTo(BigInteger.ZERO) < 0)
+				return null;
+			if (range[0].compareTo(range[1]) == 0)
+				return new ArrayList<>();
+			int[] rangeInt = { range[0].intValue(), range[1].intValue() };
+
+			result = personanaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters(), rangeInt);
+		} else {
+			result = personanaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters());
+		}
+		if(result != null){
+			for (PersonaNatural personaNatural : result) {
+				TipoDocumento tipoDocumento = personaNatural.getTipoDocumento();
+				Hibernate.initialize(tipoDocumento);
+			}
+		}
+		return result;
+	}
+	
+	public PersonaNatural create(PersonaNatural personanatural) throws PreexistingEntityException{
+		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(personanatural);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
+		}
+		TipoDocumento tipoDocumento = personanatural.getTipoDocumento();
+		String numeroDocumento = personanatural.getNumeroDocumento();
+		Object obj = find(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
+		if (obj == null)
+			personanaturalDAO.create(personanatural);
+		else
+			throw new PreexistingEntityException("La persona con el Tipo y Numero de documento ya existe");
+		return personanatural;
+	}
+	
+	@Override
+	public void update(BigInteger idPersona, PersonaNatural persona) throws NonexistentEntityException, PreexistingEntityException {
+		Set<ConstraintViolation<PersonaNatural>> violations = validator.validate(persona);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
+		}		
+		PersonaNatural personaNaturalFromDB = personanaturalDAO.find(idPersona);
+		if (personaNaturalFromDB == null)
+			throw new NonexistentEntityException("La persona con id " + idPersona + " no fue encontrado");
+					
+		TipoDocumento tipoDocumento = persona.getTipoDocumento();
+		PersonaNatural p = this.find(tipoDocumento.getIdTipoDocumento(), persona.getNumeroDocumento());
+		if(p != null)
+			if(p.getIdPersonaNatural() != idPersona)
+				throw new PreexistingEntityException("Tipo y numero de documento ya existente");
+				
+		persona.setIdPersonaNatural(idPersona);
+		personanaturalDAO.update(persona);
+	}
+	
+	@Override
 	protected DAO<Object, PersonaNatural> getDAO() {
-		return personanaturalDAO;
+		return this.personanaturalDAO;
 	}
 
 }

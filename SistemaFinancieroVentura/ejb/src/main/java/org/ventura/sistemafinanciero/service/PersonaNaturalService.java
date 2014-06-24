@@ -1,22 +1,25 @@
 package org.ventura.sistemafinanciero.service;
 
 import java.math.BigInteger;
-import java.util.Set;
+import java.util.List;
 
 import javax.ejb.Remote;
 
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
-import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
 
 @Remote
 public interface PersonaNaturalService extends AbstractService<PersonaNatural>{
-
-	public BigInteger crear(PersonaNatural personaNatural) throws PreexistingEntityException;
 	
-	public PersonaNatural findByTipoNumeroDocumento(BigInteger idTipodocumento, String numerodocumento);
-
-	public Set<PersonaNatural> findByFilterText(String filterText);
-
-	public PersonaNatural findByTrabajador(BigInteger idTrabajador);
+	public PersonaNatural find(BigInteger idTrabajador);
+	
+	public PersonaNatural find(BigInteger idTipodocumento, String numerodocumento);	
+	
+	public List<PersonaNatural> findAll();
+	
+	public List<PersonaNatural> findAll(BigInteger[] range);
+	
+	public List<PersonaNatural> findAll(String filterText);
+	
+	public List<PersonaNatural> findAll(String filterText, BigInteger[] range);
 	
 }

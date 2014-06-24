@@ -1,28 +1,22 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('PersonanaturalBuscarController', ['$scope','$state','$dialogs', 'ngProgress','Restangular', "PersonanaturalService",
-        function($scope, $state, $dialogs, ngProgress, Restangular, PersonanaturalService) {
+    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$location','$window','ngProgress','PersonaNaturalService','TransitionService',
+        function($scope, $state,$location,$window,ngProgress,PersonaNaturalService,TransitionService){
+
+            $scope.nuevo = function() {
+                TransitionService.setUrl('app.administracion.buscarPersonaNatural');
+                TransitionService.setParameters({});
+                TransitionService.setModeRedirect();
+                $state.transitionTo('app.administracion.crearPersonaNatural');
+            };
+            $scope.editar = function(persona) {
+                TransitionService.setUrl('app.administracion.buscarPersonaNatural');
+                TransitionService.setParameters({});
+                TransitionService.setModeRedirect(),
+                $state.transitionTo('app.administracion.editarPersonaNatural', { id: persona.id });
+            };
 
             $scope.personasList = [];
-
-            $scope.create = function() {
-                $state.go("app.administracion.personanaturalCreate");
-            };
-
-            $scope.edit = function(persona) {
-                $state.transitionTo('app.administracion.personanaturalUpdate', { id: persona.id });
-            };
-
-            $scope.delete = function(persona) {
-                var dlg = $dialogs.confirm('Confirmacion','¿Está seguro de eliminar la persona? "Si" or "No"');
-                dlg.result.then(function(btn){
-                    PersonanaturalService.remove(persona.id);
-                    var index = $scope.personasList.indexOf(persona);
-                    if (index > -1) {
-                        $scope.personasList.splice(index, 1);
-                    }
-                },function(btn){});
-            };
 
             $scope.filterOptions = {
                 filterText: "",
@@ -35,67 +29,79 @@ define(['../../module'], function (controllers) {
                 currentPage: 1
             };
             $scope.setPagingData = function(data, page, pageSize){
-                var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
-                $scope.personasList = pagedData;
-                $scope.totalServerItems = data.length;
+                $scope.personasList = data;
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
             };
+            $scope.getDesde = function(){
+                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
+            }
+            $scope.getHasta = function(){
+                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
+            }
 
-            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
+            $scope.getPagedDataInitial = function () {
                 setTimeout(function () {
-                    var data;
-                    if (searchText) {
-                        var ft = searchText.toLowerCase();
-                        data = $scope.personasList.filter(function(item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
-                        });
-                        $scope.setPagingData(data,page,pageSize);
-                    } else {
-                        if( angular.isUndefined($scope.filterOptions.filterText) || $scope.filterOptions.filterText === null) {
-                            var result = $scope.personasList = PersonanaturalService.getPersonas();
-                            $scope.setPagingData(result,page,pageSize);
-                        } else {
-                            $scope.setPagingData($scope.personasList,page,pageSize);
-                        }
-                    }
+                    $scope.pagingOptions.currentPage = 1;
+                    PersonaNaturalService.getPersonas($scope.getDesde(), $scope.getHasta()).then(function(data){
+                        $scope.personasList = data;
+                        $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                    });
+                    PersonaNaturalService.count().then(function(data){
+                        $scope.totalServerItems = data;
+                    });
                 }, 100);
             };
-
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
-            ngProgress.color("#2d6ca2");
+            $scope.getPagedDataInitial();
 
             $scope.getPagedDataSearched = function () {
                 setTimeout(function () {
                     if ($scope.filterOptions.filterText) {
-                        ngProgress.start();
-                        var ft = $scope.filterOptions.filterText.toLowerCase();
-                        PersonanaturalService.findByFilterText(ft).then(function (personas){
-                            $scope.personasList = personas;
+                        var ft = $scope.filterOptions.filterText.toUpperCase();
+                        PersonaNaturalService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta()).then(function (data){
+                            $scope.personasList = data;
+                            $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
-                        ngProgress.complete();
+                        PersonaNaturalService.count(ft).then(function(data){
+                            $scope.totalServerItems = data;
+                        });
                     } else {
-                        ngProgress.start();
-                        $scope.personasList = PersonanaturalService.getPersonas();
-                        ngProgress.complete();
+                        $scope.getPagedDataInitial();
                     }
                 }, 100);
             };
 
-            $scope.getPagedDataSearched();
-
-            $scope.$watch('pagingOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
-            $scope.$watch('filterOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
+            $scope.$watch(
+                function () {
+                    return {
+                        currentPage: $scope.pagingOptions.currentPage,
+                        pageSize: $scope.pagingOptions.pageSize
+                    };
+                },
+                function (newVal, oldVal) {
+                    if (newVal.pageSize !== oldVal.pageSize) {
+                        $scope.pagingOptions.currentPage = 1;
+                    }
+                    if ($scope.filterOptions.filterText) {
+                        var ft = $scope.filterOptions.filterText.toUpperCase();
+                        PersonaNaturalService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta()).then(function (data){
+                            $scope.personasList = data;
+                            $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                        PersonaNaturalService.count(ft).then(function(data){
+                            $scope.totalServerItems = data;
+                        });
+                    } else {
+                        PersonaNaturalService.getPersonas($scope.getDesde(), $scope.getHasta()).then(function(data){
+                            $scope.personasList = data;
+                            $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        });
+                        PersonaNaturalService.count().then(function(data){
+                            $scope.totalServerItems = data;
+                        });
+                    }
+                },true);
 
             $scope.gridOptions = {
                 data: 'personasList',
@@ -106,14 +112,14 @@ define(['../../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:'tipodocumento.abreviatura', displayName:'T.doc.'},
-                    {field:'numerodocumento', displayName:'Num.doc.'},
-                    {field:'apellidopaterno', displayName:'Ap.paterno'},
-                    {field:'apellidomaterno', displayName:'Ap.materno'},
-                    {field:'nombres', displayName:'Nombres'},
-                    {field:'sexo', displayName:'Sexo'},
-                    {field:"fechanacimiento | date:'dd-MM-yyyy'", displayName:'F.nacimiento'},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="edit(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="delete(row.entity)"><span class="glyphicon glyphicon-remove"></span>Del</button></div>'}]
+                    {field:'tipoDocumento.abreviatura', displayName:'DOCUMENTO'},
+                    {field:'numeroDocumento', displayName:'NUM.DOCUMENTO'},
+                    {field:'apellidoPaterno', displayName:'AP.PATERNO'},
+                    {field:'apellidoMaterno', displayName:'AP.MATERNO'},
+                    {field:'nombres', displayName:'NOMBRES'},
+                    {field:'sexo', displayName:'SEXO'},
+                    {field:"fechaNacimiento | date:'dd/MM/yyyy'", displayName:'F.NACIMIENTO'},
+                    {displayName: 'EDITAR', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editar(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button></div>'}]
             };
         }]);
 });

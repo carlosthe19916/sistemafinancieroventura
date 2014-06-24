@@ -1,7 +1,8 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearPersonaNaturalController', ["$scope", "$state","$window", "MaestroService", "PersonaNaturalService",
-        function($scope, $state,$window, MaestroService, PersonaNaturalService) {
+    controllers.controller('CrearPersonaNaturalController', ['$scope','$state','$window','MaestroService','PersonaNaturalService','TransitionService',
+        function($scope,$state,$window,MaestroService,PersonaNaturalService,TransitionService) {
+
             $scope.control = {
                 "success":false,
                 "inProcess": false,
@@ -25,17 +26,17 @@ define(['../../module'], function (controllers) {
                 if(!angular.isUndefined($scope.ubigeo.departamento))
                     return $scope.ubigeo.departamento.codigo;
                 else return "";
-            }
+            };
             $scope.getProvinciaCode = function(){
                 if(!angular.isUndefined($scope.ubigeo.provincia))
                     return $scope.ubigeo.provincia.codigo;
                 else return "";
-            }
+            };
             $scope.getDistritoCode = function(){
                 if(!angular.isUndefined($scope.ubigeo.distrito))
                     return $scope.ubigeo.distrito.codigo;
                 else return "";
-            }
+            };
 
             //recuperando parametros de url
             //$scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
@@ -99,12 +100,12 @@ define(['../../module'], function (controllers) {
                 MaestroService.getProvincias($scope.ubigeo.departamento.id).then(function(provincias){
                     $scope.provincias = provincias;
                 });
-            }
+            };
             $scope.changeProvincia = function(){
                 MaestroService.getDistritos($scope.ubigeo.provincia.id).then(function(distritos){
                     $scope.distritos = distritos;
                 });
-            }
+            };
 
             //logic
             $scope.crearTransaccion = function(){
@@ -116,7 +117,14 @@ define(['../../module'], function (controllers) {
                     $scope.buttonDisableState = true;
                     PersonaNaturalService.crear($scope.persona).then(
                         function(persona){
-                            $window.close();
+                            if(TransitionService.isModeRedirect()){
+                                var url = TransitionService.getUrl();
+                                $state.transitionTo(url);
+                            } else if(TransitionService.isModeClose()){
+                                $window.close();
+                            } else {
+                                $window.close();
+                            }
                         },
                         function error(error){
                             $scope.control.inProcess = false;
@@ -129,15 +137,22 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
 
             $scope.cancel = function () {
-                $window.close();
-            }
+                if(TransitionService.isModeRedirect()){
+                    var url = TransitionService.getUrl();
+                    $state.transitionTo(url);
+                } else if(TransitionService.isModeClose()){
+                    $window.close();
+                } else {
+                    $window.close();
+                }
+            };
 
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
-            }
+            };
 
         }]);
 });

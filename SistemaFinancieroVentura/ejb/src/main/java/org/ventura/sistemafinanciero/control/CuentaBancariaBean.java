@@ -515,7 +515,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			throw new RollbackFailureException("Cuenta bancaria no encotrada");		
 		
 		PersonaNatural personaNatural = titular.getPersonaNatural();
-		personaNatural = personaNaturalService.findByTipoNumeroDocumento(personaNatural.getTipoDocumento().getIdTipoDocumento(), personaNatural.getNumeroDocumento());
+		personaNatural = personaNaturalService.find(personaNatural.getTipoDocumento().getIdTipoDocumento(), personaNatural.getNumeroDocumento());
 		
 		Set<Titular> titulresDB = cuentaBancaria.getTitulars();
 		for (Titular titDB : titulresDB) {

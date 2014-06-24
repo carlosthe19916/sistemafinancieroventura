@@ -3,17 +3,10 @@ define(['./module'], function (services) {
     services.factory("PersonaNaturalService",["Restangular",
         function(Restangular){
 
-            var personaResponse = undefined;
-            var _personanaturalService = Restangular.all("personanatural");
+            var _personaNaturalService = Restangular.all("personaNatural");
+            var baseUrl = "personaNatural";
 
             return {
-                guardarPersonaResponse:function (data) {
-                    personaResponse = data;
-                    console.log(data);
-                },
-                getPersonaResponse:function () {
-                    return personaResponse;
-                },
                 getModel: function(){
                     return {
                         "id":undefined,
@@ -36,16 +29,8 @@ define(['./module'], function (services) {
                     };
                 },
                 crear: function(persona){
-                    persona.tipoDocumento = {"id":persona.tipoDocumento.id};
-                    return _personanaturalService.post(persona);
-                },
-                crearWithImages: function(persona,foto){
-                    var data = $.param({persona:persona,foto:foto});
-                    return Restangular.one("personanatural").customPOST(
-                        data,
-                        '',{},{
-                            "Content-Type":"multipart/form-data"}
-                    );
+                    persona.tipoDocumento = {"id": persona.tipoDocumento.id};
+                    return _personaNaturalService.post(persona);
                 },
                 update: function(persona){
                     var copy = Restangular.copy(persona);
@@ -53,20 +38,45 @@ define(['./module'], function (services) {
                     return copy.put();
                 },
                 remove: function(id){
-                    return Restangular.all("personanatural/"+id).remove();
+                    return Restangular.all(baseUrl + "/" + id).remove();
                 },
-                getPersonas: function(){
-                    return _personanaturalService.getList();
-                },
+
                 findById: function(id){
-                    return Restangular.one("personanatural", id).get();
+                    return Restangular.one(baseUrl, id).get();
                 },
                 findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
-                    return Restangular.one('personanatural'+'/'+idtipodocumento+'/'+numerodocumento).get();
+                    return Restangular.one(baseUrl+'/'+idtipodocumento+'/'+numerodocumento).get();
                 },
-                findByFilterText: function(text){
-                    return Restangular.all("personanatural/filtertext/"+text).getList();
+                getPersonas: function(desde, hasta){
+                    if(arguments.length == 0){
+                        return _personaNaturalService.getList();
+                    } else if(arguments.length == 1){
+                        return _personaNaturalService.getList({"desde":desde},{});
+                    } else if(arguments.length == 2){
+                        return _personaNaturalService.getList({"desde":desde,"hasta":hasta},{});
+                    } else if(arguments.length > 2){
+                        return _personaNaturalService.getList({"desde":desde,"hasta":hasta},{});
+                    }
                 },
+                findByFilterText: function(filterText, desde, hasta){
+                    if(arguments.length == 0){
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList();
+                    } else if(arguments.length == 1){
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"desde":desde},{});
+                    } else if(arguments.length == 2){
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"desde":desde,"hasta":hasta},{});
+                    } else if(arguments.length > 2){
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"desde":desde,"hasta":hasta},{});
+                    }
+                },
+                count: function(filterText){
+                    if(arguments.length == 0){
+                        return Restangular.one(baseUrl + "/count").get();
+                    } else if(arguments.length == 1){
+                        return Restangular.one(baseUrl + "/count").get({"filterText":filterText},{});
+                    }
+                },
+
                 currentSession: function(){
                     return Restangular.one("personanatural/currentSession").get();
                 },

@@ -188,6 +188,28 @@ define(['./app'], function(app) {
                     }
                 }
             })
+            .state('app.administracion', {
+                url: "/administracion",
+                views: {
+                    "viewMenu":{
+                        controller: function($scope){
+                            $scope.menus = [
+                                {'name':'Persona Natural', submenus:[
+                                    { 'name':'Nuevo' , 'state':'app.administracion.crearPersonaNatural'},
+                                    { 'name':'Buscar' , 'state':'app.administracion.buscarPersonaNatural'}
+                                ]},
+                                {'name':'Persona Juridica', submenus:[
+                                    { 'name':'Nuevo' , 'state':'app.administracion.crearPersonaJuridica'},
+                                    { 'name':'Buscar' , 'state':'app.administracion.buscarPersonaJuridica'}
+                                ]}
+                            ];
+                        }
+                    },
+                    "viewContent":{
+                        template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                    }
+                }
+            })
             .state('app.caja.panelControl', {
                 url: "/panelControl",
                 views: {
@@ -474,11 +496,20 @@ define(['./app'], function(app) {
                 }
             })
 
-            .state('app.socio.crearPersonaNatural', {
+            .state('app.administracion.buscarPersonaNatural', {
+                url: '/personaNatural/buscar',
+                views: {
+                    "viewContent":{
+                        templateUrl: 'views/cajero/persona/natural/buscarPersonaNatural.html',
+                        controller: 'BuscarPersonaNaturalController'
+                    }
+                }
+            })
+            .state('app.administracion.crearPersonaNatural', {
                 url: "/personaNatural?tipoDocumento&numeroDocumento",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaNatural/crearPersonaNatural.html",
+                        templateUrl: "views/cajero/persona/natural/crearPersonaNatural.html",
                         controller: function($scope, $stateParams) {
                             $scope.params = {};
                             $scope.params.idTipoDocumento = $stateParams.tipoDocumento;
@@ -487,18 +518,26 @@ define(['./app'], function(app) {
                     }
                 }
             })
-            .state('app.socio.editarPersonaNatural', {
+            .state('app.administracion.editarPersonaNatural', {
                 url: "/personaNatural/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/socio/personaNatural/editarPersonaNatural.html",
+                        templateUrl: "views/cajero/persona/natural/editarPersonaNatural.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }
                     }
                 }
             })
-            .state('app.socio.crearPersonaJuridica', {
+            .state('app.administracion.buscarPersonaJuridica', {
+                url: "/personaJuridica/buscar",
+                views: {
+                    "viewContent":{
+                        templateUrl: "views/cajero/socio/personaJuridica/buscarPersonaJuridica.html"
+                    }
+                }
+            })
+            .state('app.administracion.crearPersonaJuridica', {
                 url: "/personaJuridica?tipoDocumento&numeroDocumento",
                 views: {
                     "viewContent":{
@@ -511,7 +550,7 @@ define(['./app'], function(app) {
                     }
                 }
             })
-            .state('app.socio.editarPersonaJuridica', {
+            .state('app.administracion.editarPersonaJuridica', {
                 url: "/personaJuridica/:id",
                 views: {
                     "viewContent":{

@@ -23,16 +23,18 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 
 	protected abstract DAO<Object, T> getDAO();
 	
-	public void create(T t) throws PreexistingEntityException {
+	public T create(T t) throws PreexistingEntityException {
+		T obj = null;
 		try {
 			Set<ConstraintViolation<T>> violations = validator.validate(t);
 			if (!violations.isEmpty()) {
 	            throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
 	        }	
-			getDAO().create(t);				
+			obj = getDAO().create(t);					
 		} catch (EntityExistsException e) {		
 			throw new PreexistingEntityException("Objeto ya existente en base de datos", e);
 		}
+		return obj;
 	}
 	
 	public void update(BigInteger id, T t) throws NonexistentEntityException, PreexistingEntityException {		
