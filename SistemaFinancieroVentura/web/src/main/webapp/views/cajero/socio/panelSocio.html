@@ -74,49 +74,49 @@
         </div>
         <div ng-show="personaJuridica">
             <tabset>
-                <tab heading="Persona juridica">
+                <tab heading="Persona Juridica">
                     <div class="panel panel-default">
                         <table class="table table-condensed">
                             <tr>
-                                <td>Doc.:</td>
-                                <td><strong ng-bind-template="{{personaJuridica.tipoDocumento.abreviatura}}/{{personaJuridica.numeroDocumento}}"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Documento:</strong></td>
+                                <td style="font-size: 12px;" colspan="3"><span ng-bind-template="{{personaJuridica.tipoDocumento.abreviatura}}/{{personaJuridica.numeroDocumento}}"></span></td>
                             </tr>
                             <tr>
-                                <td>Razon social:</td>
-                                <td><strong ng-bind="personaJuridica.razonSocial"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Raz&oacute;n Social:</strong></td>
+                                <td style="font-size: 12px;" colspan="3"><span ng-bind="personaJuridica.razonSocial"></span></td>
                             </tr>
                             <tr>
-                                <td>F. constitucion:</td>
-                                <td><strong ng-bind="personaJuridica.fechaConstitucion | date : 'dd/MM/yyyy'"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Fecha Constituci&oacute;n:</strong></td>
+                                <td style="font-size: 12px;" colspan="3"><span ng-bind="personaJuridica.fechaConstitucion | date : 'dd/MM/yyyy'"></span></td>
                             </tr>
                             <tr>
-                                <td>Nombre comercial:</td>
-                                <td><strong ng-bind="personaJuridica.nombreComercial"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Nombre Comercial:</strong></td>
+                                <td style="font-size: 12px;" colspan="3"><span ng-bind="personaJuridica.nombreComercial"></span></td>
                             </tr>
                             <tr>
-                                <td>Tipo Empresa:</td>
-                                <td><strong ng-bind="personaJuridica.tipoEmpresa"></strong></td>
-                                <td>Fin lucro:</td>
-                                <td><strong ng-cloak>{{personaJuridica.finLucro ? 'SI' : 'NO'}}</strong></td>
+                                <td style="font-size: 12px; width: 130px;" colspan="1"><strong>Tipo Empresa:</strong></td>
+                                <td style="font-size: 12px; width: 120px;" colspan="1"><span ng-bind="personaJuridica.tipoEmpresa"></span></td>
+                                <td style="font-size: 12px; width: 70px;" colspan="1"><strong>Fin Lucro:</strong></td>
+                                <td style="font-size: 12px;" colspan="1"><span ng-cloak>{{personaJuridica.finLucro ? 'SI' : 'NO'}}</span></td>
                             </tr>
                             <tr>
-                                <td>Direccion:</td>
-                                <td colspan="3"><strong ng-bind-template="{{personaJuridica.direccion}}-{{personaJuridica.referencia}}"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Direcci&oacute;n:</strong></td>
+                                <td colspan="3" style="font-size: 12px;"><span ng-bind-template="{{personaJuridica.direccion}}-{{personaJuridica.referencia}}"></span></td>
                             </tr>
                             <tr>
-                                <td>Telefono:</td>
-                                <td><strong ng-bind="personaJuridica.telefono"></strong></td>
-                                <td>Celular:</td>
-                                <td><strong ng-bind="personaJuridica.celular"></strong></td>
+                                <td style="font-size: 12px;"><strong>Telefono:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind="personaJuridica.telefono"></span></td>
+                                <td style="font-size: 12px;"><strong>Celular:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind="personaJuridica.celular"></span></td>
                             </tr>
                             <tr>
-                                <td>Email:</td>
-                                <td colspan="3"><strong ng-bind="personaJuridica.email"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Email:</strong></td>
+                                <td colspan="3" style="font-size: 12px;"><span ng-bind="personaJuridica.email"></span></td>
                             </tr>
                         </table>
                     </div>
                 </tab>
-                <tab heading="Representante">
+                <tab heading="Representante Legal">
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
                         <div class="panel-heading">
@@ -140,16 +140,16 @@
                                     <!--Persona natural-->
                                     <table class="table table-condensed">
                                         <tr>
-                                            <td>Pais:</td>
-                                            <td><strong ng-bind="pais.denominacion"></strong></td>
+                                            <td style="font-size: 12px;"><strong>Pais:</strong></td>
+                                            <td style="font-size: 12px;"><span ng-bind="pais.denominacion"></span></td>
                                         </tr>
                                         <tr>
-                                            <td>Doc.:</td>
-                                            <td><strong ng-bind-template="{{personaJuridica.representanteLegal.tipoDocumento.abreviatura}}/{{personaJuridica.representanteLegal.numeroDocumento}}"></strong></td>
+                                            <td style="font-size: 12px;"><strong>Documento:</strong></td>
+                                            <td style="font-size: 12px;"><span ng-bind-template="{{personaJuridica.representanteLegal.tipoDocumento.abreviatura}}/{{personaJuridica.representanteLegal.numeroDocumento}}"></span></td>
                                         </tr>
                                         <tr>
-                                            <td>Socio:</td>
-                                            <td><strong ng-bind-template="{{personaJuridica.representanteLegal.apellidoPaterno}} {{personaJuridica.representanteLegal.apellidoMaterno}},{{personaJuridica.representanteLegal.nombres}}"></strong></td>
+                                            <td style="font-size: 12px;"><strong>Socio:</strong></td>
+                                            <td style="font-size: 12px;"><span ng-bind-template="{{personaJuridica.representanteLegal.apellidoPaterno}} {{personaJuridica.representanteLegal.apellidoMaterno}}, {{personaJuridica.representanteLegal.nombres}}"></span></td>
                                         </tr>
                                         <tr><td></td><td></td></tr>
                                     </table>
@@ -158,30 +158,30 @@
                         </div>
                         <table class="table table-condensed">
                             <tr>
-                                <td>F. nacimiento:</td>
-                                <td><strong ng-bind="personaJuridica.representanteLegal.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
-                                <td>sexo:</td>
-                                <td><strong ng-bind="personaJuridica.representanteLegal.sexo"></strong></td>
+                                <td style="font-size: 12px; width: 85px;" colspan="1"><strong>Fecha Nac.:</strong></td>
+                                <td style="font-size: 12px; width: 105px;" colspan="1"><span ng-bind="personaJuridica.representanteLegal.fechaNacimiento | date : 'dd/MM/yyyy'"></span></td>
+                                <td style="font-size: 12px; width: 80px;" colspan="1"><strong>Sexo:</strong></td>
+                                <td style="font-size: 12px;" colspan="1"><span ng-bind="personaJuridica.representanteLegal.sexo"></span></td>
                             </tr>
                             <tr>
-                                <td>E. civil:</td>
-                                <td><strong ng-bind="personaJuridica.representanteLegal.estadoCivil"></strong></td>
-                                <td>Ocupacion:</td>
-                                <td><strong ng-bind="personaJuridica.representanteLegal.ocupacion"></strong></td>
+                                <td style="font-size: 12px;"><strong>Estado Civil:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind="personaJuridica.representanteLegal.estadoCivil"></span></td>
+                                <td style="font-size: 12px;"><strong>Ocupaci&oacute;n:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind="personaJuridica.representanteLegal.ocupacion"></span></td>
                             </tr>
                             <tr>
-                                <td>Direccion:</td>
-                                <td colspan="3"><strong ng-bind-template="{{personaJuridica.representanteLegal.direccion}}-{{personaJuridica.representanteLegal.referencia}}"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Direcci&oacute;n:</strong></td>
+                                <td colspan="3" style="font-size: 12px;"><span ng-bind-template="{{personaJuridica.representanteLegal.direccion}} - {{personaJuridica.representanteLegal.referencia}}"></span></td>
                             </tr>
                             <tr>
-                                <td>Telefono:</td>
-                                <td><strong ng-bind="personaJuridica.representanteLegal.telefono"></strong></td>
-                                <td>Celular:</td>
-                                <td><strong ng-bind="personaJuridica.representanteLegal.celular"></strong></td>
+                                <td style="font-size: 12px;"><strong>Telefono:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind="personaJuridica.representanteLegal.telefono"></span></td>
+                                <td style="font-size: 12px;"><strong>Celular:</strong></td>
+                                <td style="font-size: 12px;"><span ng-bind="personaJuridica.representanteLegal.celular"></span></td>
                             </tr>
                             <tr>
-                                <td>Email:</td>
-                                <td colspan="3"><strong ng-bind="personaJuridica.representanteLegal.email"></strong></td>
+                                <td style="font-size: 12px;" colspan="1"><strong>Email:</strong></td>
+                                <td colspan="3" style="font-size: 12px;"><span ng-bind="personaJuridica.representanteLegal.email"></span></td>
                             </tr>
                         </table>
                     </div>
@@ -285,31 +285,31 @@
             </div>
             <table class="table table-condensed" ng-show="cuentasBancarias.length != 0">
                 <thead>
-                <tr>
-                    <th>Tipo Cta.</th>
-                    <th>Num. Cta.</th>
+                <tr style="font-size: 12px;">
+                    <th>Tipo Cuenta</th>
+                    <th>N&uacute;mero Cuenta</th>
                     <th>Moneda</th>
-                    <th>F. Saldo</th>
-                    <th>F. Apertura</th>
-                    <th>F. Cierre</th>
-                    <th>Cant.Retirantes</th>
+                    <th>Saldo</th>
+                    <th>Fec. Apertura</th>
+                    <th>Fec. Cancel.</th>
+                    <th>N&deg; Retirantes</th>
                     <th>Estado</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="cuenta in cuentasBancarias">
-                    <td><span ng-bind="cuenta.tipoCuentaBancaria"/></td>
-                    <td><span ng-bind="cuenta.numeroCuenta"/></td>
-                    <td><span ng-bind="cuenta.moneda.denominacion"/></td>
-                    <td><span ng-bind="cuenta.saldo"/></td>
-                    <td><span ng-bind="cuenta.fechaApertura | date : 'dd/MM/yyyy'"/></td>
-                    <td>
+                    <td style="font-size: 12px;"><span ng-bind="cuenta.tipoCuentaBancaria"/></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuenta.numeroCuenta"/></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuenta.moneda.denominacion"/></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuenta.saldo"/></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuenta.fechaApertura | date : 'dd/MM/yyyy'"/></td>
+                    <td style="font-size: 12px;">
                         <span ng-show="cuenta.fechaCierre" ng-bind="cuenta.fechaCierre | date : 'dd/MM/yyyy'"/>
                         <span ng-show="!cuenta.fechaCierre">INDEFINIDO</span>
                     </td>
-                    <td><span ng-bind="cuenta.cantidadRetirantes | date : 'dd/MM/yyyy'"/></td>
-                    <td><span ng-bind="cuenta.estado"/></td>
+                    <td style="font-size: 12px; text-align: center"><span ng-bind="cuenta.cantidadRetirantes"/></td>
+                    <td style="font-size: 12px;"><span ng-bind="cuenta.estado"/></td>
                     <td>
                         <button type="button" class="btn btn-info btn-xs" ng-click="editarCuentaBancaria($index)">
                             <span class="glyphicon glyphicon-share"></span>Editar
