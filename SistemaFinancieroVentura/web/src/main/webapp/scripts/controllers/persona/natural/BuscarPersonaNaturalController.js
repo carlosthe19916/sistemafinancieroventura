@@ -18,6 +18,10 @@ define(['../../module'], function (controllers) {
 
             $scope.personasList = [];
 
+            $scope.view = {
+                filterText: ""
+            };
+
             $scope.filterOptions = {
                 filterText: "",
                 useExternalFilter: true
@@ -41,35 +45,33 @@ define(['../../module'], function (controllers) {
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
             }
 
+            //carga inicial de datos
             $scope.getPagedDataInitial = function () {
-                setTimeout(function () {
-                    $scope.pagingOptions.currentPage = 1;
-                    PersonaNaturalService.getPersonas($scope.getDesde(), $scope.getHasta()).then(function(data){
-                        $scope.personasList = data;
-                        $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                    });
-                    PersonaNaturalService.count().then(function(data){
-                        $scope.totalServerItems = data;
-                    });
-                }, 100);
+                $scope.pagingOptions.currentPage = 1;
+                PersonaNaturalService.getPersonas($scope.getDesde(), $scope.getHasta()).then(function(data){
+                    $scope.personasList = data;
+                    $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                });
+                PersonaNaturalService.count().then(function(data){
+                    $scope.totalServerItems = data;
+                });
             };
             $scope.getPagedDataInitial();
 
             $scope.getPagedDataSearched = function () {
-                setTimeout(function () {
-                    if ($scope.filterOptions.filterText) {
-                        var ft = $scope.filterOptions.filterText.toUpperCase();
-                        PersonaNaturalService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta()).then(function (data){
-                            $scope.personasList = data;
-                            $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        });
-                        PersonaNaturalService.count(ft).then(function(data){
-                            $scope.totalServerItems = data;
-                        });
-                    } else {
-                        $scope.getPagedDataInitial();
-                    }
-                }, 100);
+                if ($scope.filterOptions.filterText) {
+                    var ft = $scope.filterOptions.filterText.toUpperCase();
+                    PersonaNaturalService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta()).then(function (data){
+                        $scope.view.filterText = ft;
+                        $scope.pagingOptions.currentPage = 1;
+                        $scope.setPagingData(data, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                    });
+                    PersonaNaturalService.count(ft).then(function(data){
+                        $scope.totalServerItems = data;
+                    });
+                } else {
+                    $scope.getPagedDataInitial();
+                }
             };
 
             $scope.$watch(
