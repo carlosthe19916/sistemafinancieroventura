@@ -28,45 +28,32 @@ define(['./module'], function (services) {
                         "codigoPais":undefined
                     };
                 },
-                crear: function(persona){
-                    persona.tipoDocumento = {"id": persona.tipoDocumento.id};
-                    return _personaNaturalService.post(persona);
-                },
-                update: function(persona){
-                    var copy = Restangular.copy(persona);
-                    copy.tipoDocumento = {"id":copy.tipoDocumento.id}
-                    return copy.put();
-                },
-                remove: function(id){
-                    return Restangular.all(baseUrl + "/" + id).remove();
-                },
-
                 findById: function(id){
                     return Restangular.one(baseUrl, id).get();
                 },
                 findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
-                    return Restangular.one(baseUrl+'/'+idtipodocumento+'/'+numerodocumento).get();
+                    return Restangular.one(baseUrl + '/' + idtipodocumento + '/' + numerodocumento).get();
                 },
-                getPersonas: function(desde, hasta){
-                    if(arguments.length == 0){
-                        return _personaNaturalService.getList();
-                    } else if(arguments.length == 1){
-                        return _personaNaturalService.getList({"desde":desde},{});
-                    } else if(arguments.length == 2){
-                        return _personaNaturalService.getList({"desde":desde,"hasta":hasta},{});
-                    } else if(arguments.length > 2){
-                        return _personaNaturalService.getList({"desde":desde,"hasta":hasta},{});
-                    }
-                },
-                findByFilterText: function(filterText, desde, hasta){
+                findByFilterText: function(filterText, offset, limit){
                     if(arguments.length == 0){
                         return Restangular.all(baseUrl + "/filtertext/" + filterText).getList();
                     } else if(arguments.length == 1){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"desde":desde},{});
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"offset":offset},{});
                     } else if(arguments.length == 2){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"desde":desde,"hasta":hasta},{});
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"offset":offset,"limit":limit},{});
                     } else if(arguments.length > 2){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"desde":desde,"hasta":hasta},{});
+                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"offset":offset,"limit":limit},{});
+                    }
+                },
+                getPersonas: function(offset, limit){
+                    if(arguments.length == 0){
+                        return _personaNaturalService.getList();
+                    } else if(arguments.length == 1){
+                        return _personaNaturalService.getList({"offset":offset},{});
+                    } else if(arguments.length == 2){
+                        return _personaNaturalService.getList({"offset":offset,"limit":limit},{});
+                    } else if(arguments.length > 2){
+                        return _personaNaturalService.getList({"offset":offset,"limit":limit},{});
                     }
                 },
                 count: function(filterText){
@@ -76,7 +63,16 @@ define(['./module'], function (services) {
                         return Restangular.one(baseUrl + "/count").get({"filterText":filterText},{});
                     }
                 },
-
+                update: function(persona){
+                    var copy = Restangular.copy(persona);
+                    return Restangular.one(baseUrl + "/"+persona.id).customPUT(copy,'',{},{});
+                },
+                crear: function(persona){
+                    return _personaNaturalService.post(persona);
+                },
+                remove: function(id){
+                    return Restangular.all(baseUrl + "/" + id).remove();
+                },
                 currentSession: function(){
                     return Restangular.one("personanatural/currentSession").get();
                 },

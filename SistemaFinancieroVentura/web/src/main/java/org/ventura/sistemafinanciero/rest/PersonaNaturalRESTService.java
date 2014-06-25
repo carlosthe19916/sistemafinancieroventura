@@ -110,14 +110,14 @@ public class PersonaNaturalRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findByFilterText(
 			@PathParam("filterText") @DefaultValue("") String filterText,
-			@QueryParam("desde") BigInteger desde,
-			@QueryParam("hasta") BigInteger hasta) {
-		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
-			desde = BigInteger.ZERO;
-		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
-			hasta = BigInteger.ZERO;
+			@QueryParam("offset") BigInteger offset,
+			@QueryParam("limit") BigInteger limit) {
+		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
+			offset = BigInteger.ZERO;
+		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
+			limit = BigInteger.ZERO;
 		
-		List<PersonaNatural> list = personaNaturalService.findAll(filterText, desde, hasta);
+		List<PersonaNatural> list = personaNaturalService.findAll(filterText, offset, limit);
 		Response result = null;
 		JsonObject model = null;
 		if(list != null){
@@ -132,14 +132,14 @@ public class PersonaNaturalRESTService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response listAll(
-			@QueryParam("desde") BigInteger desde,
-			@QueryParam("hasta") BigInteger hasta) {
-		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
-			desde = BigInteger.ZERO;
-		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
-			hasta = BigInteger.ZERO;
+			@QueryParam("offset") BigInteger offset,
+			@QueryParam("limit") BigInteger limit) {
+		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
+			offset = BigInteger.ZERO;
+		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
+			limit = BigInteger.ZERO;
 		
-		List<PersonaNatural> list = personaNaturalService.findAll(desde, hasta);		
+		List<PersonaNatural> list = personaNaturalService.findAll(offset, limit);		
 		Response result = null;
 		JsonObject model = null;
 		if(list != null){						
@@ -154,7 +154,7 @@ public class PersonaNaturalRESTService {
 	@GET
 	@Path("/count")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listAll(
+	public Response countAll(
 			@QueryParam("filterText") String filterText) {				
 		int size = personaNaturalService.count();		
 		Response result = Response.status(Response.Status.OK).entity(size).build();
