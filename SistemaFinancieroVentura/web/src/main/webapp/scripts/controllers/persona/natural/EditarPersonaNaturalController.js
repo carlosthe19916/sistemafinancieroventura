@@ -108,7 +108,11 @@ define(['../../module'], function (controllers) {
             $scope.crearTransaccion = function(){
                 if ($scope.formEditarPersonanatural.$valid) {
                     $scope.control.inProcess = true;
-                    PersonaNaturalService.update($scope.persona).then(
+
+                    var personaTransaccion = angular.copy($scope.persona);
+                    personaTransaccion.tipoDocumento = {"id":personaTransaccion.tipoDocumento.id};
+                    personaTransaccion.fechaNacimiento = $scope.persona.fechaNacimiento.getTime();
+                    PersonaNaturalService.update(personaTransaccion).then(
                         function(persona){
                             $scope.control.inProcess = false;
                             if(TransitionService.isModeRedirect()){
@@ -116,8 +120,10 @@ define(['../../module'], function (controllers) {
                                 $state.transitionTo(url);
                             } else if(TransitionService.isModeClose()){
                                 $window.close();
+                                $state.transitionTo('app.administracion.buscarPersonaNatural');
                             } else {
                                 $window.close();
+                                $state.transitionTo('app.administracion.buscarPersonaNatural');
                             }
                         },
                         function error(error){

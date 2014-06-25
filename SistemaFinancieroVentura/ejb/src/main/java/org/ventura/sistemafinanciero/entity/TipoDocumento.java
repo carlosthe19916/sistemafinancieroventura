@@ -2,7 +2,6 @@ package org.ventura.sistemafinanciero.entity;
 
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
@@ -156,12 +155,20 @@ public class TipoDocumento implements java.io.Serializable {
 			return false;
 		}
 		final TipoDocumento other = (TipoDocumento) obj;
-		return other.getAbreviatura().equalsIgnoreCase(this.abreviatura);
+		if(this.abreviatura != null)
+			return other.getAbreviatura().equalsIgnoreCase(this.abreviatura);
+		if(this.idTipoDocumento != null)
+			return other.getIdTipoDocumento().equals(this.idTipoDocumento);
+		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return this.abreviatura.hashCode();
+		if(this.abreviatura != null)
+			return this.abreviatura.hashCode();
+		if(this.idTipoDocumento != null)
+			return this.idTipoDocumento.hashCode();
+		return 0;
 	}
 	
 }

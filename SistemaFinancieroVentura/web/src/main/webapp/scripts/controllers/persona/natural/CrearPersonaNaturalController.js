@@ -109,28 +109,35 @@ define(['../../module'], function (controllers) {
 
             //logic
             $scope.crearTransaccion = function(){
-                console.log($scope.persona.ubigeo);
                 if ($scope.formCrearPersonanatural.$valid) {
                     if($scope.control.errorForm.numeroDocumento == true){
                         return;
                     }
+
+                    var personaTransaccion = angular.copy($scope.persona);
+                    personaTransaccion.tipoDocumento = {"id":personaTransaccion.tipoDocumento.id};
+                    personaTransaccion.fechaNacimiento = $scope.fechaNacimiento.getTime();
+
                     $scope.buttonDisableState = true;
-                    PersonaNaturalService.crear($scope.persona).then(
+                    PersonaNaturalService.crear(personaTransaccion).then(
                         function(persona){
                             if(TransitionService.isModeRedirect()){
                                 var url = TransitionService.getUrl();
                                 $state.transitionTo(url);
                             } else if(TransitionService.isModeClose()){
                                 $window.close();
+                                $state.transitionTo('app.administracion.buscarPersonaNatural');
                             } else {
                                 $window.close();
+                                $state.transitionTo('app.administracion.buscarPersonaNatural');
                             }
                         },
                         function error(error){
                             $scope.control.inProcess = false;
                             $scope.control.success = false;
-                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            $window.scrollTo(0,0);
                         }
                     );
                     $scope.buttonDisableState = false;

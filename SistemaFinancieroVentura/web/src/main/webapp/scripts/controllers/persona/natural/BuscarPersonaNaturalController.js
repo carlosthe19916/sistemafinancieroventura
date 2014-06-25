@@ -42,7 +42,7 @@ define(['../../module'], function (controllers) {
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
             }
             $scope.getHasta = function(){
-                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
+                return ($scope.pagingOptions.pageSize);
             }
 
             //carga inicial de datos
@@ -91,16 +91,10 @@ define(['../../module'], function (controllers) {
                             $scope.personasList = data;
                             $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
-                        PersonaNaturalService.count(ft).then(function(data){
-                            $scope.totalServerItems = data;
-                        });
                     } else {
                         PersonaNaturalService.getPersonas($scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.personasList = data;
                             $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        });
-                        PersonaNaturalService.count().then(function(data){
-                            $scope.totalServerItems = data;
                         });
                     }
                 },true);

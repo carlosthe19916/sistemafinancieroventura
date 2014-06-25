@@ -46,7 +46,7 @@ import org.ventura.sistemafinanciero.entity.type.Sexo;
 @NamedQueries({
 		@NamedQuery(name = PersonaNatural.FindAll, query = "SELECT p FROM PersonaNatural p ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
 		@NamedQuery(name = PersonaNatural.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaNatural p WHERE p.tipoDocumento.idTipoDocumento = :idTipoDocumento AND p.numeroDocumento = :numeroDocumento ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
-		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filterText OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filtertext ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
+		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filterText OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filterText ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
 public class PersonaNatural implements java.io.Serializable {
 
 	/**
@@ -146,7 +146,6 @@ public class PersonaNatural implements java.io.Serializable {
 
 	@XmlElement
 	@NotNull
-	@NotBlank
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TIPO_DOCUMENTO", nullable = false)
 	public TipoDocumento getTipoDocumento() {
@@ -412,11 +411,15 @@ public class PersonaNatural implements java.io.Serializable {
 		}
 		final PersonaNatural other = (PersonaNatural) obj;
 		if (other.getNumeroDocumento().equalsIgnoreCase(this.numeroDocumento)) {
-			if (other.getTipoDocumento().equals(this.tipoDocumento)) {
-				return true;
+			if(other.getTipoDocumento() != null){
+				if (other.getTipoDocumento().equals(this.tipoDocumento)) {
+					return true;
+				} else {
+					return false;
+				}
 			} else {
 				return false;
-			}
+			}			
 		} else {
 			return false;
 		}
