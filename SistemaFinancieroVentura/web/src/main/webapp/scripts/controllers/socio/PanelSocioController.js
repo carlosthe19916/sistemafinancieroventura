@@ -93,6 +93,54 @@ define(['../module'], function (controllers) {
                     $window.open(url + "/app/administracion/personaNatural/"+$scope.apoderado.id);
                 }
             };
+            $scope.cambiarApoderado = function(){
+                if(!angular.isUndefined($scope.socio)){
+                    var modalInstance = $modal.open({
+                        templateUrl: 'views/cajero/socio/apoderadoPopUp.html',
+                        controller: "ApoderadoPopUpController"
+                    });
+                    modalInstance.result.then(function (result) {
+                        var apoderado = {
+                            "idTipoDocumento" : result.tipoDocumento.id,
+                            "numeroDocumento": result.numeroDocumento
+                        };
+                        SocioService.cambiarApoderado($scope.socio.id, apoderado).then(
+                            function(data){
+                                $scope.loadApoderado();
+                                $scope.alerts = [{ type: "success", msg: "Apoderado cambiado." }];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            }, function error(error){
+                                $scope.alerts = [{ type: "danger", msg: "Error:" + error.data.message +"." }];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                                $window.scrollTo(0,0);
+                            }
+                        );
+                    }, function () {
+                    });
+                }
+            };
+            $scope.eliminarApoderado = function(){
+                if(!angular.isUndefined($scope.socio)){
+                    var modalInstance = $modal.open({
+                        templateUrl: 'views/cajero/util/confirmPopUp.html',
+                        controller: "ConfirmPopUpController"
+                    });
+                    modalInstance.result.then(function (result) {
+                        SocioService.eliminarApoderado($scope.socio.id).then(
+                            function(data){
+                                $scope.apoderado = undefined;
+                                $scope.alerts = [{ type: "success", msg: "Socio inactivado eliminado." }];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            }, function error(error){
+                                $scope.alerts = [{ type: "danger", msg: "Error:" + error.data.message +"." }];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                                $window.scrollTo(0,0);
+                            }
+                        );
+                    }, function () {
+                    });
+                }
+            };
             $scope.editarCuentaBancaria = function(index){
                 if(!angular.isUndefined($scope.cuentasBancarias)){
                     $state.transitionTo("app.socio.editarCuentaBancaria", { id: $scope.cuentasBancarias[index].id });
@@ -101,7 +149,6 @@ define(['../module'], function (controllers) {
 
             $scope.congelarCuentaAporte = function(){
                 if(!angular.isUndefined($scope.socio)){
-                    console.log($scope.socio);
                     SocioService.congelarCuentaAporte($scope.socio.id).then(
                         function(data){
                             $scope.loadCuentaAporte();
@@ -117,7 +164,6 @@ define(['../module'], function (controllers) {
             };
             $scope.descongelarCuentaAporte = function(){
                 if(!angular.isUndefined($scope.socio)){
-                    console.log($scope.socio);
                     SocioService.descongelarCuentaAporte($scope.socio.id).then(
                         function(data){
                             $scope.loadCuentaAporte();

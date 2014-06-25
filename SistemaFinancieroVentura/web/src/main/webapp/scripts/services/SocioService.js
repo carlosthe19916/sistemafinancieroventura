@@ -81,6 +81,12 @@ define(['./module'], function (services) {
                 },
                 inactivarSocio: function(id){
                     return Restangular.one(baseUrl +"/"+id).remove();
+                },
+                cambiarApoderado: function(idSocio, apoderado){
+                    return Restangular.all(baseUrl+"/"+idSocio+"/apoderado").customPUT(apoderado,'',{},{});
+                },
+                eliminarApoderado: function(idSocio){
+                    return Restangular.all(baseUrl+"/"+idSocio+"/apoderado").remove();
                 }
             }
         }])

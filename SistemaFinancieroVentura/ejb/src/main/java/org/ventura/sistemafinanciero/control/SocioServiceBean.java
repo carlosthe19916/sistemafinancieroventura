@@ -57,6 +57,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	private DAO<Object, CuentaBancaria> cuentaBancariaDAO;
 	@Inject
 	private DAO<Object, Agencia> agenciaDAO;
+	@Inject
+	private DAO<Object, PersonaNatural> personaNaturalDAO;
 	
 	@EJB
 	private PersonaNaturalService personaNaturalService;
@@ -469,6 +471,36 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		
 		cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.INACTIVO);
 		cuentaAporteDAO.update(cuentaAporte);
+	}
+	
+	@Override
+	public void cambiarApoderado(BigInteger idSocio, BigInteger idPersonaNatural) throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		if(socio == null)
+			throw new RollbackFailureException("Socio no encontrado");
+		PersonaNatural apoderado = personaNaturalDAO.find(idPersonaNatural);
+		if(apoderado == null)
+			throw new RollbackFailureException("Apoderado no encontrado");
+		PersonaNatural personaNaturalSocio = socio.getPersonaNatural();
+		PersonaJuridica personaJuridicaSocio = socio.getPersonaJuridica();
+		if(personaNaturalSocio != null){
+			if(apoderado.equals(personaNaturalSocio))
+				throw new RollbackFailureException("El apoderado no puede ser el titular de la cuenta");
+		}
+		if(personaJuridicaSocio != null){
+			if(apoderado.equals(personaJuridicaSocio.getRepresentanteLegal()))
+				throw new RollbackFailureException("El apoderado no puede ser el titular de la cuenta");
+		}
+		socio.setApoderado(apoderado);
+		socioDAO.update(socio);
+	}
+	@Override
+	public void eliminarApoderado(BigInteger idSocio)throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		if(socio == null)
+			throw new RollbackFailureException("Socio no encontrado");
+		socio.setApoderado(null);
+		socioDAO.update(socio);
 	}		
 
 }

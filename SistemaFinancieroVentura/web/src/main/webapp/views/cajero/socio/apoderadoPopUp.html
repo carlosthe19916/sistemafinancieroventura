@@ -1,0 +1,79 @@
+<div>
+    <div>
+        <div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">APODERADO</h4>
+            </div>
+            <form name="$parent.formTitular" class="form-horizontal" ng-submit="addTitular()" novalidate>
+                <div class="modal-body">
+                    <alert ng-repeat="alert in alertsTitular" type="{{alert.type}}" close="closeAlert($index)">
+                        <span ng-bind-html="alert.msg"></span>
+                    </alert>
+                    <div class="form-group" ng-class="
+                    { 'has-error' : (formTitular.tipoDocumento.$invalid && (control.submitted || formTitular.tipoDocumento.$dirty)) ||
+                    (formTitular.numeroDocumento.$invalid && (control.submitted || formTitular.numeroDocumento.$dirty))}">
+                        <label class="col-sm-2 control-label">Documento:</label>
+                        <div class="col-sm-4">
+                            <select name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="titular.tipoDocumento" class="form-control" required autofocus>
+                            </select>
+                            <div ng-show="formTitular.tipoDocumento.$invalid && (control.submitted || formTitular.tipoDocumento.$dirty)">
+                                <span class="help-block" ng-show="formTitular.numeroDocumento.$error.required">Ingrese Documento.</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaTitular($event)'}" ng-model="titular.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
+                                <span class="input-group-btn">
+                                  <button type="button" class="btn btn-default" ng-click="buscarPersonaTitular()">
+                                      <span class="glyphicon glyphicon-search"></span>
+                                  </button>
+                                </span>
+                            </div>
+                            <div ng-show="formTitular.numeroDocumento.$invalid && (control.submitted || formTitular.numeroDocumento.$dirty)">
+                                <span class="help-block" ng-show="formTitular.numeroDocumento.$error.required">Ingrese Numero de Documento.</span>
+                                <span class="help-block" ng-show="formTitular.numeroDocumento.$error.minlength">Minimo 1 Caracter.</span>
+                                <span class="help-block" ng-show="formTitular.numeroDocumento.$error.maxlength">Maximo 20 Caracteres.</span>
+                                <span class="help-block" ng-show="formTitular.numeroDocumento.$error.pattern">Numero Invalido.</span>
+                                <span class="help-block" ng-show="formTitular.numeroDocumento.$error.sgmaxlength">
+                                    Debe Tener <span ng-bind="titular.tipoDocumento.numeroCaracteres"></span> Caracteres.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="font-weight: bold;">Datos Generales</div>
+                                <div class="panel-body" ng-show="!titular.persona">
+                                    <p>Persona no Encontrada</p>
+                                </div>
+                                <!-- Table -->
+                                <table class="table table-condensed" ng-show="titular.persona">
+                                    <tr>
+                                        <td>Documento:</td>
+                                        <td colspan="3"><strong ng-bind-template="{{titular.persona.tipoDocumento.abreviatura}}/{{titular.persona.numeroDocumento}}"></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Apellidos y Nombres:</td>
+                                        <td colspan="3"><strong ng-bind-template="{{titular.persona.apellidoPaterno}} {{titular.persona.apellidoMaterno}}, {{titular.persona.nombres}}"></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fecha Nac.:</td>
+                                        <td><strong ng-bind="titular.persona.fechaNacimiento | date : 'dd/MM/yyyy'"></strong></td>
+                                        <td>Sexo:</td>
+                                        <td><strong ng-bind="titular.persona.sexo"></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 0px;">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

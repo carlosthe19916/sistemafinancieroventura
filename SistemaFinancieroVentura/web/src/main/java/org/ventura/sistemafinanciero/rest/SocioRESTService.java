@@ -51,7 +51,9 @@ import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
+import org.ventura.sistemafinanciero.rest.dto.ApoderadoDTO;
 import org.ventura.sistemafinanciero.rest.dto.SocioDTO;
+import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.SocioService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
@@ -67,6 +69,9 @@ public class SocioRESTService {
 	
 	@EJB
 	private TrabajadorService trabajadorService;
+	
+	@EJB
+	private PersonaNaturalService personaNaturalService;
 	
 	//cuerpo de la respuesta
 	private final String ID_RESPONSE = "id";
@@ -236,58 +241,123 @@ public class SocioRESTService {
 	@GET
 	@Path("/{id}/personaNatural")
 	@Produces({ "application/xml", "application/json" })
-	public Response getPersonaNatural(@PathParam("id")BigInteger id) {				
-		if(id == null)
-			return Response.status(Response.Status.BAD_REQUEST).entity("id no valido").build();
-		Socio socio = socioService.findById(id);
-		if(socio == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("Socio no encontrado").build();	
+	public Response getPersonaNatural(@PathParam("id")BigInteger id) {										
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
 		}			
-		else {
-			PersonaNatural persona= socioService.getPersonaNatural(socio.getIdSocio());	
-			if(persona == null)
-				return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();
-			else 
-				return Response.status(Response.Status.OK).entity(persona).build();
+		PersonaNatural persona= socioService.getPersonaNatural(id);		
+		if(persona != null){
+			return Response.status(Response.Status.OK).entity(persona).build();
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();
 		}	
+		return result;		
 	}
 	
 	@GET
 	@Path("/{id}/personaJuridica")
 	@Produces({ "application/xml", "application/json" })
-	public Response getPersonaJuridica(@PathParam("id")BigInteger id) {				
-		if(id == null)
-			return Response.status(Response.Status.BAD_REQUEST).entity("id no valido").build();
-		Socio socio = socioService.findById(id);
-		if(socio == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("Socio no encontrado").build();	
+	public Response getPersonaJuridica(@PathParam("id")BigInteger id) {								
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
 		}			
-		else {
-			PersonaJuridica persona= socioService.getPersonaJuridica(socio.getIdSocio());	
-			if(persona == null)
-				return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();
-			else
-				return Response.status(Response.Status.OK).entity(persona).build();
+		PersonaJuridica persona= socioService.getPersonaJuridica(id);	
+		if(persona != null){
+			return Response.status(Response.Status.OK).entity(persona).build();
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();
 		}	
+		return result;
 	}
 	
 	@GET
 	@Path("/{id}/apoderado")
 	@Produces({ "application/xml", "application/json" })
-	public Response getApoderado(@PathParam("id")BigInteger id) {				
-		if(id == null)
-			return Response.status(Response.Status.BAD_REQUEST).entity("id no valido").build();
-		Socio socio = socioService.findById(id);
-		if(socio == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("Socio no encontrado").build();	
+	public Response getApoderado(@PathParam("id")BigInteger id) {								
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
 		}			
-		else {
-			PersonaNatural persona= socioService.getApoderado(socio.getIdSocio());	
-			if(persona == null)
-				return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();
-			else
-				return Response.status(Response.Status.OK).entity(persona).build();
+		PersonaNatural persona= socioService.getApoderado(id);	
+		if(persona != null){
+			return Response.status(Response.Status.OK).entity(persona).build();
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();
 		}	
+		return result;
+	}
+	
+	@PUT
+	@Path("/{id}/apoderado")
+	@Produces({ "application/xml", "application/json" })
+	public Response cambiarApoderado(@PathParam("id")BigInteger idSocio,
+			ApoderadoDTO apoderado) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(idSocio == null || apoderado == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}	
+		BigInteger idTipoDocumento = apoderado.getIdTipoDocumento();
+		String numeroDocumento  = apoderado.getNumeroDocumento();
+		
+		PersonaNatural apoderadoPN = personaNaturalService.find(idTipoDocumento, numeroDocumento);
+		if(apoderadoPN == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		}
+		try {			
+			socioService.cambiarApoderado(idSocio, apoderadoPN.getIdPersonaNatural());
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, SUCCESS_MESSAGE).build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
+	}
+	
+	@DELETE
+	@Path("/{id}/apoderado")
+	@Produces({ "application/xml", "application/json" })
+	public Response eliminarApoderado(@PathParam("id")BigInteger idSocio) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(idSocio == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}	
+		try {			
+			socioService.eliminarApoderado(idSocio);
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, SUCCESS_MESSAGE).build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
 	}
 	
 	@GET

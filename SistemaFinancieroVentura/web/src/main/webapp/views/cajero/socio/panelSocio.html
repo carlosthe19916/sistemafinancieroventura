@@ -274,12 +274,14 @@
             </table>
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-6" style="font-weight: bold;">
+                    <div class="col-md-5" style="font-weight: bold;">
                         Apoderado
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <div class="text-right">
-                            <button type="button" ng-click="editarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
+                            <button type="button" ng-if="apoderado" ng-click="eliminarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Eliminar</button>
+                            <button type="button" ng-click="cambiarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Cambiar</button>
+                            <button type="button" ng-if="apoderado" ng-click="editarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Editar</button>
                         </div>
                     </div>
                 </div>

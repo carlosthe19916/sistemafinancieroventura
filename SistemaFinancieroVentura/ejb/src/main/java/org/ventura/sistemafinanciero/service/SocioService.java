@@ -68,4 +68,8 @@ public interface SocioService extends AbstractService<Socio> {
 	
 	public void inactivarSocio(BigInteger idSocio) throws RollbackFailureException;
 
+	public void cambiarApoderado(BigInteger idSocio, BigInteger idPersonaNatural)throws RollbackFailureException;
+
+	public void eliminarApoderado(BigInteger idSocio)throws RollbackFailureException;
+
 }

@@ -49,6 +49,7 @@ define([
     './socio/BuscarSocioController',
     './socio/PanelSocioController',
     './socio/BuscarSocioPopUpController',
+    './socio/ApoderadoPopUpController',
 
     './util/CalculadoraController',
     './util/LoginPopUpController',
