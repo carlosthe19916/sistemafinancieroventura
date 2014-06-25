@@ -111,7 +111,7 @@ define(['../../module'], function (controllers) {
 
                     var personaTransaccion = angular.copy($scope.persona);
                     personaTransaccion.tipoDocumento = {"id":personaTransaccion.tipoDocumento.id};
-                    personaTransaccion.fechaNacimiento = $scope.persona.fechaNacimiento.getTime();
+                    personaTransaccion.fechaNacimiento = $scope.persona.fechaNacimiento;
                     PersonaNaturalService.update(personaTransaccion).then(
                         function(persona){
                             $scope.control.inProcess = false;
