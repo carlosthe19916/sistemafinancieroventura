@@ -76,6 +76,9 @@ define(['./module'], function (services) {
                 congelarCuentaAporte: function(id){
                     return Restangular.one(baseUrl +"/"+id+"/cuentaAporte/congelar").customPUT({},'',{},{});
                 },
+                descongelarCuentaAporte: function(id){
+                    return Restangular.one(baseUrl +"/"+id+"/cuentaAporte/descongelar").customPUT({},'',{},{});
+                },
                 inactivarSocio: function(id){
                     return Restangular.one(baseUrl +"/"+id).remove();
                 }

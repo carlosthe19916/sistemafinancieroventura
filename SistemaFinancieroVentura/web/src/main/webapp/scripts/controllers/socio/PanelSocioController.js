@@ -101,6 +101,7 @@ define(['../module'], function (controllers) {
 
             $scope.congelarCuentaAporte = function(){
                 if(!angular.isUndefined($scope.socio)){
+                    console.log($scope.socio);
                     SocioService.congelarCuentaAporte($scope.socio.id).then(
                         function(data){
                             $scope.loadCuentaAporte();
@@ -116,6 +117,7 @@ define(['../module'], function (controllers) {
             };
             $scope.descongelarCuentaAporte = function(){
                 if(!angular.isUndefined($scope.socio)){
+                    console.log($scope.socio);
                     SocioService.descongelarCuentaAporte($scope.socio.id).then(
                         function(data){
                             $scope.loadCuentaAporte();
