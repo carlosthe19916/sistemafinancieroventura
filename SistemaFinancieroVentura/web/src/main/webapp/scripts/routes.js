@@ -172,11 +172,11 @@ define(['./app'], function(app) {
                     "viewMenu":{
                         controller: function($scope){
                             $scope.menus = [
+                                {'name':'Socio', submenus:[
+                                    { 'name':'Buscar' , 'state':'app.socio.buscarSocio'}
+                                ]},
                                 {'name':'Cuenta Aporte', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.socio.crearSocio'},
-                                ]},
-                                {'name':'Clientes', submenus:[
-                                    { 'name':'Buscar' , 'state':'app.socio.buscarSocio'}
                                 ]},
                                 {'name':'Cuentas Bancarias', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.socio.crearCuentaBancaria'},
