@@ -19,9 +19,12 @@ along with this program.  If not, see <http://www.opensource.org/licenses/gpl-2.
  */
 package org.ventura.sistemafinanciero.dao;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.ventura.sistemafinanciero.entity.PersonaNatural;
 
 
 /**
@@ -50,12 +53,9 @@ public interface DAO<K, T> {
 
 	public Collection<T> findByNamedQuery(String queryName, int resultLimit);
 
-	public List<T> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters);
+	public List<T> findByNamedQuery(String namedQueryName,Map<String, Object> parameters);
 
-	public List<T> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters, int resultLimit);
-	
-	public List<T> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters, int[] range);
+	public List<T> findByNamedQuery(String namedQueryName, Map<String, Object> parameters, int resultLimit);	
+
+	public List<T> findByNamedQuery(String namedQueryName, Map<String, Object> parameters, Integer offset, Integer limit);
 }

@@ -36,6 +36,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.Caja;
+import org.ventura.sistemafinanciero.entity.HistorialBoveda;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 
@@ -124,15 +125,15 @@ public class HistorialCajaBeanDAO implements DAO<Object, HistorialCaja> {
 		return query.getResultList();
 	}
 	
-	public List<HistorialCaja> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters, int[] range) {
+	public List<HistorialCaja> findByNamedQuery(String namedQueryName, Map<String, Object> parameters, Integer offset, Integer limit) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
 		for (Entry<String, Object> entry : rawParameters) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
-		query.setMaxResults(range[1] - range[0]);
-		query.setFirstResult(range[0]);
+		query.setFirstResult(offset != null ? offset : 0);
+		if(limit != null)
+			query.setMaxResults(limit);		
 		return query.getResultList();
     }
 }

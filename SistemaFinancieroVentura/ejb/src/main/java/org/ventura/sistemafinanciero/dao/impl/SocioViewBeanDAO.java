@@ -35,6 +35,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.SocioView;
+import org.ventura.sistemafinanciero.entity.TasaInteres;
 
 /**
  * A minimalistic CRUD implementation. Usually provides the implementation of
@@ -120,15 +121,15 @@ public class SocioViewBeanDAO implements DAO<Object, SocioView> {
 		return query.getResultList();
 	}
 	
-	public List<SocioView> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters, int[] range) {
+	public List<SocioView> findByNamedQuery(String namedQueryName, Map<String, Object> parameters, Integer offset, Integer limit) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
 		for (Entry<String, Object> entry : rawParameters) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
-		query.setFirstResult(range[0]);
-		query.setMaxResults(range[1] - range[0]);		
+		query.setFirstResult(offset != null ? offset : 0);
+		if(limit != null)
+			query.setMaxResults(limit);		
 		return query.getResultList();
     }
 

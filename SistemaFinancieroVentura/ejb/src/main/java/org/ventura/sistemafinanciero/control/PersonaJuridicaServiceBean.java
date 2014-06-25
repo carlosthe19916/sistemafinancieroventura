@@ -125,18 +125,18 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 		
 		if(filterText == null)
 			filterText = "";
-		if(offset == null || limit == null){
-			offset = null;
-			limit = null;
+		if(offset == null) {			
+			offset = BigInteger.ZERO;			
 		}
+		offset = offset.abs();
+		if(limit != null){
+			limit = limit.abs();			
+		}
+		Integer offSetInteger = offset.intValue();
+		Integer limitInteger = (limit != null ? limit.intValue() : null);
 		
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		if(offset != null){
-			int[] rangeInt = { offset.intValue(), offset.add(limit).intValue() };
-			result = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByFilterText, queryParameter.parameters(), rangeInt);
-		} else {
-			result = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByFilterText, queryParameter.parameters());
-		}			
+		result = personaJuridicaDAO.findByNamedQuery(PersonaJuridica.FindByFilterText, queryParameter.parameters(), offSetInteger, limitInteger);			
 		if(result != null){
 			for (PersonaJuridica personaJuridica : result) {
 				Set<Accionista> accionistas = personaJuridica.getAccionistas();

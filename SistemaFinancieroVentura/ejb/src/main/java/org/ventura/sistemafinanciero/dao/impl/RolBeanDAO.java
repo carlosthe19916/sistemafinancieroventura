@@ -121,15 +121,15 @@ public class RolBeanDAO implements DAO<Object, Rol> {
 		return query.getResultList();
 	}
 
-	public List<Rol> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters, int[] range) {
+	public List<Rol> findByNamedQuery(String namedQueryName, Map<String, Object> parameters, Integer offset, Integer limit) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
 		for (Entry<String, Object> entry : rawParameters) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
-		query.setMaxResults(range[1] - range[0]);
-		query.setFirstResult(range[0]);
+		query.setFirstResult(offset != null ? offset : 0);
+		if(limit != null)
+			query.setMaxResults(limit);		
 		return query.getResultList();
     }
 }

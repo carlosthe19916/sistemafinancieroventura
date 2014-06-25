@@ -74,22 +74,13 @@ public class SocioRESTService {
 			@QueryParam("modeEstado") Boolean modeEstado,
 			@QueryParam("desde") BigInteger desde, 
 			@QueryParam("hasta") BigInteger hasta) {
-		if(desde == null || hasta == null){
-			desde = null;
-			hasta = null;
-		}
 		
 		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
 			desde = BigInteger.ZERO;
 		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
 			hasta = BigInteger.ZERO;
-		
-		BigInteger[] range = null;
-		if(desde != null && hasta != null){
-			range = new BigInteger[]{desde, hasta};
-		}
 					
-		List<SocioView> list = socioService.findAllView(range, modeSocio, modeEstado);
+		List<SocioView> list = socioService.findAllView(modeSocio, modeEstado, desde, hasta);
 		return Response.status(Response.Status.OK).entity(list).build();				
 		
 	}
@@ -103,22 +94,13 @@ public class SocioRESTService {
 			@QueryParam("modeEstado") Boolean modeEstado,
 			@QueryParam("desde") BigInteger desde, 
 			@QueryParam("hasta") BigInteger hasta) {		
-				
-		if(desde == null || hasta == null){
-			desde = null;
-			hasta = null;
-		}
 		
 		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
 			desde = BigInteger.ZERO;
 		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
 			hasta = BigInteger.ZERO;
 		
-		BigInteger[] range = null;
-		if(desde != null && hasta != null){
-			range = new BigInteger[]{desde, hasta};
-		}
-		List<SocioView> list = socioService.findByFilterText(filterText, range, modeSocio, modeEstado);
+		List<SocioView> list = socioService.findByFilterText(filterText, modeSocio, modeEstado, desde, hasta);
 		return Response.status(Response.Status.OK).entity(list).build();						
 	}	
 	

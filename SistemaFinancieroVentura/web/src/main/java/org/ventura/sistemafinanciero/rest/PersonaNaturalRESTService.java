@@ -112,20 +112,12 @@ public class PersonaNaturalRESTService {
 			@PathParam("filterText") @DefaultValue("") String filterText,
 			@QueryParam("desde") BigInteger desde,
 			@QueryParam("hasta") BigInteger hasta) {
-		if(desde == null || hasta == null){
-			desde = null;
-			hasta = null;
-		}	
 		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
 			desde = BigInteger.ZERO;
 		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
 			hasta = BigInteger.ZERO;
-		BigInteger[] range = null;
-		if(desde != null && hasta != null){
-			range = new BigInteger[]{desde, hasta};
-		}
 		
-		List<PersonaNatural> list = personaNaturalService.findAll(filterText, range);
+		List<PersonaNatural> list = personaNaturalService.findAll(filterText, desde, hasta);
 		Response result = null;
 		JsonObject model = null;
 		if(list != null){
@@ -142,20 +134,12 @@ public class PersonaNaturalRESTService {
 	public Response listAll(
 			@QueryParam("desde") BigInteger desde,
 			@QueryParam("hasta") BigInteger hasta) {
-		if(desde == null || hasta == null){
-			desde = null;
-			hasta = null;
-		}	
 		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
 			desde = BigInteger.ZERO;
 		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
 			hasta = BigInteger.ZERO;
-		BigInteger[] range = null;
-		if(desde != null && hasta != null){
-			range = new BigInteger[]{desde, hasta};
-		}
 		
-		List<PersonaNatural> list = personaNaturalService.findAll(range);		
+		List<PersonaNatural> list = personaNaturalService.findAll(desde, hasta);		
 		Response result = null;
 		JsonObject model = null;
 		if(list != null){						

@@ -63,7 +63,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	private PersonaJuridicaService personaJuridicaService;		
 	
 	@Override
-	public List<SocioView> findByFilterText(String filterText, BigInteger[] range, Boolean modeSocio, Boolean modeEstado) {
+	public List<SocioView> findByFilterText(String filterText, Boolean modeSocio, Boolean modeEstado, BigInteger offset, BigInteger limit) {
 		List<SocioView> result = null;	
 		if (filterText == null)
 			return new ArrayList<SocioView>();
@@ -80,24 +80,26 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			listEstado.add(true);
 			listEstado.add(false);
 		}		
+		
+		if(filterText == null)
+			filterText = "";
+		if(offset == null) {			
+			offset = BigInteger.ZERO;			
+		}
+		offset = offset.abs();
+		if(limit != null){
+			limit = limit.abs();			
+		}
+		
+		Integer offSetInteger = offset.intValue();
+		Integer limitInteger = (limit != null ? limit.intValue() : null);
+		
 		QueryParameter queryParameter = QueryParameter.with("modeEstado", listEstado).and("filtertext", '%' + filterText.toUpperCase() + '%');	
-		if(range != null){
-			if(range.length != 2)
-				return null;
-			if(range[0] == null || range[1] == null)
-				return null;
-			if(range[0].compareTo(BigInteger.ZERO) < 0 )
-				return null;
-			if(range[1].compareTo(BigInteger.ZERO) < 0 )
-				return null;
-			if(range[0].compareTo(range[1]) == 0)
-				return new ArrayList<>();
-			int[] rangeInt = {range[0].intValue(),range[1].intValue()};						
-									
+		if(offSetInteger != null){															
 			if(modeSocio){				
-				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters(), rangeInt);
+				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters(), offSetInteger, limitInteger);
 			} else {
-				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), rangeInt);
+				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), offSetInteger, limitInteger);
 			}						
 		} else {
 			if(modeSocio){
@@ -110,7 +112,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	public List<SocioView> findAllView(BigInteger[] range, Boolean modeSocio, Boolean modeEstado) {	
+	public List<SocioView> findAllView(Boolean modeSocio, Boolean modeEstado, BigInteger offset, BigInteger limit) {	
 		List<SocioView> result = null;	
 		if(modeSocio == null)
 			modeSocio = true;
@@ -122,26 +124,26 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			listEstado.add(true);
 			listEstado.add(false);
 		}		
+		
+		if(offset == null) {			
+			offset = BigInteger.ZERO;			
+		}
+		offset = offset.abs();
+		if(limit != null){
+			limit = limit.abs();			
+		}
+		
+		Integer offSetInteger = offset.intValue();
+		Integer limitInteger = (limit != null ? limit.intValue() : null);
+		
 		QueryParameter queryParameter = QueryParameter.with("modeEstado", listEstado);		
-		if(range != null){
-			if(range.length != 2)
-				return null;
-			if(range[0] == null || range[1] == null)
-				return null;
-			if(range[0].compareTo(BigInteger.ZERO) < 0 )
-				return null;
-			if(range[1].compareTo(BigInteger.ZERO) < 0 )
-				return null;
-			if(range[0].compareTo(range[1]) == 0)
-				return new ArrayList<>();
-			int[] rangeInt = {range[0].intValue(),range[1].intValue()};						
-									
+		if(offSetInteger != null){																	
 			if(modeSocio){
 				//todos
-				result = socioViewDAO.findByNamedQuery(SocioView.findAll, queryParameter.parameters(), rangeInt);
+				result = socioViewDAO.findByNamedQuery(SocioView.findAll, queryParameter.parameters(), offSetInteger, limitInteger);
 			} else {
 				//con cuenta aporte
-				result = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte, queryParameter.parameters(), rangeInt);
+				result = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte, queryParameter.parameters(), offSetInteger, limitInteger);
 			}						
 		} else {
 			if(modeSocio){

@@ -57,19 +57,6 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		}		
 		return persona;
 	}
-	
-	@Override
-	public PersonaNatural find(BigInteger idTrabajador) {
-		Trabajador trabajador = trabajadorDAO.find(idTrabajador);
-		if(trabajador == null){
-			return null;
-		}		
-		else {
-			PersonaNatural persona = trabajador.getPersonaNatural();
-			Hibernate.initialize(persona);
-			return persona;
-		}			
-	}
 
 	@Override
 	public PersonaNatural find(BigInteger idTipodocumento, String numerodocumento) {
@@ -97,45 +84,39 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 
 	@Override
 	public List<PersonaNatural> findAll() {
-		BigInteger[] range = null;
-		return findAll(range);
+		return findAll(null, null);
 	}
 	
 	@Override
-	public List<PersonaNatural> findAll(BigInteger[] range) {
-		return findAll(null, range);
+	public List<PersonaNatural> findAll(BigInteger offset, BigInteger limit) {
+		return findAll(null, offset, limit);
 	}
 
 	@Override
 	public List<PersonaNatural> findAll(String filterText) {
-		return findAll(filterText, null);
+		return findAll(filterText, null, null);
 	}
 
 	@Override
-	public List<PersonaNatural> findAll(String filterText, BigInteger[] range) {
+	public List<PersonaNatural> findAll(String filterText, BigInteger offset, BigInteger limit) {
 		List<PersonaNatural> result = null;
 		
 		if(filterText == null)
 			filterText = "";
+		if(offset == null) {			
+			offset = BigInteger.ZERO;			
+		}
+		offset = offset.abs();
+		if(limit != null){
+			limit = limit.abs();			
+		}
+		
+		Integer offSetInteger = offset.intValue();
+		Integer limitInteger = (limit != null ? limit.intValue() : null);
 		
 		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
-		if (range != null) {
-			if (range.length != 2)
-				return null;
-			if (range[0] == null || range[1] == null)
-				return null;
-			if (range[0].compareTo(BigInteger.ZERO) < 0)
-				return null;
-			if (range[1].compareTo(BigInteger.ZERO) < 0)
-				return null;
-			if (range[0].compareTo(range[1]) == 0)
-				return new ArrayList<>();
-			int[] rangeInt = { range[0].intValue(), range[1].intValue() };
-
-			result = personanaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters(), rangeInt);
-		} else {
-			result = personanaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters());
-		}
+		result = personanaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters(), offSetInteger, limitInteger);	
+		
 		if(result != null){
 			for (PersonaNatural personaNatural : result) {
 				TipoDocumento tipoDocumento = personaNatural.getTipoDocumento();

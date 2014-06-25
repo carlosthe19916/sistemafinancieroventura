@@ -121,15 +121,15 @@ public class ProvinciaDAO implements DAO<Object, Provincia> {
 		return query.getResultList();
 	}
 
-	public List<Provincia> findByNamedQuery(String namedQueryName,
-			Map<String, Object> parameters, int[] range) {
+	public List<Provincia> findByNamedQuery(String namedQueryName, Map<String, Object> parameters, Integer offset, Integer limit) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
 		Query query = this.em.createNamedQuery(namedQueryName);
 		for (Entry<String, Object> entry : rawParameters) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
-		query.setMaxResults(range[1] - range[0]);
-		query.setFirstResult(range[0]);
+		query.setFirstResult(offset != null ? offset : 0);
+		if(limit != null)
+			query.setMaxResults(limit);		
 		return query.getResultList();
     }
 }

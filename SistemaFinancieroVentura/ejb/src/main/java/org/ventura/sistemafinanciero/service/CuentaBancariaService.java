@@ -70,7 +70,7 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
      * @param  range BigInteger[] para indicar el rango de resultados.   
      * @return List<CuentaBancariaView> lista de cuentas bancarias.
      */
-	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range);
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger offset, BigInteger limit);
 	
 	/**
      * Devuelve la lista de cuentas bancarias que cumplan con los datos 
@@ -124,7 +124,7 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
      * @param  range BigInteger[] para indicar el rango de resultados.   
      * @return List<CuentaBancariaView> lista de cuentas bancarias.
      */
-	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range);		
+	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger offset, BigInteger limit);		
 		
 	public BigInteger createCuentaAhorro(BigInteger idAgencia,
 			BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona, 

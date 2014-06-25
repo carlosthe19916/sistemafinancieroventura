@@ -28,8 +28,7 @@ public interface SocioService extends AbstractService<Socio>{
      * @param  modeEstado Boolean: TRUE socios activos, FALSE socios inactivos, NULL todos los socios
      * @return List<SocioView> lista de socios.
      */
-	public List<SocioView> findByFilterText(String filterText,
-			BigInteger[] range, Boolean modeSocio, Boolean modeEstado);	
+	public List<SocioView> findByFilterText(String filterText, Boolean modeSocio, Boolean modeEstado, BigInteger offset, BigInteger limit);	
 	
 	/**
      * Devuelve la lista de socios del sistema,
@@ -40,7 +39,7 @@ public interface SocioService extends AbstractService<Socio>{
      * @param  modeEstado Boolean: TRUE socios activos, FALSE socios inactivos, NULL todos los socios
      * @return List<SocioView> lista de socios.
      */
-	public List<SocioView> findAllView(BigInteger[] range, Boolean modeSocio, Boolean modeEstado);
+	public List<SocioView> findAllView(Boolean modeSocio, Boolean modeEstado, BigInteger offset, BigInteger limit);
 	
 	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc, String numDoc);
 	

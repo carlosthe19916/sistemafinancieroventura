@@ -641,30 +641,30 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		TipoCuentaBancaria[] tipoCuenta = EnumSet.allOf(TipoCuentaBancaria.class).toArray(new TipoCuentaBancaria[0]);
 		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
 		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
-		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta) {
 		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
 		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
-		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona) {
 		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
-		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta) {
-		return findAllView(tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
-	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range) {
-		return findAllView(null, tipoCuenta, persona, estadoCuenta, range);
+	public List<CuentaBancariaView> findAllView(TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta, BigInteger offset, BigInteger limit) {
+		return findAllView(null, tipoCuenta, persona, estadoCuenta, offset, limit);
 	}
 
 	@Override
@@ -672,29 +672,29 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		TipoCuentaBancaria[] tipoCuenta = EnumSet.allOf(TipoCuentaBancaria.class).toArray(new TipoCuentaBancaria[0]);
 		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
 		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
-		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta) {
 		TipoPersona[] persona = EnumSet.allOf(TipoPersona.class).toArray(new TipoPersona[0]);
 		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
-		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona) {		
 		EstadoCuentaBancaria[] estadoCuenta = EnumSet.allOf(EstadoCuentaBancaria.class).toArray(new EstadoCuentaBancaria[0]);
-		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
 	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta) {
-		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null);
+		return findAllView(filterText, tipoCuenta, persona, estadoCuenta, null, null);
 	}
 
 	@Override
-	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta, BigInteger[] range) {
+	public List<CuentaBancariaView> findAllView(String filterText,TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona,EstadoCuentaBancaria[] estadoCuenta, BigInteger offset, BigInteger limit) {
 		List<CuentaBancariaView> result = null;
 
 		if(filterText == null)
@@ -721,23 +721,20 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 				.and("tipoPersona", dos)
 				.and("tipoEstadoCuenta", tres);
 
-		if (range != null) {
-			if (range.length != 2)
-				return null;
-			if (range[0] == null || range[1] == null)
-				return null;
-			if (range[0].compareTo(BigInteger.ZERO) < 0)
-				return null;
-			if (range[1].compareTo(BigInteger.ZERO) < 0)
-				return null;
-			if (range[0].compareTo(range[1]) == 0)
-				return new ArrayList<>();
-			int[] rangeInt = { range[0].intValue(), range[1].intValue() };
-
-			result = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView,queryParameter.parameters(), rangeInt);
-		} else {
-			result = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView,queryParameter.parameters());
+		if(filterText == null)
+			filterText = "";
+		if(offset == null) {			
+			offset = BigInteger.ZERO;			
 		}
+		offset = offset.abs();
+		if(limit != null){
+			limit = limit.abs();			
+		}
+		
+		Integer offSetInteger = offset.intValue();
+		Integer limitInteger = (limit != null ? limit.intValue() : null);
+				
+		result = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.FindByFilterTextCuentaBancariaView,queryParameter.parameters(), offSetInteger, limitInteger);
 		if (result != null)
 			for (CuentaBancariaView cuentaBancariaView : result) {
 				Moneda moneda = cuentaBancariaView.getMoneda();

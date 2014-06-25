@@ -113,20 +113,12 @@ public class CuentaBancariaRESTService {
 			@QueryParam("tipoPersona") TipoPersona[] tipoPersona,
 			@QueryParam("tipoEstadoCuenta") EstadoCuentaBancaria[]  tipoEstadoCuenta) {
 				
-		if(desde == null || hasta == null){
-			desde = null;
-			hasta = null;
-		}	
 		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
 			desde = BigInteger.ZERO;
 		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
 			hasta = BigInteger.ZERO;
-		BigInteger[] range = null;
-		if(desde != null && hasta != null){
-			range = new BigInteger[]{desde, hasta};
-		}
 						
-		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(tipoCuenta, tipoPersona, tipoEstadoCuenta, range);
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(tipoCuenta, tipoPersona, tipoEstadoCuenta, desde, hasta);
 		return Response.status(Response.Status.OK).entity(list).build();				
 	}
 	
@@ -140,20 +132,12 @@ public class CuentaBancariaRESTService {
 			@QueryParam("tipoCuenta") TipoCuentaBancaria[] tipoCuenta,
 			@QueryParam("tipoPersona") TipoPersona[] tipoPersona,
 			@QueryParam("tipoEstadoCuenta") EstadoCuentaBancaria[] tipoEstadoCuenta) {
-		if(desde == null || hasta == null){
-			desde = null;
-			hasta = null;
-		}	
 		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
 			desde = BigInteger.ZERO;
 		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
 			hasta = BigInteger.ZERO;
-		BigInteger[] range = null;
-		if(desde != null && hasta != null){
-			range = new BigInteger[]{desde, hasta};
-		}
 		
-		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText, tipoCuenta, tipoPersona, tipoEstadoCuenta, range);
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText, tipoCuenta, tipoPersona, tipoEstadoCuenta, desde, hasta);
 		return Response.status(Response.Status.OK).entity(list).build();				
 	}
 	

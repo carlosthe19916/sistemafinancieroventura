@@ -85,8 +85,7 @@ public class PersonaJuridicaRESTService {
 		try {
 			PersonaJuridica personaJuridica = personaJuridicaService.find(idtipodocumento, numerodocumento);
 			if (personaJuridica != null) {
-				model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
-				result = Response.status(Response.Status.OK).entity(model).build();
+				result = Response.status(Response.Status.OK).entity(personaJuridica).build();
 			} else {
 				model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
 				result = Response.status(Response.Status.NOT_FOUND).entity(model).build();
