@@ -174,6 +174,8 @@ define(['./app'], function(app) {
                             $scope.menus = [
                                 {'name':'Cuenta Aporte', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.socio.crearSocio'},
+                                ]},
+                                {'name':'Clientes', submenus:[
                                     { 'name':'Buscar' , 'state':'app.socio.buscarSocio'}
                                 ]},
                                 {'name':'Cuentas Bancarias', submenus:[

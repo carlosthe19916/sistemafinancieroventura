@@ -60,26 +60,64 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	@EJB
 	private PersonaNaturalService personaNaturalService;
 	@EJB
-	private PersonaJuridicaService personaJuridicaService;		
+	private PersonaJuridicaService personaJuridicaService;
 	
 	@Override
-	public List<SocioView> findByFilterText(String filterText, Boolean modeSocio, Boolean modeEstado, BigInteger offset, BigInteger limit) {
-		List<SocioView> result = null;	
-		if (filterText == null)
-			return new ArrayList<SocioView>();
-		if (filterText.isEmpty() || filterText.trim().isEmpty()) {
-			return new ArrayList<SocioView>();
-		}
-		if(modeSocio == null)
-			modeSocio = true;
-		
-		List<Boolean> listEstado = new ArrayList<>();
-		if(modeEstado != null){
-			listEstado.add(modeEstado);
-		} else {
-			listEstado.add(true);
-			listEstado.add(false);
-		}		
+	public List<SocioView> findAllView() {
+		Boolean estadoCuentaAporte = null;
+		return findAllView(estadoCuentaAporte);
+	}
+	@Override
+	public List<SocioView> findAllView(String filterText) {
+		Boolean estadoCuentaAporte = null;
+		return findAllView(filterText, estadoCuentaAporte);
+	}
+	@Override
+	public List<SocioView> findAllView(Boolean estadoCuentaAporte) {
+		Boolean estadoSocio = null;
+		return findAllView(estadoCuentaAporte, estadoSocio);
+	}
+	@Override
+	public List<SocioView> findAllView(String filterText, Boolean cuentaAporte) {
+		Boolean estadoSocio = null;
+		return findAllView(filterText, cuentaAporte, estadoSocio);
+	}
+	@Override
+	public List<SocioView> findAllView(Boolean estadoCuentaAporte, Boolean estadoSocio) {
+		return findAllView(estadoCuentaAporte, estadoSocio, null, null);
+	}
+	@Override
+	public List<SocioView> findAllView(String filterText, Boolean estadoCuentaAporte, Boolean estadoSocio) {
+		return findAllView(filterText, estadoCuentaAporte, estadoSocio, null, null);
+	}
+	@Override
+	public List<SocioView> findAllView(BigInteger offset, BigInteger limit) {
+		Boolean cuentaAporte = null;
+		Boolean estadoSocio = null;
+		return findAllView(cuentaAporte, estadoSocio, offset, limit);
+	}
+	@Override
+	public List<SocioView> findAllView(Boolean cuentaAporte, BigInteger offset, BigInteger limit) {
+		Boolean estadoSocio = null;
+		return findAllView(cuentaAporte, estadoSocio, offset, limit);
+	}
+	@Override
+	public List<SocioView> findAllView(Boolean estadoCuentaAporte, Boolean estadoSocio, BigInteger offset, BigInteger limit) {
+		return findAllView(null, estadoCuentaAporte, estadoSocio, offset, limit);
+	}
+	@Override
+	public List<SocioView> findAllView(String filterText, BigInteger offset,BigInteger limit) {
+		Boolean estadoCuentaAporte = null;
+		Boolean estadoSocio = null;
+		return findAllView(filterText, estadoCuentaAporte, estadoSocio, offset, limit);
+	}
+	@Override
+	public List<SocioView> findAllView(String filterText, Boolean cuentaAporte, BigInteger offset, BigInteger limit) {
+		return findAllView(filterText, cuentaAporte,null, offset, limit);
+	}
+	@Override
+	public List<SocioView> findAllView(String filterText, Boolean estadoCuentaAporte, Boolean estadoSocio, BigInteger offset, BigInteger limit) {
+		List<SocioView> result = null;				
 		
 		if(filterText == null)
 			filterText = "";
@@ -89,20 +127,31 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		offset = offset.abs();
 		if(limit != null){
 			limit = limit.abs();			
-		}
-		
+		}		
 		Integer offSetInteger = offset.intValue();
 		Integer limitInteger = (limit != null ? limit.intValue() : null);
+				
+		//parametros de busqueda de estado socio
+		if(estadoCuentaAporte == null)
+			estadoCuentaAporte = true;
+		
+		List<Boolean> listEstado = new ArrayList<>();
+		if(estadoSocio != null){
+			listEstado.add(estadoSocio);
+		} else {
+			listEstado.add(true);
+			listEstado.add(false);
+		}		
 		
 		QueryParameter queryParameter = QueryParameter.with("modeEstado", listEstado).and("filtertext", '%' + filterText.toUpperCase() + '%');	
 		if(offSetInteger != null){															
-			if(modeSocio){				
+			if(estadoCuentaAporte){				
 				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters(), offSetInteger, limitInteger);
 			} else {
 				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters(), offSetInteger, limitInteger);
 			}						
 		} else {
-			if(modeSocio){
+			if(estadoCuentaAporte){
 				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioView, queryParameter.parameters());
 			} else {
 				result = socioViewDAO.findByNamedQuery(SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, queryParameter.parameters());
@@ -112,62 +161,16 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	public List<SocioView> findAllView(Boolean modeSocio, Boolean modeEstado, BigInteger offset, BigInteger limit) {	
-		List<SocioView> result = null;	
-		if(modeSocio == null)
-			modeSocio = true;
-		
-		List<Boolean> listEstado = new ArrayList<>();
-		if(modeEstado != null){
-			listEstado.add(modeEstado);
-		} else {
-			listEstado.add(true);
-			listEstado.add(false);
-		}		
-		
-		if(offset == null) {			
-			offset = BigInteger.ZERO;			
-		}
-		offset = offset.abs();
-		if(limit != null){
-			limit = limit.abs();			
-		}
-		
-		Integer offSetInteger = offset.intValue();
-		Integer limitInteger = (limit != null ? limit.intValue() : null);
-		
-		QueryParameter queryParameter = QueryParameter.with("modeEstado", listEstado);		
-		if(offSetInteger != null){																	
-			if(modeSocio){
-				//todos
-				result = socioViewDAO.findByNamedQuery(SocioView.findAll, queryParameter.parameters(), offSetInteger, limitInteger);
-			} else {
-				//con cuenta aporte
-				result = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte, queryParameter.parameters(), offSetInteger, limitInteger);
-			}						
-		} else {
-			if(modeSocio){
-				//todos
-				result = socioViewDAO.findByNamedQuery(SocioView.findAll, queryParameter.parameters());
-			} else {
-				//con cuenta aporte
-				result = socioViewDAO.findByNamedQuery(SocioView.FindAllHaveCuentaAporte, queryParameter.parameters());
-			}				
-		}			
-		return result;
-	}
-	
-	@Override
-	public Socio findSocio(TipoPersona tipoPersona, BigInteger idTipoDoc,String numDoc) {
+	public Socio find(TipoPersona tipoPersona, BigInteger idTipoDocumento, String numeroDocumento) {
 		switch (tipoPersona) {
 		case NATURAL:
-			QueryParameter queryParameter1 = QueryParameter.with("idtipodocumento", idTipoDoc).and("numerodocumento", numDoc);
+			QueryParameter queryParameter1 = QueryParameter.with("idtipodocumento", idTipoDocumento).and("numerodocumento", numeroDocumento);
 			List<Socio> list1 = socioDAO.findByNamedQuery(Socio.FindByPNTipoAndNumeroDocumento ,queryParameter1.parameters());
 			if(list1.size() == 1)
 				return list1.get(0);
 			break;
 		case JURIDICA:
-			QueryParameter queryParameter2 = QueryParameter.with("idtipodocumento", idTipoDoc).and("numerodocumento", numDoc);
+			QueryParameter queryParameter2 = QueryParameter.with("idtipodocumento", idTipoDocumento).and("numerodocumento", numeroDocumento);
 			List<Socio> list2 = socioDAO.findByNamedQuery(Socio.FindByPJTipoAndNumeroDocumento ,queryParameter2.parameters());
 			if(list2.size() == 1)
 				return list2.get(0);
@@ -237,8 +240,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			Hibernate.initialize(cuentaAporte);
 			Moneda moneda = cuentaAporte.getMoneda();
 			Hibernate.initialize(moneda);
-		}
-			
+		}			
 		return cuentaAporte;
 	}
 	
@@ -257,9 +259,11 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona, BigInteger idDocSocio,
-			String numDocSocio, BigInteger idDocApoderado,
-			String numDocApoderado) throws RollbackFailureException {
+	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona,
+			BigInteger idDocSocio, String numDocSocio,
+			BigInteger idDocApoderado, String numDocApoderado)
+			throws RollbackFailureException {
+		
 		PersonaNatural personaNatural = null;
 		PersonaJuridica personaJuridica = null;
 		PersonaNatural apoderado = null;
@@ -297,7 +301,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		}		
 		
 		//verificar si el socio ya existe
-		Socio socio = findSocio(tipoPersona, idDocSocio,numDocSocio);
+		Socio socio = find(tipoPersona, idDocSocio,numDocSocio);
 		if(socio != null) {		
 			if(socio.getEstado()) {
 				CuentaAporte aporte = socio.getCuentaAporte();
@@ -371,12 +375,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	protected DAO<Object, Socio> getDAO() {
-		return this.socioDAO;
-	}
-
-	@Override
-	public Socio findSocioByCuenta(BigInteger idCuentaBancaria) {
+	public Socio find(BigInteger idCuentaBancaria) {
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
 		if(cuentaBancaria == null)
 			return null;
@@ -398,11 +397,10 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		}	 	
 		return socio;
 	}
-
 	
-
-	
-
-	
+	@Override
+	protected DAO<Object, Socio> getDAO() {
+		return this.socioDAO;
+	}		
 
 }

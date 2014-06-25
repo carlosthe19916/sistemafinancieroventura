@@ -166,7 +166,7 @@ public class CuentaBancariaRESTService {
 	public Response findSocioFromCuentaBancaria(@PathParam("id")BigInteger id) {				
 		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(id);
 		if(cuentaBancaria != null) {
-			Socio socio = socioService.findSocioByCuenta(cuentaBancaria.getIdCuentaBancaria());
+			Socio socio = socioService.find(cuentaBancaria.getIdCuentaBancaria());
 			return Response.status(Response.Status.OK).entity(socio).build();	
 		}					
 		else {

@@ -36,7 +36,7 @@ import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 @NamedQueries({
 		@NamedQuery(name = SocioView.findAll, query = "SELECT sv FROM SocioView sv WHERE sv.estado IN :modeEstado ORDER BY sv.socio, sv.idsocio ASC"),
 		@NamedQuery(name = SocioView.FindAllHaveCuentaAporte, query = "SELECT sv FROM SocioView sv WHERE sv.cuentaAporte IS NOT NULL AND sv.estado IN :modeEstado ORDER BY sv.socio, sv.idsocio ASC"),
-		@NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.estado IN :modeEstado AND sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext ORDER BY sv.socio, sv.idsocio ASC"),
+		@NamedQuery(name = SocioView.FindByFilterTextSocioView, query = "SELECT sv FROM SocioView sv WHERE sv.estado IN :modeEstado AND (sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext) ORDER BY sv.socio, sv.idsocio ASC"),
 		@NamedQuery(name = SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte, query = "SELECT sv FROM SocioView sv WHERE sv.cuentaAporte IS NOT NULL AND sv.estado IN :modeEstado AND (sv.socio LIKE :filtertext or sv.numerodocumento like :filtertext) ORDER BY sv.socio, sv.idsocio ASC") })
 public class SocioView implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -45,31 +45,31 @@ public class SocioView implements Serializable {
 	public final static String FindAllHaveCuentaAporte = "SocioView.FindAllHaveCuentaAporte";
 	public final static String FindByFilterTextSocioView = "SocioView.FindByFilterTextSocioView";
 	public final static String FindByFilterTextSocioViewAllHaveCuentaAporte = "SocioView.FindByFilterTextSocioViewAllHaveCuentaAporte";
-	
+
 	private BigInteger idsocio;
-	
+
 	private int estado;
-	
+
 	private CuentaAporte cuentaAporte;
-	
+
 	private String numeroCuentaAporte;
-	
+
 	private EstadoCuentaAporte estadoCuentaAporte;
 
 	private String tipodocumento;
-	
+
 	private TipoPersona tipopersona;
-	
+
 	private String numerodocumento;
-	
+
 	private String socio;
-	
+
 	private Date fecNacfecConst;
-	
+
 	private Date fechaasociado;
-	
+
 	private String direccion;
-	
+
 	private String email;
 
 	public SocioView() {
@@ -85,7 +85,7 @@ public class SocioView implements Serializable {
 	public void setIdsocio(BigInteger idsocio) {
 		this.idsocio = idsocio;
 	}
-	
+
 	@XmlElement(name = "direccion")
 	@Column(name = "DIRECCION", nullable = false, length = 70, columnDefinition = "nvarchar2")
 	public String getDireccion() {
@@ -104,7 +104,7 @@ public class SocioView implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}	
+	}
 
 	@XmlElement
 	@Column(name = "SOCIO", nullable = false, length = 192, columnDefinition = "nvarchar2")
@@ -150,7 +150,7 @@ public class SocioView implements Serializable {
 	@XmlElement
 	@Temporal(TemporalType.DATE)
 	@Column(name = "\"FEC. NAC. / FEC. CONST.\"")
-	public Date getFecNacFecConst() {		        
+	public Date getFecNacFecConst() {
 		return fecNacfecConst;
 	}
 

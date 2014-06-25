@@ -45,8 +45,8 @@ import org.ventura.sistemafinanciero.entity.type.Sexo;
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
 		@NamedQuery(name = PersonaNatural.FindAll, query = "SELECT p FROM PersonaNatural p ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
-		@NamedQuery(name = PersonaNatural.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaNatural p WHERE p.tipoDocumento.idTipoDocumento = :idTipoDocumento AND p.numeroDocumento = :numeroDocumento ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
-		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filterText OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filterText ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
+		@NamedQuery(name = PersonaNatural.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaNatural p WHERE p.tipoDocumento.idTipoDocumento LIKE :idTipoDocumento AND p.numeroDocumento = :numeroDocumento ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
+		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento LIKE :filterText OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filterText ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
 public class PersonaNatural implements java.io.Serializable {
 
 	/**

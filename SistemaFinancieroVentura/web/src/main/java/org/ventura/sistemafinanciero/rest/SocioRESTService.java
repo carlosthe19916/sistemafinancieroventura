@@ -67,22 +67,35 @@ public class SocioRESTService {
 	@EJB
 	private TrabajadorService trabajadorService;
 	
+	//cuerpo de la respuesta
+	private final String ID_RESPONSE = "id";
+	private final String MESSAGE_RESPONSE = "message";
+
+	// mensajes
+	private final String SUCCESS_MESSAGE = "Success";
+	private final String NOT_FOUND_MESSAGE = "Socio no encontrado";
+	private final String BAD_REQUEST_MESSAGE = "Datos invalidos";
+	private final String CONFLICT_MESSAGE = "Socio ya existente";
+		
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listAll(
-			@QueryParam("modeSocio") Boolean modeSocio,
-			@QueryParam("modeEstado") Boolean modeEstado,
-			@QueryParam("desde") BigInteger desde, 
-			@QueryParam("hasta") BigInteger hasta) {
-		
-		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
-			desde = BigInteger.ZERO;
-		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
-			hasta = BigInteger.ZERO;
-					
-		List<SocioView> list = socioService.findAllView(modeSocio, modeEstado, desde, hasta);
-		return Response.status(Response.Status.OK).entity(list).build();				
-		
+	@Path("/{id}")
+	@Produces({ "application/xml", "application/json" })
+	public Response findById(@PathParam("id") @DefaultValue("null") BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;		
+		if(id != null){
+			Socio socio = socioService.findById(id);
+			if(socio != null){				
+				result = Response.status(Response.Status.OK).entity(socio).build();	
+			} else {
+				model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+				result = Response.status(Response.Status.NOT_FOUND).entity(model).build();	
+			}
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		}	
+		return result;
 	}
 	
 	@GET
@@ -90,40 +103,63 @@ public class SocioRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findByFilterText(
 			@PathParam("filterText") @DefaultValue("") String filterText, 
-			@QueryParam("modeSocio") Boolean modeSocio,
-			@QueryParam("modeEstado") Boolean modeEstado,
-			@QueryParam("desde") BigInteger desde, 
-			@QueryParam("hasta") BigInteger hasta) {		
+			@QueryParam("cuentaAporte") Boolean estadoCuentaAporte,
+			@QueryParam("estadoSocio") Boolean estadoSocio,
+			@QueryParam("offset") BigInteger offset, 
+			@QueryParam("limit") BigInteger limit) {		
 		
-		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
-			desde = BigInteger.ZERO;
-		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
-			hasta = BigInteger.ZERO;
+		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
+			offset = BigInteger.ZERO;
+		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
+			limit = BigInteger.ZERO;
 		
-		List<SocioView> list = socioService.findByFilterText(filterText, modeSocio, modeEstado, desde, hasta);
-		return Response.status(Response.Status.OK).entity(list).build();						
+		List<SocioView> list = socioService.findAllView(filterText, estadoCuentaAporte, estadoSocio, offset, limit);
+		Response result = null;
+		JsonObject model = null;
+		if(list != null){
+			result = Response.status(Response.Status.OK).entity(list).build();
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();	
+		}
+		return result;					
 	}	
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listAll(
+			@QueryParam("cuentaAporte") Boolean estadoCuentaAporte,
+			@QueryParam("estadoSocio") Boolean estadoSocio,
+			@QueryParam("offset") BigInteger offset,
+			@QueryParam("limit") BigInteger limit) {
+		
+		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
+			offset = BigInteger.ZERO;
+		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
+			limit = BigInteger.ZERO;
+			
+		
+		List<SocioView> list = socioService.findAllView(estadoCuentaAporte, estadoSocio, offset, limit);
+		Response result = null;
+		JsonObject model = null;
+		if(list != null){
+			result = Response.status(Response.Status.OK).entity(list).build();
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();	
+		}
+		return result;	
+		
+	}
 	
 	@GET
 	@Path("/count")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterText() {								
-		int size = socioService.count();
-		return Response.status(Response.Status.OK).entity(size).build();						
+	public Response countAll(@QueryParam("filterText") String filterText) {										
+		int size = socioService.count();		
+		Response result = Response.status(Response.Status.OK).entity(size).build();
+		return result;
 	}	
-	
-	@GET
-	@Path("/{id}")
-	@Produces({ "application/xml", "application/json" })
-	public Response getSocio(@PathParam("id") @DefaultValue("null") BigInteger id) {				
-		if(id == null)
-			return Response.status(Response.Status.BAD_REQUEST).entity("id no valido").build();
-		Socio socio = socioService.findById(id);
-		if(socio == null)
-			return Response.status(Response.Status.NOT_FOUND).entity("Socio no encontrado").build();
-		else 
-			return Response.status(Response.Status.OK).entity(socio).build();
-	}
 	
 	@GET
 	@Path("/{id}/cuentaAporte")

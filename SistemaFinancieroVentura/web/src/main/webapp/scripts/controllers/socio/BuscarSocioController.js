@@ -1,14 +1,13 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarSocioController", ["$scope", "$state", "ngProgress","focus", "SocioService",
-        function($scope, $state, ngProgress,focus, SocioService) {
+    controllers.controller("BuscarSocioController", ['$scope','$state','$timeout','focus','SocioService',
+        function($scope,$state,$timeout,focus,SocioService) {
 
             focus("firstFocus");
-            ngProgress.color("#2d6ca2");
 
             $scope.nuevo = function(){
                 $state.transitionTo("app.socio.crearSocio");
-            }
+            };
 
             $scope.sociosList = [];
 
@@ -31,43 +30,41 @@ define(['../module'], function (controllers) {
 
             $scope.getDesde = function(){
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
-            }
+            };
             $scope.getHasta = function(){
-                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
-            }
-
-            //eventos
+                return $scope.pagingOptions.pageSize;
+            };
 
             //cargar datos por primera vez
             $scope.getPagedDataInitial = function () {
-                setTimeout(function () {
-                    $scope.pagingOptions.currentPage = 1;
-                    SocioService.getSocios($scope.getDesde(), $scope.getHasta(), true).then(function(data){
+                $scope.pagingOptions.currentPage = 1;
+                SocioService.getSocios(null,null, $scope.getDesde(), $scope.getHasta()).then(function(data){
+                    $scope.sociosList = data;
+                    $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                });
+                SocioService.count().then(function(data){
+                    $scope.totalServerItems = data;
+                });
+            };
+            $scope.getPagedDataInitial();
+
+            //buscar con enter
+            $scope.getPagedDataSearched = function () {
+                if ($scope.filterOptions.filterText) {
+                    var ft = $scope.filterOptions.filterText.toUpperCase();
+                    SocioService.findByFilterText(ft,null,null,$scope.getDesde(), $scope.getHasta()).then(function (data){
                         $scope.sociosList = data;
                         $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
                     SocioService.count().then(function(data){
                         $scope.totalServerItems = data;
                     });
-                }, 100);
-            };
-            $scope.getPagedDataInitial();
+                } else {
+                    $scope.getPagedDataInitial();
+                }
 
-            //buscar con enter
-            $scope.getPagedDataSearched = function () {
-                setTimeout(function () {
-                    if ($scope.filterOptions.filterText) {
-                        var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), true).then(function (data){
-                            $scope.sociosList = data;
-                            $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        });
-                        SocioService.count().then(function(data){
-                            $scope.totalServerItems = data;
-                        });
-                    } else {
-                        $scope.getPagedDataInitial();
-                    }
+                $timeout(function() {
+                    angular.element(document.querySelector('#txtFilterText')).focus();
                 }, 100);
             };
 
@@ -84,12 +81,12 @@ define(['../module'], function (controllers) {
                     }
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), true).then(function(data){
+                        SocioService.findByFilterText(ft,null,null, $scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
                     } else {
-                        SocioService.getSocios($scope.getDesde(), $scope.getHasta(), true).then(function(data){
+                        SocioService.getSocios(null, null,$scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
@@ -105,13 +102,14 @@ define(['../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:'id', displayName:'ID SOCIO', width:"8%"},
-                    {field:'tipoDocumento', displayName:'TIPO DOC.',width:"10%"},
+                    {field:'id', displayName:'C.SOCIO', width:"8%"},
+                    {field:'tipoDocumento', displayName:'TIPO DOC.',width:"9%"},
                     {field:'numeroDocumento', displayName:'NUM. DOC.',width:"12%"},
-                    {field:'tipoPersona', displayName:'T.PERSONA',width:"10%"},
-                    {field:'socio', displayName:'SOCIO',width:"26%"},
-                    {field:'numeroCuentaAporte', displayName:'CUENTA.',width:"14%"},
-                    {field:"fechaAsociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:"10%"},
+                    {field:'tipoPersona', displayName:'PERSONA',width:"9%"},
+                    {field:'socio', displayName:'SOCIO',width:"25%"},
+                    {displayName: 'NUM.CTA.AP.', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center; width: 100%;"><span ng-show="row.entity.numeroCuentaAporte">{{row.entity.numeroCuentaAporte}}</span><span ng-hide="row.entity.numeroCuentaAporte">NO REGISTRADO</span></div>', width:"14%"},
+                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">INACTIVO</span></div>', width:"8%"},
+                    {field:"fechaAsociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:"9%"},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editSocio(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
             };

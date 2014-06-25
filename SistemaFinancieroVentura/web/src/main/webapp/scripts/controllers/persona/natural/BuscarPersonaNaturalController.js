@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$location','$window','ngProgress','PersonaNaturalService','TransitionService',
-        function($scope, $state,$location,$window,ngProgress,PersonaNaturalService,TransitionService){
+    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$timeout','$location','$window','ngProgress','PersonaNaturalService','TransitionService',
+        function($scope,$state,$timeout,$location,$window,ngProgress,PersonaNaturalService,TransitionService){
 
             $scope.nuevo = function() {
                 TransitionService.setUrl('app.administracion.buscarPersonaNatural');
@@ -72,6 +72,9 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.getPagedDataInitial();
                 }
+                $timeout(function() {
+                    angular.element(document.querySelector('#txtFilterText')).focus();
+                }, 100);
             };
 
             $scope.$watch(

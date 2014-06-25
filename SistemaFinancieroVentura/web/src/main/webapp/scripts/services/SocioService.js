@@ -4,38 +4,46 @@ define(['./module'], function (services) {
         function(Restangular){
 
             var _socioService = Restangular.all("socio");
+            var baseUrl = "socio";
 
             return {
-                getSocios: function(desde, hasta, modeSocio, modeEstado){
-                    if(arguments.length == 0){
-                        return _socioService.getList({},{});
-                    } else if(arguments.length == 1){
-                        return _socioService.getList({"desde":desde},{});
-                    } else if(arguments.length == 2){
-                        return _socioService.getList({"desde":desde,"hasta":hasta},{});
-                    } else if(arguments.length == 3){
-                        return _socioService.getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio},{});
-                    } else if(arguments.length == 4){
-                        return _socioService.getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio,"modeEstado":modeEstado},{});
-                    }
+                findById: function(id){
+                    return Restangular.one(baseUrl, id).get();
                 },
-                findByFilterText: function(text, desde, hasta, modeSocio, modeEstado){
+                findByFilterText: function(filterText,estadoCuentaAporte, estadoSocio, offset, limit){
                     if(arguments.length == 0){
                         return Restangular.all("socio/filtertext/"+"").getList({},{});
                     } else if(arguments.length == 1){
-                        return Restangular.all("socio/filtertext/"+text).getList({},{});
+                        return Restangular.all("socio/filtertext/"+filterText).getList({},{});
                     } else if(arguments.length == 2){
-                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde},{});
+                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte},{});
                     } else if(arguments.length == 3){
-                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde,"hasta":hasta},{});
+                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio},{});
                     } else if(arguments.length == 4){
-                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio},{});
+                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset},{});
                     } else if(arguments.length == 5){
-                        return Restangular.all("socio/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"modeSocio":modeSocio,"modeEstado":modeEstado},{});
+                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset,"limit":limit},{});
                     }
                 },
-                count: function(){
-                    return Restangular.one("socio/count").get();
+                getSocios: function(estadoCuentaAporte, estadoSocio, offset, limit){
+                    if(arguments.length == 0){
+                        return _socioService.getList({},{});
+                    } else if(arguments.length == 1){
+                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte},{});
+                    } else if(arguments.length == 2){
+                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio},{});
+                    } else if(arguments.length == 3){
+                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset},{});
+                    } else if(arguments.length == 4){
+                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset,"limit":limit},{});
+                    }
+                },
+                count: function(filterText){
+                    if(arguments.length == 0){
+                        return Restangular.one(baseUrl + "/count").get();
+                    } else if(arguments.length == 1){
+                        return Restangular.one(baseUrl + "/count").get({"filterText":filterText},{});
+                    }
                 },
                 crear : function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
                     var socio = {
