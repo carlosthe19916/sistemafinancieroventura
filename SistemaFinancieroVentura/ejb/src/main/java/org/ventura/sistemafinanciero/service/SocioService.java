@@ -61,5 +61,11 @@ public interface SocioService extends AbstractService<Socio> {
 	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona, 
 			BigInteger idDocSocio, String numDocSocio, BigInteger 
 			idDocApoderado, String numDocApoderado) throws RollbackFailureException;
+	
+	public void congelarCuentaAporte(BigInteger idSocio) throws RollbackFailureException;
+	
+	public void descongelarCuentaAporte(BigInteger idSocio) throws RollbackFailureException;
+	
+	public void inactivarSocio(BigInteger idSocio) throws RollbackFailureException;
 
 }

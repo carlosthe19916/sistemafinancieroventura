@@ -72,6 +72,12 @@ define(['./module'], function (services) {
                 },
                 getCuentasBancarias: function(id){
                     return Restangular.all("socio/"+id+"/cuentasBancarias").getList();
+                },
+                congelarCuentaAporte: function(id){
+                    return Restangular.one(baseUrl +"/"+id+"/cuentaAporte/congelar").customPUT({},'',{},{});
+                },
+                inactivarSocio: function(id){
+                    return Restangular.one(baseUrl +"/"+id).remove();
                 }
             }
         }])

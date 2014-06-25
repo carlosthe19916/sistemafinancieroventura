@@ -29,6 +29,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -165,19 +166,71 @@ public class SocioRESTService {
 	@Path("/{id}/cuentaAporte")
 	@Produces({ "application/xml", "application/json" })
 	public Response getCuentaAporte(@PathParam("id")BigInteger id) {				
-		if(id == null)
-			return Response.status(Response.Status.BAD_REQUEST).entity("id no valido").build();
-		Socio socio = socioService.findById(id);
-		if(socio == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("Socio no encontrado").build();	
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
 		}			
-		else {
-			CuentaAporte ctaAporte= socioService.getCuentaAporte(socio.getIdSocio());	
-			if(ctaAporte == null)
-				return Response.status(Response.Status.NOT_FOUND).entity(ctaAporte).build();
-			else 
-				return Response.status(Response.Status.OK).entity(ctaAporte).build();
+		CuentaAporte cuentaAporte = socioService.getCuentaAporte(id);	
+		if(cuentaAporte != null){
+			return Response.status(Response.Status.OK).entity(cuentaAporte).build();
+		} else {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
+			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}	
+		return result;
+	}
+	
+	@PUT
+	@Path("/{id}/cuentaAporte/congelar")
+	@Produces({ "application/xml", "application/json" })
+	public Response congelarCuentaAporte(@PathParam("id")BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
 		}			
+		try {
+			socioService.congelarCuentaAporte(id);
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, SUCCESS_MESSAGE).build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
+	}
+	
+	@PUT
+	@Path("/{id}/cuentaAporte/descongelar")
+	@Produces({ "application/xml", "application/json" })
+	public Response descongelarCuentaAporte(@PathParam("id")BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {
+			socioService.descongelarCuentaAporte(id);
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, SUCCESS_MESSAGE).build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
 	}
 	
 	@GET
@@ -304,9 +357,25 @@ public class SocioRESTService {
 	
 	@DELETE
 	@Path("/{id}")
-	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-	public Response deleteSocio(@PathParam("id") int id) {				
-		return null;
+	public Response deleteSocio(@PathParam("id") BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;		
+		if(id == null){
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {
+			socioService.inactivarSocio(id);
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, SUCCESS_MESSAGE).build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;	
 	}
 }

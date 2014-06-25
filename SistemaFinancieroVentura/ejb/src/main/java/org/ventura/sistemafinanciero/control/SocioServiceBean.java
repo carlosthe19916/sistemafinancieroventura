@@ -31,6 +31,7 @@ import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaAporte;
+import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
@@ -401,6 +402,73 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	@Override
 	protected DAO<Object, Socio> getDAO() {
 		return this.socioDAO;
+	}
+	@Override
+	public void congelarCuentaAporte(BigInteger idSocio) throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		CuentaAporte cuentaAporte = socio.getCuentaAporte();
+		if(cuentaAporte == null)
+			throw new RollbackFailureException("Socio no tiene cuenta de aportes");
+		EstadoCuentaAporte estadoCuentaAporte = cuentaAporte.getEstadoCuenta();
+		switch (estadoCuentaAporte) {
+		case ACTIVO:	
+			cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.CONGELADO);
+			cuentaAporteDAO.update(cuentaAporte);
+			break;
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta de aportes ya esta congelada");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta de aportes inactiva, no se puede congelar");
+		default:
+			throw new RollbackFailureException("Estado de cuenta de aportes no definida");
+		}				
+	}
+	
+	@Override
+	public void descongelarCuentaAporte(BigInteger idSocio) throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		CuentaAporte cuentaAporte = socio.getCuentaAporte();
+		if(cuentaAporte == null)
+			throw new RollbackFailureException("Socio no tiene cuenta de aportes");
+		EstadoCuentaAporte estadoCuentaAporte = cuentaAporte.getEstadoCuenta();
+		switch (estadoCuentaAporte) {
+		case ACTIVO:	
+			throw new RollbackFailureException("Cuenta de aportes activa, no se puede descongelar");
+		case CONGELADO:
+			cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.ACTIVO);
+			cuentaAporteDAO.update(cuentaAporte);
+			break;
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta de aportes inactiva, no se puede descongelar");
+		default:
+			throw new RollbackFailureException("Estado de cuenta de aportes no definida");
+		}
+	}
+	@Override
+	public void inactivarSocio(BigInteger idSocio) throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);				
+		CuentaAporte cuentaAporte = socio.getCuentaAporte();		
+		Set<CuentaBancaria> cuentasBancarias = socio.getCuentaBancarias();		
+		if(!socio.getEstado()){
+			throw new RollbackFailureException("Socio ya esta inactivo, no se puede inactivar nuevamente");
+		}
+		for (CuentaBancaria cuentaBancaria : cuentasBancarias) {
+			EstadoCuentaBancaria estadoCuentaBancaria = cuentaBancaria.getEstado();
+			if(!estadoCuentaBancaria.equals(EstadoCuentaBancaria.INACTIVO))
+				throw new RollbackFailureException("Socio tiene cuentas bancarias activas, primero inactive cuentas bancarias");
+		}
+		BigDecimal saldoCuentaAporte = cuentaAporte.getSaldo();
+		if(saldoCuentaAporte.compareTo(BigDecimal.ZERO) != 0){
+			throw new RollbackFailureException("Cuenta de aportes tiene saldo, retire el dinero antes de desactivar");
+		}
+		
+		//inactivar socio
+		socio.setEstado(false);
+		socio.setFechaFin(Calendar.getInstance().getTime());
+		socioDAO.update(socio);
+		
+		cuentaAporte.setEstadoCuenta(EstadoCuentaAporte.INACTIVO);
+		cuentaAporteDAO.update(cuentaAporte);
 	}		
 
 }
