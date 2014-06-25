@@ -23,12 +23,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.ventura.sistemafinanciero.entity.type.Sexo;
 
 /**
@@ -39,9 +44,9 @@ import org.ventura.sistemafinanciero.entity.type.Sexo;
 @XmlRootElement(name = "personanatural")
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
-		@NamedQuery(name = PersonaNatural.FindAll, query = "SELECT p FROM PersonaNatural p"),
-		@NamedQuery(name = PersonaNatural.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaNatural p WHERE p.tipoDocumento.idTipoDocumento = :idtipodocumento AND p.numeroDocumento = :numerodocumento"),
-		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filtertext OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filtertext ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
+		@NamedQuery(name = PersonaNatural.FindAll, query = "SELECT p FROM PersonaNatural p ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
+		@NamedQuery(name = PersonaNatural.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaNatural p WHERE p.tipoDocumento.idTipoDocumento = :idTipoDocumento AND p.numeroDocumento = :numeroDocumento ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural"),
+		@NamedQuery(name = PersonaNatural.FindByFilterText, query = "SELECT p FROM PersonaNatural p WHERE p.numeroDocumento = :filterText OR UPPER(CONCAT(p.apellidoPaterno,' ', p.apellidoMaterno,' ',p.nombres)) LIKE :filtertext ORDER BY p.apellidoPaterno, p.apellidoMaterno, p.nombres, p.idPersonaNatural") })
 public class PersonaNatural implements java.io.Serializable {
 
 	/**
@@ -127,7 +132,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.trabajadors = trabajadors;
 	}
 
-	@XmlElement(name = "id")
+	@XmlElement(name = "id")	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_PERSONA_NATURAL", unique = true, nullable = false, precision = 22, scale = 0)
@@ -140,6 +145,8 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
+	@NotBlank
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TIPO_DOCUMENTO", nullable = false)
 	public TipoDocumento getTipoDocumento() {
@@ -151,6 +158,9 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 20)
 	@Column(name = "NUMERO_DOCUMENTO", nullable = false, length = 40, columnDefinition = "nvarchar2")
 	public String getNumeroDocumento() {
 		return this.numeroDocumento;
@@ -161,6 +171,9 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 60)
 	@Column(name = "APELLIDO_PATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoPaterno() {
 		return this.apellidoPaterno;
@@ -171,6 +184,9 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 60)
 	@Column(name = "APELLIDO_MATERNO", nullable = false, length = 120, columnDefinition = "nvarchar2")
 	public String getApellidoMaterno() {
 		return this.apellidoMaterno;
@@ -181,6 +197,9 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
+	@NotBlank
+	@Size(min = 1, max = 70)
 	@Column(name = "NOMBRES", nullable = false, length = 140, columnDefinition = "nvarchar2")
 	public String getNombres() {
 		return this.nombres;
@@ -191,6 +210,8 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
+	@Past
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_NACIMIENTO", nullable = false, length = 7)
 	public Date getFechaNacimiento() {
@@ -202,6 +223,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "SEXO", nullable = false, length = 20, columnDefinition = "nvarchar2")
 	public Sexo getSexo() {
@@ -212,7 +234,7 @@ public class PersonaNatural implements java.io.Serializable {
 		this.sexo = sexo;
 	}
 
-	@XmlElement
+	@XmlElement	
 	@Column(name = "ESTADO_CIVIL", length = 20, columnDefinition = "nvarchar2")
 	public String getEstadoCivil() {
 		return this.estadoCivil;
@@ -223,6 +245,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 30)
 	@Column(name = "OCUPACION", length = 60, columnDefinition = "nvarchar2")
 	public String getOcupacion() {
 		return this.ocupacion;
@@ -233,6 +256,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 70)
 	@Column(name = "DIRECCION", length = 140, columnDefinition = "nvarchar2")
 	public String getDireccion() {
 		return this.direccion;
@@ -243,6 +267,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 50)
 	@Column(name = "REFERENCIA", length = 100, columnDefinition = "nvarchar2")
 	public String getReferencia() {
 		return this.referencia;
@@ -253,6 +278,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 20)
 	@Column(name = "TELEFONO", length = 40, columnDefinition = "nvarchar2")
 	public String getTelefono() {
 		return this.telefono;
@@ -263,6 +289,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 20)
 	@Column(name = "CELULAR", length = 40, columnDefinition = "nvarchar2")
 	public String getCelular() {
 		return this.celular;
@@ -273,6 +300,8 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Email
+	@Size(max = 70)
 	@Column(name = "EMAIL", length = 140, columnDefinition = "nvarchar2")
 	public String getEmail() {
 		return this.email;
@@ -283,6 +312,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 6)
 	@Column(name = "UBIGEO", length = 12, columnDefinition = "nvarchar2")
 	public String getUbigeo() {
 		return this.ubigeo;
@@ -293,6 +323,7 @@ public class PersonaNatural implements java.io.Serializable {
 	}
 
 	@XmlElement
+	@Size(max = 3)
 	@Column(name = "CODIGO_PAIS", length = 6, nullable = false, columnDefinition = "nvarchar2")
 	public String getCodigoPais() {
 		return this.codigoPais;
@@ -300,6 +331,28 @@ public class PersonaNatural implements java.io.Serializable {
 
 	public void setCodigoPais(String codigoPais) {
 		this.codigoPais = codigoPais;
+	}
+	
+	@XmlElement
+	@Size(max = 100)
+	@Column(name = "URL_FOTO", nullable = true, length = 200, columnDefinition = "nvarchar2")
+	public String getUrlFoto() {
+		return urlFoto;
+	}
+
+	public void setUrlFoto(String urlFoto) {
+		this.urlFoto = urlFoto;
+	}
+
+	@XmlElement
+	@Size(max = 100)
+	@Column(name = "URL_FIRMA", nullable = true, length = 200, columnDefinition = "nvarchar2")
+	public String getUrlFirma() {
+		return urlFirma;
+	}
+
+	public void setUrlFirma(String urlFirma) {
+		this.urlFirma = urlFirma;
 	}
 
 	@XmlTransient
@@ -372,26 +425,6 @@ public class PersonaNatural implements java.io.Serializable {
 	@Override
 	public int hashCode() {
 		return this.tipoDocumento.hashCode() * this.numeroDocumento.hashCode();
-	}
-
-	@XmlElement
-	@Column(name = "URL_FOTO", nullable = true, length = 200, columnDefinition = "nvarchar2")
-	public String getUrlFoto() {
-		return urlFoto;
-	}
-
-	public void setUrlFoto(String urlFoto) {
-		this.urlFoto = urlFoto;
-	}
-
-	@XmlElement
-	@Column(name = "URL_FIRMA", nullable = true, length = 200, columnDefinition = "nvarchar2")
-	public String getUrlFirma() {
-		return urlFirma;
-	}
-
-	public void setUrlFirma(String urlFirma) {
-		this.urlFirma = urlFirma;
 	}
 
 }

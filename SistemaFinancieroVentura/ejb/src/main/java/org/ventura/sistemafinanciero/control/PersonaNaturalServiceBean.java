@@ -54,17 +54,20 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 	}
 
 	@Override
-	public PersonaNatural find(BigInteger idTipodocumento, String numerodocumento) {
-		if(idTipodocumento == null || numerodocumento == null)
+	public PersonaNatural find(BigInteger idTipoDocumento, String numeroDocumento) {
+		if(idTipoDocumento == null || numeroDocumento == null)
 			return null;
-		if(numerodocumento.isEmpty() || numerodocumento.trim().isEmpty())
+		
+		numeroDocumento = numeroDocumento.trim();
+		if(numeroDocumento.isEmpty())
 			return null;
+		
 		PersonaNatural result = null;
 		try {
-			QueryParameter queryParameter = QueryParameter.with("idtipodocumento",idTipodocumento).and("numerodocumento", numerodocumento);
+			QueryParameter queryParameter = QueryParameter.with("idTipoDocumento",idTipoDocumento).and("numeroDocumento", numeroDocumento);
 			List<PersonaNatural> list = personaNaturalDAO.findByNamedQuery(PersonaNatural.FindByTipoAndNumeroDocumento, queryParameter.parameters());
 			if (list.size() > 1)
-				throw new IllegalResultException("Se encontró mas de una persona con idDocumento:" + idTipodocumento + " y numero de documento:" + numerodocumento);
+				throw new IllegalResultException("Se encontró mas de una persona con idDocumento:" + idTipoDocumento + " y numero de documento:" + numeroDocumento);
 			else 
 				for (PersonaNatural personaNatural : list) {
 					result = personaNatural;
@@ -109,7 +112,7 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		Integer offSetInteger = offset.intValue();
 		Integer limitInteger = (limit != null ? limit.intValue() : null);
 		
-		QueryParameter queryParameter = QueryParameter.with("filtertext", '%' + filterText.toUpperCase() + '%');
+		QueryParameter queryParameter = QueryParameter.with("filterText", '%' + filterText.toUpperCase() + '%');
 		result = personaNaturalDAO.findByNamedQuery(PersonaNatural.FindByFilterText, queryParameter.parameters(), offSetInteger, limitInteger);	
 		
 		if(result != null){
@@ -128,7 +131,7 @@ public class PersonaNaturalServiceBean extends AbstractServiceBean<PersonaNatura
 		}
 		TipoDocumento tipoDocumento = personanatural.getTipoDocumento();
 		String numeroDocumento = personanatural.getNumeroDocumento();
-		Object obj = find(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
+		Object obj = this.find(tipoDocumento.getIdTipoDocumento(), numeroDocumento);
 		if (obj == null)
 			personaNaturalDAO.create(personanatural);
 		else
