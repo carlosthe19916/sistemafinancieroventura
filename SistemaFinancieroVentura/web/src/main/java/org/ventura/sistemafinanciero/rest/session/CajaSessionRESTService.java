@@ -197,18 +197,5 @@ public class CajaSessionRESTService {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
-
-	@PUT
-	@Consumes({ "application/xml", "application/json" })
-	@Produces({ "application/xml", "application/json" })
-	public Response updateCaja(Caja caja) {
-		return null;
-	}
-
-	@DELETE
-	@Consumes({ "application/xml", "application/json" })
-	@Produces({ "application/xml", "application/json" })
-	public Response deleteCaja() {
-		return null;
-	}
+	
 }
