@@ -1,8 +1,11 @@
-<div>
+<div ng-controller="ContratoInactivadoSocioController">
+
     <fieldset>
         <legend>Inactivar Socio</legend>
     </fieldset>
-
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        <span ng-bind="alert.msg"></span>
+    </alert>
     <div class="row">
         <div class="col-sm-12">
             <p>
@@ -33,9 +36,11 @@
         <div class="col-sm-12">
             <div class="checkbox">
                 <label>
-                    <input type="checkbox"> Acepto los terminos y condiciones
+                    <input type="checkbox" ng-model="view.condiciones" required> Acepto los terminos y condiciones
                 </label>
             </div>
         </div>
     </div>
+    <button type="button" ng-click="cancelar()" class="btn btn-default">Cancelar</button>
+    <button type="button" ng-click="siguiente()" class="btn btn-default">Continuar »</button>
 </div>

@@ -70,7 +70,13 @@ define(['./module'], function (services) {
                     return Restangular.all("caja/session/transferenciaBancaria").post(transaccion);
                 },
                 crearAporte: function(transaccion){
-                    return Restangular.all("caja/session/transaccionCuentaAporte").post(transaccion);
+                    return Restangular.all("caja/session/transaccionCuentaAporte/deposito").post(transaccion);
+                },
+                crearRetiroCuentaAporte: function(idSocio){
+                    return Restangular.all("caja/session/transaccionCuentaAporte/retiro/"+idSocio).post();
+                },
+                getVoucherCancelacionCuentaAporte: function(idTransaccion){
+                    return Restangular.one("socio/"+idTransaccion+"/voucherCancelacionCuentaAporte").get();
                 },
                 crearTransaccionCompraVenta: function(transaccion){
                     return Restangular.all("caja/session/transaccionCompraVenta").post(transaccion);

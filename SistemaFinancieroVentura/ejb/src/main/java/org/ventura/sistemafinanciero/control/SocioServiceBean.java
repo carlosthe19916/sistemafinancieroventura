@@ -22,6 +22,8 @@ import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Accionista;
 import org.ventura.sistemafinanciero.entity.Agencia;
+import org.ventura.sistemafinanciero.entity.BovedaCaja;
+import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.Moneda;
@@ -30,9 +32,14 @@ import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
+import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
+import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
@@ -59,6 +66,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	private DAO<Object, Agencia> agenciaDAO;
 	@Inject
 	private DAO<Object, PersonaNatural> personaNaturalDAO;
+	@Inject
+	private DAO<Object, TransaccionCuentaAporte> transaccionCuentaAporteDAO;
 	
 	@EJB
 	private PersonaNaturalService personaNaturalService;
@@ -399,12 +408,8 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			Hibernate.initialize(accionistas);
 		}	 	
 		return socio;
-	}
+	}		
 	
-	@Override
-	protected DAO<Object, Socio> getDAO() {
-		return this.socioDAO;
-	}
 	@Override
 	public void congelarCuentaAporte(BigInteger idSocio) throws RollbackFailureException {
 		Socio socio = socioDAO.find(idSocio);
@@ -446,6 +451,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			throw new RollbackFailureException("Estado de cuenta de aportes no definida");
 		}
 	}
+	
 	@Override
 	public void inactivarSocio(BigInteger idSocio) throws RollbackFailureException {
 		Socio socio = socioDAO.find(idSocio);				
@@ -494,6 +500,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		socio.setApoderado(apoderado);
 		socioDAO.update(socio);
 	}
+	
 	@Override
 	public void eliminarApoderado(BigInteger idSocio)throws RollbackFailureException {
 		Socio socio = socioDAO.find(idSocio);
@@ -502,5 +509,82 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		socio.setApoderado(null);
 		socioDAO.update(socio);
 	}		
+	
+	@Override
+	protected DAO<Object, Socio> getDAO() {
+		return this.socioDAO;
+	}
+	
+	@Override
+	public VoucherTransaccionCuentaAporte getVoucherCancelacion(BigInteger idTransaccion) {
+		VoucherTransaccionCuentaAporte voucherTransaccion = null;
+		
+		// recuperando transaccion
+		TransaccionCuentaAporte transaccionBancaria = transaccionCuentaAporteDAO.find(idTransaccion);
+		CuentaAporte cuentaAporte = transaccionBancaria.getCuentaAporte();
+		Set<Socio> socios = cuentaAporte.getSocios();
+		
+			try {
+				if(socios.size() != 1)
+					throw new IllegalResultException("mas de un socio asociado a la cuenta de aportes");
+				Socio socio = null;
+				for (Socio sos : socios) {
+					socio = sos;
+				}
+				Caja caja = transaccionBancaria.getHistorialCaja().getCaja();
+				Set<BovedaCaja> list = caja.getBovedaCajas();
+				Agencia agencia = null;
+				for (BovedaCaja bovedaCaja : list) {
+					agencia = bovedaCaja.getBoveda().getAgencia();
+					break;
+				}
+				
+				voucherTransaccion = new VoucherTransaccionCuentaAporte();
+				//Poniendo datos de transaccion
+				voucherTransaccion.setIdTransaccion(transaccionBancaria.getIdTransaccionCuentaAporte());
+				Moneda moneda = transaccionBancaria.getCuentaAporte().getMoneda();
+				Hibernate.initialize(moneda);
+				voucherTransaccion.setMoneda(moneda);
+				
+				voucherTransaccion.setFecha(transaccionBancaria.getFecha());
+				voucherTransaccion.setHora(transaccionBancaria.getHora());
+				voucherTransaccion.setNumeroOperacion(transaccionBancaria.getNumeroOperacion());
+				voucherTransaccion.setMonto(transaccionBancaria.getMonto());
+				voucherTransaccion.setReferencia(transaccionBancaria.getReferencia());
+				voucherTransaccion.setTipoTransaccion(transaccionBancaria.getTipoTransaccion());				
+				voucherTransaccion.setObservacion(transaccionBancaria.getObservacion());
+				
+				//Poniendo datos de cuenta bancaria					
+				voucherTransaccion.setNumeroCuenta(cuentaAporte.getNumeroCuenta());
+				voucherTransaccion.setSaldoDisponible(cuentaAporte.getSaldo());
+				
+				//Poniendo datos de agencia
+				voucherTransaccion.setAgenciaDenominacion(agencia.getDenominacion());
+				voucherTransaccion.setAgenciaAbreviatura(agencia.getAbreviatura());
+				
+				//Poniendo datos de caja
+				voucherTransaccion.setCajaDenominacion(caja.getDenominacion());
+				voucherTransaccion.setCajaAbreviatura(caja.getAbreviatura());
+				
+				//Poniendo datos del socio
+				PersonaNatural personaNatural = socio.getPersonaNatural();
+				PersonaJuridica personaJuridica = socio.getPersonaJuridica();
+				if (personaJuridica == null) {
+					voucherTransaccion.setIdSocio(socio.getIdSocio());
+					voucherTransaccion.setTipoDocumento(socio.getPersonaNatural().getTipoDocumento());			//
+					voucherTransaccion.setNumeroDocumento(socio.getPersonaNatural().getNumeroDocumento());
+					voucherTransaccion.setSocio(personaNatural.getApellidoPaterno() + " " + personaNatural.getApellidoMaterno() + ", " + personaNatural.getNombres());
+				}
+				if (personaNatural == null) {
+					voucherTransaccion.setIdSocio(socio.getIdSocio());
+					voucherTransaccion.setTipoDocumento(socio.getPersonaJuridica().getTipoDocumento());			//
+					voucherTransaccion.setNumeroDocumento(socio.getPersonaJuridica().getNumeroDocumento());
+					voucherTransaccion.setSocio(personaJuridica.getRazonSocial());
+				}				
+			} catch (IllegalResultException e) {
+				LOGGER.error(e.getMessage(), e.getCause(), e.getLocalizedMessage());
+			}		
+			return voucherTransaccion;
+	}
 
 }

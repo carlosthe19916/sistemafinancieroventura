@@ -896,6 +896,59 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		return transaccionCuentaAporte.getIdTransaccionCuentaAporte();	
 	}
+	
+	@Override
+	public BigInteger retiroCuentaAporte(BigInteger idSocio)
+			throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		if(socio == null)
+			throw new RollbackFailureException("Socio no encontrado");
+		CuentaAporte cuentaAporte = socio.getCuentaAporte();
+		if(cuentaAporte == null)
+			throw new RollbackFailureException("Socio no tiene cuenta de aportes");						
+		
+		switch (cuentaAporte.getEstadoCuenta()) {
+		case CONGELADO:
+			throw new RollbackFailureException("Cuenta CONGELADA, no se pueden realizar transacciones");			
+		case INACTIVO:
+			throw new RollbackFailureException("Cuenta INACTIVO, no se pueden realizar transacciones");
+		default:
+			break;
+		}
+		
+		//obteniendo datos de caja en session
+		HistorialCaja historialCaja = this.getHistorialActivo();
+		Trabajador trabajador = this.getTrabajador();
+		PersonaNatural natural = trabajador.getPersonaNatural();
+		
+		//obteniendo saldo disponible de cuenta
+		BigDecimal montoTransaccion = cuentaAporte.getSaldo().negate();
+		BigDecimal saldoDisponible = cuentaAporte.getSaldo().add(montoTransaccion);
+		cuentaAporte.setSaldo(saldoDisponible);		
+		cuentaAporteDAO.update(cuentaAporte);
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		TransaccionCuentaAporte transaccionCuentaAporte = new TransaccionCuentaAporte();
+		transaccionCuentaAporte.setCuentaAporte(cuentaAporte);
+		transaccionCuentaAporte.setEstado(true);
+		transaccionCuentaAporte.setFecha(calendar.getTime());
+		transaccionCuentaAporte.setHistorialCaja(historialCaja);
+		transaccionCuentaAporte.setHora(calendar.getTime());
+		transaccionCuentaAporte.setMonto(montoTransaccion);
+		transaccionCuentaAporte.setNumeroOperacion(this.getNumeroOperacion());
+		transaccionCuentaAporte.setReferencia("Cancelacion de cuenta");
+		transaccionCuentaAporte.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
+		transaccionCuentaAporte.setSaldoDisponible(saldoDisponible);
+		transaccionCuentaAporte.setTipoTransaccion(Tipotransaccionbancaria.RETIRO);
+		
+		transaccionCuentaAporteDAO.create(transaccionCuentaAporte);	
+		
+		//actualizar saldo caja
+		this.actualizarSaldoCaja(montoTransaccion, cuentaAporte.getMoneda().getIdMoneda());
+		
+		return transaccionCuentaAporte.getIdTransaccionCuentaAporte();	
+	}
 
 	@Override
 	public BigInteger crearTransferenciaBancaria(String numeroCuentaOrigen,
@@ -1018,6 +1071,5 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		return transaccionCompraVenta.getIdTransaccionCompraVenta();
 	}
-
 
 }

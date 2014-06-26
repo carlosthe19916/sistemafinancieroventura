@@ -176,7 +176,7 @@ define(['./app'], function(app) {
                                     { 'name':'Buscar' , 'state':'app.socio.buscarSocio'}
                                 ]},
                                 {'name':'Cuenta Aporte', submenus:[
-                                    { 'name':'Nuevo' , 'state':'app.socio.crearSocio'},
+                                    { 'name':'Nuevo' , 'state':'app.socio.crearSocio'}
                                 ]},
                                 {'name':'Cuentas Bancarias', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.socio.crearCuentaBancaria'},
@@ -465,6 +465,18 @@ define(['./app'], function(app) {
                         templateUrl: "views/cajero/socio/contratoInactivadoSocio.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
+            .state('app.socio.voucherCancelacionCuenta', {
+                url: "/:id/contradoInactivadoSocio/:idTransaccion",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/voucher/cancelacionCuentaAporteVoucher.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                            $scope.idTransaccion = $stateParams.idTransaccion;
                         }
                     }
                 }

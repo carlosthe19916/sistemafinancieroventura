@@ -48,6 +48,8 @@ import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
@@ -236,7 +238,7 @@ public class SocioRESTService {
 			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
 		}			
 		return result;		
-	}
+	}		
 	
 	@GET
 	@Path("/{id}/personaNatural")
@@ -378,9 +380,7 @@ public class SocioRESTService {
 				return Response.status(Response.Status.OK).entity(cuentas).build();
 		}	
 	}
-     
-	
-	
+     		
 	@POST
 	@Produces({ "application/xml", "application/json" })
 	public Response createSocio(SocioDTO socioDTO, @Context SecurityContext context) {
@@ -448,4 +448,13 @@ public class SocioRESTService {
 		}			
 		return result;	
 	}
+	
+	@GET
+    @Path("{id}/voucherCancelacionCuentaAporte")  
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+    public Response getVoucherCuentaBancaria(@PathParam("id") BigInteger idTransaccion){
+    	VoucherTransaccionCuentaAporte voucherTransaccionBancaria = socioService.getVoucherCancelacion(idTransaccion);    	
+		return Response.status(Response.Status.OK).entity(voucherTransaccionBancaria).build(); 
+    }
 }
