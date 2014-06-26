@@ -16,26 +16,26 @@ define(['./module'], function (services) {
                     } else if(arguments.length == 1){
                         return Restangular.all(baseUrl).getList({filterText:filterText},{});
                     } else if(arguments.length == 2){
-                        return Restangular.all(baseUrl).getList({filterText:filterText,estadoCuentaAporte:estadoCuentaAporte},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText,cuentaAporte:estadoCuentaAporte},{});
                     } else if(arguments.length == 3){
-                        return Restangular.all(baseUrl).getList({filterText:filterText, estadoCuentaAporte:estadoCuentaAporte,"estadoSocio":estadoSocio},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText, cuentaAporte:estadoCuentaAporte,"estadoSocio":estadoSocio},{});
                     } else if(arguments.length == 4){
-                        return Restangular.all(baseUrl).getList({filterText:filterText, estadoCuentaAporte:estadoCuentaAporte,estadoSocio:estadoSocio,offset:offset},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText, cuentaAporte:estadoCuentaAporte,estadoSocio:estadoSocio,offset:offset},{});
                     } else if(arguments.length == 5){
-                        return Restangular.all(baseUrl).getList({filterText:filterText, estadoCuentaAporte:estadoCuentaAporte,estadoSocio:estadoSocio,offset:offset,limit:limit},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText, cuentaAporte:estadoCuentaAporte,estadoSocio:estadoSocio,offset:offset,limit:limit},{});
                     }
                 },
                 getSocios: function(estadoCuentaAporte, estadoSocio, offset, limit){
                     if(arguments.length == 0){
                         return _socioService.getList({},{});
                     } else if(arguments.length == 1){
-                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte},{});
+                        return _socioService.getList({"cuentaAporte":estadoCuentaAporte},{});
                     } else if(arguments.length == 2){
-                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio},{});
+                        return _socioService.getList({"cuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio},{});
                     } else if(arguments.length == 3){
-                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset},{});
+                        return _socioService.getList({"cuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset},{});
                     } else if(arguments.length == 4){
-                        return _socioService.getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset,"limit":limit},{});
+                        return _socioService.getList({"cuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset,"limit":limit},{});
                     }
                 },
                 count: function(filterText){

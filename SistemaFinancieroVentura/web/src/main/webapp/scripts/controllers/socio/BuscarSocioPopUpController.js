@@ -27,7 +27,7 @@ define(['../module'], function (controllers) {
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
             }
             $scope.getHasta = function(){
-                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
+                return ($scope.pagingOptions.pageSize);
             }
 
             //eventos
@@ -36,7 +36,7 @@ define(['../module'], function (controllers) {
             $scope.getPagedDataInitial = function () {
                 setTimeout(function () {
                     $scope.pagingOptions.currentPage = 1;
-                    SocioService.getSocios($scope.getDesde(), $scope.getHasta(), false, true).then(function(data){
+                    SocioService.getSocios(false, true, $scope.getDesde(), $scope.getHasta()).then(function(data){
                         $scope.sociosList = data;
                         $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
@@ -52,7 +52,7 @@ define(['../module'], function (controllers) {
                 setTimeout(function () {
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), false, true).then(function (data){
+                        SocioService.findByFilterText(ft, false, true,$scope.getDesde(), $scope.getHasta()).then(function (data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
@@ -78,7 +78,7 @@ define(['../module'], function (controllers) {
                     }
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft, $scope.getDesde(), $scope.getHasta(), false, true).then(function(data){
+                        SocioService.findByFilterText(ft, false, true, $scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
