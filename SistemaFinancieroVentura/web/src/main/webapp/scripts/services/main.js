@@ -16,6 +16,7 @@ define([
     './UsuarioService',
     './PendienteCajaService',
     './TransitionService',
+    './RedirectService',
 
     './HotKeysFunctionsService',
     './VariablesService'

@@ -1,136 +1,107 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearPersonaNaturalController', ['$scope','$state','$window','MaestroService','PersonaNaturalService','TransitionService',
-        function($scope,$state,$window,MaestroService,PersonaNaturalService,TransitionService) {
+    controllers.controller('CrearPersonaNaturalController', ['$scope','$state','$stateParams','$window','MaestroService','PersonaNaturalService','RedirectService',
+        function($scope,$state,$stateParams,$window,MaestroService,PersonaNaturalService,RedirectService) {
+
+            $scope.limpiarRedirectService = function(){
+              if($stateParams.redirect){
+                  RedirectService.clearAll();
+              }
+            };
+            $scope.limpiarRedirectService();
 
             $scope.control = {
                 "success":false,
                 "inProcess": false,
-                "submitted" : false,
-                "errorForm" : {"numeroDocumento" : false}
+                "submitted" : false
             };
 
-            $scope.persona = PersonaNaturalService.getModel();
-            $scope.ubigeo = {"departamento": {"codigo":""}, "provincia": {"codigo":""}, "distrito": {"codigo":""}};
-            $scope.persona.ubigeo = $scope.ubigeo.departamento.codigo + $scope.ubigeo.provincia.codigo + $scope.ubigeo.distrito.codigo;
-            $scope.$watch("ubigeo.departamento", function(){
-                $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
-            });
-            $scope.$watch("ubigeo.provincia", function(){
-                $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
-            });
-            $scope.$watch("ubigeo.distrito", function(){
-                $scope.persona.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
-            });
-            $scope.getDepartamentoCode = function(){
-                if(!angular.isUndefined($scope.ubigeo.departamento))
-                    return $scope.ubigeo.departamento.codigo;
-                else return "";
+            $scope.view = {
+                persona: PersonaNaturalService.getModel(),
+                dateOptions: {
+                    formatYear: 'yyyy',
+                    startingDay: 1
+                },
+                tipoDocumentos: undefined,
+                sexos: undefined,
+                estadosCiviles: undefined,
+                paises: undefined
             };
-            $scope.getProvinciaCode = function(){
-                if(!angular.isUndefined($scope.ubigeo.provincia))
-                    return $scope.ubigeo.provincia.codigo;
-                else return "";
-            };
-            $scope.getDistritoCode = function(){
-                if(!angular.isUndefined($scope.ubigeo.distrito))
-                    return $scope.ubigeo.distrito.codigo;
-                else return "";
-            };
-
-            //recuperando parametros de url
-            //$scope.persona.tipoDocumento.id = $scope.params.idTipoDocumento;
-            $scope.persona.numeroDocumento = $scope.params.numeroDocumento;
-
-            $scope.$watch("persona.numeroDocumento", function(){
-                if(!angular.isUndefined($scope.persona.tipoDocumento) && $scope.persona.tipoDocumento !== null){
-                    if(angular.isUndefined($scope.persona.numeroDocumento) || $scope.persona.numeroDocumento === null){
-                        $scope.control.errorForm.numeroDocumento = true;
-                    } else if($scope.persona.tipoDocumento.numeroCaracteres != $scope.persona.numeroDocumento.length){
-                        $scope.control.errorForm.numeroDocumento = true;
-                    } else {
-                        $scope.control.errorForm.numeroDocumento = false;
-                    }
-                }
-                if(angular.isUndefined($scope.persona.numeroDocumento) || $scope.persona.numeroDocumento === "")
-                    $scope.control.errorForm.numeroDocumento = true;
-                else
-                    $scope.control.errorForm.numeroDocumento = false;
-            });
-
-            $scope.dateOptions = {
-                formatYear: 'yyyy',
-                startingDay: 1
-            };
-
-            $scope.fechaNacimiento = new Date();
-            $scope.persona.fechaNacimiento = $scope.fechaNacimiento.getTime();
 
             $scope.open = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-
                 $scope.opened = true;
             };
 
-            MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
-                $scope.tipodocumentos = tipodocumentos;
-                if(!angular.isUndefined($scope.params.idTipoDocumento)){
-                    for(var i = 0; i < $scope.tipodocumentos.length; i++){
-                        if($scope.tipodocumentos[i].id == $scope.params.idTipoDocumento)
-                            $scope.persona.tipoDocumento = $scope.tipodocumentos[i];
+            $scope.$watch("view.persona.numeroDocumento",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.validarNumeroDocumento();
+                }
+            },true);
+            $scope.validarNumeroDocumento = function(){
+                if(!angular.isUndefined($scope.formCrearPersonanatural.numeroDocumento)){
+                    if(!angular.isUndefined($scope.view.persona.numeroDocumento)){
+                        if(!angular.isUndefined($scope.view.persona.tipoDocumento)){
+                            if($scope.view.persona.numeroDocumento.length == $scope.view.persona.tipoDocumento.numeroCaracteres) {
+                                $scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",true);
+                            } else {$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}
+                        } else{$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}
+                    } else {$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}}
+            };
+
+            $scope.loadParametros = function(){
+                if(!angular.isUndefined($scope.view.persona)){
+                    $scope.view.persona.numeroDocumento = $scope.params.numeroDocumento;
+                    if(!angular.isUndefined($scope.params.idTipoDocumento)){
+                        for(var i = 0; i < $scope.view.tipoDocumentos.length; i++){
+                            if($scope.view.tipoDocumentos[i].id == $scope.params.idTipoDocumento)
+                                $scope.view.persona.tipoDocumento = $scope.view.tipoDocumentos[i];
+                        }
                     }
                 }
-            });
-            MaestroService.getSexos().then(function(sexos){
-                $scope.sexos = sexos;
-            });
-            MaestroService.getEstadosciviles().then(function(estadosciviles){
-                $scope.estadosciviles = estadosciviles;
-            });
-            MaestroService.getPaises().then(function(paises){
-                $scope.paises = paises;
-                $scope.persona.codigoPais = "PE";
-            });
-            MaestroService.getDepartamentos().then(function(departamentos){
-                $scope.departamentos = departamentos;
-            });
+            };
 
-            $scope.changeDepartamento = function(){
-                MaestroService.getProvincias($scope.ubigeo.departamento.id).then(function(provincias){
-                    $scope.provincias = provincias;
+            $scope.loadTipoDocumentoPN = function(){
+                MaestroService.getTipoDocumentoPN().then(function(data){
+                    $scope.view.tipoDocumentos = data;
+                    $scope.loadParametros();
                 });
             };
-            $scope.changeProvincia = function(){
-                MaestroService.getDistritos($scope.ubigeo.provincia.id).then(function(distritos){
-                    $scope.distritos = distritos;
+            $scope.loadSexos = function(){
+                MaestroService.getSexos().then(function(data){
+                    $scope.view.sexos = data;
                 });
             };
+            $scope.loadEstadosCiviles = function(){
+                MaestroService.getEstadosciviles().then(function(data){
+                    $scope.view.estadosCiviles = data;
+                });
+            };
+            $scope.loadPaises = function(){
+                MaestroService.getPaises().then(function(data){
+                    $scope.view.paises = data;
+                });
+            };
+
+            $scope.loadTipoDocumentoPN();
+            $scope.loadSexos();
+            $scope.loadEstadosCiviles();
+            $scope.loadPaises();
 
             //logic
             $scope.crearTransaccion = function(){
                 if ($scope.formCrearPersonanatural.$valid) {
-                    if($scope.control.errorForm.numeroDocumento == true){
-                        return;
-                    }
-
-                    var personaTransaccion = angular.copy($scope.persona);
-                    personaTransaccion.tipoDocumento = {"id":personaTransaccion.tipoDocumento.id};
-                    personaTransaccion.fechaNacimiento = $scope.fechaNacimiento.getTime();
+                    var personaTransaccion = angular.copy($scope.view.persona);
+                    personaTransaccion.tipoDocumento = {
+                        id: personaTransaccion.tipoDocumento.id
+                    };
+                    personaTransaccion.fechaNacimiento = $scope.view.persona.fechaNacimiento.getTime();
 
                     $scope.buttonDisableState = true;
                     PersonaNaturalService.crear(personaTransaccion).then(
                         function(persona){
-                            if(TransitionService.isModeRedirect()){
-                                var url = TransitionService.getUrl();
-                                $state.transitionTo(url);
-                            } else if(TransitionService.isModeClose()){
-                                $window.close();
-                                $state.transitionTo('app.administracion.buscarPersonaNatural');
-                            } else {
-                                $window.close();
-                                $state.transitionTo('app.administracion.buscarPersonaNatural');
-                            }
+                            $scope.redireccion();
                         },
                         function error(error){
                             $scope.control.inProcess = false;
@@ -146,17 +117,21 @@ define(['../../module'], function (controllers) {
                 }
             };
 
-            $scope.cancel = function () {
-                if(TransitionService.isModeRedirect()){
-                    var url = TransitionService.getUrl();
-                    $state.transitionTo(url);
-                } else if(TransitionService.isModeClose()){
-                    $window.close();
+            $scope.redireccion = function(){
+                if(RedirectService.haveNextState()){
+                    var nextState = RedirectService.getNextState();
+                    var paramsState = RedirectService.getParamsState();
+                    RedirectService.clearNextState();
+                    RedirectService.clearParamsState();
+                    $state.transitionTo(nextState, paramsState);
                 } else {
-                    $window.close();
+                    $state.transitionTo('app.administracion.buscarPersonaNatural');
                 }
             };
 
+            $scope.cancel = function () {
+                $scope.redireccion();
+            };
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
             };

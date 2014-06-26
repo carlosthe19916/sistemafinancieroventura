@@ -94,15 +94,6 @@ public class CuentaBancariaRESTService {
 		return Response.status(Response.Status.OK).entity(list).build();
 	}
 	
-	/*
-	@GET
-	@Path("/view")
-	@Produces({ "application/xml", "application/json" })
-	public Response findAllView() {					
-		List<CuentaBancariaView> list = cuentaBancariaService.findAllView();
-		return Response.status(Response.Status.OK).entity(list).build();
-	}*/
-	
 	@GET
 	@Path("/view")
 	@Produces({ "application/xml", "application/json" })

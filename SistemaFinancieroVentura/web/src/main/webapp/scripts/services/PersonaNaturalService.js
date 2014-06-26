@@ -31,18 +31,20 @@ define(['./module'], function (services) {
                 findById: function(id){
                     return Restangular.one(baseUrl, id).get();
                 },
-                findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
-                    return Restangular.one(baseUrl + '/' + idtipodocumento + '/' + numerodocumento).get();
+                findByTipoNumeroDocumento: function(idTipoDocumento, numeroDocumento){
+                    return Restangular.one(baseUrl + '/buscar').get({idTipoDocumento:idTipoDocumento,numeroDocumento:numeroDocumento},{});
                 },
                 findByFilterText: function(filterText, offset, limit){
                     if(arguments.length == 0){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList();
+                        return Restangular.all(baseUrl).getList();
                     } else if(arguments.length == 1){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"offset":offset},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText},{});
                     } else if(arguments.length == 2){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"offset":offset,"limit":limit},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText,offset:offset},{});
+                    } else if(arguments.length == 3){
+                        return Restangular.all(baseUrl).getList({filterText:filterText,offset:offset,limit:limit},{});
                     } else if(arguments.length > 2){
-                        return Restangular.all(baseUrl + "/filtertext/" + filterText).getList({"offset":offset,"limit":limit},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText,offset:offset,limit:limit},{});
                     }
                 },
                 getPersonas: function(offset, limit){

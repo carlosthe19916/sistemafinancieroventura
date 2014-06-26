@@ -12,17 +12,17 @@ define(['./module'], function (services) {
                 },
                 findByFilterText: function(filterText,estadoCuentaAporte, estadoSocio, offset, limit){
                     if(arguments.length == 0){
-                        return Restangular.all("socio/filtertext/"+"").getList({},{});
+                        return Restangular.all(baseUrl).getList({},{});
                     } else if(arguments.length == 1){
-                        return Restangular.all("socio/filtertext/"+filterText).getList({},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText},{});
                     } else if(arguments.length == 2){
-                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText,estadoCuentaAporte:estadoCuentaAporte},{});
                     } else if(arguments.length == 3){
-                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText, estadoCuentaAporte:estadoCuentaAporte,"estadoSocio":estadoSocio},{});
                     } else if(arguments.length == 4){
-                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText, estadoCuentaAporte:estadoCuentaAporte,estadoSocio:estadoSocio,offset:offset},{});
                     } else if(arguments.length == 5){
-                        return Restangular.all("socio/filtertext/"+filterText).getList({"estadoCuentaAporte":estadoCuentaAporte,"estadoSocio":estadoSocio,"offset":offset,"limit":limit},{});
+                        return Restangular.all(baseUrl).getList({filterText:filterText, estadoCuentaAporte:estadoCuentaAporte,estadoSocio:estadoSocio,offset:offset,limit:limit},{});
                     }
                 },
                 getSocios: function(estadoCuentaAporte, estadoSocio, offset, limit){
@@ -71,7 +71,7 @@ define(['./module'], function (services) {
                     return Restangular.one("socio/"+id+"/apoderado").get();
                 },
                 getCuentasBancarias: function(id){
-                    return Restangular.all("socio/"+id+"/cuentasBancarias").getList();
+                    return Restangular.all("socio/"+id+"/cuentaBancaria").getList();
                 },
                 congelarCuentaAporte: function(id){
                     return Restangular.one(baseUrl +"/"+id+"/cuentaAporte/congelar").customPUT({},'',{},{});

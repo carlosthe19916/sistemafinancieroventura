@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('PanelSocioController', ['$scope', '$state','$location','$window','$modal','SocioService','MaestroService',
-        function($scope,$state,$location,$window,$modal,SocioService,MaestroService) {
+    controllers.controller('PanelSocioController', ['$scope', '$state','$location','$window','$modal','SocioService','MaestroService','RedirectService',
+        function($scope,$state,$location,$window,$modal,SocioService,MaestroService,RedirectService) {
 
             $scope.loadSocio = function(){
                 if(!angular.isUndefined($scope.id)){
@@ -72,25 +72,31 @@ define(['../module'], function (controllers) {
             $scope.loadCuentasBancarias();
 
             $scope.editarSocioPN = function(){
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaNatural/"+$scope.personaNatural.id);
+                if(!angular.isUndefined($scope.personaNatural)){
+                    RedirectService.setNextState("app.socio.panelSocio");
+                    RedirectService.setParamsState({id:$scope.id});
+                    $state.transitionTo("app.administracion.editarPersonaNatural", { id: $scope.personaNatural.id });
+                }
             };
             $scope.editarSocioPJ = function(){
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaJuridica/"+$scope.personaJuridica.id);
+                if(!angular.isUndefined($scope.personaJuridica)){
+                    RedirectService.setNextState("app.socio.panelSocio");
+                    RedirectService.setParamsState({id:$scope.id});
+                    $state.transitionTo("app.administracion.editarPersonaJuridica", { id: $scope.personaJuridica.id });
+                }
             };
             $scope.editarRepresentantePJ = function(){
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaNatural/"+$scope.personaJuridica.representanteLegal.id);
+                if(!angular.isUndefined($scope.personaJuridica)){
+                    RedirectService.setNextState("app.socio.panelSocio");
+                    RedirectService.setParamsState({id:$scope.id});
+                    $state.transitionTo("app.administracion.editarPersonaNatural", { id: $scope.personaJuridica.representanteLegal.id });
+                }
             };
             $scope.editarApoderado = function(){
                 if(!angular.isUndefined($scope.apoderado)){
-                    var baseLen = $location.absUrl().length - $location.url().length;
-                    var url = $location.absUrl().substring(0, baseLen);
-                    $window.open(url + "/app/administracion/personaNatural/"+$scope.apoderado.id);
+                    RedirectService.setNextState("app.socio.panelSocio");
+                    RedirectService.setParamsState({id:$scope.id});
+                    $state.transitionTo("app.administracion.editarPersonaNatural", { id: $scope.apoderado.id });
                 }
             };
             $scope.cambiarApoderado = function(){
@@ -143,6 +149,8 @@ define(['../module'], function (controllers) {
             };
             $scope.editarCuentaBancaria = function(index){
                 if(!angular.isUndefined($scope.cuentasBancarias)){
+                    RedirectService.setNextState("app.socio.panelSocio");
+                    RedirectService.setParamsState({id:$scope.id});
                     $state.transitionTo("app.socio.editarCuentaBancaria", { id: $scope.cuentasBancarias[index].id });
                 }
             };
@@ -189,26 +197,6 @@ define(['../module'], function (controllers) {
                         }
                         $state.transitionTo("app.socio.contratoInactivadoSocio", { id: $scope.socio.id });
                     }
-/*
-                    var modalInstance = $modal.open({
-                        templateUrl: 'views/cajero/util/confirmPopUp.html',
-                        controller: "ConfirmPopUpController"
-                    });
-                    modalInstance.result.then(function (result) {
-                        SocioService.inactivarSocio($scope.socio.id).then(
-                            function(data){
-                                $scope.loadSocio();
-                                $scope.loadCuentaAporte();
-                                $scope.alerts = [{ type: "success", msg: "Socio inactivado eliminado." }];
-                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                            }, function error(error){
-                                $scope.alerts = [{ type: "danger", msg: "Error:" + error.data.message +"." }];
-                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                                $window.scrollTo(0,0);
-                            }
-                        );
-                    }, function () {
-                    });*/
                 }
             };
 

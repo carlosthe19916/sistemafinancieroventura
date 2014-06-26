@@ -48,7 +48,6 @@ import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.Trabajador;
 import org.ventura.sistemafinanciero.entity.Usuario;
-import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
@@ -104,38 +103,12 @@ public class SocioRESTService {
 			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}	
 		return result;
-	}
-	
-	@GET
-	@Path("/filtertext/{filterText}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterText(
-			@PathParam("filterText") @DefaultValue("") String filterText, 
-			@QueryParam("cuentaAporte") Boolean estadoCuentaAporte,
-			@QueryParam("estadoSocio") Boolean estadoSocio,
-			@QueryParam("offset") BigInteger offset, 
-			@QueryParam("limit") BigInteger limit) {		
-		
-		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
-			offset = BigInteger.ZERO;
-		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
-			limit = BigInteger.ZERO;
-		
-		List<SocioView> list = socioService.findAllView(filterText, estadoCuentaAporte, estadoSocio, offset, limit);
-		Response result = null;
-		JsonObject model = null;
-		if(list != null){
-			result = Response.status(Response.Status.OK).entity(list).build();
-		} else {
-			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
-			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();	
-		}
-		return result;					
-	}	
+	}		
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response listAll(
+			@QueryParam("filterText") @DefaultValue("") String filterText,
 			@QueryParam("cuentaAporte") Boolean estadoCuentaAporte,
 			@QueryParam("estadoSocio") Boolean estadoSocio,
 			@QueryParam("offset") BigInteger offset,
@@ -147,7 +120,7 @@ public class SocioRESTService {
 			limit = BigInteger.ZERO;
 			
 		
-		List<SocioView> list = socioService.findAllView(estadoCuentaAporte, estadoSocio, offset, limit);
+		List<SocioView> list = socioService.findAllView(filterText, estadoCuentaAporte, estadoSocio, offset, limit);
 		Response result = null;
 		JsonObject model = null;
 		if(list != null){
@@ -363,7 +336,7 @@ public class SocioRESTService {
 	}
 	
 	@GET
-	@Path("/{id}/cuentasBancarias")
+	@Path("/{id}/cuentaBancaria")
 	@Produces({ "application/xml", "application/json" })
 	public Response getCuentasBancarias(@PathParam("id")BigInteger id) {				
 		if(id == null)
