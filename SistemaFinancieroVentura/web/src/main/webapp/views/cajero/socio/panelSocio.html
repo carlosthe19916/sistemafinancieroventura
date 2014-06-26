@@ -277,7 +277,7 @@
                     <div class="col-md-5" style="font-weight: bold;">
                         Apoderado
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7" ng-if="socio.estado">
                         <div class="text-right">
                             <button type="button" ng-if="apoderado" ng-click="eliminarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Eliminar</button>
                             <button type="button" ng-click="cambiarApoderado()" class="btn btn-link" style="padding: 0px 12px;">Cambiar</button>

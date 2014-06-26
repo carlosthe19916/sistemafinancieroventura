@@ -458,6 +458,17 @@ define(['./app'], function(app) {
                     }
                 }
             })
+            .state('app.socio.contratoInactivadoSocio', {
+                url: "/:id/contradoInactivadoSocio",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/socio/contratoInactivadoSocio.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
 
             .state('app.socio.crearCuentaBancaria', {
                 url: "/cuentaBancaria",

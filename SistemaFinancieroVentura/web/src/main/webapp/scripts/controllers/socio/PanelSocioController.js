@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("PanelSocioController", ['$scope', '$state','$location','$window','$modal','SocioService','MaestroService',
-        function($scope, $state,$location,$window,$modal,SocioService,MaestroService) {
+    controllers.controller('PanelSocioController', ['$scope', '$state','$location','$window','$modal','SocioService','MaestroService',
+        function($scope,$state,$location,$window,$modal,SocioService,MaestroService) {
 
             $scope.loadSocio = function(){
                 if(!angular.isUndefined($scope.id)){
@@ -179,6 +179,17 @@ define(['../module'], function (controllers) {
             };
             $scope.inactivarSocio = function(){
                 if(!angular.isUndefined($scope.socio)){
+                    if(!angular.isUndefined($scope.cuentasBancarias)){
+                        for(var i = 0; i < $scope.cuentasBancarias.length; i++){
+                            if($scope.cuentasBancarias[i].estado != 'INACTIVO'){
+                                $scope.alerts = [{ type: "warning", msg: "Error: debe de desactivar todas las cuentas bancarias."}];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                                return;
+                            }
+                        }
+                        $state.transitionTo("app.socio.contratoInactivadoSocio", { id: $scope.socio.id });
+                    }
+/*
                     var modalInstance = $modal.open({
                         templateUrl: 'views/cajero/util/confirmPopUp.html',
                         controller: "ConfirmPopUpController"
@@ -197,7 +208,7 @@ define(['../module'], function (controllers) {
                             }
                         );
                     }, function () {
-                    });
+                    });*/
                 }
             };
 
