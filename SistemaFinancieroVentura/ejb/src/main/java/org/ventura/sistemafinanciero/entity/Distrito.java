@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "DISTRITO", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "pais")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = Distrito.findByIdProvincia, query = "SELECT d FROM Distrito d WHERE d.provincia.idProvincia = :idprovincia") })
+@NamedQueries({ @NamedQuery(name = Distrito.findByIdProvincia, query = "SELECT d FROM Distrito d WHERE d.provincia.idProvincia = :idprovincia Order By d.denominacion") })
 public class Distrito implements java.io.Serializable {
 
 	/**
