@@ -4,9 +4,9 @@ define(['../module'], function (controllers) {
         function($scope,MaestroService) {
 
             $scope.ubigeo = {
-              departamento:undefined,
-              provincia:undefined,
-              distrito:undefined,
+              departamento: undefined,
+              provincia: undefined,
+              distrito: undefined,
               codigo:''
             };
 
@@ -55,12 +55,15 @@ define(['../module'], function (controllers) {
 
             $scope.initializeUbigeo = function(){
                 var ubigeo = '';
-                if(!$scope.ubigeo.departamento){
+                if(!angular.isUndefined($scope.ubigeo.departamento)){
                     ubigeo = $scope.ubigeo.departamento.codigo;
-                    if(!$scope.ubigeo.provincia){
+                    if(!angular.isUndefined($scope.ubigeo.provincia)){
                         ubigeo = ubigeo + $scope.ubigeo.provincia.codigo;
-                        if(!$scope.ubigeo.distrito){
+                        if(!angular.isUndefined($scope.ubigeo.distrito)){
                             ubigeo = ubigeo + $scope.ubigeo.distrito.codigo;
+
+                            //poner ubigeo al objeto padre
+                            $scope.view.persona.ubigeo = ubigeo;
                         }
                     }
                 }

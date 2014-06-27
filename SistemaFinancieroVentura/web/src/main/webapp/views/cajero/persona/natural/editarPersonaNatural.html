@@ -248,7 +248,7 @@
 </fieldset>
 <fieldset>
     <legend style="background: whitesmoke;">Datos Adicionales</legend>
-    <div class="row">
+    <div class="row" ng-controller="UbigeoController">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formEditarPersonanatural.departamento.$invalid && control.submitted}">
                 <label>Departamento</label>
@@ -274,7 +274,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formEditarPersonanatural.distrito.$invalid && control.submitted}">
                 <label>Distrito</label>
-                <select name="distrito" ng-options="distrito as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" class="form-control"></select>
+                <select name="distrito" ng-options="distrito as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" ng-change="changeDistrito()" class="form-control"></select>
                 <div ng-show="formEditarPersonanatural.distrito.$invalid && control.submitted">
                     <p class="help-block" ng-show="formEditarPersonanatural.distrito.$error.required">
                         Ingrese Distrito.

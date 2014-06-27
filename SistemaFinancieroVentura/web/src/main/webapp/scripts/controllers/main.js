@@ -56,7 +56,8 @@ define([
     './util/LoginPopUpController',
     './util/ConfirmPopUpController',
     './util/LoadImageController',
-    './util/FirmaPopUpController'
+    './util/FirmaPopUpController',
+    './util/UbigeoController'
 ], function () {
 
 });

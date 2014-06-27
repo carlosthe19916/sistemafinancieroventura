@@ -202,11 +202,11 @@
 </fieldset>
 <fieldset>
     <legend style="background: whitesmoke;">Datos Adicionales</legend>
-    <div class="row">
+    <div class="row" ng-controller="UbigeoController">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.departamento.$invalid && control.submitted}">
                 <label>Departamento</label>
-                <select name="departamento" ng-options="departamento as departamento.denominacion for departamento in departamentos" ng-model="ubigeo.departamento" ng-change="changeDepartamento()" class="form-control"></select>
+                <select name="departamento" ng-options="departamento as departamento.denominacion for departamento in combos.departamentos" ng-model="ubigeo.departamento" ng-change="changeDepartamento()" class="form-control"></select>
                 <div ng-show="formCrearPersonanatural.departamento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.departamento.$error.required">
                         Ingrese Departamento.
@@ -217,7 +217,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.provincia.$invalid && control.submitted}">
                 <label>Provincia</label>
-                <select name="provincia" ng-options="provincia as provincia.denominacion for provincia in provincias" ng-model="ubigeo.provincia" ng-change="changeProvincia()" class="form-control"></select>
+                <select name="provincia" ng-options="provincia as provincia.denominacion for provincia in combos.provincias" ng-model="ubigeo.provincia" ng-change="changeProvincia()" class="form-control"></select>
                 <div ng-show="formCrearPersonanatural.provincia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.provincia.$error.required">
                         Ingrese Provincia.
@@ -228,7 +228,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.distrito.$invalid && control.submitted}">
                 <label>Distrito</label>
-                <select name="distrito" ng-options="distrito as distrito.denominacion for distrito in distritos" ng-model="ubigeo.distrito" class="form-control"></select>
+                <select name="distrito" ng-options="distrito as distrito.denominacion for distrito in combos.distritos" ng-model="ubigeo.distrito" ng-change="changeDistrito()" class="form-control"></select>
                 <div ng-show="formCrearPersonanatural.distrito.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.distrito.$error.required">
                         Ingrese Distrito.

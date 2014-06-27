@@ -3,13 +3,6 @@ define(['../../module'], function (controllers) {
     controllers.controller('EditarPersonaNaturalController', ['$scope', '$state','$stateParams','$window', 'MaestroService', 'PersonaNaturalService','RedirectService',
         function($scope,$state,$stateParams,$window,MaestroService,PersonaNaturalService,RedirectService) {
 
-            $scope.limpiarRedirectService = function(){
-                if($stateParams.redirect){
-                    RedirectService.clearAll();
-                }
-            };
-            $scope.limpiarRedirectService();
-
             $scope.control = {
                 "success":false,
                 "inProcess": false,
@@ -38,13 +31,6 @@ define(['../../module'], function (controllers) {
                     $scope.validarNumeroDocumento();
                 }
             },true);
-            $scope.$watch("view.persona.tipoDocumento",function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    if(!angular.isUndefined($scope.view.tipoDocumentos)){
-
-                    }
-                }
-            },true);
             $scope.validarNumeroDocumento = function(){
                 if(!angular.isUndefined($scope.formEditarPersonanatural.numeroDocumento)){
                     if(!angular.isUndefined($scope.view.persona.numeroDocumento)){
@@ -55,21 +41,6 @@ define(['../../module'], function (controllers) {
                         } else{$scope.formEditarPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formEditarPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}}
             };
-
-            $scope.loadPersonaNatural = function(){
-                if(!angular.isUndefined($scope.id)){
-                    PersonaNaturalService.findById($scope.id).then(
-                        function(data){
-                            $scope.view.persona = data;
-                        }, function error(error){
-                            $scope.alerts = [{ type: "danger", msg: "Error: No se pudo cargar la persona."}];
-                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                        }
-                    );
-                };
-            };
-            $scope.loadPersonaNatural();
-
 
             $scope.loadTipoDocumentoPN = function(){
                 MaestroService.getTipoDocumentoPN().then(function(data){
@@ -96,6 +67,42 @@ define(['../../module'], function (controllers) {
             $scope.loadSexos();
             $scope.loadEstadosCiviles();
             $scope.loadPaises();
+
+            $scope.loadPersonaNatural = function(){
+                if(!angular.isUndefined($scope.id)){
+                    PersonaNaturalService.findById($scope.id).then(
+                        function(data){
+                            $scope.view.persona = data;
+                        }, function error(error){
+                            $scope.alerts = [{ type: "danger", msg: "Error: No se pudo cargar la persona."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                };
+            };
+            $scope.loadPersonaNatural();
+
+
+            $scope.$watch(
+                function () {
+                    return {
+                        persona: $scope.view.persona,
+                        tipoDocumentos: $scope.view.tipoDocumentos
+                    };
+                },
+                function (newVal, oldVal) {
+                    if (newVal.persona !== oldVal.persona && newVal != undefined) {
+                        if (newVal.tipoDocumentos !== oldVal.tipoDocumentos && newVal != undefined) {
+                            if(!angular.isUndefined($scope.view.persona.tipoDocumento) && !angular.isUndefined($scope.view.tipoDocumentos)){
+                                for(var i = 0; i<$scope.view.tipoDocumentos.length;i++){
+                                    if($scope.view.persona.tipoDocumento.id==$scope.view.tipoDocumentos[i].id){
+                                        $scope.view.persona.tipoDocumento = $scope.view.tipoDocumentos[i];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },true);
 
             //logic
             $scope.crearTransaccion = function(){
