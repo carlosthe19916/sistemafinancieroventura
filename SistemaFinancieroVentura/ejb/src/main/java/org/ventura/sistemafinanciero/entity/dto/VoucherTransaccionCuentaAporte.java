@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
-import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 
 @XmlRootElement

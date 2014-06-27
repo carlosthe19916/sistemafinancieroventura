@@ -12,6 +12,7 @@ import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
@@ -74,5 +75,7 @@ public interface SocioService extends AbstractService<Socio> {
 	public void eliminarApoderado(BigInteger idSocio)throws RollbackFailureException;
 
 	public VoucherTransaccionCuentaAporte getVoucherCancelacion(BigInteger idTransaccion);
+	
+	public VoucherTransaccionCuentaAporte getVoucherCuentaAporte(BigInteger idTransaccion);
 
 }

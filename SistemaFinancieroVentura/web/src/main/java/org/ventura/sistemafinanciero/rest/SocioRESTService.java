@@ -430,4 +430,13 @@ public class SocioRESTService {
     	VoucherTransaccionCuentaAporte voucherTransaccionBancaria = socioService.getVoucherCancelacion(idTransaccion);    	
 		return Response.status(Response.Status.OK).entity(voucherTransaccionBancaria).build(); 
     }
+	
+	@GET
+    @Path("{id}/voucherCuentaAporte")  
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+    public Response getVoucherCuentaAporte(@PathParam("id") BigInteger idTransaccion){
+    	VoucherTransaccionCuentaAporte voucherTransaccionCuentaAporte = socioService.getVoucherCuentaAporte(idTransaccion);    	
+		return Response.status(Response.Status.OK).entity(voucherTransaccionCuentaAporte).build(); 
+    }
 }

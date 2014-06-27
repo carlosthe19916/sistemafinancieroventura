@@ -87,6 +87,9 @@ define(['./module'], function (services) {
                 },
                 eliminarApoderado: function(idSocio){
                     return Restangular.all(baseUrl+"/"+idSocio+"/apoderado").remove();
+                },
+                getVoucherCuentaAporte: function(id) {
+                    return Restangular.one("socio/"+id+"/voucherCuentaAporte").get();
                 }
             }
         }])

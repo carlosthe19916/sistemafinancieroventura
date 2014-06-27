@@ -32,9 +32,7 @@ import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
-import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
-import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
@@ -587,4 +585,69 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			return voucherTransaccion;
 	}
 
+	@Override
+	public VoucherTransaccionCuentaAporte getVoucherCuentaAporte(BigInteger idTransaccion) {
+		VoucherTransaccionCuentaAporte voucherTransaccion = new VoucherTransaccionCuentaAporte();
+		
+		// recuperando transaccion
+		TransaccionCuentaAporte transaccionCuentaAporte = transaccionCuentaAporteDAO.find(idTransaccion);
+		CuentaAporte cuentaAporte = transaccionCuentaAporte.getCuentaAporte();
+		Socio socio = new Socio();
+		Set<Socio> socios = cuentaAporte.getSocios();
+		if (socios.size() == 1) {
+			for (Socio socioBuscado : socios) {
+				socio = socioBuscado;
+			}
+		}
+		Caja caja = transaccionCuentaAporte.getHistorialCaja().getCaja();
+		Set<BovedaCaja> list = caja.getBovedaCajas();
+		Agencia agencia = null;
+		for (BovedaCaja bovedaCaja : list) {
+			agencia = bovedaCaja.getBoveda().getAgencia();
+			break;
+		}
+		
+		//Poniendo datos de transaccion
+		Moneda moneda = transaccionCuentaAporte.getCuentaAporte().getMoneda();
+		Hibernate.initialize(moneda);
+		voucherTransaccion.setMoneda(moneda);
+		
+		voucherTransaccion.setIdTransaccion(transaccionCuentaAporte.getIdTransaccionCuentaAporte());
+		voucherTransaccion.setFecha(transaccionCuentaAporte.getFecha());
+		voucherTransaccion.setHora(transaccionCuentaAporte.getHora());
+		voucherTransaccion.setNumeroOperacion(transaccionCuentaAporte.getNumeroOperacion());
+		voucherTransaccion.setMonto(transaccionCuentaAporte.getMonto());
+		voucherTransaccion.setReferencia(transaccionCuentaAporte.getReferencia());
+		voucherTransaccion.setTipoTransaccion(transaccionCuentaAporte.getTipoTransaccion());
+		
+		//Poniendo datos de cuenta bancaria
+		voucherTransaccion.setNumeroCuenta(cuentaAporte.getNumeroCuenta());
+		voucherTransaccion.setSaldoDisponible(cuentaAporte.getSaldo());
+		voucherTransaccion.setObservacion(transaccionCuentaAporte.getObservacion());
+		
+		//Poniendo datos de agencia
+		voucherTransaccion.setAgenciaDenominacion(agencia.getDenominacion());
+		voucherTransaccion.setAgenciaAbreviatura(agencia.getAbreviatura());
+		
+		//Poniendo datos de caja
+		voucherTransaccion.setCajaDenominacion(caja.getDenominacion());
+		voucherTransaccion.setCajaAbreviatura(caja.getAbreviatura());
+		
+		//Poniendo datos del socio
+		PersonaNatural personaNatural = socio.getPersonaNatural();
+		PersonaJuridica personaJuridica = socio.getPersonaJuridica();
+		if (personaJuridica == null) {
+			voucherTransaccion.setIdSocio(socio.getIdSocio());
+			voucherTransaccion.setTipoDocumento(socio.getPersonaNatural().getTipoDocumento());			//
+			voucherTransaccion.setNumeroDocumento(socio.getPersonaNatural().getNumeroDocumento());
+			voucherTransaccion.setSocio(personaNatural.getApellidoPaterno() + " " + personaNatural.getApellidoMaterno() + ", " + personaNatural.getNombres());
+		}
+		if (personaNatural == null) {
+			voucherTransaccion.setIdSocio(socio.getIdSocio());
+			voucherTransaccion.setTipoDocumento(socio.getPersonaJuridica().getTipoDocumento());			//
+			voucherTransaccion.setNumeroDocumento(socio.getPersonaJuridica().getNumeroDocumento());
+			voucherTransaccion.setSocio(personaJuridica.getRazonSocial());
+		}
+		return voucherTransaccion;
+	}
 }
