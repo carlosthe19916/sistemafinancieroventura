@@ -208,6 +208,7 @@ public class PersonaJuridicaServiceBean extends AbstractServiceBean<PersonaJurid
 		if(personaById == null)
 			throw new PreexistingEntityException("Persona juridica no encontrada");
 		
+		personaJuridica.setIdPersonaJuridica(id);
 		if (personaDB != null){
 			if(personaById.getIdPersonaJuridica().equals(personaDB.getIdPersonaJuridica())){
 				personaJuridicaDAO.update(personaJuridica);

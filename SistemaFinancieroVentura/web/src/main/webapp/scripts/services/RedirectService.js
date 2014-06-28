@@ -3,56 +3,61 @@ define(['./module'], function (services) {
     services.factory('RedirectService', function(){
 
         //STATE TO TRANSITION
-        var nextState = '';
-        var paramsState = undefined;
-        var object = undefined;
-        var focusElement = undefined;
+        var nextState = [];
+        var paramsState = [];
+        var object = [];
+        var focusElement = [];
 
         return {
+            haveNext: function(){
+                return nextState.length > 0;
+            },
+            addNext: function(state, params, obj, element){
+                if(arguments.length == 1){
+                    nextState.push(state);
+                    paramsState.push({});
+                    object.push({});
+                    focusElement.push({});
+                } else if(arguments.length == 2){
+                    nextState.push(state);
+                    paramsState.push(params);
+                    object.push({});
+                    focusElement.push({});
+                } else if(arguments.length == 3){
+                    nextState.push(state);
+                    paramsState.push(params);
+                    object.push(obj);
+                    focusElement.push({});
+                } else if(arguments.length == 4){
+                    nextState.push(state);
+                    paramsState.push(params);
+                    object.push(obj);
+                    focusElement.push(element);
+                }
+            },
             getNextState: function() {
-                return nextState;
+                return nextState[nextState.length-1];
             },
-            setNextState: function(state) {
-                nextState = state;
+            getNextObject: function(){
+                return object[object.length-1];
             },
-            haveNextState: function(){
-              return nextState.length > 0;
+            getNextParamsState: function(){
+                return paramsState[paramsState.length-1];
             },
-            clearNextState: function(){
-                nextState = '';
+            getNextFocusElement: function(){
+                return focusElement[focusElement.length-1];
             },
-            getObject: function(){
-                return object;
+            clearLast: function(){
+                object.pop();
+                nextState.pop();
+                paramsState.pop();
+                focusElement.pop();
             },
-            setObject: function(obj){
-                object = obj;
-            },
-            clearObject: function(){
-                object = undefined;
-            },
-            getParamsState: function(){
-                return paramsState;
-            },
-            setParamsState: function(params){
-                paramsState = params;
-            },
-            clearParamsState: function(){
-                paramsState = undefined;
-            },
-            getFocusElement: function(){
-                return focusElement;
-            },
-            setFocusElement: function(element){
-                focusElement = element;
-            },
-            clearFocusElement: function(){
-                focusElement = undefined;
-            },
-            clearAll:function(){
-                object = undefined;
-                nextState = '';
-                paramsState = undefined;
-                focusElement = undefined;
+            limpiar: function(){
+                object = [];
+                nextState = [];
+                paramsState = [];
+                focusElement = [];
             }
         }
     })

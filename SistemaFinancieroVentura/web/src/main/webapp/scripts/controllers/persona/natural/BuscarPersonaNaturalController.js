@@ -1,18 +1,14 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$timeout','$location','$window','ngProgress','PersonaNaturalService','TransitionService',
-        function($scope,$state,$timeout,$location,$window,ngProgress,PersonaNaturalService,TransitionService){
+    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$timeout','$location','$window','ngProgress','PersonaNaturalService','RedirectService',
+        function($scope,$state,$timeout,$location,$window,ngProgress,PersonaNaturalService,RedirectService){
 
             $scope.nuevo = function() {
-                TransitionService.setUrl('app.administracion.buscarPersonaNatural');
-                TransitionService.setParameters({});
-                TransitionService.setModeRedirect();
+                RedirectService.limpiar();
                 $state.transitionTo('app.administracion.crearPersonaNatural');
             };
             $scope.editar = function(persona) {
-                TransitionService.setUrl('app.administracion.buscarPersonaNatural');
-                TransitionService.setParameters({});
-                TransitionService.setModeRedirect(),
+                RedirectService.limpiar();
                 $state.transitionTo('app.administracion.editarPersonaNatural', { id: persona.id });
             };
 

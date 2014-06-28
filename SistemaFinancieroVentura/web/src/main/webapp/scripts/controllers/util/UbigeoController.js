@@ -4,9 +4,9 @@ define(['../module'], function (controllers) {
         function($scope,MaestroService) {
 
             $scope.ubigeo = {
-              departamento: undefined,
-              provincia: undefined,
-              distrito: undefined,
+              codigoDepartamento: undefined,
+              codigoProvincia: undefined,
+              codigoDistrito: undefined,
               codigo:''
             };
 
@@ -14,6 +14,35 @@ define(['../module'], function (controllers) {
               departamentos: undefined,
               provincias: undefined,
               distritos: undefined
+            };
+
+            $scope.getDepartamento = function(){
+                if(!angular.isUndefined($scope.ubigeo.codigoDepartamento)){
+                    for(var i = 0 ; i < $scope.combos.departamentos.length; i++){
+                        if($scope.ubigeo.codigoDepartamento == $scope.combos.departamentos[i].codigo){
+                            return $scope.combos.departamentos[i];
+                        }
+                    }
+                }
+                return undefined;
+            };
+            $scope.getProvincia = function(){
+                if(!angular.isUndefined($scope.ubigeo.codigoProvincia)){
+                    for(var i = 0 ; i < $scope.combos.provincias.length; i++){
+                        if($scope.ubigeo.codigoProvincia == $scope.combos.provincias[i].codigo)
+                            return $scope.combos.provincias[i];
+                    }
+                }
+                return undefined;
+            };
+            $scope.getDistrito = function(){
+                if(!angular.isUndefined($scope.ubigeo.codigoDistrito)){
+                    for(var i = 0 ; i < $scope.combos.distritos.length; i++){
+                        if($scope.ubigeo.codigoDistrito == $scope.combos.distritos[i].codigo)
+                            return $scope.combos.distritos[i];
+                    }
+                }
+                return undefined;
             };
 
             //metodos para cargar los combos
@@ -24,8 +53,9 @@ define(['../module'], function (controllers) {
             };
             $scope.loadDepartamentos();
             $scope.loadProvincias = function(){
-                if(!angular.isUndefined($scope.ubigeo.departamento)){
-                    MaestroService.getProvincias($scope.ubigeo.departamento.id).then(function(data){
+                var departamentoSelected = $scope.getDepartamento();
+                if(!angular.isUndefined(departamentoSelected)){
+                    MaestroService.getProvincias(departamentoSelected.id).then(function(data){
                         $scope.combos.provincias = data;
                     });
                 } else {
@@ -33,8 +63,9 @@ define(['../module'], function (controllers) {
                 }
             };
             $scope.loadDistritos = function(){
-                if(!angular.isUndefined($scope.ubigeo.provincia)){
-                    MaestroService.getDistritos($scope.ubigeo.provincia.id).then(function(data){
+                var provinciaSelected = $scope.getProvincia();
+                if(!angular.isUndefined(provinciaSelected)){
+                    MaestroService.getDistritos(provinciaSelected.id).then(function(data){
                         $scope.combos.distritos = data;
                     });
                 } else {
@@ -55,20 +86,36 @@ define(['../module'], function (controllers) {
 
             $scope.initializeUbigeo = function(){
                 var ubigeo = '';
-                if(!angular.isUndefined($scope.ubigeo.departamento)){
-                    ubigeo = $scope.ubigeo.departamento.codigo;
-                    if(!angular.isUndefined($scope.ubigeo.provincia)){
-                        ubigeo = ubigeo + $scope.ubigeo.provincia.codigo;
-                        if(!angular.isUndefined($scope.ubigeo.distrito)){
-                            ubigeo = ubigeo + $scope.ubigeo.distrito.codigo;
+                if(!angular.isUndefined($scope.ubigeo.codigoDepartamento)){
+                    ubigeo = $scope.ubigeo.codigoDepartamento;
+                    if(!angular.isUndefined($scope.ubigeo.codigoProvincia)){
+                        ubigeo = ubigeo + $scope.ubigeo.codigoProvincia;
+                        if(!angular.isUndefined($scope.ubigeo.codigoDistrito)){
+                            ubigeo = ubigeo + $scope.ubigeo.codigoDistrito;
 
                             //poner ubigeo al objeto padre
-                            $scope.view.persona.ubigeo = ubigeo;
+                            $scope.$parent.view.ubigeo = ubigeo;
                         }
                     }
                 }
+
+                //objeto local
                 $scope.ubigeo.codigo = ubigeo;
             };
+
+            $scope.$parent.$watch('view.ubigeo', function () {
+                if (!angular.isUndefined($scope.$parent.view.ubigeo)) {
+                    $scope.ubigeo.codigoDepartamento = $scope.$parent.view.ubigeo.substr(0,2);
+                    $scope.ubigeo.codigoProvincia = $scope.$parent.view.ubigeo.substr(2,2);
+                    $scope.ubigeo.codigoDistrito = $scope.$parent.view.ubigeo.substr(4,2);
+                    setTimeout(function () {
+                        $scope.loadProvincias();
+                    }, 1000);
+                    setTimeout(function () {
+                        $scope.loadDistritos();
+                    }, 2000);
+                }
+            },true);
 
         }]);
 });

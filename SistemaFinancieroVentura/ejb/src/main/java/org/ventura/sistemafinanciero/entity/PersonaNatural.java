@@ -410,6 +410,9 @@ public class PersonaNatural implements java.io.Serializable {
 			return false;
 		}
 		final PersonaNatural other = (PersonaNatural) obj;
+		if(this.tipoDocumento == null || this.numeroDocumento == null){
+			return false;
+		}
 		if (other.getNumeroDocumento().equalsIgnoreCase(this.numeroDocumento)) {
 			if(other.getTipoDocumento() != null){
 				if (other.getTipoDocumento().equals(this.tipoDocumento)) {
@@ -427,7 +430,9 @@ public class PersonaNatural implements java.io.Serializable {
 
 	@Override
 	public int hashCode() {
-		return this.tipoDocumento.hashCode() * this.numeroDocumento.hashCode();
+		if(this.tipoDocumento != null && this.numeroDocumento != null)
+			return this.tipoDocumento.hashCode() * this.numeroDocumento.hashCode();		
+		return 0;		
 	}
 
 }

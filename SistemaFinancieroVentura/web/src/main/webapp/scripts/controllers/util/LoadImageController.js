@@ -4,40 +4,37 @@ define(['../module'], function (controllers) {
     controllers.controller("LoadImageController", ["$scope",
         function($scope) {
 
-            $scope.getFirma = function(id) {
-                return "http://localhost:8080/SistemaFinancieroVentura-web/services/personanatural/image/"+id+"/firma";
-            }
-            $scope.getFoto = function(id) {
-                return "http://localhost:8080/SistemaFinancieroVentura-web/services/personanatural/image/"+id+"/foto";
-            }
-
-            $scope.configFirma = function(id){
-                return {
-                    singleFile: true,
-                    target: '/SistemaFinancieroVentura-web/services/personanatural/image/firma/upload',
-                    query: function (flowFile, flowChunk) {
-                        return {
-                            id: angular.isUndefined(id) ? $scope.idPersona : id
-                        };
-                    }
-                }
-            }
-            $scope.configFoto = function(id){
-                return {
-                    singleFile: true,
-                    target: '/SistemaFinancieroVentura-web/services/personanatural/image/foto/upload',
-                    query: function (flowFile, flowChunk) {
-                        return {
-                            id: $scope.idPersona
-                        };
-                    }
-                }
-            }
-
+            $scope.urlBase = "http://localhost:8080/SistemaFinancieroVentura-web/services/personaNatural/";
+            $scope.baseTarget = "/SistemaFinancieroVentura-web/services/personaNatural/";
             $scope.idPersona = undefined;
-            $scope.$watch("persona", function(){
-                if(!angular.isUndefined($scope.persona)){
-                    $scope.idPersona = $scope.persona.id;
+            $scope.tipoImagen = undefined;
+
+            //tipofoto ppuede ser FOTO O FIRMA
+            $scope.configImagen = function(id, tipoFoto){
+                $scope.tipoImagen = tipoFoto;
+                if(!angular.isUndefined(id)){
+                    return {
+                        singleFile: true,
+                        target: $scope.baseTarget + id + '/' + tipoFoto
+                    }
+                } else {
+                    return {
+                        singleFile: true,
+                        target: '/upload'
+                    }
+                }
+            };
+
+            $scope.getImagen = function(id,tipoFoto) {
+                if(!angular.isUndefined(id))
+                    return $scope.urlBase + id + "/" + tipoFoto;
+            };
+
+
+            $scope.$watch("view.id", function(){
+                if(!angular.isUndefined($scope.view.id)){
+                    $scope.idPersona = $scope.view.id;
+                    $scope.$flow.opts.target = $scope.baseTarget + $scope.idPersona + '/' + $scope.tipoImagen;
                 }
             });
 

@@ -1,32 +1,42 @@
 define(['../../module'], function (controllers) {
     'use strict';
 
-    controllers.controller('AccionistaController', [ "$scope", "$location", "$window", "$timeout", "$filter", "MaestroService", "PersonaNaturalService",
-        function($scope, $location, $window,$timeout, $filter, MaestroService, PersonaNaturalService) {
+    controllers.controller('AccionistaController', [ "$scope","$state","$location", "$window", "$timeout", "$filter", "MaestroService", "PersonaNaturalService","RedirectService",
+        function($scope,$state,$location, $window,$timeout, $filter, MaestroService, PersonaNaturalService,RedirectService) {
 
-            $scope.control = {"inProcess": false, "submitted" : false};
+            $scope.control = {
+                inProcess: false,
+                submitted : false
+            };
 
-            $scope.accionista = {
-                "tipoDocumento" : undefined,
-                "numeroDocumento" : undefined
-            }
+            $scope.view = {
+              idTipoDocumento: undefined,
+              numeroDocumento: undefined
+            };
 
-            MaestroService.getTipoDocumentoPN().then(function(tipoDocumentos){
-                $scope.tipoDocumentos = tipoDocumentos;
-            });
+            $scope.combo = {
+                tipoDocumentos: undefined
+            };
+
+            $scope.loadTipoDocumento = function(){
+                MaestroService.getTipoDocumentoPN().then(function(data){
+                    $scope.combo.tipoDocumentos = data;
+                });
+            };
+            $scope.loadTipoDocumento();
 
             $scope.addAccionista = function() {
                 if($scope.formAccionista.$valid){
                     $scope.control.inProcess = true;
-                    PersonaNaturalService.findByTipoNumeroDocumento($scope.accionista.tipoDocumento.id, $scope.accionista.numeroDocumento).then(
-                        function(persona){
+                    PersonaNaturalService.findByTipoNumeroDocumento($scope.view.idTipoDocumento, $scope.view.numeroDocumento).then(
+                        function(data){
                             $scope.control.inProcess = false;
                             var obj = {
                                 "porcentajeParticipacion" : "0",
-                                "personaNatural" : persona
+                                "personaNatural" : data
                             };
-                            $scope.accionistas.push(obj);
-                            $scope.accionistas = $filter('unique')($scope.accionistas);
+                            $scope.$parent.view.accionistas.push(obj);
+                            $scope.$parent.view.accionistas = $filter('unique')($scope.$parent.view.accionistas);
                             $scope.resetFocus();
                             $scope.alertsAccionistas = [];
                         }, function error(error){
@@ -38,46 +48,62 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
-
-            $scope.removeAccionista = function(index){
-                $scope.accionistas.splice(index, 1);
-                $scope.resetFocus();
-            }
-
-            $scope.resetFocus = function(){
-                $scope.formAccionista.$setPristine(false);
-                $scope.control.submited = false;
-                $scope.accionista = {"tipoDocumento" : undefined,"numeroDocumento" : ""}
-                angular.element("#cmbTipoDocumentoAccionista").focus();
-            }
+            };
 
             $scope.nuevaPersona = function(){
-                var idTipoDoc = undefined;
-                if(!angular.isUndefined($scope.accionista.tipoDocumento))
-                    idTipoDoc = $scope.accionista.tipoDocumento.id;
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.accionista.numeroDocumento);
-                $timeout(function() {angular.element("#txtNumeroDocumentoAccionista").focus();}, 100);
-            }
+                var parametros = {
+                    tipoDocumento: $scope.view.idTipoDocumento,
+                    numeroDocumento: $scope.view.numeroDocumento
+                };
+                var nextState = "app.administracion.crearPersonaJuridica";
+                var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
+                RedirectService.addNext(nextState,parametros,$scope.$parent.view, elementFocus);
+                $state.transitionTo('app.administracion.crearPersonaNatural', parametros);
+            };
 
-            $scope.$watch("accionista.numeroDocumento", function(){
+            $scope.removeAccionista = function(index){
+                $scope.$parent.view.accionistas.splice(index, 1);
+                $scope.resetFocus();
+            };
+
+            $scope.$watch("view.numeroDocumento", function(){
                 $scope.validarNumeroDocumentoAccionista();
             });
-            $scope.$watch("accionista.tipoDocumento", function(){
+            $scope.$watch("view.idTipoDocumento", function(){
                 $scope.validarNumeroDocumentoAccionista();
             });
             $scope.validarNumeroDocumentoAccionista = function(){
                 if(!angular.isUndefined($scope.formAccionista.numeroDocumento)){
-                    if(!angular.isUndefined($scope.accionista.numeroDocumento)){
-                        if(!angular.isUndefined($scope.accionista.tipoDocumento)){
-                            if($scope.accionista.numeroDocumento.length == $scope.accionista.tipoDocumento.numeroCaracteres) {
-                                $scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",true);
+                    if(!angular.isUndefined($scope.view.numeroDocumento)){
+                        if(!angular.isUndefined($scope.view.idTipoDocumento)){
+                            var tipoDoc = $scope.getTipoDocumento();
+                            if(!angular.isUndefined(tipoDoc)) {
+                                if($scope.view.numeroDocumento.length == tipoDoc.numeroCaracteres) {
+                                    $scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",true);
+                                } else {$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
                             } else {$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
                         } else{$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}}
-            }
+            };
+            $scope.getTipoDocumento = function(){
+                if(!angular.isUndefined($scope.combo.tipoDocumentos)){
+                    for(var i = 0; i < $scope.combo.tipoDocumentos.length; i++){
+                        if($scope.view.idTipoDocumento == $scope.combo.tipoDocumentos[i].id)
+                            return $scope.combo.tipoDocumentos[i];
+                    }
+                }
+                return undefined;
+            };
+
+            $scope.resetFocus = function(){
+                $scope.formAccionista.$setPristine(false);
+                $scope.control.submited = false;
+                $scope.view = {
+                    idTipoDocumento : undefined,
+                    numeroDocumento : ''
+                };
+                angular.element(document.querySelector('#cmbTipoDocumentoAccionista')).focus();
+            };
 
         }]);
 });
