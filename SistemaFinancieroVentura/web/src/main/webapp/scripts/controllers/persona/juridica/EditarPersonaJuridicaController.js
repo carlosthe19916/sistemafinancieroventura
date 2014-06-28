@@ -258,7 +258,8 @@ define(['../../module'], function (controllers) {
             $scope.redireccion = function(){
                 if(RedirectService.haveNext()){
                     var nextState = RedirectService.getNextState();
-                    $state.transitionTo(nextState);
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
                 } else {
                     $state.transitionTo('app.administracion.buscarPersonaJuridica');
                 }

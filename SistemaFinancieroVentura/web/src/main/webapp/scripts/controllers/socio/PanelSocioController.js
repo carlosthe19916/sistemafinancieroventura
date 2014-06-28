@@ -3,6 +3,8 @@ define(['../module'], function (controllers) {
     controllers.controller('PanelSocioController', ['$scope', '$state','$location','$window','$modal','SocioService','MaestroService','RedirectService',
         function($scope,$state,$location,$window,$modal,SocioService,MaestroService,RedirectService) {
 
+            $scope.viewState = "app.socio.panelSocio";
+
             $scope.loadSocio = function(){
                 if(!angular.isUndefined($scope.id)){
                     SocioService.getSocio($scope.id).then(
@@ -73,30 +75,42 @@ define(['../module'], function (controllers) {
 
             $scope.editarSocioPN = function(){
                 if(!angular.isUndefined($scope.personaNatural)){
-                    RedirectService.setNextState("app.socio.panelSocio");
-                    RedirectService.setParamsState({id:$scope.id});
-                    $state.transitionTo("app.administracion.editarPersonaNatural", { id: $scope.personaNatural.id });
+                    var parametros = {
+                        id: $scope.id
+                    };
+                    var nextState = $scope.viewState;
+                    RedirectService.addNext(nextState,parametros);
+                    $state.transitionTo('app.administracion.editarPersonaNatural', { id: $scope.personaNatural.id });
                 }
             };
             $scope.editarSocioPJ = function(){
                 if(!angular.isUndefined($scope.personaJuridica)){
-                    RedirectService.setNextState("app.socio.panelSocio");
-                    RedirectService.setParamsState({id:$scope.id});
-                    $state.transitionTo("app.administracion.editarPersonaJuridica", { id: $scope.personaJuridica.id });
+                    var parametros = {
+                        id: $scope.id
+                    };
+                    var nextState = $scope.viewState;
+                    RedirectService.addNext(nextState,parametros);
+                    $state.transitionTo('app.administracion.editarPersonaJuridica', { id: $scope.personaJuridica.id });
                 }
             };
             $scope.editarRepresentantePJ = function(){
                 if(!angular.isUndefined($scope.personaJuridica)){
-                    RedirectService.setNextState("app.socio.panelSocio");
-                    RedirectService.setParamsState({id:$scope.id});
-                    $state.transitionTo("app.administracion.editarPersonaNatural", { id: $scope.personaJuridica.representanteLegal.id });
+                    var parametros = {
+                        id: $scope.id
+                    };
+                    var nextState = $scope.viewState;
+                    RedirectService.addNext(nextState,parametros);
+                    $state.transitionTo('app.administracion.editarPersonaNatural', { id: $scope.personaJuridica.representanteLegal.id });
                 }
             };
             $scope.editarApoderado = function(){
                 if(!angular.isUndefined($scope.apoderado)){
-                    RedirectService.setNextState("app.socio.panelSocio");
-                    RedirectService.setParamsState({id:$scope.id});
-                    $state.transitionTo("app.administracion.editarPersonaNatural", { id: $scope.apoderado.id });
+                    var parametros = {
+                        id: $scope.id
+                    };
+                    var nextState = $scope.viewState;
+                    RedirectService.addNext(nextState,parametros);
+                    $state.transitionTo('app.administracion.editarPersonaNatural', { id: $scope.apoderado.id });
                 }
             };
             $scope.cambiarApoderado = function(){
@@ -149,9 +163,12 @@ define(['../module'], function (controllers) {
             };
             $scope.editarCuentaBancaria = function(index){
                 if(!angular.isUndefined($scope.cuentasBancarias)){
-                    RedirectService.setNextState("app.socio.panelSocio");
-                    RedirectService.setParamsState({id:$scope.id});
-                    $state.transitionTo("app.socio.editarCuentaBancaria", { id: $scope.cuentasBancarias[index].id });
+                    var parametros = {
+                        id: $scope.id
+                    };
+                    var nextState = $scope.viewState;
+                    RedirectService.addNext(nextState,parametros);
+                    $state.transitionTo('app.socio.editarCuentaBancaria', { id: $scope.cuentasBancarias[index].id });
                 }
             };
 
