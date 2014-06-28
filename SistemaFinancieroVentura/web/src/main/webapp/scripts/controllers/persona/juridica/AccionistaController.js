@@ -51,14 +51,17 @@ define(['../../module'], function (controllers) {
             };
 
             $scope.nuevaPersona = function(){
-                var parametros = {
+                var savedParameters = {
+                    id: $scope.view.id
+                };
+                var sendParameters = {
                     tipoDocumento: $scope.view.idTipoDocumento,
                     numeroDocumento: $scope.view.numeroDocumento
                 };
                 var nextState = "app.administracion.crearPersonaJuridica";
                 var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
-                RedirectService.addNext(nextState,parametros,$scope.$parent.view, elementFocus);
-                $state.transitionTo('app.administracion.crearPersonaNatural', parametros);
+                RedirectService.addNext(nextState,savedParameters,$scope.$parent.view, elementFocus);
+                $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
             };
 
             $scope.removeAccionista = function(index){

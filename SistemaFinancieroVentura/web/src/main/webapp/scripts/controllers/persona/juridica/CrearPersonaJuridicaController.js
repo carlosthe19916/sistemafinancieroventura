@@ -79,10 +79,10 @@ define(['../../module'], function (controllers) {
                     var state = RedirectService.getNextState();
                     if(state == $scope.viewState){
                         $scope.view = RedirectService.getNextObject();
-                        var focusElem = RedirectService.getNextFocusElement();
+                        //var focusElem = RedirectService.getNextFocusElement();
                         RedirectService.clearLast();
                         $timeout(function() {
-                            focusElem.focus();
+                            //focusElem.focus();
                         }, 100);
                         $scope.buscarRepresentanteLegal();
                     }
@@ -106,14 +106,17 @@ define(['../../module'], function (controllers) {
                 }
             };
             $scope.nuevaPersonaRepresentanteLegal = function(){
-                var parametros = {
+                var savedParameters = {
+                    id: $scope.view.id
+                };
+                var sendParameters = {
                     tipoDocumento: $scope.view.idTipoDocumentoPN,
                     numeroDocumento: $scope.view.numeroDocumentoPN
                 };
                 var nextState = $scope.viewState;
                 var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
-                RedirectService.addNext(nextState,parametros,$scope.view, elementFocus);
-                $state.transitionTo('app.administracion.crearPersonaNatural', parametros);
+                RedirectService.addNext(nextState,savedParameters,$scope.view, elementFocus);
+                $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
             };
 
             $scope.getTipoDocumentoPJ = function(){
