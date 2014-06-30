@@ -4,9 +4,9 @@ define(['../../module'], function (controllers) {
         function($scope,$state,$stateParams,$timeout,$window,MaestroService,PersonaNaturalService,RedirectService) {
 
             $scope.control = {
-                "success":false,
-                "inProcess": false,
-                "submitted" : false
+                success:false,
+                inProcess: false,
+                submitted : false
             };
 
             $scope.combo = {
@@ -17,23 +17,23 @@ define(['../../module'], function (controllers) {
             };
 
             $scope.view = {
-                "id":undefined,
-                "idTipoDocumento":undefined,
-                "numeroDocumento":undefined,
-                "apellidoPaterno":undefined,
-                "apellidoMaterno":undefined,
-                "nombres":undefined,
-                "fechaNacimiento":undefined,
-                "sexo":undefined,
-                "estadoCivil":undefined,
-                "ocupacion":undefined,
-                "direccion":undefined,
-                "referencia":undefined,
-                "telefono":undefined,
-                "celular":undefined,
-                "email":undefined,
-                "ubigeo":undefined,
-                "codigoPais":undefined
+                id:undefined,
+                idTipoDocumento:-1,
+                numeroDocumento:undefined,
+                apellidoPaterno:undefined,
+                apellidoMaterno:undefined,
+                nombres:undefined,
+                fechaNacimiento:undefined,
+                sexo:undefined,
+                estadoCivil:undefined,
+                ocupacion:undefined,
+                direccion:undefined,
+                referencia:undefined,
+                telefono:undefined,
+                celular:undefined,
+                email:undefined,
+                ubigeo:undefined,
+                codigoPais:undefined
             };
 
             $scope.dateOptions = {
@@ -49,9 +49,8 @@ define(['../../module'], function (controllers) {
 
             $scope.loadParametros = function(){
                 $scope.view.numeroDocumento = $scope.params.numeroDocumento;
-                $scope.view.idTipoDocumento = $scope.params.idTipoDocumento;
+                $scope.view.idTipoDocumento = parseInt($scope.params.idTipoDocumento);
             };
-            $scope.loadParametros();
 
             $scope.$watch("view.numeroDocumento",function (newVal, oldVal) {
                 if (newVal !== oldVal) {
@@ -102,11 +101,6 @@ define(['../../module'], function (controllers) {
                 });
             };
 
-            $scope.loadTipoDocumentoPN();
-            $scope.loadSexos();
-            $scope.loadEstadosCiviles();
-            $scope.loadPaises();
-
             //logic
             $scope.crearTransaccion = function(){
                 if ($scope.formCrearPersonanatural.$valid) {
@@ -151,16 +145,6 @@ define(['../../module'], function (controllers) {
                 }
             };
 
-            $scope.actualizar = function(){
-                $timeout(function() {
-                    if (!$scope.$$phase) {
-                        console.log("entro");
-                        $scope.$apply();
-                    }
-                }, 1000);
-            };
-            $scope.actualizar();
-
             $scope.redireccion = function(){
                 if(RedirectService.haveNext()){
                     var nextState = RedirectService.getNextState();
@@ -177,6 +161,12 @@ define(['../../module'], function (controllers) {
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
             };
+
+            $scope.loadParametros();
+            $scope.loadTipoDocumentoPN();
+            $scope.loadSexos();
+            $scope.loadEstadosCiviles();
+            $scope.loadPaises();
 
         }]);
 });

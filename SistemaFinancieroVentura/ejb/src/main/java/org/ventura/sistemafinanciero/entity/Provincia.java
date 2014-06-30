@@ -29,7 +29,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "PROVINCIA", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "pais")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = Provincia.findByIdDepartamento, query = "SELECT p FROM Provincia p WHERE p.departamento.idDepartamento = :iddepartamento order by p.denominacion") })
+@NamedQueries({
+		@NamedQuery(name = Provincia.findByIdDepartamento, query = "SELECT p FROM Provincia p WHERE p.departamento.idDepartamento = :iddepartamento order by p.denominacion"),
+		@NamedQuery(name = Provincia.findCodigoDepartamento, query = "SELECT p FROM Provincia p WHERE p.departamento.codigo = :codigoDepartamento order by p.denominacion") })
 public class Provincia implements java.io.Serializable {
 
 	/**
@@ -38,6 +40,7 @@ public class Provincia implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public final static String findByIdDepartamento = "Provincia.findByIdDepartamento";
+	public final static String findCodigoDepartamento = "Provincia.findCodigoDepartamento";
 
 	private BigInteger idProvincia;
 	private String denominacion;
@@ -45,7 +48,7 @@ public class Provincia implements java.io.Serializable {
 	private String codigo;
 	private Departamento departamento;
 	private Set distritos = new HashSet(0);
-	
+
 	public Provincia() {
 	}
 

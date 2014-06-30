@@ -27,6 +27,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -167,6 +168,22 @@ public class MaestroRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Distrito> getDistritos(@PathParam("id") BigInteger idProvincia) {
 		List<Distrito> list = maestroService.getDistritos(idProvincia);
+		return list;
+	}
+	
+	@GET
+	@Path("/ubigeo/provincia")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Provincia> getProvinciasByCodigo(@QueryParam("codigoDepartamento") String codigoDepartamento) {
+		List<Provincia> list = maestroService.getProvincias(codigoDepartamento);
+		return list;
+	}
+	
+	@GET
+	@Path("/ubigeo/distrito")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Distrito> getDistritosByCodigo(@QueryParam("codigoProvincia") String codigoProvincia) {
+		List<Distrito> list = maestroService.getDistritos(codigoProvincia);
 		return list;
 	}
 

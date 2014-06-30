@@ -24,7 +24,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.hibernate.Hibernate;
-import org.joda.time.LocalDate;
+//import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
@@ -438,16 +438,16 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		
 		//crear cuenta bancaria			
 		Date date = calendar.getTime();
-		LocalDate inicio = new LocalDate(date.getTime());
-		LocalDate fin = inicio.plusDays(periodo);
+		//LocalDate inicio = new LocalDate(date.getTime());
+		//LocalDate fin = inicio.plusDays(periodo);
 		
 		CuentaBancaria cuentaBancaria = new CuentaBancaria();
 		cuentaBancaria.setNumeroCuenta(agencia.getCodigo());
 		cuentaBancaria.setBeneficiarios(null);
 		cuentaBancaria.setCantidadRetirantes(cantRetirantes);
 		cuentaBancaria.setEstado(EstadoCuentaBancaria.ACTIVO);
-		cuentaBancaria.setFechaApertura(inicio.toDateTimeAtStartOfDay().toDate());
-		cuentaBancaria.setFechaCierre(fin.toDateTimeAtStartOfDay().toDate());
+		//cuentaBancaria.setFechaApertura(inicio.toDateTimeAtStartOfDay().toDate());
+		//cuentaBancaria.setFechaCierre(fin.toDateTimeAtStartOfDay().toDate());
 		cuentaBancaria.setMoneda(moneda);
 		cuentaBancaria.setSaldo(BigDecimal.ZERO);
 		cuentaBancaria.setSocio(socio);
@@ -617,11 +617,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		
 		if(dateDesde == null || dateHasta == null){
 			Calendar calendar = Calendar.getInstance();
-			LocalDate localDateHasta = new LocalDate(calendar.getTime());			
-			LocalDate localDateDesde = localDateHasta.minusDays(30);
+			//LocalDate localDateHasta = new LocalDate(calendar.getTime());			
+			//LocalDate localDateDesde = localDateHasta.minusDays(30);
 			
-			desdeQuery = localDateDesde.toDateTimeAtStartOfDay().toDate();
-			hastaQuery = localDateHasta.toDateTimeAtStartOfDay().toDate();	
+			//desdeQuery = localDateDesde.toDateTimeAtStartOfDay().toDate();
+			//hastaQuery = localDateHasta.toDateTimeAtStartOfDay().toDate();	
 		} else {
 			desdeQuery = dateDesde;
 			hastaQuery = dateHasta;
