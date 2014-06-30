@@ -35,8 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "socio")
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
-		@NamedQuery(name = Socio.FindByPNTipoAndNumeroDocumento, query = "SELECT s FROM Socio s INNER JOIN s.personaNatural pn WHERE pn.numeroDocumento = :numerodocumento AND pn.tipoDocumento.idTipoDocumento = :idtipodocumento"),
-		@NamedQuery(name = Socio.FindByPJTipoAndNumeroDocumento, query = "SELECT s FROM Socio s INNER JOIN s.personaJuridica pj WHERE pj.numeroDocumento = :numerodocumento AND pj.tipoDocumento.idTipoDocumento = :idtipodocumento") })
+		@NamedQuery(name = Socio.FindByPNTipoAndNumeroDocumento, query = "SELECT s FROM Socio s INNER JOIN s.personaNatural pn WHERE pn.numeroDocumento = :numerodocumento AND pn.tipoDocumento.idTipoDocumento = :idtipodocumento AND s.estado = true"),
+		@NamedQuery(name = Socio.FindByPJTipoAndNumeroDocumento, query = "SELECT s FROM Socio s INNER JOIN s.personaJuridica pj WHERE pj.numeroDocumento = :numerodocumento AND pj.tipoDocumento.idTipoDocumento = :idtipodocumento AND s.estado = true") })
 public class Socio implements java.io.Serializable {
 
 	/**
@@ -46,7 +46,6 @@ public class Socio implements java.io.Serializable {
 
 	public final static String FindByPNTipoAndNumeroDocumento = "Socio.FindByPNTipoAndNumeroDocumento";
 	public final static String FindByPJTipoAndNumeroDocumento = "Socio.FindByPJTipoAndNumeroDocumento";
-
 
 	private BigInteger idSocio;
 	private PersonaNatural personaNatural;

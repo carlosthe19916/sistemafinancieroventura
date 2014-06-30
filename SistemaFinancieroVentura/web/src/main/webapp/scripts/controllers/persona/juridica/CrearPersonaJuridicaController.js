@@ -3,7 +3,7 @@ define(['../../module'], function (controllers) {
     controllers.controller('CrearPersonaJuridicaController', ["$scope", "$state","$location", "$window","$timeout", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService","RedirectService",
         function($scope, $state,$location, $window,$timeout, MaestroService, PersonaNaturalService, PersonaJuridicaService,RedirectService) {
 
-            $scope.viewState = "app.administracion.crearPersonaJuridica";
+            $scope.viewState = "app.socio.crearSocio";
 
             $scope.control = {
                 success:false,

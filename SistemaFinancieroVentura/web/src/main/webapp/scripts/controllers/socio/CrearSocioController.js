@@ -1,151 +1,155 @@
 
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearSocioController', ['$scope','$state','$window','$timeout','$location','focus', 'MaestroService', 'PersonaNaturalService', 'PersonaJuridicaService', 'SocioService',
-        function($scope, $state,$window,$timeout,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService) {
+    controllers.controller('CrearSocioController', ['$scope','$state','$window','$timeout','$location','focus', 'MaestroService', 'PersonaNaturalService', 'PersonaJuridicaService', 'SocioService','RedirectService',
+        function($scope, $state,$window,$timeout,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService,RedirectService) {
 
             focus("firstFocus");
 
+            $scope.viewState = 'app.socio.crearSocio';
+
             $scope.control = {
-                "success":false,
-                "inProcess": false,
-                "submitted" : false,
-                "errorForm" : {"socio" : false, "apoderado" : false}
+                success: false,
+                inProcess: false,
+                submitted : false
             };
 
-            $scope.tipoPersonas = MaestroService.getTipoPersonas();
-            $scope.tipoDocumentosSocio = [];
-            $scope.tipoDocumentosApoderado = [];
+            $scope.combo = {
+                tipoPersonas: MaestroService.getTipoPersonas(),
+                tipoDocumentosSocio: [],
+                tipoDocumentosApoderado: []
+            };
+
+            $scope.view = {
+                tipoPersona: undefined,
+                idTipoDocumentoSocio: undefined,
+                numeroDocumentoSocio: '',
+                idTipoDocumentoApoderado: undefined,
+                numeroDocumento: ''
+            };
+
+            $scope.objetosCargados = {
+                socio: undefined,
+                apoderado: undefined
+            };
 
             $scope.transaccion = {
-                "tipoPersona": undefined,
-                "tipoDocumentoSocio": undefined,
-                "numeroDocumentoSocio": "",
-                "tipoDocumentoApoderado": undefined,
-                "numeroDocumentoApoderado": ""
+                tipoPersona: undefined,
+                tipoDocumentoSocio: undefined,
+                numeroDocumentoSocio: undefined,
+                tipoDocumentoApoderado: undefined,
+                numeroDocumentoApoderado: undefined
             };
 
-            $scope.$watch("transaccion.numeroDocumentoSocio", function(){
-                if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null){
-                    if($scope.transaccion.numeroDocumentoSocio === undefined || $scope.transaccion.numeroDocumentoSocio === null){
-                        $scope.control.errorForm.socio = true;
-                    } else if($scope.transaccion.tipoDocumentoSocio.numeroCaracteres != $scope.transaccion.numeroDocumentoSocio.length){
-                        $scope.control.errorForm.socio = true;
-                    } else {
-                        $scope.control.errorForm.socio = false;
-                    }
-                }
-                if($scope.transaccion.numeroDocumentoSocio === undefined || $scope.transaccion.numeroDocumentoSocio === null || $scope.transaccion.numeroDocumentoSocio === "")
-                    $scope.control.errorForm.socio = true;
-            });
-            $scope.$watch("transaccion.numeroDocumentoApoderado", function(){
-                if($scope.transaccion.tipoDocumentoApoderado !== undefined && $scope.transaccion.tipoDocumentoApoderado !== null){
-                    if($scope.transaccion.numeroDocumentoApoderado === undefined || $scope.transaccion.numeroDocumentoApoderado === null){
-                        $scope.control.errorForm.apoderado = true;
-                    } else if($scope.transaccion.tipoDocumentoApoderado.numeroCaracteres != $scope.transaccion.numeroDocumentoApoderado.length){
-                        $scope.control.errorForm.apoderado = true;
-                    } else {
-                        $scope.control.errorForm.apoderado = false;
-                    }
-                } else {
-                    $scope.control.errorForm.apoderado = false;
-                }
-            });
+            $scope.loadTipoDocumentosApoderado = function(){
+                MaestroService.getTipoDocumentoPN().then(function(data){
+                    $scope.combo.tipoDocumentosApoderado = data;
+                });
+            };
+            $scope.loadTipoDocumentoSocioPN = function(){
+                MaestroService.getTipoDocumentoPN().then(function(data){
+                    $scope.combo.tipoDocumentosSocio = data;
+                });
+            };
+            $scope.loadTipoDocumentoSocioPJ = function(){
+                MaestroService.getTipoDocumentoPJ().then(function(data){
+                    $scope.combo.tipoDocumentosSocio = data;
+                });
+            };
 
-            MaestroService.getTipoDocumentoPN().then(function(data){
-                $scope.tipoDocumentosApoderado = data;
-            });
+            $scope.loadRedireccion = function(){
+                if(RedirectService.haveNext()){
+                    var state = RedirectService.getNextState();
+                    if(state == $scope.viewState){
+                        $scope.view = RedirectService.getNextObject();
+                        //var focusElem = RedirectService.getNextFocusElement();
+                        RedirectService.clearLast();
+                        $timeout(function() {
+                            //focusElem.focus();
+                        }, 100);
+                        $scope.tipoPersonaChange();
+                        $scope.buscarPersonaSocio();
+                        $scope.buscarPersonaApoderado();
+                    }
+                }
+            };
+
             $scope.tipoPersonaChange = function(){
-                $scope.transaccion.numeroDocumentoSocio = "";
-                if($scope.transaccion.tipoPersona == "NATURAL"){
-                    MaestroService.getTipoDocumentoPN().then(function(data){
-                        $scope.tipoDocumentosSocio = data;
-                    });
-                }else{if($scope.transaccion.tipoPersona == "JURIDICA"){
-                    MaestroService.getTipoDocumentoPJ().then(function(data){
-                        $scope.tipoDocumentosSocio = data;
-                    });
+                if($scope.view.tipoPersona == "NATURAL"){
+                    $scope.loadTipoDocumentoSocioPN();
+                }else{if($scope.view.tipoPersona == "JURIDICA"){
+                    $scope.loadTipoDocumentoSocioPJ();
                 }}
-            }
+            };
 
             $scope.buscarPersonaSocio = function($event){
                 $scope.control.submitted = true;
 
-                if(angular.isUndefined($scope.transaccion.tipoDocumentoSocio || $scope.control.errorForm.socio == true)){
-                    if($event !== undefined)
+                if(angular.isUndefined($scope.view.idTipoDocumentoSocio) || angular.isUndefined($scope.view.numeroDocumentoSocio)){
+                    if(!angular.isUndefined($event))
                         $event.preventDefault();
                     return;
                 }
 
-                var tipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
-                var numDoc = $scope.transaccion.numeroDocumentoSocio;
-                if($scope.transaccion.tipoPersona == "NATURAL"){
-                    PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
-                        $scope.socio = persona;
+                var tipoDoc = $scope.view.idTipoDocumentoSocio;
+                var numDoc = $scope.view.numeroDocumentoSocio;
+                if($scope.view.tipoPersona == "NATURAL"){
+                    PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(data){
+                        $scope.objetosCargados.socio = data;
                         $scope.alerts = [{ type: "success", msg: "Persona(socio) encontrada."}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
                     },function error(error){
-                        $scope.socio = undefined;
+                        $scope.objetosCargados.socio = undefined;
                         $scope.alerts = [{ type: "danger", msg: "Persona(socio) no encontrada."}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                     });
-                }else{if($scope.transaccion.tipoPersona == "JURIDICA"){
+                }else{if($scope.view.tipoPersona == "JURIDICA"){
                     PersonaJuridicaService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
-                        $scope.socio = persona;
+                        $scope.objetosCargados.socio = persona;
                         $scope.alerts = [{ type: "success", msg: "Persona(socio) encontrada."}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
                     },function error(error){
-                        $scope.socio = undefined;
+                        $scope.objetosCargados.socio = undefined;
                         $scope.alerts = [{ type: "danger", msg: "Persona(socio) no encontrada."}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
                     });
                 }}
                 if($event !== undefined)
                     $event.preventDefault();
-            }
+            };
+
             $scope.buscarPersonaApoderado = function($event){
                 $scope.control.submitted = true;
-                if(angular.isUndefined($scope.transaccion.tipoDocumentoApoderado
-                    || angular.isUndefined($scope.transaccion.numeroDocumentoApoderado)
-                    || $scope.transaccion.numeroDocumentoApoderado === ""
-                    || $scope.control.errorForm.apoderado == true)){
+                if(angular.isUndefined($scope.view.idTipoDocumentoApoderado || angular.isUndefined($scope.view.numeroDocumentoApoderado))){
                     return;
                 }
-                var tipoDoc = $scope.transaccion.tipoDocumentoApoderado.id;
-                var numDoc = $scope.transaccion.numeroDocumentoApoderado;
-
-                PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc, numDoc).then(function(persona){
-                    $scope.apoderado = persona;
+                var tipoDoc = $scope.view.idTipoDocumentoApoderado;
+                var numDoc = $scope.view.numeroDocumentoApoderado;
+                PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc, numDoc).then(function(data){
+                    $scope.objetosCargados.apoderado = data;
                     $scope.alerts = [{ type: "success", msg: "Persona(apoderado) encontrada."}];
                     $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
                 },function error(error){
-                    $scope.apoderado = undefined;
+                    $scope.objetosCargados.apoderado = undefined;
                     $scope.alerts = [{ type: "danger", msg: "Persona(apoderado) no encontrado."}];
                     $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                 });
                 if($event !== undefined)
                     $event.preventDefault();
-            }
+            };
 
             //transacacion principal
             $scope.crearTransaccion = function(){
                 if ($scope.formCrearSocio.$valid) {
-                    var tipoPersona = $scope.transaccion.tipoPersona;
-                    var idTipoDocumentoSocio = $scope.transaccion.tipoDocumentoSocio.id;
-                    var numeroDocumentoSocio = $scope.transaccion.numeroDocumentoSocio;
-                    var idTipoDocumentoApoderado;
-                    var numeroDocumentoApoderado = $scope.transaccion.numeroDocumentoApoderado;
-                    if($scope.transaccion.tipoDocumentoApoderado === undefined)
-                        idTipoDocumentoApoderado = undefined;
-                    else
-                        idTipoDocumentoApoderado = $scope.transaccion.tipoDocumentoApoderado.id;
+                    var tipoPersona = $scope.view.tipoPersona;
+                    var idTipoDocumentoSocio = $scope.view.idTipoDocumentoSocio;
+                    var numeroDocumentoSocio = $scope.view.numeroDocumentoSocio;
+                    var idTipoDocumentoApoderado = $scope.view.idTipoDocumentoApoderado;
+                    var numeroDocumentoApoderado = $scope.view.numeroDocumentoApoderado;
 
                     if(idTipoDocumentoSocio == idTipoDocumentoApoderado && numeroDocumentoSocio == numeroDocumentoApoderado){
                         $scope.alerts = [{ type: "danger", msg: "Error: Socio y apoderado deben de ser diferentes"}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                        return;
-                    }
-                    if($scope.control.errorForm.socio == true || $scope.control.errorForm.apoderado == true){
                         return;
                     }
 
@@ -169,53 +173,115 @@ define(['../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
 
             $scope.crearPersonaSocio = function(){
-                if($scope.transaccion.tipoPersona !== undefined && $scope.transaccion.tipoPersona !== null){
-                    if($scope.transaccion.tipoPersona == "NATURAL"){
-                        var idTipoDoc = undefined;
-                        if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null)
-                            idTipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
-                        var baseLen = $location.absUrl().length - $location.url().length;
-                        var url = $location.absUrl().substring(0, baseLen);
-                        $window.open(url + "/app/administracion/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
-                        $timeout(function() {
-                            angular.element(document.querySelector('#txtNumeroDocumentoSocio')).focus();
-                        }, 100);
-                    } else{if($scope.transaccion.tipoPersona == "JURIDICA"){
-                        if($scope.transaccion.tipoDocumentoSocio !== undefined && $scope.transaccion.tipoDocumentoSocio !== null)
-                            idTipoDoc = $scope.transaccion.tipoDocumentoSocio.id;
-                        var baseLen = $location.absUrl().length - $location.url().length;
-                        var url = $location.absUrl().substring(0, baseLen);
-                        $window.open(url + "/app/administracion/personaJuridica" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoSocio);
-                        $timeout(function() {
-                            angular.element(document.querySelector('#txtNumeroDocumentoSocio')).focus();
-                        }, 100);
-                    }}
-                } else{
+                if(!angular.isUndefined($scope.view.tipoPersona)){
+                    var sendParameters = {
+                        tipoDocumento: $scope.view.idTipoDocumentoSocio,
+                        numeroDocumento: $scope.view.numeroDocumentoSocio
+                    };
+
+                    var nextState = $scope.viewState;
+                    var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
+                    RedirectService.addNext(nextState,{},$scope.view, elementFocus);
+
+                    if($scope.view.tipoPersona == 'NATURAL'){
+                        $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
+                    } else if($scope.view.tipoPersona == 'JURIDICA'){
+                        $state.transitionTo('app.administracion.crearPersonaJuridica', sendParameters);
+                    }
+                } else {
                     alert("Seleccione tipo de persona");
                 }
-            }
+            };
 
             $scope.crearPersonaApoderado = function(){
-                var idTipoDoc = undefined;
-                if($scope.transaccion.tipoDocumentoApoderado !== undefined && $scope.transaccion.tipoDocumentoApoderado !== null)
-                    idTipoDoc = $scope.transaccion.tipoDocumentoApoderado.id;
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.transaccion.numeroDocumentoApoderado);
-                $timeout(function() {
-                    angular.element(document.querySelector('#txtNumeroDocumentoApoderado')).focus();
-                }, 100);
-            }
+                var sendParameters = {
+                    tipoDocumento: $scope.view.idTipoDocumentoApoderado,
+                    numeroDocumento: $scope.view.numeroDocumentoApoderado
+                };
+
+                var nextState = $scope.viewState;
+                var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
+                RedirectService.addNext(nextState,{},$scope.view, elementFocus);
+                $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
+            };
+
+            $scope.getTipoDocumentoSocio = function(){
+                if(!angular.isUndefined($scope.combo.tipoDocumentosSocio)){
+                    for(var i = 0; i < $scope.combo.tipoDocumentosSocio.length; i++){
+                        if($scope.view.idTipoDocumentoSocio == $scope.combo.tipoDocumentosSocio[i].id)
+                            return $scope.combo.tipoDocumentosSocio[i];
+                    }
+                }
+                return undefined;
+            };
+            $scope.getTipoDocumentoApoderado = function(){
+                if(!angular.isUndefined($scope.combo.tipoDocumentosApoderado)){
+                    for(var i = 0; i < $scope.combo.tipoDocumentosApoderado.length; i++){
+                        if($scope.view.idTipoDocumentoApoderado == $scope.combo.tipoDocumentosApoderado[i].id)
+                            return $scope.combo.tipoDocumentosApoderado[i];
+                    }
+                }
+                return undefined;
+            };
+            $scope.$watch("view.numeroDocumentoSocio",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.validarNumeroDocumentoSocio();
+                }
+            },true);
+            $scope.$watch("view.numeroDocumentoApoderado",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.validarNumeroDocumentoApoderado();
+                }
+            },true);
+            $scope.validarNumeroDocumentoSocio = function(){
+                if(!angular.isUndefined($scope.formCrearSocio.numeroDocumentoSocio)){
+                    if(!angular.isUndefined($scope.view.numeroDocumentoSocio)){
+                        if(!angular.isUndefined($scope.view.idTipoDocumentoSocio)){
+                            var tipoDoc = $scope.getTipoDocumentoSocio();
+                            if(!angular.isUndefined(tipoDoc)) {
+                                if($scope.view.numeroDocumentoSocio.length == tipoDoc.numeroCaracteres) {
+                                    $scope.formCrearSocio.numeroDocumentoSocio.$setValidity("sgmaxlength",true);
+                                } else {$scope.formCrearSocio.numeroDocumentoSocio.$setValidity("sgmaxlength",false);}
+                            } else {$scope.formCrearSocio.numeroDocumentoSocio.$setValidity("sgmaxlength",false);}
+                        } else{$scope.formCrearSocio.numeroDocumentoSocio.$setValidity("sgmaxlength",false);}
+                    } else {$scope.formCrearSocio.numeroDocumentoSocio.$setValidity("sgmaxlength",false);}}
+            };
+            $scope.validarNumeroDocumentoApoderado = function(){
+                if(!angular.isUndefined($scope.formCrearSocio.numeroDocumentoApoderado)){
+                    if(!angular.isUndefined($scope.view.numeroDocumentoApoderado)){
+                        if(!angular.isUndefined($scope.view.idTipoDocumentoApoderado)){
+                            var tipoDoc = $scope.getTipoDocumentoApoderado();
+                            if(!angular.isUndefined(tipoDoc)) {
+                                if($scope.view.numeroDocumentoApoderado.length == tipoDoc.numeroCaracteres) {
+                                    $scope.formCrearSocio.numeroDocumentoApoderado.$setValidity("sgmaxlength",true);
+                                } else {$scope.formCrearSocio.numeroDocumentoApoderado.$setValidity("sgmaxlength",false);}
+                            } else {$scope.formCrearSocio.numeroDocumentoApoderado.$setValidity("sgmaxlength",false);}
+                        } else{$scope.formCrearSocio.numeroDocumentoApoderado.$setValidity("sgmaxlength",false);}
+                    } else {$scope.formCrearSocio.numeroDocumentoApoderado.$setValidity("sgmaxlength",false);}}
+            };
+
+            $scope.redireccion = function(){
+                if(RedirectService.haveNext()){
+                    var nextState = RedirectService.getNextState();
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
+                } else {
+                    $state.transitionTo('app.socio.buscarSocio');
+                }
+            };
+
+            $scope.cancelar = function(){
+                $scope.redireccion();
+            };
 
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
-            }
+            };
 
-            $scope.cancelar = function(){
-                $state.transitionTo("app.socio.buscarSocio");
-            }
+            $scope.loadTipoDocumentosApoderado();
+            $scope.loadRedireccion();
         }]);
 });
