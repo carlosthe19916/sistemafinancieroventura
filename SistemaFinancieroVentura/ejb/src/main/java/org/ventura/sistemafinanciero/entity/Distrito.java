@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
 		@NamedQuery(name = Distrito.findByIdProvincia, query = "SELECT d FROM Distrito d WHERE d.provincia.idProvincia = :idprovincia Order By d.denominacion"),
-		@NamedQuery(name = Distrito.findCodigoProvincia, query = "SELECT d FROM Distrito d WHERE d.provincia.codigo = :codigoProvincia Order By d.denominacion") })
+		@NamedQuery(name = Distrito.findCodigoProvincia, query = "SELECT d FROM Distrito d INNER JOIN d.provincia p INNER JOIN p.departamento dep WHERE dep.codigo = :codigoDepartamento AND p.codigo = :codigoProvincia Order By d.denominacion") })
 public class Distrito implements java.io.Serializable {
 
 	/**

@@ -51,7 +51,7 @@
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.tipoDocumento.$invalid && (control.submitted || formCrearPersonanatural.tipoDocumento.$dirty)}">
                 <label>Tipo Documento</label>
-                <label style="color: brown;">(*) id:{{view.idTipoDocumento}}</label>
+                <label style="color: brown;">(*)</label>
                 <select name="tipoDocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumento" class="form-control" required>
                 </select>
                 <div ng-show="formCrearPersonanatural.tipoDocumento.$invalid && (control.submitted || formCrearPersonanatural.tipoDocumento.$dirty)">

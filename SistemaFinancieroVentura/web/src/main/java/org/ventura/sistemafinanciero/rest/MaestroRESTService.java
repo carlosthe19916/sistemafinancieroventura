@@ -182,8 +182,8 @@ public class MaestroRESTService {
 	@GET
 	@Path("/ubigeo/distrito")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Distrito> getDistritosByCodigo(@QueryParam("codigoProvincia") String codigoProvincia) {
-		List<Distrito> list = maestroService.getDistritos(codigoProvincia);
+	public List<Distrito> getDistritosByCodigo(@QueryParam("codigoDepartamento") String codigoDepartamento, @QueryParam("codigoProvincia") String codigoProvincia) {
+		List<Distrito> list = maestroService.getDistritos(codigoDepartamento, codigoProvincia);
 		return list;
 	}
 

@@ -43,8 +43,8 @@ define(['./module'], function (services) {
                 getProvinciasByCodigo: function(codigoDepartamento) {
                     return Restangular.all("ubigeo/provincia").getList({codigoDepartamento:codigoDepartamento},{});
                 },
-                getDistritosByCodigo: function(codigoProvincia) {
-                    return Restangular.all("ubigeo/distrito").getList({codigoProvincia:codigoProvincia},{});
+                getDistritosByCodigo: function(codigoDepartamento, codigoProvincia) {
+                    return Restangular.all("ubigeo/distrito").getList({codigoDepartamento:codigoDepartamento, codigoProvincia:codigoProvincia},{});
                 }
             }
         }])

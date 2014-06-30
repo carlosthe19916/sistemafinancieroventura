@@ -107,8 +107,8 @@ public class MaestroServiceBean implements MaestroService {
 	}
 
 	@Override
-	public List<Distrito> getDistritos(String codigoProvincia) {
-		QueryParameter queryParameter = QueryParameter.with("codigoProvincia", codigoProvincia);
+	public List<Distrito> getDistritos(String codigoDepartamento, String codigoProvincia) {
+		QueryParameter queryParameter = QueryParameter.with("codigoDepartamento", codigoDepartamento).and("codigoProvincia", codigoProvincia);
 		List<Distrito> distritos = distritoDAO.findByNamedQuery(Distrito.findCodigoProvincia, queryParameter.parameters());
 		return distritos;		
 	}
