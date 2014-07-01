@@ -75,6 +75,9 @@ define(['./module'], function (services) {
                 },
                 descongelarCuentaBancaria: function(id){
                     return Restangular.one("cuentaBancaria/"+id+"/descongelar").customPUT({},'',{},{});
+                },
+                cancelarCuenta: function(id){
+                    return Restangular.one("cuentaBancaria/"+id).remove();
                 }
             }
         }])

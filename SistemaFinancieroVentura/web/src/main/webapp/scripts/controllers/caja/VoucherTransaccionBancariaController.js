@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('VoucherTransaccionBancariaController', ["$scope", "$state", "$filter", "CuentaBancariaService", "TransitionService",
-        function($scope, $state, $filter, CuentaBancariaService, TransitionService) {
+    controllers.controller('VoucherTransaccionBancariaController', ["$scope", "$state", "$filter", "CuentaBancariaService", "RedirectService",
+        function($scope, $state, $filter, CuentaBancariaService, RedirectService) {
 
     		CuentaBancariaService.getVoucherCuentaBancaria($scope.id).then(
                 function(transaccionCuentaBancaria){
@@ -13,7 +13,17 @@ define(['../module'], function (controllers) {
             );
 
             $scope.salir = function(){
-                $state.transitionTo(TransitionService.getUrl(), TransitionService.getParameters());
+                $scope.redireccion();
+            };
+
+            $scope.redireccion = function(){
+                if(RedirectService.haveNext()){
+                    var nextState = RedirectService.getNextState();
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
+                } else {
+                    $state.transitionTo('app.transaccion.depositoRetiro');
+                }
             };
 
             $scope.imprimir = function(){

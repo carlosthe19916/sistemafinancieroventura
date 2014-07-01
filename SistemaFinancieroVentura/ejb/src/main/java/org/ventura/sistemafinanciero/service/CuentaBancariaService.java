@@ -146,6 +146,8 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	
 	public void descongelarCuentaBancaria(BigInteger idCuentaBancaria) throws RollbackFailureException;
 	
+	public void cancelarCuentaBancaria(BigInteger id) throws RollbackFailureException;;
+	
 	/**mode representa titulares activos/inacativos o todos*/
 	public Set<Titular> getTitulares(BigInteger idCuentaBancaria, boolean mode);
 	
@@ -157,6 +159,6 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	
 	public VoucherTransaccionBancaria getVoucherCuentaBancaria(BigInteger idTransaccionBancaria);
 
-	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);
+	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);	
 
 }

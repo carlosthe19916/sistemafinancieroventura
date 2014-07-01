@@ -367,10 +367,17 @@ define(['./app'], function(app) {
                 }
             })
             .state('app.transaccion.depositoRetiro', {
-                url: "/depositoRetiro",
+                url: "/depositoRetiro?numeroCuenta&tipoTransaccion&monto&referencia",
                 views: {
                     "viewContent": {
-                        templateUrl: "views/cajero/transaccion/depositoRetiro.html"
+                        templateUrl: "views/cajero/transaccion/depositoRetiro.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.params = {};
+                            $scope.params.numeroCuenta = $stateParams.numeroCuenta;
+                            $scope.params.tipoTransaccion = $stateParams.tipoTransaccion;
+                            $scope.params.monto = $stateParams.monto;
+                            $scope.params.referencia = $stateParams.referencia;
+                        }
                     }
                 }
             })
@@ -510,6 +517,17 @@ define(['./app'], function(app) {
                 views: {
                     "viewContent": {
                         templateUrl: "views/cajero/cuentaBancaria/firmasCuentaBancaria.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
+            .state('app.socio.cancelarCuentaBancaria', {
+                url: "/cuentaBancaria/cancelarCuenta/:id",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/cuentaBancaria/cancelarCuentaBancaria.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }

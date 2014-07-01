@@ -771,5 +771,21 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancariaDAO.update(cuentaBancaria);
 	}
 
+	@Override
+	public void cancelarCuentaBancaria(BigInteger id)
+			throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(id);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta bancaria no encontrada");
+		if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO))
+			throw new RollbackFailureException("La cuenta no esta activa, no se puede cancelar");
+		if(cuentaBancaria.getSaldo().compareTo(BigDecimal.ZERO) != 0)
+			throw new RollbackFailureException("Cuenta tiene saldo diferente de cero, no se puede cancelar");
+		
+		cuentaBancaria.setEstado(EstadoCuentaBancaria.INACTIVO);
+		cuentaBancaria.setFechaCierre(Calendar.getInstance().getTime());
+		cuentaBancariaDAO.update(cuentaBancaria);
+	}
+
 
 }

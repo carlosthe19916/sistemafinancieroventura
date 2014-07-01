@@ -559,10 +559,26 @@ public class CuentaBancariaRESTService {
 	
 	@DELETE
 	@Path("/{id}")
-	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })
-	public Response updateCuentaBancaria(@PathParam("id") int id) {				
-		return null;
+	public Response deleteCuentaBancaria(@PathParam("id") BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;		
+		if(id == null){
+			model = Json.createObjectBuilder().add("message", "Id no valido").build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {
+			cuentaBancariaService.cancelarCuentaBancaria(id);
+			model = Json.createObjectBuilder().add("message", "success").build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;	
 	}
 	
 	@GET

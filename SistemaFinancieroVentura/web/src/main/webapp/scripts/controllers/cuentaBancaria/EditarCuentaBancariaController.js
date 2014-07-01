@@ -36,7 +36,7 @@ define(['../module'], function (controllers) {
                             $scope.alerts.push({ type: "danger", msg: "Cuenta bancaria no encontrada."});
                         }
                     );
-                };
+                }
             };
             $scope.loadSocio = function(){
                 if(!angular.isUndefined($scope.id)){
@@ -180,6 +180,12 @@ define(['../module'], function (controllers) {
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         }
                     );
+                }
+            };
+            //carlos
+            $scope.cancelarCuentaBancaria = function(){
+                if(!angular.isUndefined($scope.cuentaBancaria)){
+                    $state.transitionTo("app.socio.cancelarCuentaBancaria", { id: $scope.id });
                 }
             };
 

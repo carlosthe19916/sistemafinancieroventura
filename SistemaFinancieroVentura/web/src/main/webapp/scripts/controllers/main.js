@@ -37,6 +37,7 @@ define([
     './cuentaBancaria/BeneficiarioPopUpController',
     './cuentaBancaria/TitularPopUpController',
     './cuentaBancaria/FirmasCuentaBancariaController',
+    './cuentaBancaria/CancelarCuentaBancariaController',
 
     './persona/natural/BuscarPersonaNaturalController',
     './persona/natural/CrearPersonaNaturalController',
