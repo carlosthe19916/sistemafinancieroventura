@@ -3,7 +3,16 @@ define(['../module'], function (controllers) {
     controllers.controller("BuscarSocioController", ['$scope','$state','$timeout','focus','SocioService','RedirectService',
         function($scope,$state,$timeout,focus,SocioService,RedirectService) {
 
-            focus("firstFocus");
+            $scope.focusElements = {
+                filterText: 'focusFilterText'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.filterText);
+            };
+            $scope.setInitialFocus();
+
 
             $scope.nuevo = function(){
                 RedirectService.limpiar();
@@ -69,9 +78,7 @@ define(['../module'], function (controllers) {
                     $scope.getPagedDataInitial();
                 }
 
-                $timeout(function() {
-                    angular.element(document.querySelector('#txtFilterText')).focus();
-                }, 100);
+                $scope.setInitialFocus();
             };
 
             $scope.$watch(

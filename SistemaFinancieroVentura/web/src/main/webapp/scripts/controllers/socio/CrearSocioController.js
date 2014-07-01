@@ -4,7 +4,16 @@ define(['../module'], function (controllers) {
     controllers.controller('CrearSocioController', ['$scope','$state','$window','$timeout','$location','focus', 'MaestroService', 'PersonaNaturalService', 'PersonaJuridicaService', 'SocioService','RedirectService',
         function($scope, $state,$window,$timeout,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService,RedirectService) {
 
-            focus("firstFocus");
+            $scope.focusElements = {
+                tipoPersona: 'focusTipoPersona'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.tipoPersona);
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
             $scope.viewState = 'app.socio.crearSocio';
 

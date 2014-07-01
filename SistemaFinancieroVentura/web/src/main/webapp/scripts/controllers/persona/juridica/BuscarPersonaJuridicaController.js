@@ -1,7 +1,18 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('BuscarPersonaJuridicaController', ['$scope','$state','$location','$window','ngProgress','PersonaJuridicaService','RedirectService',
-        function($scope, $state,$location,$window,ngProgress,PersonaJuridicaService,RedirectService){
+    controllers.controller('BuscarPersonaJuridicaController', ['$scope','$state','$location','$window','ngProgress','focus','PersonaJuridicaService','RedirectService',
+        function($scope, $state,$location,$window,ngProgress,focus,PersonaJuridicaService,RedirectService){
+
+            $scope.focusElements = {
+                filterText: 'focusFilterText'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.filterText);
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
             $scope.nuevo = function() {
                 RedirectService.limpiar();
@@ -49,17 +60,16 @@ define(['../../module'], function (controllers) {
             $scope.getPagedDataInitial();
 
             $scope.getPagedDataSearched = function () {
-                setTimeout(function () {
-                    if ($scope.filterOptions.filterText) {
-                        var ft = $scope.filterOptions.filterText.toUpperCase();
-                        PersonaJuridicaService.findByFilterText(ft, $scope.getOffset(), $scope.getLimit()).then(function (data){
-                            $scope.personasList = data;
-                            $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        });;
-                    } else {
-                        $scope.getPagedDataInitial();
-                    }
-                }, 100);
+                if ($scope.filterOptions.filterText) {
+                    var ft = $scope.filterOptions.filterText.toUpperCase();
+                    PersonaJuridicaService.findByFilterText(ft, $scope.getOffset(), $scope.getLimit()).then(function (data){
+                        $scope.personasList = data;
+                        $scope.setPagingData($scope.personasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                    });;
+                } else {
+                    $scope.getPagedDataInitial();
+                }
+                $scope.setInitialFocus();
             };
 
             $scope.$watch(

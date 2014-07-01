@@ -36,7 +36,7 @@ define(['../module'], function (controllers) {
                 idTipoDocumento: undefined,
                 numeroDocumento: undefined,
                 idMoneda: undefined,
-                tasaInteres: undefined,
+                tasaInteres: 0,
                 cantRetirantes: 1,
                 titulares: [],
                 titularesFinal: [],
@@ -210,7 +210,7 @@ define(['../module'], function (controllers) {
             $scope.crearPersona = function(){
                 if(!angular.isUndefined($scope.view.tipoPersona)){
                     $scope.setTabCuentaActive();
-                    var savedParameters = 'AHORRO';
+                    var savedParameters = 'CORRIENTE';
                     var sendParameters = {
                         tipoDocumento: $scope.view.idTipoDocumento,
                         numeroDocumento: $scope.view.numeroDocumento

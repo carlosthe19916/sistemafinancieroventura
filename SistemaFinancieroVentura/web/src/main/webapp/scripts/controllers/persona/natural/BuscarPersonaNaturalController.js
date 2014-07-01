@@ -1,7 +1,18 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$timeout','$location','$window','ngProgress','PersonaNaturalService','RedirectService',
-        function($scope,$state,$timeout,$location,$window,ngProgress,PersonaNaturalService,RedirectService){
+    controllers.controller('BuscarPersonaNaturalController', ['$scope','$state','$timeout','$location','$window','ngProgress','focus','PersonaNaturalService','RedirectService',
+        function($scope,$state,$timeout,$location,$window,ngProgress,focus,PersonaNaturalService,RedirectService){
+
+            $scope.focusElements = {
+                filterText: 'focusFilterText'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.filterText);
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
             $scope.nuevo = function() {
                 RedirectService.limpiar();
@@ -68,9 +79,7 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.getPagedDataInitial();
                 }
-                $timeout(function() {
-                    angular.element(document.querySelector('#txtFilterText')).focus();
-                }, 100);
+                $scope.setInitialFocus();
             };
 
             $scope.$watch(
