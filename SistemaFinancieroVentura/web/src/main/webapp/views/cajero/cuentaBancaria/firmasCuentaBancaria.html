@@ -36,16 +36,17 @@
         </div>
         <div class="row" ng-repeat = "titularY in titulares">
             <div class="col-sm-6 col-md-4" ng-repeat="titularX in titularY">
-                <div ng-controller="LoadImageController">
+                <div>
                     <div class="thumbnail"
-                         flow-init="configFirma(titularX.personaNatural.id)"
+                         ng-controller="LoadImageController"
+                         flow-init="configImagen(titularX.personaNatural.id,'firma')"
                          flow-files-submitted="$flow.upload()"
                          flow-file-success="$file.msg = $message"
-                         flow-name="uploader.flow"
+                         flow-name="flowObject"
                          flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
 
                         <div ng-show="!$flow.files.length">
-                            <img ng-src="{{getFirma(titularX.personaNatural.id)}}" style="width: 100%; height: 150px">
+                            <img ng-src="{{getImagen(titularX.personaNatural.id,'firma')}}" style="width: 100%; height: 150px">
                         </div>
                         <div ng-show="$flow.files.length">
                             <img flow-img="$flow.files[0]" style="width: 100%; height: 150px">

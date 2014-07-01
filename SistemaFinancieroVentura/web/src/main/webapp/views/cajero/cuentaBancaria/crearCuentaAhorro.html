@@ -3,7 +3,7 @@
     <legend>Apertura Cuenta de Ahorro</legend>
 </fieldset>
 <tabset>
-<tab heading="Cuenta de Ahorro" select="tabCuentaSelected()">
+<tab heading="Cuenta de Ahorro" select="tabCuentaSelected()" active="view.tabSelectedCuenta">
 <br/>
 <div>
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
@@ -19,7 +19,7 @@
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && control.submitted}">
                 <label>Tipo Persona</label>
                 <label style="color: brown;">(*)</label>
-                <select focus-on="firstFocus" id="cmbTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in combo.tipoPersonas" ng-model="view.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
+                <select focus-on="focusTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in combo.tipoPersonas" ng-model="view.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearCuenta.tipoPersona.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">
@@ -48,7 +48,7 @@
                 <label>Numero Documento</label>
                 <label style="color: brown;">(*)</label>
                 <div class="input-group">
-                    <input id="txtNumeroDocumentoSocio" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
+                    <input focus-on="focusNumeroDocumento" type="text" name="numeroDocumento" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
                      <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="buscarPersonaSocio()" >
                             <span class="glyphicon glyphicon-search"></span>
@@ -264,10 +264,10 @@
 </form>
 </div>
 </tab>
-<tab heading="Titulares" select="tabTitularSelected()">
+<tab heading="Titulares" select="tabTitularSelected()" active="view.tabSelectedTitulares">
     <div ng-include="'views/cajero/cuentaBancaria/titular.html'"></div>
 </tab>
-<tab heading="Beneficiarios" select="tabBeneficiarioSelected()">
+<tab heading="Beneficiarios" select="tabBeneficiarioSelected()" active="view.tabSelectedBeneficiarios">
     <div ng-include="'views/cajero/cuentaBancaria/beneficiario.html'"></div>
 </tab>
 </tabset>

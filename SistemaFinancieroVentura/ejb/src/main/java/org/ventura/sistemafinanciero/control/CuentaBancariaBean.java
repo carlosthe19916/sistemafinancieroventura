@@ -350,10 +350,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			titular.setCuentaBancaria(cuentaBancaria);
 			titularDAO.create(titular);
 		}
-		for (Beneficiario beneficiario : beneficiarios) {
-			beneficiario.setCuentaBancaria(cuentaBancaria);
-			beneficiarioDAO.create(beneficiario);
-		}
+		if(beneficiarios != null)
+			for (Beneficiario beneficiario : beneficiarios) {
+				beneficiario.setCuentaBancaria(cuentaBancaria);
+				beneficiarioDAO.create(beneficiario);
+			}
 		
 		//crear intereses
 		if(tasaInteres == null)
@@ -464,10 +465,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			titular.setCuentaBancaria(cuentaBancaria);
 			titularDAO.create(titular);
 		}
-		for (Beneficiario beneficiario : beneficiarios) {
-			beneficiario.setCuentaBancaria(cuentaBancaria);
-			beneficiarioDAO.create(beneficiario);
-		}
+		if(beneficiarios != null)
+			for (Beneficiario beneficiario : beneficiarios) {
+				beneficiario.setCuentaBancaria(cuentaBancaria);
+				beneficiarioDAO.create(beneficiario);
+			}
 		
 		//crear las tasas de interes
 		//crear intereses		

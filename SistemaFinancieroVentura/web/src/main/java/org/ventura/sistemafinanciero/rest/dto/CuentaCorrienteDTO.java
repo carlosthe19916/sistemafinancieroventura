@@ -22,8 +22,6 @@ public class CuentaCorrienteDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private BigInteger idMoneda;
-	private int periodo;
-	private BigDecimal monto;
 	private BigDecimal tasaInteres;
 
 	private TipoPersona tipoPersona;
@@ -40,22 +38,6 @@ public class CuentaCorrienteDTO implements Serializable {
 
 	public void setIdMoneda(BigInteger idMoneda) {
 		this.idMoneda = idMoneda;
-	}
-
-	public int getPeriodo() {
-		return periodo;
-	}
-
-	public void setPeriodo(int periodo) {
-		this.periodo = periodo;
-	}
-
-	public BigDecimal getMonto() {
-		return monto;
-	}
-
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
 	}
 
 	public BigDecimal getTasaInteres() {

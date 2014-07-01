@@ -1,25 +1,16 @@
 <div ng-controller="CrearCuentaBancariaController">
     <fieldset>
         <legend style="text-align: center;">APERTURA DE CUENTA BANCARIA</legend>
-        <div>
-            <div class="radio-inline">
-                <label>
-                    <input type="radio" ng-model="cuentaSelected" ng-value="cuentaAhorro" autofocus>
-                    Cuenta de Ahorro
-                </label>
-            </div>
-            <div class="radio-inline">
-                <label>
-                    <input type="radio" ng-model="cuentaSelected" ng-value="cuentaPlazoFijo">
-                    Cuenta Plazo Fijo
-                </label>
-            </div>
-            <div class="radio-inline">
-                <label>
-                    <input type="radio" ng-model="cuentaSelected" ng-value="cuentaCorriente">
-                    Cuenta Corriente
-                </label>
-            </div>
+        <div class="btn-group">
+            <label class="btn btn-default" ng-model="cuentaSelected" btn-radio="cuentaAhorro" uncheckable autofocus>
+                Cuenta de Ahorro
+            </label>
+            <label class="btn btn-default" ng-model="cuentaSelected" btn-radio="cuentaPlazoFijo" uncheckable>
+                Cuenta Plazo Fijo
+            </label>
+            <label class="btn btn-default" ng-model="cuentaSelected" btn-radio="cuentaCorriente" uncheckable>
+                Cuenta Corriente
+            </label>
         </div>
         <div>
             <div ng-include="cuentaSelected"></div>

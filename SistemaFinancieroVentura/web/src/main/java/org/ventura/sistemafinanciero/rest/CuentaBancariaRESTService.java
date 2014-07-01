@@ -247,6 +247,7 @@ public class CuentaBancariaRESTService {
 	@Produces({ "application/xml", "application/json" })
 	public Response createCuentaAhorro(
 			CuentaAhorroDTO cuenta, @Context SecurityContext context) {	
+		JsonObject model = null;
 		try {		
 			String username = context.getUserPrincipal().getName();
 			Usuario currentUser = usuarioService.findByUsername(username);
@@ -259,25 +260,48 @@ public class CuentaBancariaRESTService {
 			if(agencia == null)
 				return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
 			
-			BigInteger idMoneda = cuenta.getIdMoneda();
-			BigDecimal tasaInteres = cuenta.getTasaInteres();
 			TipoPersona tipoPersona = cuenta.getTipoPersona();
-			BigInteger idPersona = cuenta.getIdPersona();
+			BigInteger idTipoDocumento = cuenta.getIdTipoDocumento();
+			String numeroDocumento = cuenta.getNumeroDocumento();	
+			BigInteger idPersona = null;
+			switch (tipoPersona) {
+			case NATURAL:
+				PersonaNatural personaNatural = personaNaturalService.find(idTipoDocumento, numeroDocumento);
+				if(personaNatural == null){
+					model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
+					return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+				}
+				idPersona = personaNatural.getIdPersonaNatural();
+				break;
+			case JURIDICA:
+				PersonaJuridica personaJuridica = personaJuridicaService.find(idTipoDocumento, numeroDocumento);
+				if(personaJuridica == null){
+					model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
+					return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+				}
+				idPersona = personaJuridica.getIdPersonaJuridica();
+				break;
+			default:
+				break;
+			}
+			
+			BigInteger idMoneda = cuenta.getIdMoneda();
+			BigDecimal tasaInteres = cuenta.getTasaInteres();			
 			int cantRetirantes = cuenta.getCantRetirantes();
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 			
 			BigInteger idCuenta = cuentaBancariaService.createCuentaAhorro(agencia.getIdAgencia(), idMoneda, tasaInteres, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);
-			JsonObject model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
+			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {
-			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (RollbackFailureException e) {
-			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (EJBException e) {
-			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}		
 	}

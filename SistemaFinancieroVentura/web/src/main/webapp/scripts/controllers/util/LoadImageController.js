@@ -30,11 +30,12 @@ define(['../module'], function (controllers) {
                     return $scope.urlBase + id + "/" + tipoFoto;
             };
 
-
             $scope.$watch("view.id", function(){
-                if(!angular.isUndefined($scope.view.id)){
-                    $scope.idPersona = $scope.view.id;
-                    $scope.$flow.opts.target = $scope.baseTarget + $scope.idPersona + '/' + $scope.tipoImagen;
+                if(!angular.isUndefined($scope.view)){
+                    if(!angular.isUndefined($scope.view.id)){
+                        $scope.idPersona = $scope.view.id;
+                        $scope.$flow.opts.target = $scope.baseTarget + $scope.idPersona + '/' + $scope.tipoImagen;
+                    }
                 }
             });
 

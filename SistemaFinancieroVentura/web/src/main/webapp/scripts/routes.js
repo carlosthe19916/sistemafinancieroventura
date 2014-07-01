@@ -11,7 +11,7 @@ define(['./app'], function(app) {
         $stateProvider
             .state('app', {
                 abstract: true,
-                url: "/app",
+                url: "/app?redirect",
                 template: '' +
                     '<div class="container" ng-controller="MainController" style="padding-top: 70px;">' +
                     '<div class="navbar navbar-default navbar-fixed-top" role="navigation">' +
@@ -30,19 +30,19 @@ define(['./app'], function(app) {
                     '<div class="navbar-collapse collapse">' +
                     '<ul class="nav navbar-nav">'+
                     '<li ui-sref-active="active" class="active">'+
-                    '   <a href="#" ui-sref="app.home">Página Principal</a>'+
+                    '   <a href="#" ui-sref="app.home({redirect:true})">Página Principal</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
-                    '   <a href="#contact" ui-sref="app.caja">Caja</a>'+
+                    '   <a href="#contact" ui-sref="app.caja({redirect:true})">Caja</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
-                    '<a href="#about" ui-sref="app.transaccion">Transacciones</a>'+
+                    '<a href="#about" ui-sref="app.transaccion({redirect:true})">Transacciones</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
-                    '<a href="#contact" ui-sref="app.socio">Cuentas Personales</a>'+
+                    '<a href="#contact" ui-sref="app.socio({redirect:true})">Cuentas Personales</a>'+
                     '</li>'+
                     '<li ui-sref-active="active">'+
-                    '<a href="#contact" ui-sref="app.administracion">Administracion</a>'+
+                    '<a href="#contact" ui-sref="app.administracion({redirect:true})">Administracion</a>'+
                     '</li>'+
                     '</ul>'+
                     '<ul class="nav navbar-nav navbar-right" ng-controller="CajaNavbarController">'+
@@ -88,7 +88,7 @@ define(['./app'], function(app) {
                     "<div class='sf-nav-bar-left-submenu'>" +
                     "<ul class='sf-ul-submenu-position sf-ul-submenu-theme'>" +
                     "<li ng-repeat='submenu in menu.submenus' ui-sref-active = 'GGLKX0UBOUD' class='sf-li-submenu ng-scope'>"+
-                    "<a ui-sref='{{submenu.state}}' class='gwt-Anchor sf-link-submenu ng-binding'>{{submenu.name}}</a>"+
+                    "<a ui-sref='{{submenu.state}}({redirect:true})' class='gwt-Anchor sf-link-submenu ng-binding'>{{submenu.name}}</a>"+
                     "</li>" +
                     "</ul>" +
                     "</div>"+
@@ -108,6 +108,10 @@ define(['./app'], function(app) {
                     '</div>'+
                     '</div>'+
                     '</div>'
+                ,
+                controller: function($scope, $stateParams) {
+                    $scope.redirect = $stateParams.redirect;
+                }
             })
             .state('app.home', {
                 url: '/home',

@@ -50,7 +50,7 @@ define(['../../module'], function (controllers) {
                     tipoDocumento: $scope.$parent.view.idTipoDocumentoAccionista,
                     numeroDocumento: $scope.$parent.view.numeroDocumentoAccionista
                 };
-                var nextState = "app.administracion.crearPersonaJuridica";
+                var nextState = $scope.$parent.viewState;
                 var elementFocus = $scope.$parent.focusElements.numeroDocumentoAccionista;
                 RedirectService.addNext(nextState,savedParameters,$scope.$parent.view, elementFocus);
                 $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);

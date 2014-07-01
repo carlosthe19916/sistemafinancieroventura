@@ -1,8 +1,14 @@
 define(['./module'], function (controllers) {
     'use strict';
 
-    controllers.controller('MainController', [ "$scope", "$window", "hotkeys", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService","HotKeysFunctionsService",
-        function($scope, $window, hotkeys,  CajaSessionService, UsuarioSessionService, AgenciaSessionService, HotKeysFunctionsService) {
+    controllers.controller('MainController', [ "$scope", "$window", "hotkeys", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService","HotKeysFunctionsService", "RedirectService",
+        function($scope, $window, hotkeys,  CajaSessionService, UsuarioSessionService, AgenciaSessionService, HotKeysFunctionsService, RedirectService) {
+
+            $scope.$watch('redirect', function(newValue, oldvalue){
+                if(newValue != oldvalue)
+                    if($scope.redirect == true)
+                        RedirectService.limpiar();
+            }, true);
 
             $scope.cajaSession = {
                 "denominacion":"undefined",

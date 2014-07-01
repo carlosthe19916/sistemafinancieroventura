@@ -3,11 +3,22 @@ define(['../module'], function (controllers) {
     controllers.controller('CrearCuentaAhorroController', [ "$scope", "$state", "$filter", "$location", "$window","$timeout", "$modal", "focus", "MaestroService", "MonedaService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "TasaInteresService", "CuentaBancariaService","RedirectService",
         function($scope, $state, $filter, $location, $window,$timeout, $modal, focus, MaestroService, MonedaService, PersonaNaturalService, PersonaJuridicaService, SocioService, TasaInteresService, CuentaBancariaService,RedirectService) {
 
-            $scope.$on('$includeContentLoaded', function(){
-                focus("firstFocus");
-            });
-
             $scope.viewState = 'app.socio.crearCuentaBancaria';
+
+            $scope.focusElements = {
+                tipoPersona: 'focusTipoPersona',
+                numeroDocumento: 'focusNumeroDocumento',
+                tipoDocumentoTitular: 'focusTipoDocumentoTitular',
+                numeroDocumentoTitular: 'focusNumeroDocumentoTitular',
+                numeroDocumentoBeneficiario: 'focusNumeroDocumentoBeneficiario'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.tipoPersona);
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
             $scope.control = {
                 success: false,
@@ -30,7 +41,14 @@ define(['../module'], function (controllers) {
                 cantRetirantes: 1,
                 titulares: [],
                 titularesFinal: [],
-                beneficiarios: []
+                beneficiarios: [],
+
+                idTipoDocumentoTitular: undefined,
+                numeroDocumentoTitular: undefined,
+
+                tabSelectedCuenta: true,
+                tabSelectedTitulares: false,
+                tabSelectedBeneficiarios: false
             };
 
             $scope.login = {
@@ -48,11 +66,16 @@ define(['../module'], function (controllers) {
                     var state = RedirectService.getNextState();
                     if(state == $scope.viewState){
                         $scope.view = RedirectService.getNextObject();
-                        //var focusElem = RedirectService.getNextFocusElement();
+                        var focusElem = RedirectService.getNextFocusElement();
+                        var windowsPosition = RedirectService.getNextWindowsPosition();
                         RedirectService.clearLast();
                         $timeout(function() {
-                            //focusElem.focus();
-                        }, 100);
+                            focus(focusElem);
+                        }, 500);
+                        if(!angular.isUndefined(windowsPosition))
+                            $timeout(function() {
+                                $window.scrollTo(windowsPosition.x, windowsPosition.y);
+                            }, 500);
                         $scope.tipoPersonaChange();
                         $scope.buscarPersonaSocio();
                     }
@@ -78,16 +101,6 @@ define(['../module'], function (controllers) {
                     $scope.view.titularesFinal.push($scope.objetosCargados.socioJuridico.representanteLegal);
                 }
             });
-
-            $scope.tabCuentaSelected = function(){
-                angular.element(document.querySelector('#cmbTipoPersona')).focus();
-            };
-            $scope.tabTitularSelected = function(){
-                angular.element(document.querySelector('#cmbTipoDocumentoTitular')).focus();
-            };
-            $scope.tabBeneficiarioSelected = function(){
-                angular.element(document.querySelector('#txtNumeroDocumentoBeneficiario')).focus();
-            };
 
             $scope.loadMonedas = function(){
                 MonedaService.getMonedas().then(function(data){
@@ -163,17 +176,13 @@ define(['../module'], function (controllers) {
                     var cuenta = {
                         "idMoneda": $scope.view.idMoneda,
                         "tipoPersona": $scope.view.tipoPersona,
-                        "idPersona": undefined,
+                        "idTipoDocumento": $scope.view.idTipoDocumento,
+                        "numeroDocumento": $scope.view.numeroDocumento,
                         "cantRetirantes":$scope.view.cantRetirantes,
                         "tasaInteres" : $scope.view.tasaInteres,
                         "titulares":[],
                         "beneficiarios": ($filter('unique')($scope.beneficiarios))
                     };
-
-                    if(!angular.isUndefined($scope.objetosCargados.socioNatural))
-                        cuenta.idPersona = $scope.objetosCargados.socioNatural.id;
-                    if(!angular.isUndefined($scope.objetosCargados.socioJuridico))
-                        cuenta.idPersona = $scope.objetosCargados.socioJuridico.id;
 
                     for(var i = 0; i < $scope.view.titularesFinal.length ; i++){
                         var idTitular = $scope.view.titularesFinal[i].id;
@@ -185,7 +194,7 @@ define(['../module'], function (controllers) {
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
                             var mensaje= data.message;
-                            $state.transitionTo("app.socio.editarCuentaBancaria", { id: data.id });
+                            $state.transitionTo("app.socio.editarCuentaBancaria", { id: data.id, redirect: true });
                         }, function error(error){
                             $scope.control.inProcess = false;
                             $scope.control.success = false;
@@ -201,6 +210,7 @@ define(['../module'], function (controllers) {
 
             $scope.crearPersona = function(){
                 if(!angular.isUndefined($scope.view.tipoPersona)){
+                    $scope.setTabCuentaActive();
                     var savedParameters = 'AHORRO';
                     var sendParameters = {
                         tipoDocumento: $scope.view.idTipoDocumento,
@@ -208,8 +218,9 @@ define(['../module'], function (controllers) {
                     };
 
                     var nextState = $scope.viewState;
-                    var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
-                    RedirectService.addNext(nextState,savedParameters,$scope.view, elementFocus);
+                    var elementFocus = $scope.focusElements.numeroDocumento;
+                    var windowsPosition = {x: $window.screenX, y: $window.screenY};
+                    RedirectService.addNext(nextState,savedParameters,$scope.view, elementFocus, windowsPosition);
 
                     if($scope.view.tipoPersona == 'NATURAL'){
                         $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
@@ -254,7 +265,6 @@ define(['../module'], function (controllers) {
                 }
             };
 
-
             $scope.getTipoDocumentoSocio = function(){
                 if(!angular.isUndefined($scope.combo.tipoDocumentos)){
                     for(var i = 0; i < $scope.combo.tipoDocumentos.length; i++){
@@ -281,6 +291,31 @@ define(['../module'], function (controllers) {
                             } else {$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}
                         } else{$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formCrearCuenta.numeroDocumento.$setValidity("sgmaxlength",false);}}
+            };
+
+            $scope.setTabCuentaActive = function(){
+                $scope.view.tabSelectedCuenta = true;
+                $scope.view.tabSelectedTitulares = false;
+                $scope.view.tabSelectedBeneficiarios = false;
+            };
+            $scope.setTabTitularesActive = function(){
+                $scope.view.tabSelectedCuenta = false;
+                $scope.view.tabSelectedTitulares = true;
+                $scope.view.tabSelectedBeneficiarios = false;
+            };
+            $scope.setTabBeneficiariosActive = function(){
+                $scope.view.tabSelectedCuenta = false;
+                $scope.view.tabSelectedTitulares = false;
+                $scope.view.tabSelectedBeneficiarios = true;
+            };
+            $scope.tabCuentaSelected = function(){
+                focus($scope.focusElements.tipoPersona);
+            };
+            $scope.tabTitularSelected = function(){
+                focus($scope.focusElements.tipoDocumentoTitular);
+            };
+            $scope.tabBeneficiarioSelected = function(){
+                focus($scope.focusElements.numeroDocumentoBeneficiario);
             };
 
             $scope.loadRedireccion();

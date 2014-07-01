@@ -11,7 +11,7 @@
                        <div class="form-group" ng-class="{ 'has-error' : formTitular.tipoDocumento.$invalid && control.submitted}">
                            <label>Tipo Documento</label>
                            <label style="color: brown;">(*)</label>
-                           <select id="cmbTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumento" class="form-control" required autofocus>
+                           <select focus-on="focusTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumentoTitular" class="form-control" required autofocus>
                            </select>
                            <div ng-show="formTitular.tipoDocumento.$invalid && control.submitted">
                                <p class="help-block" ng-show="formTitular.tipoDocumento.$error.required">
@@ -25,7 +25,7 @@
                            <label>Numero Documento</label>
                            <label style="color: brown;">(*)</label>
                            <div class="input-group">
-                               <input type="text" name="numeroDocumento" ng-model="view.numeroDocumento" min-length="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
+                               <input focus-on="focusNumeroDocumentoTitular" type="text" name="numeroDocumento" ng-model="view.numeroDocumentoTitular" min-length="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
                                  <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="addPersona()" >
                                         <span class="glyphicon glyphicon-search"></span>

@@ -7,11 +7,11 @@
         </alert>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.numeroDocumento.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.numeroDocumento.$invalid && formBeneficiario.numeroDocumento.$dirty}">
                     <label>Numero Documento</label>
                     <label style="color: brown;">(*)</label>
-                    <input id="txtNumeroDocumentoBeneficiario" type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero Documento" capitalize required autofocus/>
-                    <div ng-show="formBeneficiario.numeroDocumento.$invalid && control.submitted">
+                    <input focus-on="focusNumeroDocumentoBeneficiario" type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero Documento" capitalize required autofocus/>
+                    <div ng-show="formBeneficiario.numeroDocumento.$invalid && formBeneficiario.numeroDocumento.$dirty">
                         <p class="help-block" ng-show="formBeneficiario.numeroDocumento.$error.required">
                             Ingrese Numero Documento.
                         </p>
@@ -22,11 +22,11 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.apellidoPaterno.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.apellidoPaterno.$invalid && formBeneficiario.apellidoPaterno.$dirty}">
                     <label>Apellido Paterno</label>
                     <label style="color: brown;">(*)</label>
                     <input type="text" name="apellidoPaterno" ng-model="beneficiario.apellidoPaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido Paterno" capitalize required/>
-                    <div ng-show="formBeneficiario.apellidoPaterno.$invalid && control.submitted">
+                    <div ng-show="formBeneficiario.apellidoPaterno.$invalid && formBeneficiario.apellidoPaterno.$dirty">
                         <p class="help-block" ng-show="formBeneficiario.apellidoPaterno.$error.required">
                             Ingrese Apellido Paterno.
                         </p>
@@ -40,11 +40,11 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.apellidoMaterno.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.apellidoMaterno.$invalid && formBeneficiario.apellidoMaterno.$dirty}">
                     <label>Apellido Materno</label>
                     <label style="color: brown;">(*)</label>
                     <input type="text" name="apellidoMaterno" ng-model="beneficiario.apellidoMaterno" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Apellido Materno" capitalize required/>
-                    <div ng-show="formBeneficiario.apellidoMaterno.$invalid && control.submitted">
+                    <div ng-show="formBeneficiario.apellidoMaterno.$invalid && formBeneficiario.apellidoMaterno.$dirty">
                         <p class="help-block" ng-show="formBeneficiario.apellidoMaterno.$error.required">
                             Ingrese Apellido Materno.
                         </p>
@@ -60,11 +60,11 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.nombres.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.nombres.$invalid && formBeneficiario.nombres.$dirty}">
                     <label>Nombres</label>
                     <label style="color: brown;">(*)</label>
                     <input type="text" name="nombres" ng-model="beneficiario.nombres" ng-minlength="1" ng-maxlength="50" class="form-control" placeholder="Nombres" capitalize required/>
-                    <div ng-show="formBeneficiario.nombres.$invalid && control.submitted">
+                    <div ng-show="formBeneficiario.nombres.$invalid && formBeneficiario.nombres.$dirty">
                         <p class="help-block" ng-show="formBeneficiario.nombres.$error.required">
                             Ingrese Nombres.
                         </p>
@@ -78,11 +78,11 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.porcentajeBeneficio.$invalid && control.submitted}">
+                <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.porcentajeBeneficio.$invalid && formBeneficiario.porcentajeBeneficio.$dirty}">
                     <label>Porcentaje % </label>
                     <label style="color: brown;">(*)</label>
                     <input type="number" name="porcentajeBeneficio" ng-model="beneficiario.porcentajeBeneficio" ng-minlength="1" ng-maxlength="3" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Porcentaje" required/>
-                    <div ng-show="formBeneficiario.porcentajeBeneficio.$invalid && control.submitted">
+                    <div ng-show="formBeneficiario.porcentajeBeneficio.$invalid && formBeneficiario.porcentajeBeneficio.$dirty">
                         <p class="help-block" ng-show="formBeneficiario.porcentajeBeneficio.$error.required">
                             Ingrese Porcentaje Valido.
                         </p>
@@ -127,7 +127,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="beneficiario in beneficiarios | unique">
+                        <tr ng-repeat="beneficiario in view.beneficiarios | unique">
                             <td><span ng-bind="beneficiario.numeroDocumento"/></td>
                             <td><span ng-bind="beneficiario.apellidoPaterno"/></td>
                             <td><span ng-bind="beneficiario.apellidoMaterno"/></td>

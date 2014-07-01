@@ -7,14 +7,13 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 
 @XmlRootElement(name = "crearCuentaAhorro")
-@XmlAccessorType(XmlAccessType.NONE)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class CuentaAhorroDTO implements Serializable {
 
 	/**
@@ -23,14 +22,16 @@ public class CuentaAhorroDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private BigInteger idMoneda;
-	private TipoPersona tipoPersona;
-	private BigInteger idPersona;
-	private int cantRetirantes;
 	private BigDecimal tasaInteres;
+
+	private TipoPersona tipoPersona;
+	private BigInteger idTipoDocumento;
+	private String numeroDocumento;
+
+	private int cantRetirantes;
 	private List<BigInteger> titulares;
 	private List<Beneficiario> beneficiarios;
 
-	@XmlElement
 	public BigInteger getIdMoneda() {
 		return idMoneda;
 	}
@@ -39,7 +40,14 @@ public class CuentaAhorroDTO implements Serializable {
 		this.idMoneda = idMoneda;
 	}
 
-	@XmlElement
+	public BigDecimal getTasaInteres() {
+		return tasaInteres;
+	}
+
+	public void setTasaInteres(BigDecimal tasaInteres) {
+		this.tasaInteres = tasaInteres;
+	}
+
 	public TipoPersona getTipoPersona() {
 		return tipoPersona;
 	}
@@ -48,16 +56,22 @@ public class CuentaAhorroDTO implements Serializable {
 		this.tipoPersona = tipoPersona;
 	}
 
-	@XmlElement
-	public BigInteger getIdPersona() {
-		return idPersona;
+	public BigInteger getIdTipoDocumento() {
+		return idTipoDocumento;
 	}
 
-	public void setIdPersona(BigInteger idPersona) {
-		this.idPersona = idPersona;
+	public void setIdTipoDocumento(BigInteger idTipoDocumento) {
+		this.idTipoDocumento = idTipoDocumento;
 	}
 
-	@XmlElement
+	public String getNumeroDocumento() {
+		return numeroDocumento;
+	}
+
+	public void setNumeroDocumento(String numeroDocumento) {
+		this.numeroDocumento = numeroDocumento;
+	}
+
 	public int getCantRetirantes() {
 		return cantRetirantes;
 	}
@@ -66,7 +80,6 @@ public class CuentaAhorroDTO implements Serializable {
 		this.cantRetirantes = cantRetirantes;
 	}
 
-	@XmlElement
 	public List<BigInteger> getTitulares() {
 		return titulares;
 	}
@@ -75,22 +88,12 @@ public class CuentaAhorroDTO implements Serializable {
 		this.titulares = titulares;
 	}
 
-	@XmlElement
 	public List<Beneficiario> getBeneficiarios() {
 		return beneficiarios;
 	}
 
 	public void setBeneficiarios(List<Beneficiario> beneficiarios) {
 		this.beneficiarios = beneficiarios;
-	}
-
-	@XmlElement
-	public BigDecimal getTasaInteres() {
-		return tasaInteres;
-	}
-
-	public void setTasaInteres(BigDecimal tasaInteres) {
-		this.tasaInteres = tasaInteres;
 	}
 
 }
