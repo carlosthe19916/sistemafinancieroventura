@@ -1,7 +1,15 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('EditarPersonaNaturalController', ['$scope', '$state','$stateParams','$window', 'MaestroService', 'PersonaNaturalService','RedirectService',
-        function($scope,$state,$stateParams,$window,MaestroService,PersonaNaturalService,RedirectService) {
+    controllers.controller('EditarPersonaNaturalController', ['$scope', '$state','$stateParams','$window','focus','MaestroService', 'PersonaNaturalService','RedirectService',
+        function($scope,$state,$stateParams,$window,focus,MaestroService,PersonaNaturalService,RedirectService) {
+
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus('focusPais');
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
             $scope.control = {
                 "success":false,

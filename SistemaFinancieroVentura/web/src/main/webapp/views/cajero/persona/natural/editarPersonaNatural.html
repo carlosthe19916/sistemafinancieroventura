@@ -85,7 +85,7 @@
                 <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <span ng-bind="view.codigoPais" class="input-group-addon"></span>
-                    <select name="pais" ng-options="pais.abreviatura as pais.denominacion for pais in combo.paises" ng-model="view.codigoPais" class="form-control" required autofocus>
+                    <select focus-on="focusPais" name="pais" ng-options="pais.abreviatura as pais.denominacion for pais in combo.paises" ng-model="view.codigoPais" class="form-control" required autofocus>
                     </select>
                 </div>
                 <div ng-show="formEditarPersonanatural.pais.$invalid && (control.submitted || formEditarPersonanatural.pais.$dirty)">

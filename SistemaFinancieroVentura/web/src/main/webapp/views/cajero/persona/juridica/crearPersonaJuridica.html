@@ -6,7 +6,8 @@
     <span ng-bind-html="alert.msg"></span>
 </alert>
 <tabset>
-<tab heading="Persona Juridica" select="tabPersonaJuridicaSelected()">
+
+<tab heading="Persona Juridica" select="tabPersonaJuridicaSelected()" active="view.tabSelectedPersonaJuridica">
 <ng-form name="$parent.formCrearPersonaJuridica">
 <fieldset>
     <legend style="background: whitesmoke;">Datos Principales</legend>
@@ -15,7 +16,7 @@
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipodocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumento.$dirty)}">
                 <label>Tipo Documento</label>
                 <label style="color: brown;">(*)</label>
-                <select id="cmbTipoDocumentoPersonaJuridica" name="tipoDocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentosPJ | orderBy : 'id'" ng-model="view.idTipoDocumentoPJ" class="form-control" required autofocus>
+                <select focus-on="focusTipoDocumento" name="tipoDocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentosPJ | orderBy : 'id'" ng-model="view.idTipoDocumentoPJ" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoDocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.tipoDocumento.$error.required">
@@ -266,7 +267,7 @@
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoRepresentante.$dirty)}">
                 <label>Numero Documento(*)</label>
                 <div class="input-group">
-                    <input id="txtNumeroDocumentoRepresentanteLegal" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="view.numeroDocumentoPN" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
+                    <input focus-on="focusNumeroDocumentoRepresentante" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="view.numeroDocumentoPN" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
                       <span class="input-group-btn">
                        <button type="button" class="btn btn-default" ng-click="buscarRepresentanteLegal()" >
                            <span class="glyphicon glyphicon-search"></span>
@@ -336,7 +337,7 @@
 </ng-form>
 </tab>
 
-<tab heading="Accionistas" select="tabAccionistaSelected()">
+<tab heading="Accionistas" select="tabAccionistaSelected()" active="view.tabSelectedAccionista">
     <div ng-include="'views/cajero/persona/juridica/accionista.html'"></div>
 </tab>
 </tabset>

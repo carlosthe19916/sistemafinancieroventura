@@ -1,9 +1,23 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('EditarPersonaJuridicaController', ["$scope", "$state","$location", "$window","$timeout", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService","RedirectService",
-        function($scope, $state,$location, $window,$timeout, MaestroService, PersonaNaturalService, PersonaJuridicaService,RedirectService) {
+    controllers.controller('EditarPersonaJuridicaController', ["$scope", "$state","$location", "$window","$timeout","focus","MaestroService", "PersonaNaturalService", "PersonaJuridicaService","RedirectService",
+        function($scope, $state,$location, $window,$timeout,focus,MaestroService, PersonaNaturalService, PersonaJuridicaService,RedirectService) {
 
             $scope.viewState = "app.administracion.editarPersonaJuridica";
+
+            $scope.focusElements = {
+                tipoDocumento: 'focusTipoDocumento',
+                representanteLegal: 'focusNumeroDocumentoRepresentante',
+                tipoDocumentoAccionista: 'focusTipoDocumentoAccionista',
+                numeroDocumentoAccionista: 'focusNumeroDocumentoAccionista'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.tipoDocumento);
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
             $scope.control = {
                 success:false,
@@ -36,7 +50,13 @@ define(['../../module'], function (controllers) {
 
                 "idTipoDocumentoPN": undefined,
                 "numeroDocumentoPN": undefined,
-                "accionistas": []
+                "accionistas": [],
+
+                idTipoDocumentoAccionista: undefined,
+                numeroDocumentoAccionista: undefined,
+
+                tabSelectedPersonaJuridica: true,
+                tabSelectedAccionista: false
             };
 
             $scope.objetosCargados = {
@@ -104,10 +124,13 @@ define(['../../module'], function (controllers) {
                     if(state == $scope.viewState){
                         $scope.view = RedirectService.getNextObject();
                         var focusElem = RedirectService.getNextFocusElement();
+                        var windowsPosition = RedirectService.getNextWindowsPosition();
                         RedirectService.clearLast();
                         $timeout(function() {
-                            focusElem.focus();
-                        }, 100);
+                            focus(focusElem);
+                        }, 500);
+                        if(!angular.isUndefined(windowsPosition))
+                            $window.scrollTo(windowsPosition.x, windowsPosition.y);
                         $scope.buscarRepresentanteLegal();
                     }
                 }
@@ -130,6 +153,7 @@ define(['../../module'], function (controllers) {
                 }
             };
             $scope.nuevaPersonaRepresentanteLegal = function(){
+                $scope.setTabPersonaJuridicaActive();
                 var savedParameters = {
                     id: $scope.view.id
                 };
@@ -138,8 +162,13 @@ define(['../../module'], function (controllers) {
                     numeroDocumento: $scope.view.numeroDocumentoPN
                 };
                 var nextState = $scope.viewState;
-                var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
-                RedirectService.addNext(nextState,savedParameters,$scope.view, elementFocus);
+                var elementFocus = $scope.focusElements.representanteLegal;
+                var windowsPosition = {x: $window.screenX, y: $window.screenY};
+                RedirectService.addNext(nextState, savedParameters, $scope.view, elementFocus, windowsPosition);
+
+                $scope.view.tabSelectedPersonaJuridica = true;
+                $scope.view.tabSelectedAccionista = false;
+
                 $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
             };
 
@@ -257,7 +286,6 @@ define(['../../module'], function (controllers) {
                 }
             };
 
-
             $scope.redireccion = function(){
                 if(RedirectService.haveNext()){
                     var nextState = RedirectService.getNextState();
@@ -274,21 +302,21 @@ define(['../../module'], function (controllers) {
                 return $scope.control.inProcess;
             };
 
-
-            $scope.$on('$includeContentLoaded', function(){
-                $scope.tabPersonaJuridicaSelected();
-            });
+            //tabs
             $scope.tabPersonaJuridicaSelected = function(){
-                $timeout(function() {
-                    angular.element(document.querySelector('#cmbTipoDocumentoPersonaJuridica')).focus();
-                }, 100);
+                focus($scope.focusElements.tipoDocumento);
             };
             $scope.tabAccionistaSelected = function(){
-                $timeout(function() {
-                    angular.element(document.querySelector('#cmbTipoDocumentoAccionista')).focus();
-                }, 100)
+                focus($scope.focusElements.tipoDocumentoAccionista);
             };
-
+            $scope.setTabPersonaJuridicaActive = function(){
+                $scope.view.tabSelectedPersonaJuridica = true;
+                $scope.view.tabSelectedAccionista = false;
+            };
+            $scope.setTabAcctionistasActive = function(){
+                $scope.view.tabSelectedPersonaJuridica = false;
+                $scope.view.tabSelectedAccionista = true;
+            };
 
             //llamar a los metodos
             $scope.loadPersonaJuridica();

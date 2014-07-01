@@ -10,7 +10,7 @@
                     <div class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formAccionista.tipoDocumento.$invalid && (control.submitted || formAccionista.tipoDocumento.$dirty)}">
                             <label>Tipo Documento</label>
-                            <select id="cmbTipoDocumentoAccionista" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumento" class="form-control" required autofocus>
+                            <select focus-on="focusTipoDocumentoAccionista" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumentoAccionista" class="form-control" required autofocus>
                             </select>
                             <div ng-show="formAccionista.tipoDocumento.$invalid && (control.submitted || formAccionista.tipoDocumento.$dirty)">
                                 <p class="help-block" ng-show="formAccionista.tipoDocumento.$error.required">
@@ -23,7 +23,7 @@
                         <div class="form-group" ng-class="{ 'has-error' : formAccionista.numeroDocumento.$invalid && (control.submitted || formAccionista.numeroDocumento.$dirty)}">
                             <label>Numero Documento</label>
                             <div class="input-group">
-                                <input id="txtNumeroDocumentoAccionista" type="text" name="numeroDocumento" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
+                                <input focus-on="focusNumeroDocumentoAccionista" type="text" name="numeroDocumento" ng-model="view.numeroDocumentoAccionista" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero documento" required/>
                                  <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="addAccionista()" >
                                         <span class="glyphicon glyphicon-search"></span>
