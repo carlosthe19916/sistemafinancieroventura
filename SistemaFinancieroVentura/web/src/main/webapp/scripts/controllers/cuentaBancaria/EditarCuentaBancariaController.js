@@ -1,9 +1,11 @@
 define(['../module'], function (controllers) {
     'use strict';
     controllers.controller('EditarCuentaBancariaController', [ "$scope", "$state", "$location", "$filter", "$window", "focus","$modal",
-        "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "CuentaBancariaService", "BeneficiarioService","TitularService",
+        "MaestroService", "PersonaNaturalService", "PersonaJuridicaService", "SocioService", "CuentaBancariaService", "BeneficiarioService","TitularService","RedirectService",
         function($scope, $state, $location, $filter, $window, focus,$modal,
-                 MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService, CuentaBancariaService, BeneficiarioService,TitularService) {
+                 MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService, CuentaBancariaService, BeneficiarioService,TitularService,RedirectService) {
+
+            $scope.viewState = "app.socio.editarCuentaBancaria";
 
             $scope.alerts = [];
             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
@@ -13,57 +15,84 @@ define(['../module'], function (controllers) {
               "titular": {"success": false, "message": undefined}
             };
 
+            $scope.loadRedireccion = function(){
+                if(RedirectService.haveNext()){
+                    var state = RedirectService.getNextState();
+                    if(state == $scope.viewState){
+                        $scope.view = RedirectService.getNextObject();
+                        RedirectService.clearLast();
+                    }
+                }
+            };
+
             //cargar datos
-            if(!angular.isUndefined($scope.id)){
-                CuentaBancariaService.getCuentasBancaria($scope.id).then(
-                    function(data){
-                        $scope.cuentaBancaria = data;
-                    }, function error(error){
-                        $scope.cuentaBancaria = undefined;
-                        $scope.alerts.push({ type: "danger", msg: "Cuenta bancaria no encontrada."});
-                    }
-                );
+            $scope.loadCuentaBancaria = function(){
+                if(!angular.isUndefined($scope.id)){
+                    CuentaBancariaService.getCuentasBancaria($scope.id).then(
+                        function(data){
+                            $scope.cuentaBancaria = data;
+                        }, function error(error){
+                            $scope.cuentaBancaria = undefined;
+                            $scope.alerts.push({ type: "danger", msg: "Cuenta bancaria no encontrada."});
+                        }
+                    );
+                };
             };
-            if(!angular.isUndefined($scope.id)){
-                CuentaBancariaService.getSocio($scope.id).then(
-                    function(data){
-                        $scope.socio = data;
-                    }, function error(error){
-                        $scope.socio = undefined;
-                        $scope.alerts.push({ type: "danger", msg: "Socio no encontrado."});
-                    }
-                );
+            $scope.loadSocio = function(){
+                if(!angular.isUndefined($scope.id)){
+                    CuentaBancariaService.getSocio($scope.id).then(
+                        function(data){
+                            $scope.socio = data;
+                        }, function error(error){
+                            $scope.socio = undefined;
+                            $scope.alerts.push({ type: "danger", msg: "Socio no encontrado."});
+                        }
+                    );
+                };
             };
-            if(!angular.isUndefined($scope.id)){
-                CuentaBancariaService.getBeneficiarios($scope.id).then(
-                    function(data){
-                        $scope.beneficiarios = data;
-                    }, function error(error){
-                        $scope.beneficiarios = undefined;
-                        $scope.alerts.push({ type: "danger", msg: "Beneficiarios no encontrados."});
-                    }
-                );
+            $scope.loadBeneficiarios = function(){
+                if(!angular.isUndefined($scope.id)){
+                    CuentaBancariaService.getBeneficiarios($scope.id).then(
+                        function(data){
+                            $scope.beneficiarios = data;
+                        }, function error(error){
+                            $scope.beneficiarios = undefined;
+                            $scope.alerts.push({ type: "danger", msg: "Beneficiarios no encontrados."});
+                        }
+                    );
+                };
             };
-            if(!angular.isUndefined($scope.id)){
-                CuentaBancariaService.getTitulares($scope.id).then(
-                    function(data){
-                        $scope.titulares = data;
-                    }, function error(error){
-                        $scope.titulares = undefined;
-                        $scope.alerts.push({ type: "danger", msg: "Titulares no encontrados."});
-                    }
-                );
+            $scope.loadTitulares = function(){
+                if(!angular.isUndefined($scope.id)){
+                    CuentaBancariaService.getTitulares($scope.id).then(
+                        function(data){
+                            $scope.titulares = data;
+                        }, function error(error){
+                            $scope.titulares = undefined;
+                            $scope.alerts.push({ type: "danger", msg: "Titulares no encontrados."});
+                        }
+                    );
+                };
             };
-            if(!angular.isUndefined($scope.id)){
-                CuentaBancariaService.getEstadoCuenta($scope.id).then(
-                    function(data){
-                        $scope.transacciones = data;
-                    }, function error(error){
-                        $scope.transacciones = undefined;
-                        $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
-                    }
-                );
+            $scope.loadEstadoCuenta = function(){
+                if(!angular.isUndefined($scope.id)){
+                    CuentaBancariaService.getEstadoCuenta($scope.id).then(
+                        function(data){
+                            $scope.transacciones = data;
+                        }, function error(error){
+                            $scope.transacciones = undefined;
+                            $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
+                        }
+                    );
+                };
             };
+
+            $scope.loadSocio();
+            $scope.loadCuentaBancaria();
+            $scope.loadBeneficiarios();
+            $scope.loadTitulares();
+            $scope.loadEstadoCuenta();
+
             $scope.estadoCuentaSearcher = false;
             $scope.today = function() { $scope.desde = new Date(); $scope.hasta = new Date(); };
             $scope.today();
@@ -99,20 +128,60 @@ define(['../module'], function (controllers) {
 
             //editar persona socio
             $scope.editarSocioPersonaNatural = function(){
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaNatural/" + $scope.socio.personaNatural.id);
+                var savedParameters = {
+                    id: $scope.id
+                };
+                var sendParameters = {
+                    id: $scope.socio.personaNatural.id
+                };
+                var nextState = $scope.viewState;
+                RedirectService.addNext(nextState, savedParameters);
+                $state.transitionTo('app.administracion.editarPersonaNatural', sendParameters);
             };
 
             $scope.editarSocioPersonaJuridica = function(){
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaJuridica/" + $scope.socio.personaJuridica.id);
+                var savedParameters = {
+                    id: $scope.id
+                };
+                var sendParameters = {
+                    id: $scope.socio.personaJuridica.id
+                };
+                var nextState = $scope.viewState;
+                RedirectService.addNext(nextState, savedParameters);
+                $state.transitionTo('app.administracion.editarPersonaJuridica', sendParameters);
             };
 
             //cuenta bancaria
-
-
+            $scope.congelarCuentaBancaria = function(){
+                if(!angular.isUndefined($scope.cuentaBancaria)){
+                    CuentaBancariaService.congelarCuentaBancaria($scope.cuentaBancaria.id).then(
+                        function(data){
+                            $scope.loadCuentaBancaria();
+                            $scope.alerts = [{ type: "success", msg: "Cuenta bancaria congelada."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        },
+                        function error(error){
+                            $scope.alerts = [{ type: "warning", msg: "Error al congelar cuenta, intente nuevamente."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                }
+            };
+            $scope.descongelarCuentaBancaria = function(){
+                if(!angular.isUndefined($scope.cuentaBancaria)){
+                    CuentaBancariaService.descongelarCuentaBancaria($scope.cuentaBancaria.id).then(
+                        function(data){
+                            $scope.loadCuentaBancaria();
+                            $scope.alerts = [{ type: "success", msg: "Cuenta bancaria descongelada."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        },
+                        function error(error){
+                            $scope.alerts = [{ type: "warning", msg: "Error al congelar cuenta, intente nuevamente."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                }
+            };
 
             //titulares
             $scope.goToFirmas = function(){
@@ -120,9 +189,15 @@ define(['../module'], function (controllers) {
             };
 
             $scope.editTitular = function(index){
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/administracion/personaNatural/" + $scope.titulares[index].personaNatural.id);
+                var savedParameters = {
+                    id: $scope.id
+                };
+                var sendParameters = {
+                    id: $scope.titulares[index].personaNatural.id
+                };
+                var nextState = $scope.viewState;
+                RedirectService.addNext(nextState, savedParameters);
+                $state.transitionTo('app.administracion.editarPersonaNatural', sendParameters);
             };
 
             $scope.addTitular = function(){

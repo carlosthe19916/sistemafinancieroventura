@@ -448,7 +448,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancaria.setNumeroCuenta(agencia.getCodigo());
 		cuentaBancaria.setBeneficiarios(null);
 		cuentaBancaria.setCantidadRetirantes(cantRetirantes);
-		cuentaBancaria.setEstado(EstadoCuentaBancaria.ACTIVO);
+		cuentaBancaria.setEstado(EstadoCuentaBancaria.CONGELADO);
 		cuentaBancaria.setFechaApertura(inicio.toDateTimeAtStartOfDay().toDate());
 		cuentaBancaria.setFechaCierre(fin.toDateTimeAtStartOfDay().toDate());
 		cuentaBancaria.setMoneda(moneda);
@@ -745,6 +745,30 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 				Hibernate.initialize(moneda);
 			}
 		return result;
+	}
+
+	@Override
+	public void congelarCuentaBancaria(BigInteger idCuentaBancaria)
+			throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta bancaria no encontrada");
+		if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO))
+			throw new RollbackFailureException("La cuenta no esta activa, no se puede congelar");
+		cuentaBancaria.setEstado(EstadoCuentaBancaria.CONGELADO);
+		cuentaBancariaDAO.update(cuentaBancaria);
+	}
+
+	@Override
+	public void descongelarCuentaBancaria(BigInteger idCuentaBancaria)
+			throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta bancaria no encontrada");
+		if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.CONGELADO))
+			throw new RollbackFailureException("La cuenta no esta activa, no se puede congelar");
+		cuentaBancaria.setEstado(EstadoCuentaBancaria.ACTIVO);
+		cuentaBancariaDAO.update(cuentaBancaria);
 	}
 
 

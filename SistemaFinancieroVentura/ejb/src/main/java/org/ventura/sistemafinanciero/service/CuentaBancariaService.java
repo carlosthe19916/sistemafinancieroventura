@@ -142,8 +142,13 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
 			throws RollbackFailureException;
 
+	public void congelarCuentaBancaria(BigInteger idCuentaBancaria) throws RollbackFailureException;
+	
+	public void descongelarCuentaBancaria(BigInteger idCuentaBancaria) throws RollbackFailureException;
+	
 	/**mode representa titulares activos/inacativos o todos*/
 	public Set<Titular> getTitulares(BigInteger idCuentaBancaria, boolean mode);
+	
 	public Set<Beneficiario> getBeneficiarios(BigInteger idCuentaBancaria);
 
 	public BigInteger addBeneficiario(BigInteger id, Beneficiario beneficiario) throws RollbackFailureException;

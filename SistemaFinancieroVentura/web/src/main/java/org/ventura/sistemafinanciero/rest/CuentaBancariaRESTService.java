@@ -98,37 +98,19 @@ public class CuentaBancariaRESTService {
 	@Path("/view")
 	@Produces({ "application/xml", "application/json" })
 	public Response findAllViewByTipoEstadoCuenta(
-			@QueryParam("desde") BigInteger desde,
-			@QueryParam("hasta") BigInteger hasta,
+			@QueryParam("filterText") String filterText,
+			@QueryParam("offset") BigInteger offset,
+			@QueryParam("limit") BigInteger limit,
 			@QueryParam("tipoCuenta") TipoCuentaBancaria[] tipoCuenta,
 			@QueryParam("tipoPersona") TipoPersona[] tipoPersona,
 			@QueryParam("tipoEstadoCuenta") EstadoCuentaBancaria[]  tipoEstadoCuenta) {
-				
-		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
-			desde = BigInteger.ZERO;
-		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
-			hasta = BigInteger.ZERO;
-						
-		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(tipoCuenta, tipoPersona, tipoEstadoCuenta, desde, hasta);
-		return Response.status(Response.Status.OK).entity(list).build();				
-	}
-	
-	@GET
-	@Path("/view/filtertext/{filterText}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterTextView(
-			@PathParam("filterText") @DefaultValue("") String filterText,
-			@QueryParam("desde") BigInteger desde,
-			@QueryParam("hasta") BigInteger hasta,
-			@QueryParam("tipoCuenta") TipoCuentaBancaria[] tipoCuenta,
-			@QueryParam("tipoPersona") TipoPersona[] tipoPersona,
-			@QueryParam("tipoEstadoCuenta") EstadoCuentaBancaria[] tipoEstadoCuenta) {
-		if(desde != null && desde.compareTo(BigInteger.ZERO) < 1)
-			desde = BigInteger.ZERO;
-		if(hasta != null && hasta.compareTo(BigInteger.ZERO) < 1)
-			hasta = BigInteger.ZERO;
 		
-		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText, tipoCuenta, tipoPersona, tipoEstadoCuenta, desde, hasta);
+		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
+			offset = BigInteger.ZERO;
+		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
+			limit = BigInteger.ZERO;
+						
+		List<CuentaBancariaView> list = cuentaBancariaService.findAllView(filterText, tipoCuenta, tipoPersona, tipoEstadoCuenta, offset, limit);
 		return Response.status(Response.Status.OK).entity(list).build();				
 	}
 	
@@ -523,6 +505,56 @@ public class CuentaBancariaRESTService {
 	@Produces({ "application/xml", "application/json" })
 	public Response updateCuentaBancaria(CuentaBancaria caja) {				
 		return null;
+	}
+	
+	@PUT
+	@Path("/{id}/congelar")
+	@Produces({ "application/xml", "application/json" })
+	public Response congelarCuentaBancaria(@PathParam("id")BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add("message", "id no encontrado").build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {
+			cuentaBancariaService.congelarCuentaBancaria(id);
+			model = Json.createObjectBuilder().add("message", "Success").build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
+	}
+	
+	@PUT
+	@Path("/{id}/descongelar")
+	@Produces({ "application/xml", "application/json" })
+	public Response descongelarCuentaBancaria(@PathParam("id")BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null){
+			model = Json.createObjectBuilder().add("message", "id no encontrado").build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {
+			cuentaBancariaService.descongelarCuentaBancaria(id);
+			model = Json.createObjectBuilder().add("message", "Success").build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
 	}
 	
 	@DELETE

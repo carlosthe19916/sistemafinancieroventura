@@ -8,36 +8,36 @@ define(['./module'], function (services) {
                 getCuentasBancarias: function(){
                     return _historialCajaService.getList();
                 },
-                getCuentasBancariasView: function(desde,hasta,tipoCuentaList,tipoPersonaList,estadoCuentaList){
+                getCuentasBancariasView: function(tipoCuentaList,tipoPersonaList,estadoCuentaList,offset,limit){
                     if(arguments.length == 0){
                         return Restangular.all("cuentaBancaria/view").getList();
                     }else if (arguments.length == 1) {
-                        return Restangular.all("cuentaBancaria/view").getList({"desde":desde},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"tipoCuenta":tipoCuentaList},{});
                     } else if (arguments.length == 2) {
-                        return Restangular.all("cuentaBancaria/view").getList({"desde":desde,"hasta":hasta},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList},{});
                     } else if (arguments.length == 3) {
-                        return Restangular.all("cuentaBancaria/view").getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList},{});
                     } else if (arguments.length == 4) {
-                        return Restangular.all("cuentaBancaria/view").getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList,"offset":offset},{});
                     } else if (arguments.length == 5) {
-                        return Restangular.all("cuentaBancaria/view").getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList,"offset":offset,"limit":limit},{});
                     }
                 },
-                findByFilterTextView: function(text,desde,hasta,tipoCuentaList,tipoPersonaList,estadoCuentaList){
+                findByFilterTextView: function(filterText,tipoCuentaList,tipoPersonaList,estadoCuentaList,offset,limit){
                     if(arguments.length == 0){
                         return Restangular.all("cuentaBancaria/view").getList();
-                    } else if (arguments.length == 1) {
-                        return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList({},{});
+                    }else if (arguments.length == 1) {
+                        return Restangular.all("cuentaBancaria/view").getList({"filterText":filterText},{});
                     } else if (arguments.length == 2) {
-                        return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList({"desde":desde},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"filterText":filterText,"tipoCuenta":tipoCuentaList},{});
                     } else if (arguments.length == 3) {
-                        return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList({"desde":desde,"hasta":hasta},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"filterText":filterText,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList},{});
                     } else if (arguments.length == 4) {
-                        return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"filterText":filterText,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList},{});
                     } else if (arguments.length == 5) {
-                        return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"filterText":filterText,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList,"offset":offset},{});
                     } else if (arguments.length == 6) {
-                        return Restangular.all("cuentaBancaria/view/filtertext/"+text).getList({"desde":desde,"hasta":hasta,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList},{});
+                        return Restangular.all("cuentaBancaria/view").getList({"filterText":filterText,"tipoCuenta":tipoCuentaList,"tipoPersona":tipoPersonaList,"tipoEstadoCuenta":estadoCuentaList,"offset":offset,"limit":limit},{});
                     }
                 },
                 count: function(){
@@ -69,6 +69,12 @@ define(['./module'], function (services) {
                 },
                 getEstadoCuenta: function(id, desde, hasta) {
                     return Restangular.all("cuentaBancaria/"+id+"/estadoCuenta").getList({"desde":desde,"hasta":hasta},{});
+                },
+                congelarCuentaBancaria: function(id){
+                    return Restangular.one("cuentaBancaria/"+id+"/congelar").customPUT({},'',{},{});
+                },
+                descongelarCuentaBancaria: function(id){
+                    return Restangular.one("cuentaBancaria/"+id+"/descongelar").customPUT({},'',{},{});
                 }
             }
         }])
