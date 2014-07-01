@@ -28,7 +28,6 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
  */
 @Entity
 @Table(name = "TRANSACCION_COMPRA_VENTA", schema = "BDSISTEMAFINANCIERO")
-@SequenceGenerator(name="secuencia_transaccion_cv", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 public class TransaccionCompraVenta implements java.io.Serializable {
 
 	/**
@@ -99,6 +98,7 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 	}
 
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="secuencia_transaccion_cv")
+	@SequenceGenerator(name="secuencia_transaccion_cv", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 	@Id
 	@Column(name = "ID_TRANSACCION_COMPRA_VENTA", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigInteger getIdTransaccionCompraVenta() {

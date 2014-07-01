@@ -24,7 +24,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "TRANSFERENCIA_BANCARIA", schema = "BDSISTEMAFINANCIERO")
-@SequenceGenerator(name="secuencia_transaccion_transferencia", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 public class TransferenciaBancaria implements java.io.Serializable {
 
 	/**
@@ -91,6 +90,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 	}
 
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="secuencia_transaccion_transferencia")
+	@SequenceGenerator(name="secuencia_transaccion_transferencia", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 	@Id
 	@Column(name = "ID_TRANSFERENCIA_BANCARIA", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigInteger getIdTransferenciaBancaria() {
