@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +24,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "TRANSFERENCIA_BANCARIA", schema = "BDSISTEMAFINANCIERO")
+@SequenceGenerator(name="secuencia_transaccion_transferencia", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 public class TransferenciaBancaria implements java.io.Serializable {
 
 	/**
@@ -88,7 +90,7 @@ public class TransferenciaBancaria implements java.io.Serializable {
 		this.observacion = observacion;
 	}
 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="secuencia_transaccion_transferencia")
 	@Id
 	@Column(name = "ID_TRANSFERENCIA_BANCARIA", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigInteger getIdTransferenciaBancaria() {

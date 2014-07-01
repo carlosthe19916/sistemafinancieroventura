@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,6 +28,7 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
  */
 @Entity
 @Table(name = "TRANSACCION_COMPRA_VENTA", schema = "BDSISTEMAFINANCIERO")
+@SequenceGenerator(name="secuencia_transaccion_cv", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 public class TransaccionCompraVenta implements java.io.Serializable {
 
 	/**
@@ -96,7 +98,7 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="secuencia_transaccion_cv")
 	@Id
 	@Column(name = "ID_TRANSACCION_COMPRA_VENTA", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigInteger getIdTransaccionCompraVenta() {

@@ -19,6 +19,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.socio.$invalid && control.submitted}">
                                         <label>Socio</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input type="text" name="socio" ng-model="transaccion.socio.socio" class="form-control" placeholder="Socio" readonly required/>
                                               <span class="input-group-btn">
@@ -29,7 +30,7 @@
                                         </div>
                                         <div ng-show="formCrearTransaccion.socio.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.socio.$error.required">
-                                                Ingrese socio.
+                                                Ingrese Socio.
                                             </p>
                                         </div>
                                     </div>
@@ -39,6 +40,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && control.submitted}">
                                         <label>Monto</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input type="text" name="monto" ng-model="transaccion.monto" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">
@@ -49,7 +51,7 @@
                                         </div>
                                         <div ng-show="formCrearTransaccion.monto.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.monto.$error.required">
-                                                Ingrese monto valido.
+                                                Ingrese Monto valido.
                                             </p>
                                         </div>
                                     </div>
@@ -68,11 +70,12 @@
                                 <div class="col-sm-6">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.mes.$invalid && control.submitted}">
                                         <label>Mes</label>
+                                        <label style="color: brown;">(*)</label>
                                         <select name="mes" ng-options="mes as mes.denominacion for mes in meses" ng-model="transaccion.mes" class="form-control" ng-required="true" required>
                                         </select>
                                         <div ng-show="formCrearTransaccion.mes.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.mes.$error.required">
-                                                Ingrese mes.
+                                                Ingrese Mes.
                                             </p>
                                         </div>
                                     </div>
@@ -80,6 +83,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.anio.$invalid && control.submitted}">
                                         <label>Año</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input type="text" name="anio" ng-model="transaccion.anio" class="form-control" placeholder="Año" required/>
                                               <span class="input-group-btn">
@@ -90,7 +94,7 @@
                                         </div>
                                         <div ng-show="formCrearTransaccion.anio.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.anio.$error.required">
-                                                Ingrese año valido.
+                                                Ingrese Año Valido.
                                             </p>
                                         </div>
                                     </div>

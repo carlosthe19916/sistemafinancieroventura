@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,6 +38,7 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 @XmlRootElement(name = "transaccionBancaria")
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({ @NamedQuery(name = TransaccionBancaria.findNumeroOperacion, query = "SELECT t FROM TransaccionBancaria t INNER JOIN t.historialCaja hc INNER JOIN hc.caja c WHERE c.idCaja = :idcaja AND hc.idHistorialCaja = :idHistorial ORDER BY t.numeroOperacion DESC") })
+@SequenceGenerator(name="secuencia_transaccion_bancaria", initialValue=1, allocationSize=1, sequenceName="TRANSACCION_SEQUENCE")
 public class TransaccionBancaria implements java.io.Serializable {
 
 	/**
@@ -100,7 +102,7 @@ public class TransaccionBancaria implements java.io.Serializable {
 		this.observacion = observacion;
 	}
 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="secuencia_transaccion_bancaria")
 	@XmlElement(name = "id")
 	@Id
 	@Column(name = "ID_TRANSACCION_BANCARIA", unique = true, nullable = false, precision = 22, scale = 0)
