@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBAccessException;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -178,12 +179,20 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			List<Socio> list1 = socioDAO.findByNamedQuery(Socio.FindByPNTipoAndNumeroDocumento ,queryParameter1.parameters());
 			if(list1.size() == 1)
 				return list1.get(0);
+			if(list1.size() > 1){
+				LOGGER.error("Resultado invalido", "Se encontró mas de un socio");
+				throw new EJBAccessException("Se encontró mas de un socio activo");
+			}					
 			break;
 		case JURIDICA:
 			QueryParameter queryParameter2 = QueryParameter.with("idtipodocumento", idTipoDocumento).and("numerodocumento", numeroDocumento);
 			List<Socio> list2 = socioDAO.findByNamedQuery(Socio.FindByPJTipoAndNumeroDocumento ,queryParameter2.parameters());
 			if(list2.size() == 1)
 				return list2.get(0);
+			if(list2.size() > 1){
+				LOGGER.error("Resultado invalido", "Se encontró mas de un socio");	
+				throw new EJBAccessException("Se encontró mas de un socio activo");				
+			}					
 			break;
 		default:
 			return null;

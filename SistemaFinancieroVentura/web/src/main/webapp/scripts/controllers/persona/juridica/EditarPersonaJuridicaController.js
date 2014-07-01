@@ -1,90 +1,67 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('EditarPersonaJuridicaController', ["$scope", "$state","$location", "$window","$timeout", "MaestroService", "PersonaNaturalService", "PersonaJuridicaService",
-        function($scope, $state,$location, $window,$timeout, MaestroService, PersonaNaturalService, PersonaJuridicaService) {
+    controllers.controller('EditarPersonaJuridicaController', ["$scope", "$state","$location", "$window","$timeout","focus","MaestroService", "PersonaNaturalService", "PersonaJuridicaService","RedirectService",
+        function($scope, $state,$location, $window,$timeout,focus,MaestroService, PersonaNaturalService, PersonaJuridicaService,RedirectService) {
 
-            $scope.control = {"success":false, "inProcess": false, "submitted" : false};
-            $scope.formEditarPersonaJuridica = {};
-            $scope.accionistas = [];
-            $scope.ubigeo = {"departamento":"", "provincia":"", "distrito":""};
+            $scope.viewState = "app.administracion.editarPersonaJuridica";
 
-            if(!angular.isUndefined($scope.id)){
-                PersonaJuridicaService.findById($scope.id).then(
-                    function(data){
-                        $scope.personaJuridica = data;
-                        $scope.representanteLegal = $scope.personaJuridica.representanteLegal;
-                        $scope.accionistas = $scope.personaJuridica.accionistas;
-                        $scope.$watch("personaJuridica.tipoDocumento", function(){
-                            if(!angular.isUndefined($scope.tipoDocumentosPJ)){
-                                for(var i = 0; i < $scope.tipoDocumentosPJ.length; i++){
-                                    if($scope.tipoDocumentosPJ[i].id == $scope.personaJuridica.tipoDocumento.id)
-                                        $scope.personaJuridica.tipoDocumento = $scope.tipoDocumentosPJ[i];
-                                }
-                            }
-                        });
-                        $scope.$watch("representanteLegal.tipoDocumento", function(){
-                            if(!angular.isUndefined($scope.tipoDocumentosPN)){
-                                for(var i = 0; i < $scope.tipoDocumentosPN.length; i++){
-                                    if($scope.tipoDocumentosPN[i].id == $scope.representanteLegal.tipoDocumento.id)
-                                        $scope.representanteLegal.tipoDocumento = $scope.tipoDocumentosPN[i];
-                                }
-                            }
-                        });
-                        $scope.$watch("personaJuridica.numeroDocumento", function(){$scope.validarNumeroDocumentoPJ();});
-                        $scope.$watch("personaJuridica.tipoDocumento", function(){$scope.validarNumeroDocumentoPJ();});
-                        $scope.$watch("representanteLegal.numeroDocumento", function(){$scope.validarNumeroDocumentoPJ();});
-                        $scope.$watch("representanteLegal.tipoDocumento", function(){$scope.validarNumeroDocumentoPJ();});
-                        $scope.validarNumeroDocumentoPJ = function(){
-                            if(!angular.isUndefined($scope.formEditarPersonaJuridica.numerodocumento)){
-                                if(!angular.isUndefined($scope.personaJuridica.numeroDocumento)){
-                                    if(!angular.isUndefined($scope.personaJuridica.tipoDocumento)){
-                                        if($scope.personaJuridica.numeroDocumento.length == $scope.personaJuridica.tipoDocumento.numeroCaracteres) {
-                                            $scope.formEditarPersonaJuridica.numerodocumento.$setValidity("sgmaxlength",true);
-                                        } else {$scope.formEditarPersonaJuridica.numerodocumento.$setValidity("sgmaxlength",false);}
-                                    } else{$scope.formEditarPersonaJuridica.numerodocumento.$setValidity("sgmaxlength",false);}
-                                } else {$scope.formEditarPersonaJuridica.numerodocumento.$setValidity("sgmaxlength",false);}}
-                        }
-                        $scope.validarNumeroDocumentoRepresentanteLegal = function(){
-                            if(!angular.isUndefined($scope.formEditarPersonaJuridica.numeroDocumentoRepresentante)){
-                                if(!angular.isUndefined($scope.representanteLegal.numeroDocumento)){
-                                    if(!angular.isUndefined($scope.representanteLegal.tipoDocumento)){
-                                        if($scope.representanteLegal.numeroDocumento.length == $scope.representanteLegal.tipoDocumento.numeroCaracteres) {
-                                            $scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",true);
-                                        } else {$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}
-                                    } else{$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}
-                                } else {$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}}
-                        }
-                    }, function error(error){
-                        $scope.alerts = [{ type: "danger", msg: "Error: No se pudo cargar la persona."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                    }
-                );
-            }
+            $scope.focusElements = {
+                tipoDocumento: 'focusTipoDocumento',
+                representanteLegal: 'focusNumeroDocumentoRepresentante',
+                tipoDocumentoAccionista: 'focusTipoDocumentoAccionista',
+                numeroDocumentoAccionista: 'focusNumeroDocumentoAccionista'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.tipoDocumento);
+                $window.scrollTo(0, 0);
+            };
+            $scope.setInitialFocus();
 
-            $scope.$watch("ubigeo.departamento", function(){
-                if(!angular.isUndefined($scope.personaJuridica))
-                    $scope.personaJuridica.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
-            });
-            $scope.$watch("ubigeo.provincia", function(){
-                if(!angular.isUndefined($scope.personaJuridica))
-                    $scope.personaJuridica.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
-            });
-            $scope.$watch("ubigeo.distrito", function(){
-                if(!angular.isUndefined($scope.personaJuridica))
-                    $scope.personaJuridica.ubigeo = $scope.getDepartamentoCode() + $scope.getProvinciaCode() + $scope.getDistritoCode();
-            });
-            $scope.getDepartamentoCode = function(){
-                if(!angular.isUndefined($scope.ubigeo.departamento)) return $scope.ubigeo.departamento.codigo;
-                else return "";
-            }
-            $scope.getProvinciaCode = function(){
-                if(!angular.isUndefined($scope.ubigeo.provincia)) return $scope.ubigeo.provincia.codigo;
-                else return "";
-            }
-            $scope.getDistritoCode = function(){
-                if(!angular.isUndefined($scope.ubigeo.distrito)) return $scope.ubigeo.distrito.codigo;
-                else return "";
-            }
+            $scope.control = {
+                success:false,
+                inProcess: false,
+                submitted : false
+            };
+
+            $scope.combo = {
+                tipoDocumentosPJ: undefined,
+                tiposEmpresa: undefined,
+                tipoDocumentoPN: undefined
+            };
+
+            $scope.view = {
+                "id":undefined,
+                "idTipoDocumentoPJ": undefined,
+                "numeroDocumentoPJ":undefined,
+                "razonSocial":undefined,
+                "nombreComercial":undefined,
+                "fechaConstitucion":undefined,
+                "actividadPrincipal":undefined,
+                "tipoEmpresa":undefined,
+                "finLucro":undefined,
+                "direccion":undefined,
+                "referencia":undefined,
+                "telefono":undefined,
+                "celular":undefined,
+                "email":undefined,
+                "ubigeo":undefined,
+
+                "idTipoDocumentoPN": undefined,
+                "numeroDocumentoPN": undefined,
+                "accionistas": [],
+
+                idTipoDocumentoAccionista: undefined,
+                numeroDocumentoAccionista: undefined,
+
+                tabSelectedPersonaJuridica: true,
+                tabSelectedAccionista: false
+            };
+
+            $scope.objetosCargados = {
+                representanteLegal: undefined
+            };
 
             $scope.dateOptions = {formatYear: 'yyyy',startingDay: 1};
             $scope.open = function($event) {
@@ -93,42 +70,80 @@ define(['../../module'], function (controllers) {
                 $scope.opened = true;
             };
 
-            MaestroService.getTipoDocumentoPJ().then(function(tipodocumentos){
-                $scope.tipoDocumentosPJ = tipodocumentos;
-            });
-            MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
-                $scope.tipoDocumentosPN = tipodocumentos;
-            });
-            MaestroService.getTiposEmpresa().then(function(tiposEmpresa){
-                $scope.tiposEmpresa = tiposEmpresa;
-            });
+            $scope.loadPersonaJuridica = function(){
+                if(!angular.isUndefined($scope.id)){
+                    PersonaJuridicaService.findById($scope.id).then(
+                        function(data){
+                            $scope.view.id = data.id;
+                            $scope.view.idTipoDocumentoPJ = data.tipoDocumento.id;
+                            $scope.view.numeroDocumentoPJ = data.numeroDocumento;
+                            $scope.view.razonSocial = data.razonSocial;
+                            $scope.view.nombreComercial = data.nombreComercial;
+                            $scope.view.fechaConstitucion = data.fechaConstitucion;
+                            $scope.view.actividadPrincipal = data.actividadPrincipal;
+                            $scope.view.tipoEmpresa = data.tipoEmpresa;
+                            $scope.view.finLucro = data.finLucro;
+                            $scope.view.direccion = data.direccion;
+                            $scope.view.referencia = data.referencia;
+                            $scope.view.telefono = data.telefono;
+                            $scope.view.celular = data.celular;
+                            $scope.view.email = data.email;
+                            $scope.view.ubigeo = data.ubigeo;
+                            $scope.view.idTipoDocumentoPN = data.representanteLegal.tipoDocumento.id;
+                            $scope.view.numeroDocumentoPN = data.representanteLegal.numeroDocumento;
+                            $scope.view.accionistas = data.accionistas;
 
-            MaestroService.getDepartamentos().then(function(departamentos){
-                $scope.departamentos = departamentos;
-            });
+                            $scope.objetosCargados.representanteLegal = data.representanteLegal;
+                        }, function error(error){
+                            $scope.alerts = [{ type: "danger", msg: "Error: No se pudo cargar la persona."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                }
+            };
 
-            $scope.changeDepartamento = function(){
-                MaestroService.getProvincias($scope.ubigeo.departamento.id).then(function(provincias){
-                    $scope.provincias = provincias;
+            $scope.loadTipoDocumentoPJ = function(){
+                MaestroService.getTipoDocumentoPJ().then(function(data){
+                    $scope.combo.tipoDocumentosPJ = data;
                 });
-            }
-            $scope.changeProvincia = function(){
-                MaestroService.getDistritos($scope.ubigeo.provincia.id).then(function(distritos){
-                    $scope.distritos = distritos;
+            };
+            $scope.loadTipoDocumentoPN = function(){
+                MaestroService.getTipoDocumentoPN().then(function(tipodocumentos){
+                    $scope.combo.tipoDocumentosPN = tipodocumentos;
                 });
-            }
+            };
+            $scope.loadTipoEmpresas = function(){
+                MaestroService.getTiposEmpresa().then(function(tiposEmpresa){
+                    $scope.combo.tiposEmpresa = tiposEmpresa;
+                });
+            };
+
+            $scope.loadRedireccion = function(){
+                if(RedirectService.haveNext()){
+                    var state = RedirectService.getNextState();
+                    if(state == $scope.viewState){
+                        $scope.view = RedirectService.getNextObject();
+                        var focusElem = RedirectService.getNextFocusElement();
+                        var windowsPosition = RedirectService.getNextWindowsPosition();
+                        RedirectService.clearLast();
+                        $timeout(function() {
+                            focus(focusElem);
+                        }, 500);
+                        if(!angular.isUndefined(windowsPosition))
+                            $window.scrollTo(windowsPosition.x, windowsPosition.y);
+                        $scope.buscarRepresentanteLegal();
+                    }
+                }
+            };
 
             $scope.buscarRepresentanteLegal = function($event){
-                if($scope.formEditarPersonaJuridica.tipoDocumentoRepresentante.$valid
-                    && $scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$valid){
-                    var tipoDoc = $scope.representanteLegal.tipoDocumento.id;
-                    var numDoc = $scope.representanteLegal.numeroDocumento;
-                    PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(persona){
-                        $scope.representanteLegal = persona;
-                        for(var i = 0; i < $scope.tipoDocumentosPN.length; i++){
-                            if($scope.tipoDocumentosPN[i].id == $scope.representanteLegal.tipoDocumento.id)
-                                $scope.representanteLegal.tipoDocumento = $scope.tipoDocumentosPN[i];
-                        }
+                if(!angular.isUndefined($scope.view.idTipoDocumentoPN) &&
+                    !angular.isUndefined($scope.view.numeroDocumentoPN)){
+
+                    var tipoDoc = $scope.view.idTipoDocumentoPN;
+                    var numDoc = $scope.view.numeroDocumentoPN;
+                    PersonaNaturalService.findByTipoNumeroDocumento(tipoDoc,numDoc).then(function(data){
+                        $scope.objetosCargados.representanteLegal = data;
                     },function error(error){
                         $scope.alerts = [{ type: "danger", msg: "Representante legal no encontrado."}];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
@@ -136,31 +151,127 @@ define(['../../module'], function (controllers) {
                     });
                     if(!angular.isUndefined($event)) $event.preventDefault();
                 }
-            }
+            };
+            $scope.nuevaPersonaRepresentanteLegal = function(){
+                $scope.setTabPersonaJuridicaActive();
+                var savedParameters = {
+                    id: $scope.view.id
+                };
+                var sendParameters = {
+                    tipoDocumento: $scope.view.idTipoDocumentoPN,
+                    numeroDocumento: $scope.view.numeroDocumentoPN
+                };
+                var nextState = $scope.viewState;
+                var elementFocus = $scope.focusElements.representanteLegal;
+                var windowsPosition = {x: $window.screenX, y: $window.screenY};
+                RedirectService.addNext(nextState, savedParameters, $scope.view, elementFocus, windowsPosition);
 
+                $scope.view.tabSelectedPersonaJuridica = true;
+                $scope.view.tabSelectedAccionista = false;
+
+                $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
+            };
+
+            $scope.getTipoDocumentoPJ = function(){
+                if(!angular.isUndefined($scope.combo.tipoDocumentosPJ)){
+                    for(var i = 0; i < $scope.combo.tipoDocumentosPJ.length; i++){
+                        if($scope.view.idTipoDocumentoPJ == $scope.combo.tipoDocumentosPJ[i].id)
+                            return $scope.combo.tipoDocumentosPJ[i];
+                    }
+                }
+                return undefined;
+            };
+            $scope.getTipoDocumentoPN = function(){
+                if(!angular.isUndefined($scope.combo.tipoDocumentosPN)){
+                    for(var i = 0; i < $scope.combo.tipoDocumentosPN.length; i++){
+                        if($scope.view.idTipoDocumentoPN == $scope.combo.tipoDocumentosPN[i].id)
+                            return $scope.combo.tipoDocumentosPN[i];
+                    }
+                }
+                return undefined;
+            };
+            $scope.validarNumeroDocumentoPJ = function(){
+                if(!angular.isUndefined($scope.formEditarPersonaJuridica.numeroDocumentoPJ)){
+                    if(!angular.isUndefined($scope.view.numeroDocumentoPJ)){
+                        if(!angular.isUndefined($scope.view.idTipoDocumentoPJ)){
+                            var tipoDoc = $scope.getTipoDocumentoPJ();
+                            if(!angular.isUndefined(tipoDoc)) {
+                                if($scope.view.numeroDocumentoPJ.length == tipoDoc.numeroCaracteres) {
+                                    $scope.formEditarPersonaJuridica.numeroDocumentoPJ.$setValidity("sgmaxlength",true);
+                                } else {$scope.formEditarPersonaJuridica.numeroDocumentoPJ.$setValidity("sgmaxlength",false);}
+                            } else {$scope.formEditarPersonaJuridica.numeroDocumentoPJ.$setValidity("sgmaxlength",false);}
+                        } else{$scope.formEditarPersonaJuridica.numeroDocumentoPJ.$setValidity("sgmaxlength",false);}
+                    } else {$scope.formEditarPersonaJuridica.numeroDocumentoPJ.$setValidity("sgmaxlength",false);}}
+            };
+            $scope.validarNumeroDocumentoPN = function(){
+                if(!angular.isUndefined($scope.formEditarPersonaJuridica.numeroDocumentoRepresentante)){
+                    if(!angular.isUndefined($scope.view.numeroDocumentoPN)){
+                        if(!angular.isUndefined($scope.view.idTipoDocumentoPN)){
+                            var tipoDoc = $scope.getTipoDocumentoPN();
+                            if(!angular.isUndefined(tipoDoc)) {
+                                if($scope.view.numeroDocumentoPN.length == tipoDoc.numeroCaracteres) {
+                                    $scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",true);
+                                } else {$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}
+                            } else {$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}
+                        } else{$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}
+                    } else {$scope.formEditarPersonaJuridica.numeroDocumentoRepresentante.$setValidity("sgmaxlength",false);}}
+            };
+            $scope.$watch("view.numeroDocumentoPJ",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.validarNumeroDocumentoPJ();
+                }
+            },true);
+            $scope.$watch("view.numeroDocumentoPN",function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.validarNumeroDocumentoPN();
+                }
+            },true);
+
+            $scope.formEditarPersonaJuridica = {};
             $scope.crearTransaccion = function(){
                 if ($scope.formEditarPersonaJuridica.$valid) {
-                    if(angular.isUndefined($scope.representanteLegal.id)){
+                    if(angular.isUndefined($scope.objetosCargados.representanteLegal.id)){
                         $scope.alerts = [{ type: 'danger', msg: "Representante no cargado." }];
                         $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         $window.scrollTo(0,0);
                         return;
                     }
 
-                    var personaJurica = angular.copy($scope.personaJuridica);
-                    delete personaJurica.representanteLegal;
-                    personaJurica.tipoDocumento = {"id":personaJurica.tipoDocumento.id};
-                    personaJurica.idRepresentanteLegal = $scope.representanteLegal.id;
+                    //copiando datos
+                    var personaJurica = {};
+                    personaJurica.id = $scope.view.id;
+                    personaJurica.tipoDocumento = {
+                        id: $scope.view.idTipoDocumentoPJ
+                    };
+                    personaJurica.numeroDocumento = $scope.view.numeroDocumentoPJ;
+                    personaJurica.razonSocial = $scope.view.razonSocial;
+                    personaJurica.nombreComercial = $scope.view.nombreComercial;
+                    personaJurica.fechaConstitucion = $scope.view.fechaConstitucion;
+                    personaJurica.actividadPrincipal = $scope.view.actividadPrincipal;
+                    personaJurica.direccion = $scope.view.direccion;
+                    personaJurica.referencia = $scope.view.referencia;
+                    personaJurica.telefono = $scope.view.telefono;
+                    personaJurica.celular = $scope.view.celular;
+                    personaJurica.email = $scope.view.email;
+                    personaJurica.tipoEmpresa = $scope.view.tipoEmpresa;
+                    personaJurica.finLucro = $scope.view.finLucro;
+                    personaJurica.ubigeo = $scope.view.ubigeo;
+
+                    personaJurica.idRepresentanteLegal = $scope.objetosCargados.representanteLegal.id;
                     personaJurica.accionistas = [];
-                    for(var i = 0; i < $scope.accionistas.length; i++){
-                        personaJurica.accionistas[i] = {"idPersona": $scope.accionistas[i].personaNatural.id , "porcentaje": $scope.accionistas[i].porcentajeParticipacion};
+                    for(var i = 0; i < $scope.view.accionistas.length; i++){
+                        personaJurica.accionistas[i] = {
+                            idPersona: $scope.view.accionistas[i].personaNatural.id ,
+                            porcentaje: $scope.view.accionistas[i].porcentajeParticipacion
+                        };
                     }
+
                     $scope.control.inProcess = true;
                     PersonaJuridicaService.update(personaJurica).then(
                         function(persona){
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
-                            $window.close();
+                            $scope.redireccion();
                         },
                         function error(error){
                             $scope.control.inProcess = false;
@@ -173,40 +284,46 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
 
-            $scope.nuevaPersonaRepresentanteLegal = function(){
-                var idTipoDoc = undefined;
-                if(!angular.isUndefined($scope.representanteLegal.tipoDocumento))
-                    idTipoDoc = $scope.representanteLegal.tipoDocumento.id;
-                var baseLen = $location.absUrl().length - $location.url().length;
-                var url = $location.absUrl().substring(0, baseLen);
-                $window.open(url + "/app/socio/personaNatural" + "?tipoDocumento=" + idTipoDoc + "&numeroDocumento=" + $scope.representanteLegal.numeroDocumento);
-                $timeout(function() {angular.element("#txtNumeroDocumentoRepresentanteLegal").focus();}, 100);
-            }
-
-            $scope.cancel = function () {
-                $window.close();
-            }
-
+            $scope.redireccion = function(){
+                if(RedirectService.haveNext()){
+                    var nextState = RedirectService.getNextState();
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
+                } else {
+                    $state.transitionTo('app.administracion.buscarPersonaJuridica');
+                }
+            };
+            $scope.cancelar = function () {
+                $scope.redireccion();
+            };
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
-            }
+            };
 
-
-            $scope.$on('$includeContentLoaded', function(){
-                $scope.tabPersonaJuridicaSelected();
-            });
+            //tabs
             $scope.tabPersonaJuridicaSelected = function(){
-                $timeout(function() {
-                    angular.element("#cmbTipoDocumentoPersonaJuridica").focus();
-                }, 100);
-            }
+                focus($scope.focusElements.tipoDocumento);
+            };
             $scope.tabAccionistaSelected = function(){
-                $timeout(function() {
-                    angular.element("#cmbTipoDocumentoAccionista").focus();
-                }, 100);
-            }
+                focus($scope.focusElements.tipoDocumentoAccionista);
+            };
+            $scope.setTabPersonaJuridicaActive = function(){
+                $scope.view.tabSelectedPersonaJuridica = true;
+                $scope.view.tabSelectedAccionista = false;
+            };
+            $scope.setTabAcctionistasActive = function(){
+                $scope.view.tabSelectedPersonaJuridica = false;
+                $scope.view.tabSelectedAccionista = true;
+            };
 
+            //llamar a los metodos
+            $scope.loadPersonaJuridica();
+
+            $scope.loadTipoDocumentoPJ();
+            $scope.loadTipoDocumentoPN();
+            $scope.loadTipoEmpresas();
+            $scope.loadRedireccion();
         }]);
 });

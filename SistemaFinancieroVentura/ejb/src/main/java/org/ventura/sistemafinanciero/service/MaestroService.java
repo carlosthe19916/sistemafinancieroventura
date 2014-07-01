@@ -24,5 +24,7 @@ public interface MaestroService {
 	public List<Departamento> getDepartamentos();
 	public List<Provincia> getProvincias(BigInteger idDepartamento);
 	public List<Distrito> getDistritos(BigInteger idProvincia);
+	public List<Provincia> getProvincias(String codigoDepartamento);
+	public List<Distrito> getDistritos(String codigoDepartamento, String codigoProvincia);
 	
 }

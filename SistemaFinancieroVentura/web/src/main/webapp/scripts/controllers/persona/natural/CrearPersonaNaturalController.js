@@ -1,31 +1,52 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearPersonaNaturalController', ['$scope','$state','$stateParams','$window','MaestroService','PersonaNaturalService','RedirectService',
-        function($scope,$state,$stateParams,$window,MaestroService,PersonaNaturalService,RedirectService) {
+    controllers.controller('CrearPersonaNaturalController', ['$scope','$state','$stateParams','$timeout','$window','focus','MaestroService','PersonaNaturalService','RedirectService',
+        function($scope,$state,$stateParams,$timeout,$window,focus,MaestroService,PersonaNaturalService,RedirectService) {
 
-            $scope.limpiarRedirectService = function(){
-              if($stateParams.redirect){
-                  RedirectService.clearAll();
-              }
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus('focusPais');
+                $window.scrollTo(0, 0);
             };
-            $scope.limpiarRedirectService();
+            $scope.setInitialFocus();
 
             $scope.control = {
-                "success":false,
-                "inProcess": false,
-                "submitted" : false
+                success:false,
+                inProcess: false,
+                submitted : false
+            };
+
+            $scope.combo = {
+                paises: undefined,
+                tipoDocumentos: undefined,
+                sexos: undefined,
+                estadosCiviles: undefined
             };
 
             $scope.view = {
-                persona: PersonaNaturalService.getModel(),
-                dateOptions: {
-                    formatYear: 'yyyy',
-                    startingDay: 1
-                },
-                tipoDocumentos: undefined,
-                sexos: undefined,
-                estadosCiviles: undefined,
-                paises: undefined
+                id:undefined,
+                idTipoDocumento:-1,
+                numeroDocumento:undefined,
+                apellidoPaterno:undefined,
+                apellidoMaterno:undefined,
+                nombres:undefined,
+                fechaNacimiento:undefined,
+                sexo:undefined,
+                estadoCivil:undefined,
+                ocupacion:undefined,
+                direccion:undefined,
+                referencia:undefined,
+                telefono:undefined,
+                celular:undefined,
+                email:undefined,
+                ubigeo:undefined,
+                codigoPais:undefined
+            };
+
+            $scope.dateOptions = {
+                formatYear: 'yyyy',
+                startingDay: 1
             };
 
             $scope.open = function($event) {
@@ -34,69 +55,84 @@ define(['../../module'], function (controllers) {
                 $scope.opened = true;
             };
 
-            $scope.$watch("view.persona.numeroDocumento",function (newVal, oldVal) {
+            $scope.loadParametros = function(){
+                $scope.view.numeroDocumento = $scope.params.numeroDocumento;
+                $scope.view.idTipoDocumento = parseInt($scope.params.idTipoDocumento);
+            };
+
+            $scope.$watch("view.numeroDocumento",function (newVal, oldVal) {
                 if (newVal !== oldVal) {
                     $scope.validarNumeroDocumento();
                 }
             },true);
             $scope.validarNumeroDocumento = function(){
                 if(!angular.isUndefined($scope.formCrearPersonanatural.numeroDocumento)){
-                    if(!angular.isUndefined($scope.view.persona.numeroDocumento)){
-                        if(!angular.isUndefined($scope.view.persona.tipoDocumento)){
-                            if($scope.view.persona.numeroDocumento.length == $scope.view.persona.tipoDocumento.numeroCaracteres) {
-                                $scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",true);
+                    if(!angular.isUndefined($scope.view.numeroDocumento)){
+                        if(!angular.isUndefined($scope.view.idTipoDocumento)){
+                            var tipoDoc = $scope.getTipoDocumento();
+                            if(!angular.isUndefined(tipoDoc)) {
+                                if($scope.view.numeroDocumento.length == tipoDoc.numeroCaracteres) {
+                                    $scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",true);
+                                } else {$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}
                             } else {$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}
                         } else{$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formCrearPersonanatural.numeroDocumento.$setValidity("sgmaxlength",false);}}
             };
-
-            $scope.loadParametros = function(){
-                if(!angular.isUndefined($scope.view.persona)){
-                    $scope.view.persona.numeroDocumento = $scope.params.numeroDocumento;
-                    if(!angular.isUndefined($scope.params.idTipoDocumento)){
-                        for(var i = 0; i < $scope.view.tipoDocumentos.length; i++){
-                            if($scope.view.tipoDocumentos[i].id == $scope.params.idTipoDocumento)
-                                $scope.view.persona.tipoDocumento = $scope.view.tipoDocumentos[i];
-                        }
+            $scope.getTipoDocumento = function(){
+                if(!angular.isUndefined($scope.combo.tipoDocumentos)){
+                    for(var i = 0; i < $scope.combo.tipoDocumentos.length; i++){
+                        if($scope.view.idTipoDocumento == $scope.combo.tipoDocumentos[i].id)
+                            return $scope.combo.tipoDocumentos[i];
                     }
                 }
+                return undefined;
             };
 
             $scope.loadTipoDocumentoPN = function(){
                 MaestroService.getTipoDocumentoPN().then(function(data){
-                    $scope.view.tipoDocumentos = data;
-                    $scope.loadParametros();
+                    $scope.combo.tipoDocumentos = data;
                 });
             };
             $scope.loadSexos = function(){
                 MaestroService.getSexos().then(function(data){
-                    $scope.view.sexos = data;
+                    $scope.combo.sexos = data;
                 });
             };
             $scope.loadEstadosCiviles = function(){
                 MaestroService.getEstadosciviles().then(function(data){
-                    $scope.view.estadosCiviles = data;
+                    $scope.combo.estadosCiviles = data;
                 });
             };
             $scope.loadPaises = function(){
                 MaestroService.getPaises().then(function(data){
-                    $scope.view.paises = data;
+                    $scope.combo.paises = data;
                 });
             };
-
-            $scope.loadTipoDocumentoPN();
-            $scope.loadSexos();
-            $scope.loadEstadosCiviles();
-            $scope.loadPaises();
 
             //logic
             $scope.crearTransaccion = function(){
                 if ($scope.formCrearPersonanatural.$valid) {
-                    var personaTransaccion = angular.copy($scope.view.persona);
+
+                    var personaTransaccion = PersonaNaturalService.getModel();
+                    personaTransaccion.id = undefined;
                     personaTransaccion.tipoDocumento = {
-                        id: personaTransaccion.tipoDocumento.id
+                        id: $scope.view.idTipoDocumento
                     };
-                    personaTransaccion.fechaNacimiento = $scope.view.persona.fechaNacimiento.getTime();
+                    personaTransaccion.numeroDocumento = $scope.view.numeroDocumento;
+                    personaTransaccion.apellidoPaterno = $scope.view.apellidoPaterno;
+                    personaTransaccion.apellidoMaterno = $scope.view.apellidoMaterno;
+                    personaTransaccion.nombres = $scope.view.nombres;
+                    personaTransaccion.fechaNacimiento = $scope.view.fechaNacimiento.getTime();
+                    personaTransaccion.sexo = $scope.view.sexo;
+                    personaTransaccion.estadoCivil = $scope.view.estadoCivil;
+                    personaTransaccion.ocupacion = $scope.view.ocupacion;
+                    personaTransaccion.direccion = $scope.view.direccion;
+                    personaTransaccion.referencia = $scope.view.referencia;
+                    personaTransaccion.telefono = $scope.view.telefono;
+                    personaTransaccion.celular = $scope.view.celular;
+                    personaTransaccion.email = $scope.view.email;
+                    personaTransaccion.ubigeo = $scope.view.ubigeo;
+                    personaTransaccion.codigoPais = $scope.view.codigoPais;
 
                     $scope.buttonDisableState = true;
                     PersonaNaturalService.crear(personaTransaccion).then(
@@ -118,12 +154,10 @@ define(['../../module'], function (controllers) {
             };
 
             $scope.redireccion = function(){
-                if(RedirectService.haveNextState()){
+                if(RedirectService.haveNext()){
                     var nextState = RedirectService.getNextState();
-                    var paramsState = RedirectService.getParamsState();
-                    RedirectService.clearNextState();
-                    RedirectService.clearParamsState();
-                    $state.transitionTo(nextState, paramsState);
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
                 } else {
                     $state.transitionTo('app.administracion.buscarPersonaNatural');
                 }
@@ -135,6 +169,12 @@ define(['../../module'], function (controllers) {
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
             };
+
+            $scope.loadParametros();
+            $scope.loadTipoDocumentoPN();
+            $scope.loadSexos();
+            $scope.loadEstadosCiviles();
+            $scope.loadPaises();
 
         }]);
 });

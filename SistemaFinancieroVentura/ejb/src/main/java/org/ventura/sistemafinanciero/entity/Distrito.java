@@ -26,7 +26,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "DISTRITO", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "pais")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = Distrito.findByIdProvincia, query = "SELECT d FROM Distrito d WHERE d.provincia.idProvincia = :idprovincia Order By d.denominacion") })
+@NamedQueries({
+		@NamedQuery(name = Distrito.findByIdProvincia, query = "SELECT d FROM Distrito d WHERE d.provincia.idProvincia = :idprovincia Order By d.denominacion"),
+		@NamedQuery(name = Distrito.findCodigoProvincia, query = "SELECT d FROM Distrito d INNER JOIN d.provincia p INNER JOIN p.departamento dep WHERE dep.codigo = :codigoDepartamento AND p.codigo = :codigoProvincia Order By d.denominacion") })
 public class Distrito implements java.io.Serializable {
 
 	/**
@@ -35,6 +37,7 @@ public class Distrito implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public final static String findByIdProvincia = "Distrito.findByIdProvincia";
+	public final static String findCodigoProvincia = "Distrito.findCodigoProvincia";
 
 	private BigInteger idDistrito;
 	private String denominacion;

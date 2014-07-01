@@ -3,7 +3,7 @@ define(['./module'], function (services) {
     services.factory("PersonaJuridicaService",["Restangular",
         function(Restangular){
             var _personaJuridicaService = Restangular.all("personaJuridica");
-
+            var baseUrl = "personaJuridica";
             return {
                 getModel: function(){
                     return {
@@ -26,14 +26,24 @@ define(['./module'], function (services) {
                         "accionistas":undefined
                     };
                 },
-                crear: function(personaJuridica){
-                    return _personaJuridicaService.post(personaJuridica);
+                findById: function(id){
+                    return Restangular.one("personaJuridica", id).get();
                 },
-                update: function(persona){
-                    return Restangular.one("personaJuridica/"+persona.id).customPUT(persona,'',{},{});
+                findByTipoNumeroDocumento: function(idtipodocumento, numeroDocumento){
+                    return Restangular.one(baseUrl + '/buscar').get({idTipoDocumento:idtipodocumento,numeroDocumento:numeroDocumento},{});
                 },
-                remove: function(id){
-                    return Restangular.all("personaJuridica/"+id).remove();
+                findByFilterText: function(filterText, offset, limit){
+                    if(arguments.length == 0){
+                        return Restangular.all(baseUrl).getList();
+                    } else if(arguments.length == 1){
+                        return Restangular.all(baseUrl).getList({filterText:filterText},{});
+                    } else if(arguments.length == 2){
+                        return Restangular.all(baseUrl).getList({filterText:filterText,offset:offset},{});
+                    } else if(arguments.length == 3){
+                        return Restangular.all(baseUrl).getList({filterText:filterText,offset:offset,limit:limit},{});
+                    } else if(arguments.length > 2){
+                        return Restangular.all(baseUrl).getList({filterText:filterText,offset:offset,limit:limit},{});
+                    }
                 },
                 getPersonas: function(offset, limit){
                     if(arguments.length == 0){
@@ -46,14 +56,21 @@ define(['./module'], function (services) {
                         return _personaJuridicaService.getList({"offset":offset,"limit":limit},{});
                     }
                 },
-                findById: function(id){
-                    return Restangular.one("personaJuridica", id).get();
+                count: function(filterText){
+                    if(arguments.length == 0){
+                        return Restangular.one(baseUrl + "/count").get();
+                    } else if(arguments.length == 1){
+                        return Restangular.one(baseUrl + "/count").get({"filterText":filterText},{});
+                    }
                 },
-                findByTipoNumeroDocumento: function(idtipodocumento, numerodocumento){
-                    return Restangular.one('personaJuridica'+'/'+idtipodocumento+'/'+numerodocumento).get();
+                update: function(persona){
+                    return Restangular.one(baseUrl + "/" + persona.id).customPUT(persona,'',{},{});
                 },
-                findByFilterText: function(text){
-                    return Restangular.all("personaJuridica/filtertext/"+text).getList();
+                crear: function(personaJuridica){
+                    return _personaJuridicaService.post(personaJuridica);
+                },
+                remove: function(id){
+                    return Restangular.all(baseUrl + "/" + id).remove();
                 }
             }
         }])

@@ -1,13 +1,19 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarSocioController", ['$scope','$state','$timeout','focus','SocioService',
-        function($scope,$state,$timeout,focus,SocioService) {
+    controllers.controller("BuscarSocioController", ['$scope','$state','$timeout','focus','SocioService','RedirectService',
+        function($scope,$state,$timeout,focus,SocioService,RedirectService) {
 
             focus("firstFocus");
 
             $scope.nuevo = function(){
+                RedirectService.limpiar();
                 $state.transitionTo("app.socio.crearSocio");
             };
+
+            $scope.editSocio = function(row){
+                RedirectService.limpiar();
+                $state.transitionTo("app.socio.panelSocio", { id: row.id });
+            }
 
             $scope.sociosList = [];
 
@@ -114,8 +120,6 @@ define(['../module'], function (controllers) {
                 ]
             };
 
-            $scope.editSocio = function(row){
-                $state.transitionTo("app.socio.panelSocio", { id: row.id });
-            }
+
         }]);
 });

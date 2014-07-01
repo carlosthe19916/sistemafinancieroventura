@@ -71,11 +71,11 @@ public class PersonaJuridicaRESTService {
 	}
 	
 	@GET
-	@Path("/{idtipodocumento}/{numerodocumento}")
+	@Path("/buscar")
 	@Produces({ "application/xml", "application/json" })
 	public Response findByTipoNumeroDocumento(
-			@PathParam("idtipodocumento") @DefaultValue("-1") BigInteger idtipodocumento,
-			@PathParam("numerodocumento") @DefaultValue("") String numerodocumento) {
+			@QueryParam("idTipoDocumento") @DefaultValue("-1") BigInteger idtipodocumento,
+			@QueryParam("numeroDocumento") @DefaultValue("") String numerodocumento) {
 		Response result = null;
 		JsonObject model = null;
 		if(idtipodocumento == null || numerodocumento == null || numerodocumento.isEmpty() || numerodocumento.trim().isEmpty()){
@@ -100,7 +100,8 @@ public class PersonaJuridicaRESTService {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listAll(			
+	public Response listAll(	
+			@QueryParam("filterText") String filterText,
 			@QueryParam("offset") BigInteger offset, 
 			@QueryParam("limit") BigInteger limit) {
 		if(offset == null || limit == null){
@@ -111,7 +112,7 @@ public class PersonaJuridicaRESTService {
 			offset = BigInteger.ZERO;
 		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
 			limit = BigInteger.ZERO;
-		List<PersonaJuridica> list = personaJuridicaService.findAll(offset, limit);
+		List<PersonaJuridica> list = personaJuridicaService.findAll(filterText, offset, limit);
 			
 		Response result = null;
 		JsonObject model = null;
@@ -125,30 +126,12 @@ public class PersonaJuridicaRESTService {
 	}
 	
 	@GET
-	@Path("/filtertext/{filterText}")
+	@Path("/count")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterText(
-			@PathParam("filterText") @DefaultValue("") String filterText,
-			@QueryParam("offset") BigInteger offset, 
-			@QueryParam("limit") BigInteger limit) {
-		if(offset == null || limit == null){
-			offset = null;
-			limit = null;
-		}	
-		if(offset != null && offset.compareTo(BigInteger.ZERO) < 1)
-			offset = BigInteger.ZERO;
-		if(limit != null && limit.compareTo(BigInteger.ZERO) < 1)
-			limit = BigInteger.ZERO;
-
-		List<PersonaJuridica> list = personaJuridicaService.findAll(filterText, offset, limit);
-		Response result = null;
-		JsonObject model = null;
-		if(list != null){
-			result = Response.status(Response.Status.OK).entity(list).build();
-		} else {
-			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
-			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();	
-		}
+	public Response countAll(
+			@QueryParam("filterText") String filterText) {				
+		int size = personaJuridicaService.count();		
+		Response result = Response.status(Response.Status.OK).entity(size).build();
 		return result;
 	}
 

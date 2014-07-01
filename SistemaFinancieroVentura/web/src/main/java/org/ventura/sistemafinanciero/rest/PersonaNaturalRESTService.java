@@ -33,7 +33,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.jboss.resteasy.util.GenericType;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
@@ -224,8 +223,19 @@ public class PersonaNaturalRESTService {
 	@GET
 	@Path("{id}/firma")
 	@Produces("image/png")
-	public Response getFirma(@PathParam("id") String id) {
+	public Response getFirma(@PathParam("id") String id,
+			@QueryParam("flowChunkNumber") int flowChunkNumber,
+			@QueryParam("flowChunkSize") int flowChunkSize,
+			@QueryParam("flowCurrentChunkSize") int flowCurrentChunkSize,
+			@QueryParam("flowFilename") String flowFilename,
+			@QueryParam("flowIdentifier") String flowIdentifier,
+			@QueryParam("flowRelativePath") String flowRelativePath,
+			@QueryParam("flowTotalChunks") int flowTotalChunks,
+			@QueryParam("flowTotalSize") int flowTotalSize) {
  
+		if(flowFilename != null)
+			return Response.status(Response.Status.NOT_FOUND).build();
+		
 		File file = new File(this.UPLOADED_FIRMA_PATH + id);
 
 		if(!file.exists())
@@ -241,8 +251,20 @@ public class PersonaNaturalRESTService {
 	@GET
 	@Path("{id}/foto")
 	@Produces("image/png")
-	public Response getFoto(@PathParam("id") String id) {
+	public Response getFoto(@PathParam("id") String id,
+			@QueryParam("flowChunkNumber") int flowChunkNumber,
+			@QueryParam("flowChunkSize") int flowChunkSize,
+			@QueryParam("flowCurrentChunkSize") int flowCurrentChunkSize,
+			@QueryParam("flowFilename") String flowFilename,
+			@QueryParam("flowIdentifier") String flowIdentifier,
+			@QueryParam("flowRelativePath") String flowRelativePath,
+			@QueryParam("flowTotalChunks") int flowTotalChunks,
+			@QueryParam("flowTotalSize") int flowTotalSize) {
  
+		if(flowFilename != null)
+			return Response.status(Response.Status.NOT_FOUND).build();
+		
+		
 		File file = new File(this.UPLOADED_FOTO_PATH + id);
 
 		if(!file.exists())
@@ -286,20 +308,22 @@ public class PersonaNaturalRESTService {
 	}
 	
 	@POST
-	@Path("/firma/upload")
+	@Path("/{id}/firma")
 	@Consumes("multipart/form-data")
-	public Response uploadFirma(MultipartFormDataInput input) {
-
+	public Response uploadFirma(@PathParam("id") BigInteger id,			
+			MultipartFormDataInput input) {		
+		
 		String fileName = "";
 
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 		List<InputPart> inputParts = uploadForm.get("file");
 
-		try {
-			fileName = input.getFormDataPart("id", new GenericType<String>() { });			
-		} catch (IOException e) {			
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
-		}
+		//try {
+		//	fileName = input.getFormDataPart("id", new GenericType<String>() { });
+			fileName = id.toString();
+		//} catch (IOException e) {			
+		//	return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
+		//}
 		
 		for (InputPart inputPart : inputParts) {
 
@@ -326,20 +350,21 @@ public class PersonaNaturalRESTService {
 
 	}
 	@POST
-	@Path("/foto/upload")
+	@Path("/{id}/foto")
 	@Consumes("multipart/form-data")
-	public Response uploadFoto(MultipartFormDataInput input) {
+	public Response uploadFoto(@PathParam("id") BigInteger id,MultipartFormDataInput input) {
 
 		String fileName = "";
 
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 		List<InputPart> inputParts = uploadForm.get("file");
 
-		try {
-			fileName = input.getFormDataPart("id", new GenericType<String>() { });			
-		} catch (IOException e) {			
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
-		}
+		//try {
+			//fileName = input.getFormDataPart("id", new GenericType<String>() { });	
+			fileName = id.toString();
+		//} catch (IOException e) {			
+		//	return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").build();
+		//}
 		
 		for (InputPart inputPart : inputParts) {
 
