@@ -1,8 +1,8 @@
 define(['./module'], function (controllers) {
     'use strict';
 
-    controllers.controller('MainController', [ "$scope", "$window", "hotkeys", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService","HotKeysFunctionsService", "RedirectService",
-        function($scope, $window, hotkeys,  CajaSessionService, UsuarioSessionService, AgenciaSessionService, HotKeysFunctionsService, RedirectService) {
+    controllers.controller('MainController', ["$scope","$state", "$window", "hotkeys", "CajaSessionService", "UsuarioSessionService", "AgenciaSessionService","HotKeysFunctionsService", "RedirectService",
+        function($scope,$state, $window, hotkeys,  CajaSessionService, UsuarioSessionService, AgenciaSessionService, HotKeysFunctionsService, RedirectService) {
 
             $scope.$watch('redirect', function(newValue, oldvalue){
                 if(newValue != oldvalue)
