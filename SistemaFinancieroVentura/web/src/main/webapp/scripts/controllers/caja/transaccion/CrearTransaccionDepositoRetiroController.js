@@ -52,7 +52,7 @@ define(['../../module'], function (controllers) {
             };
 
             $scope.loadCuentaBancaria = function(){
-                if(!angular.isUndefined($scope.view.numeroCuenta)){
+                if(!angular.isUndefined($scope.view.numeroCuenta) && $scope.view.numeroCuenta != null && $scope.numeroCuenta != ''){
                     CuentaBancariaService.findCuentaByNumeroCuenta($scope.view.numeroCuenta).then(
                         function(data){
                             $scope.objetosCargados.cuentaBancaria = data;
