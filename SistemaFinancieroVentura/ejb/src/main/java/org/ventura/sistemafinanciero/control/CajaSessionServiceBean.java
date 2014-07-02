@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.interceptor.Interceptors;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -30,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
@@ -202,18 +205,33 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	}
 	
 	private BigInteger getNumeroOperacion(){
-		//falta modificar
+		Agencia agencia = new Agencia();
 		Caja caja = this.getCaja();
-		HistorialCaja historialCaja = this.getHistorialActivo();
+		Set<BovedaCaja> lisBC = caja.getBovedaCajas();
+		for (BovedaCaja bovedaCaja : lisBC) {
+			agencia = bovedaCaja.getBoveda().getAgencia();
+		}
+
+		Query query = em
+				.getEm()
+				.createNativeQuery(
+						"SELECT T.Numero_Operacion AS numero_operacion FROM Transaccion_Bancaria T Inner Join Historial_Caja HC on (HC.id_historial_caja = T.Id_Historial_Caja) Inner Join Caja C on (C.Id_Caja = Hc.Id_Caja) Inner Join Boveda_Caja BC on (BC.id_caja = C.Id_Caja) Inner Join Boveda B on (B.id_boveda = Bc.Id_Boveda) Where B.Id_Agencia = :idagencia and T.Fecha = (select to_char(systimestamp,'dd/mm/yy') from dual) "
+						+ "union "
+						+ "select Tcv.Numero_Operacion AS numero_operacion From Transaccion_Compra_Venta TCV Inner Join Historial_Caja HC on (HC.id_historial_caja = Tcv.Id_Historial_Caja) Inner Join Caja C on (C.Id_Caja = Hc.Id_Caja) Inner Join Boveda_Caja BC on (BC.id_caja = C.Id_Caja) Inner Join Boveda B on (B.id_boveda = Bc.Id_Boveda) Where B.Id_Agencia = :idagencia and Tcv.Fecha = (select to_char(systimestamp,'dd/mm/yy') from dual) "
+						+ "union "
+						+ "select Tb.Numero_Operacion AS numero_operacion From Transferencia_Bancaria TB Inner Join Historial_Caja HC on (HC.id_historial_caja = Tb.Id_Historial_Caja) Inner Join Caja C on (C.Id_Caja = Hc.Id_Caja) Inner Join Boveda_Caja BC on (BC.id_caja = C.Id_Caja) Inner Join Boveda B on (B.id_boveda = Bc.Id_Boveda) Where B.Id_Agencia = :idagencia and Tb.Fecha = (select to_char(systimestamp,'dd/mm/yy') from dual) "
+						+ "union "
+						+ "select Ap.Numero_Operacion AS numero_operacion from Transaccion_Cuenta_Aporte AP Inner Join Historial_Caja HC on (HC.id_historial_caja = AP.id_historial_caja) Inner Join Caja C on (HC.Id_Caja = C.Id_Caja) Inner Join Boveda_Caja BC on (BC.id_caja = C.id_caja) Inner Join Boveda B on (B.id_boveda = BC.id_boveda) where B.Id_Agencia = :idagencia and ap.Fecha = (select to_char(systimestamp,'dd/mm/yy') from dual) ORDER BY numero_operacion DESC");
+		query.setParameter("idagencia", agencia.getIdAgencia());
 		
-		QueryParameter queryParameter = QueryParameter.with("idcaja", caja.getIdCaja()).and("idHistorial", historialCaja.getIdHistorialCaja());
-		List<TransaccionBancaria> list = transaccionBancariaDAO.findByNamedQuery(TransaccionBancaria.findNumeroOperacion, queryParameter.parameters(), 1);
+		List<BigDecimal> list = query.getResultList();
 		if(list.size() == 0) {
 			return BigInteger.ONE;	
 		}			
 		else {
-			TransaccionBancaria transaccion = list.get(0);
-			return transaccion.getNumeroOperacion().add(BigInteger.ONE);
+			BigDecimal op = list.get(0);
+			BigInteger numero_operacion = op.toBigInteger();
+			return numero_operacion.add(BigInteger.ONE);
 		}
 	}
 	

@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -28,6 +29,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.hibernate.annotations.NamedNativeQueries;
+import org.omg.CosNaming.NameComponent;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 
 /**
@@ -37,15 +40,12 @@ import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 @Table(name = "TRANSACCION_BANCARIA", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "transaccionBancaria")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = TransaccionBancaria.findNumeroOperacion, query = "SELECT t FROM TransaccionBancaria t INNER JOIN t.historialCaja hc INNER JOIN hc.caja c WHERE c.idCaja = :idcaja AND hc.idHistorialCaja = :idHistorial ORDER BY t.numeroOperacion DESC") })
 public class TransaccionBancaria implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	public final static String findNumeroOperacion = "TransaccionBancaria.findNumeroOperacion";
 
 	private BigInteger idTransaccionBancaria;
 	private Moneda moneda;
