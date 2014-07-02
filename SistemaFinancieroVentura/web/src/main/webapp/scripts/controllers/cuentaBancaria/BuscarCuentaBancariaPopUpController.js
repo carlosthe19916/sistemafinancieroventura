@@ -3,15 +3,10 @@ define(['../module'], function (controllers) {
     controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$modalInstance", "$state","focus", "CuentaBancariaService","VariablesService",
         function($scope, $modalInstance, $state,focus, CuentaBancariaService, VariablesService) {
 
-            $scope.tipoCuentasBancarias = [];
-            $scope.tipoPersonas = [];
+            $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();;
+            $scope.tipoPersonas = VariablesService.getTipoPersonas();;
             $scope.tipoEstadoCuenta = [];
-            $scope.tipoCuentasBancarias.push(VariablesService.getAhorro());
-            $scope.tipoCuentasBancarias.push(VariablesService.getCorriente());
-            $scope.tipoPersonas.push(VariablesService.getPersonaNatural());
-            $scope.tipoPersonas.push(VariablesService.getPersonaJuridica());
             $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioActivo());
-            $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioCongelado());
 
             //configurar tabla
             $scope.cuentasList = [];
@@ -34,15 +29,15 @@ define(['../module'], function (controllers) {
             };
             $scope.getDesde = function(){
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
-            }
+            };
             $scope.getHasta = function(){
-                return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage);
-            }
+                return $scope.pagingOptions.pageSize;
+            };
 
             $scope.getPagedDataInitial = function () {
                 setTimeout(function () {
                     $scope.pagingOptions.currentPage = 1;
-                    CuentaBancariaService.getCuentasBancariasView($scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function(data){
+                    CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta,$scope.getDesde(), $scope.getHasta()).then(function(data){
                         $scope.cuentasList = data;
                         $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
@@ -57,7 +52,7 @@ define(['../module'], function (controllers) {
                 setTimeout(function () {
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        CuentaBancariaService.findByFilterTextView(ft, $scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function (data){
+                        CuentaBancariaService.findByFilterTextView(ft, $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta,$scope.getDesde(), $scope.getHasta()).then(function (data){
                             $scope.cuentasList = data;
                             $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
@@ -83,13 +78,13 @@ define(['../module'], function (controllers) {
                     }
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        CuentaBancariaService.findByFilterTextView(ft, $scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function (data){
+                        CuentaBancariaService.findByFilterTextView(ft, $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta, $scope.getDesde(), $scope.getHasta()).then(function (data){
                             $scope.cuentasList = data;
                             $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                             $scope.cuentasListAuxiliar = angular.copy(data);
                         });
                     } else {
-                        CuentaBancariaService.getCuentasBancariasView($scope.getDesde(), $scope.getHasta(), $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta).then(function(data){
+                        CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta, $scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.cuentasList = data;
                             $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });

@@ -6,11 +6,11 @@ define(['../module'], function (controllers) {
         $scope.nombres = nombres;
 
         $scope.getUrlFirma = function(index) {
-            return "http://localhost:8080/SistemaFinancieroVentura-web/services/personanatural/image/"+$scope.idPersonas[index]+"/firma";
-        }
+            return "http://localhost:8080/SistemaFinancieroVentura-web/services/personaNatural/"+$scope.idPersonas[index]+"/firma";
+        };
         $scope.getNombre = function(index){
             return $scope.nombres[index];
-        }
+        };
 
         $scope.ok = function () {
             $modalInstance.close();

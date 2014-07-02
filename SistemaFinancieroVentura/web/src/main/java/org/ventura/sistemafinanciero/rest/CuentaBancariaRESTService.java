@@ -28,7 +28,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -120,6 +119,26 @@ public class CuentaBancariaRESTService {
 	public Response findByFilterText() {								
 		int size = cuentaBancariaService.count();
 		return Response.status(Response.Status.OK).entity(size).build();						
+	}
+	
+	@GET
+	@Path("/view/buscar")
+	@Produces({ "application/xml", "application/json" })
+	public Response buscarByNumeroCuenta(
+			@QueryParam("numeroCuenta") String numeroCuenta) {
+		
+		if(numeroCuenta == null){
+			JsonObject model = Json.createObjectBuilder().add("message", "numero de cuenta no valida").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}
+		numeroCuenta = numeroCuenta.trim();
+		CuentaBancariaView cuentaBancaria = cuentaBancariaService.find(numeroCuenta);
+		if(cuentaBancaria != null){
+			return Response.status(Response.Status.OK).entity(cuentaBancaria).build();	
+		} else {
+			JsonObject model = Json.createObjectBuilder().add("message", "cuenta no encontrada").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();	
+		}												
 	}
 	
 	@GET

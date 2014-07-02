@@ -46,6 +46,9 @@ define(['./module'], function (services) {
                 getCuentasBancaria: function(id){
                     return Restangular.one("cuentaBancaria/"+id).get();
                 },
+                findCuentaByNumeroCuenta: function(numeroCuenta){
+                    return Restangular.one("cuentaBancaria/view/buscar").get({numeroCuenta:numeroCuenta},{});
+                },
                 crearCuentaAhorro: function(transaccion){
                     return Restangular.all("cuentaBancaria/ahorro").post(transaccion);
                 },

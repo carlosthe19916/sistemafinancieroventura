@@ -1,61 +1,75 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal", "CuentaBancariaService", "CajaSessionService","MonedaService","TransitionService",
-        function($scope, $state, $window, $filter, $modal, CuentaBancariaService, CajaSessionService, MonedaService, TransitionService) {
+    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService", "CajaSessionService","MonedaService","TransitionService",
+        function($scope, $state, $window, $filter, $modal,focus,CuentaBancariaService, CajaSessionService, MonedaService, TransitionService) {
 
-            $scope.control = {"success":false, "inProcess": false, "submitted":false};
+            $scope.viewState = 'app.socio.crearCuentaBancaria';
 
-            $scope.tipotransacciones = [{"denominacion":"DEPOSITO","factor":1},{"denominacion":"RETIRO","factor":-1}];
+            $scope.focusElements = {
+                buscarCuenta: 'focusBuscarCuenta',
+                tipoTransaccion: 'focusTipoTransaccion',
+                monto: 'focusMonto'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.tipoPersona);
+            };
+            $scope.setInitialFocus();
 
-            $scope.cuenta;
+            $scope.control = {
+                success: false,
+                inProcess: false,
+                submitted : false
+            };
 
-            $scope.transaccion = {
-                "numeroCuenta" : undefined,
-                "monto" : undefined,
-                "montoReal" : undefined,
-                "tipoTransaccion": undefined,
-                "referencia" : undefined
-            }
+            $scope.combo = {
+                tipoTransacciones: [
+                    {denominacion: "DEPOSITO", factor: 1},
+                    {denominacion: "RETIRO", factor: -1}
+                ]
+            };
 
-            $scope.$watch('transaccion.monto', function() {
-                if($scope.transaccion.monto !== undefined && $scope.transaccion.monto !== null){
-                    if($scope.transaccion.tipoTransaccion !== undefined && $scope.transaccion.tipoTransaccion !== null){
-                        $scope.transaccion.montoReal = ( Math.abs($scope.transaccion.monto) * $scope.transaccion.tipoTransaccion.factor );
-                    } else {
-                        $scope.transaccion.montoReal = $scope.transaccion.monto;
-                    }
-                } else {
-                    $scope.transaccion.montoReal = 0;
-                }
-            });
+            $scope.view = {
+                numeroCuenta: undefined,
+                tipoTransaccion: undefined,
+                monto: parseFloat('0.00'),
+                referencia: undefined
+            };
 
-            $scope.loadDenominacionesMoneda = function(){
-                if(!angular.isUndefined($scope.cuenta)){
-                    MonedaService.getDenominaciones($scope.cuenta.moneda.id).then(function(data){
-                        $scope.denominacionesMoneda = data;
-                    });
-                }
-            }
+            $scope.objetosCargados = {
+                cuentaBancaria: undefined,
+                denominacionesMoneda: [],
+                titulares: []
+            };
 
-            $scope.openCalculadora = function () {
-                var modalInstance = $modal.open({
-                    templateUrl: 'views/cajero/util/calculadora.html',
-                    controller: "CalculadoraController",
-                    resolve: {
-                        denominaciones: function () {
-                            return !angular.isUndefined($scope.denominacionesMoneda) ? $scope.denominacionesMoneda : [];
+            $scope.loadParametros = function(){
+                $scope.view.numeroCuenta = $scope.params.numeroCuenta;
+                $scope.view.tipoTransaccion = $scope.params.tipoTransaccion;
+                $scope.view.monto = parseFloat($scope.params.monto);
+                $scope.view.referencia = $scope.params.referencia;
+                $scope.loadCuentaBancaria();
+            };
+
+            $scope.loadCuentaBancaria = function(){
+                if(!angular.isUndefined($scope.view.numeroCuenta)){
+                    CuentaBancariaService.findCuentaByNumeroCuenta($scope.view.numeroCuenta).then(
+                        function(data){
+                            $scope.objetosCargados.cuentaBancaria = data;
                         },
-                        moneda: function () {
-                            return !angular.isUndefined($scope.cuenta) ? $scope.cuenta.moneda.simbolo : '';
+                        function error(error){
+                            $scope.alerts = [{ type: "danger", msg: "Error: no se pudo cargar la cuenta bancaria."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         }
-                    }
-                });
+                    );
+                }
+            };
 
-                modalInstance.result.then(function (total) {
-                    $scope.transaccion.monto = total;
-                }, function () {
-                    //$log.info('Modal dismissed at: ' + new Date());
-                });
+            $scope.getTipoTransaccion = function(){
+                for(var i=0; i<$scope.combo.tipoTransacciones.length; i++){
+                    if($scope.view.tipoTransaccion == $scope.combo.tipoTransacciones[i].denominacion)
+                        return $scope.combo.tipoTransacciones[i];
+                }
             };
 
             $scope.openBuscarCuentaBancaria = function () {
@@ -65,39 +79,73 @@ define(['../../module'], function (controllers) {
                     size: 'lg'
                 });
                 modalInstance.result.then(function (cuenta) {
-                    setTimeout(function () {
-                        angular.element(document.querySelector('#cmbTipoTransaccion')).focus();
-                    }, 10);
-                    $scope.cuenta = cuenta;
-                    $scope.transaccion.numeroCuenta = $scope.cuenta.numeroCuenta;
-                    $scope.loadTitulares();
-                    $scope.loadDenominacionesMoneda();
+                    focus($scope.focusElements.tipotransaccion);
+                    $scope.objetosCargados.cuentaBancaria = cuenta;
+                    $scope.view.numeroCuenta = $scope.objetosCargados.cuentaBancaria.numeroCuenta;
+                }, function () {
+                });
+            };
+
+            $scope.openCalculadora = function () {
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/util/calculadora.html',
+                    controller: "CalculadoraController",
+                    resolve: {
+                        denominaciones: function () {
+                            return !angular.isUndefined($scope.objetosCargados.denominacionesMoneda) ? $scope.objetosCargados.denominacionesMoneda : [];
+                        },
+                        moneda: function () {
+                            return !angular.isUndefined($scope.objetosCargados.cuentaBancaria) ? $scope.objetosCargados.cuentaBancaria.moneda.simbolo : '';
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (total) {
+                    $scope.view.monto = total;
+                    focus($scope.focusElements.monto);
                 }, function () {
                 });
             };
 
             $scope.loadTitulares = function(){
-                CuentaBancariaService.getTitulares($scope.cuenta.id).then(
+                CuentaBancariaService.getTitulares($scope.objetosCargados.cuentaBancaria.id).then(
                     function(data){
-                        $scope.titulares = data;
+                        $scope.objetosCargados.titulares = data;
                     }
                 );
-            }
+            };
+
+            $scope.loadDenominacionesMoneda = function(){
+                if(!angular.isUndefined($scope.objetosCargados.cuentaBancaria)){
+                    MonedaService.getDenominaciones($scope.objetosCargados.cuentaBancaria.moneda.id).then(function(data){
+                        $scope.objetosCargados.denominacionesMoneda = data;
+                    });
+                }
+            };
+
+            $scope.$watch('objetosCargados.cuentaBancaria', function(){
+                if(!angular.isUndefined($scope.objetosCargados.cuentaBancaria)){
+                    $scope.loadTitulares();
+                    $scope.loadDenominacionesMoneda();
+                }
+            });
+
+            //firmas
             $scope.showFirma = function(index){
-                if(!angular.isUndefined($scope.titulares)){
-                    if(!angular.isUndefined($scope.titulares[index])){
+                if(!angular.isUndefined($scope.objetosCargados.titulares)){
+                    if(!angular.isUndefined($scope.objetosCargados.titulares[index])){
                         var modalInstance = $modal.open({
                             templateUrl: 'views/cajero/util/firmaPopUp.html',
                             controller: "FirmaPopUpController",
                             resolve: {
                                 idPersonas: function () {
                                     var idPersonas = [];
-                                    idPersonas.push($scope.titulares[index].personaNatural.id);
+                                    idPersonas.push($scope.objetosCargados.titulares[index].personaNatural.id);
                                     return idPersonas;
                                 },
                                 nombres: function(){
                                     var nombres = [];
-                                    nombres.push($scope.titulares[index].personaNatural.apellidoPaterno+" "+$scope.titulares[index].personaNatural.apellidoMaterno+","+$scope.titulares[index].personaNatural.nombres);
+                                    nombres.push($scope.objetosCargados.titulares[index].personaNatural.apellidoPaterno+" "+$scope.objetosCargados.titulares[index].personaNatural.apellidoMaterno+","+$scope.objetosCargados.titulares[index].personaNatural.nombres);
                                     return nombres;
                                 }
                             }
@@ -107,23 +155,23 @@ define(['../../module'], function (controllers) {
                         });
                     }
                 }
-            }
+            };
             $scope.showFirmaTodos = function(){
-                if(!angular.isUndefined($scope.titulares)){
+                if(!angular.isUndefined($scope.objetosCargados.titulares)){
                     var modalInstance = $modal.open({
                         templateUrl: 'views/cajero/util/firmaPopUp.html',
                         controller: "FirmaPopUpController",
                         resolve: {
                             idPersonas: function () {
                                 var idPersonas = [];
-                                for(var i = 0; i < $scope.titulares.length; i++)
-                                    idPersonas.push($scope.titulares[i].personaNatural.id);
+                                for(var i = 0; i < $scope.objetosCargados.titulares.length; i++)
+                                    idPersonas.push($scope.objetosCargados.titulares[i].personaNatural.id);
                                 return idPersonas;
                             },
                             nombres: function(){
                                 var nombres = [];
-                                for(var i = 0; i < $scope.titulares.length; i++)
-                                    nombres.push($scope.titulares[i].personaNatural.apellidoPaterno+" "+$scope.titulares[i].personaNatural.apellidoMaterno+","+$scope.titulares[i].personaNatural.nombres);
+                                for(var i = 0; i < $scope.objetosCargados.titulares.length; i++)
+                                    nombres.push($scope.objetosCargados.titulares[i].personaNatural.apellidoPaterno+" "+$scope.objetosCargados.titulares[i].personaNatural.apellidoMaterno+","+$scope.objetosCargados.titulares[i].personaNatural.nombres);
                                 return nombres;
                             }
                         }
@@ -132,23 +180,21 @@ define(['../../module'], function (controllers) {
                     }, function () {
                     });
                 }
-            }
+            };
 
             //transaccion
             $scope.crearTransaccion = function(){
                 if($scope.formCrearTransaccion.$valid){
                     $scope.control.inProcess = true;
                     var transaccion = {
-                        "numeroCuenta" : $scope.transaccion.numeroCuenta,
-                        "monto": $scope.transaccion.montoReal,
-                        "referencia" : $scope.transaccion.referencia
-                    }
+                        "numeroCuenta" : $scope.view.numeroCuenta,
+                        "monto": (Math.abs(parseFloat($scope.view.monto.toString())) * $scope.getTipoTransaccion().factor),
+                        "referencia" : $scope.view.referencia
+                    };
                     CajaSessionService.crearTransaccionBancaria(transaccion).then(
                         function(data){
                             $scope.control.success = true;
                             $scope.control.inProcess = false;
-                            TransitionService.setUrl("app.transaccion.depositoRetiro");
-                            TransitionService.setParameters({});
                             $state.transitionTo('app.transaccion.depositoRetiroVoucher', { id: data.id });
                         },
                         function error(error){
@@ -162,14 +208,16 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
-            }
+            };
 
             $scope.cancel = function(){
 
-            }
+            };
+
+            $scope.loadParametros();
 
         }]);
 });

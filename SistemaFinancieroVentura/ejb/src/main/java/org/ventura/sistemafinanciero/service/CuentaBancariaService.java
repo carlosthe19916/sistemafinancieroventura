@@ -159,6 +159,8 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	
 	public VoucherTransaccionBancaria getVoucherCuentaBancaria(BigInteger idTransaccionBancaria);
 
-	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);	
+	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);
+
+	public CuentaBancariaView find(String numeroCuenta);	
 
 }

@@ -17,17 +17,17 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && control.submitted}">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && (control.submitted || formCrearTransaccion.numeroCuenta.$dirty)}">
                                         <label>N&uacute;mero Cuenta</label>
                                         <div class="input-group">
-                                            <input type="text" name="numeroCuenta" ng-model="transaccion.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta" readonly required autofocus/>
+                                            <input type="text" name="numeroCuenta" ng-model="view.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta" readonly required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()">
+                                                <button focus-on="focusBuscarCuenta" type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()" autofocus>
                                                     <span class="glyphicon glyphicon-search"></span>
                                                 </button>
                                               </span>
                                         </div>
-                                        <div ng-show="formCrearTransaccion.numeroCuenta.$invalid && control.submitted">
+                                        <div ng-show="formCrearTransaccion.numeroCuenta.$invalid && (control.submitted || formCrearTransaccion.numeroCuenta.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransaccion.numeroCuenta.$error.required">
                                                 Ingrese N&uacute;mero de Cuenta.
                                             </p>
@@ -37,11 +37,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && control.submitted}">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && (control.submitted || formCrearTransaccion.tipotransaccion.$dirty)}">
                                         <label>Tipo Transacci&oacute;n</label>
-                                        <select id="cmbTipoTransaccion" name="tipotransaccion" ng-options="tipotransaccion as tipotransaccion.denominacion for tipotransaccion in tipotransacciones" ng-model="transaccion.tipoTransaccion" class="form-control" required>
+                                        <select focus-on="focusTipoTransaccion" name="tipotransaccion" ng-options="tipotransaccion.denominacion as tipotransaccion.denominacion for tipotransaccion in combo.tipoTransacciones" ng-model="view.tipoTransaccion" class="form-control" required>
                                         </select>
-                                        <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && control.submitted">
+                                        <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && (control.submitted || formCrearTransaccion.tipotransaccion.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
                                                 Ingrese Tipo Transacci&oacute;n.
                                             </p>
@@ -51,17 +51,17 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && control.submitted}">
+                                    <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && (control.submitted || formCrearTransaccion.monto.$dirty)}">
                                         <label>Monto</label>
                                         <div class="input-group">
-                                            <input type="text" name="monto" ng-model="transaccion.monto" class="form-control" placeholder="Monto" required/>
+                                            <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="transaccion.numeroCuenta === undefined">
+                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="view.numeroCuenta === undefined">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </button>
                                               </span>
                                         </div>
-                                        <div ng-show="formCrearTransaccion.monto.$invalid && control.submitted">
+                                        <div ng-show="formCrearTransaccion.monto.$invalid && (control.submitted || formCrearTransaccion.monto.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransaccion.monto.$error.required">
                                                 Ingrese monto valido.
                                             </p>
@@ -72,8 +72,8 @@
                                     <div class="form-group">
                                         <label>&nbsp;</label>
                                         <kbd style="display: block;margin-top: 3px;">
-                                            <span ng-bind="cuenta.moneda.simbolo"/>
-                                            <span ng-bind="transaccion.montoReal | number : 2"/>
+                                            <span ng-bind="objetosCargados.cuentaBancaria.moneda.simbolo"/>
+                                            <span ng-bind="view.monto | number : 2"/>
                                         </kbd>
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.referencia.$invalid && formCrearTransaccion.submitted}">
                                         <label>Referencia</label>
-                                        <textarea name="referencia" class="form-control" rows="3" ng-model="transaccion.referencia" placeholder="Referencia"></textarea>
+                                        <textarea name="referencia" class="form-control" rows="3" ng-model="view.referencia" placeholder="Referencia"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -99,19 +99,19 @@
                                 <table class="table">
                                     <tr>
                                         <td style="font-weight: bold;">Socio:</td>
-                                        <td><span ng-bind="cuenta.socio"></span></td>
+                                        <td><span ng-bind="objetosCargados.cuentaBancaria.socio"></span></td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold;">Tipo y N&deg; Doc.:</td>
-                                        <td><span ng-bind-template="{{cuenta.tipoDocumento}}/{{cuenta.numeroDocumento}}"></span></td>
+                                        <td><span ng-bind-template="{{objetosCargados.cuentaBancaria.tipoDocumento}}/{{objetosCargados.cuentaBancaria.numeroDocumento}}"></span></td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold;">Tipo Cuenta:</td>
-                                        <td><span ng-bind="cuenta.tipoCuenta"></span></td>
+                                        <td><span ng-bind="objetosCargados.cuentaBancaria.tipoCuenta"></span></td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold;">N&deg; Cuenta:</td>
-                                        <td><span ng-bind="cuenta.numeroCuenta"></span></td>
+                                        <td><span ng-bind="objetosCargados.cuentaBancaria.numeroCuenta"></span></td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold;">
@@ -119,12 +119,12 @@
                                         </td>
                                         <td>
                                             <span class="label label-info">Info</span>
-                                            <span ng-bind="cuenta.moneda.denominacion"></span>
+                                            <span ng-bind="objetosCargados.cuentaBancaria.moneda.denominacion"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold;">Estado Cuenta:</td>
-                                        <td><span ng-bind="cuenta.estadoCuenta"></span></td>
+                                        <td><span ng-bind="objetosCargados.cuentaBancaria.estadoCuenta"></span></td>
                                     </tr>
                                 </table>
                             </div>
@@ -148,7 +148,7 @@
                                     </div>
                                 </div>
                                 <table class="table table-condensed table-striped">
-                                    <tr ng-repeat="titular in titulares | filter:{ estado: true }">
+                                    <tr ng-repeat="titular in objetosCargados.titulares | filter:{ estado: true }">
                                         <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
                                         <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}}&nbsp;{{titular.personaNatural.apellidoMaterno}},{{titular.personaNatural.nombres}}"></span></td>
                                         <td>

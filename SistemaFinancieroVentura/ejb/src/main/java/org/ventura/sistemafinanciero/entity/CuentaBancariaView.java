@@ -26,13 +26,13 @@ import java.util.Date;
 @XmlRootElement(name = "cuentabancariaview")
 @XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
-		//@NamedQuery(name = CuentaBancariaView.FindByLists, query = "SELECT cbv FROM CuentaBancariaView cbv WHERE cbv.tipocuenta IN :tipoCuenta AND cbv.tipopersona IN :tipoPersona AND cbv.estadocuenta IN :tipoEstadoCuenta ORDER BY cbv.socio, cbv.idcuentabancaria"),	
+		@NamedQuery(name = CuentaBancariaView.findByNumeroCuenta, query = "SELECT cbv FROM CuentaBancariaView cbv WHERE cbv.numerocuenta = :numeroCuenta"),
 		@NamedQuery(name = CuentaBancariaView.FindByFilterTextCuentaBancariaView, query = "SELECT cbv FROM CuentaBancariaView cbv WHERE cbv.tipocuenta IN :tipoCuenta AND cbv.tipopersona IN :tipoPersona AND cbv.estadocuenta IN :tipoEstadoCuenta AND (cbv.numerocuenta LIKE :filtertext OR cbv.numerodocumento LIKE :filtertext OR UPPER(cbv.socio) LIKE :filtertext)") })
 public class CuentaBancariaView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public final static String FindByFilterTextCuentaBancariaView = "CuentaBancariaView.FindByFilterTextCuentaBancariaView";
-	//public final static String FindByLists = "CuentaBancariaView.FindByLists";
+	public final static String findByNumeroCuenta = "CuentaBancariaView.findByNumeroCuenta";
 
 	private String numerocuenta;
 	private BigDecimal idcuentabancaria;

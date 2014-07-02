@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -50,6 +51,7 @@ import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
+import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
@@ -785,6 +787,21 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancaria.setEstado(EstadoCuentaBancaria.INACTIVO);
 		cuentaBancaria.setFechaCierre(Calendar.getInstance().getTime());
 		cuentaBancariaDAO.update(cuentaBancaria);
+	}
+
+	@Override
+	public CuentaBancariaView find(String numeroCuenta) {
+		QueryParameter queryParameter = QueryParameter.with("numeroCuenta", numeroCuenta);
+		List<CuentaBancariaView> list = cuentaBancariaViewDAO.findByNamedQuery(CuentaBancariaView.findByNumeroCuenta, queryParameter.parameters());
+		if(list.size()>1)
+			throw new EJBException("Mas de una cuenta con el numero de cuenta");
+		else
+			for (CuentaBancariaView cuentaBancaria : list) {
+				Moneda moneda = cuentaBancaria.getMoneda();
+				Hibernate.initialize(moneda);
+				return cuentaBancaria;
+			}
+		return null;
 	}
 
 
