@@ -1,5 +1,6 @@
 package org.ventura.sistemafinanciero.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.ventura.sistemafinanciero.entity.Agencia;
@@ -63,9 +64,10 @@ public class ProduceObject {
 		return numeroCuenta;
 	}
 	
-	public static Agencia getAgenciafromNumeroCuenta(String numeroCuenta){
-		Agencia agencia = null;
-		return agencia;
+	public static String getCodigoAgenciaFromNumeroCuenta(String numeroCuenta){
+		if(numeroCuenta == null)
+			return null;
+		return numeroCuenta.substring(0, 2);
 	}
 	
 	public static Moneda getMonedaPrincipal(){
@@ -74,5 +76,17 @@ public class ProduceObject {
 		moneda.setDenominacion("NUEVO SOL");
 		moneda.setSimbolo("S/.");
 		return moneda;
+	}
+
+	public static BigDecimal getInteresPlazoFijo(BigDecimal capital, BigDecimal tasaInteres, int periodo) {
+		BigDecimal result = null;
+		
+		Double base = tasaInteres.add(BigDecimal.ONE).doubleValue();
+		Double potencia = (new Double(periodo)/360);
+		Double a = Math.pow(base, potencia) - 1;
+		result = capital.multiply(new BigDecimal(a));
+		result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
+		
+		return result;
 	}
 }

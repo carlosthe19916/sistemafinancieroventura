@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -34,9 +36,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "AGENCIA", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "agencia")
 @XmlAccessorType(XmlAccessType.NONE)
+@NamedQueries({ @NamedQuery(name = Agencia.findByCodigo, query = "SELECT a FROM Agencia a WHERE a.codigo = :codigo") })
 public class Agencia implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	public final static String findByCodigo = "Agencia.findByCodigo";
 
 	private BigInteger idAgencia;
 
@@ -54,7 +59,7 @@ public class Agencia implements java.io.Serializable {
 	@NotEmpty(message = "Denominacion is empty")
 	@NotBlank(message = "Denominacion is blank")
 	private String codigo;
-	
+
 	@NotNull(message = "Estado is null")
 	@Min(value = 0)
 	@Max(value = 1)
@@ -133,7 +138,7 @@ public class Agencia implements java.io.Serializable {
 	public void setDenominacion(String denominacion) {
 		this.denominacion = denominacion;
 	}
-	
+
 	@XmlElement
 	@Column(name = "CODIGO", nullable = false, length = 3, columnDefinition = "nvarchar2")
 	public String getCodigo() {

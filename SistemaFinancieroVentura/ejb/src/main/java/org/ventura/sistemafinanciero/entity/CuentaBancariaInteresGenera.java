@@ -4,9 +4,13 @@ package org.ventura.sistemafinanciero.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -44,6 +48,7 @@ public class CuentaBancariaInteresGenera implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_CUENTA_BANCARIA_INTERES_GEN", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getIdCuentaBancariaInteresGen() {

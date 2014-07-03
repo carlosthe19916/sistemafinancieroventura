@@ -126,33 +126,22 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
      */
 	public List<CuentaBancariaView> findAllView(String filterText, TipoCuentaBancaria[] tipoCuenta, TipoPersona[] persona, EstadoCuentaBancaria[] estadoCuenta, BigInteger offset, BigInteger limit);		
 		
-	public BigInteger createCuentaAhorro(BigInteger idAgencia,
-			BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona, 
-			BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares,
-			List<Beneficiario> beneficiarios) throws RollbackFailureException;
+	public BigInteger crearCuentaBancaria(TipoCuentaBancaria tipoCuentaBancaria,String codigoAgencia, BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona,  BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares, List<Beneficiario> beneficiarios) throws RollbackFailureException;
 
-	public BigInteger createCuentaCorriente(BigInteger idAgencia, 
-			BigInteger idMoneda, BigDecimal tasaInteres, TipoPersona tipoPersona,
-			BigInteger idPersona, int cantRetirantes, List<BigInteger> titulares, 
-			List<Beneficiario> beneficiarios) throws RollbackFailureException;
-
-	public BigInteger[] createCuentaPlazoFijo(BigInteger idAgencia, BigInteger idMoneda,
-			TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes,
-			BigDecimal monto, int periodo, BigDecimal tasaInteres,
-			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
-			throws RollbackFailureException;
-
+	public BigInteger[] crearCuentaBancariaPlazoFijoConDeposito(String codigo, BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes, BigDecimal monto, int periodo, BigDecimal tasaInteres, List<BigInteger> titulares, List<Beneficiario> beneficiarios) throws RollbackFailureException;
+	
 	public void congelarCuentaBancaria(BigInteger idCuentaBancaria) throws RollbackFailureException;
 	
 	public void descongelarCuentaBancaria(BigInteger idCuentaBancaria) throws RollbackFailureException;
-	
-	public void cancelarCuentaBancaria(BigInteger id) throws RollbackFailureException;;
 	
 	public void recalcularCuentaPlazoFijo(BigInteger idCuenta, int periodo, BigDecimal tasaInteres) throws RollbackFailureException;
 	
 	public BigInteger[] renovarCuentaPlazoFijo(BigInteger idCuenta, int periodo, BigDecimal tasaInteres) throws RollbackFailureException;
 	
-	/**mode representa titulares activos/inacativos o todos*/
+	public void cancelarCuentaBancaria(BigInteger id) throws RollbackFailureException;
+	
+	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger id) throws RollbackFailureException;
+						
 	public Set<Titular> getTitulares(BigInteger idCuentaBancaria, boolean mode);
 	
 	public Set<Beneficiario> getBeneficiarios(BigInteger idCuentaBancaria);
@@ -166,7 +155,5 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);
 
 	public CuentaBancariaView find(String numeroCuenta);
-
-		
 
 }

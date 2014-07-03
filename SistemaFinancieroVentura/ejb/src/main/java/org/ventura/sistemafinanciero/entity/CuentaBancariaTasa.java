@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CUENTA_BANCARIA_TASA", schema = "BDSISTEMAFINANCIERO")
 public class CuentaBancariaTasa implements java.io.Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private BigDecimal idCuentaBancariaTasa;
 	private CuentaBancaria cuentaBancaria;

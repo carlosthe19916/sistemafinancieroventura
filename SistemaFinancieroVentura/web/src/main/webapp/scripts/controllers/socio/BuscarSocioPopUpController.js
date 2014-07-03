@@ -25,44 +25,40 @@ define(['../module'], function (controllers) {
 
             $scope.getDesde = function(){
                 return ($scope.pagingOptions.pageSize*$scope.pagingOptions.currentPage)-$scope.pagingOptions.pageSize;
-            }
+            };
             $scope.getHasta = function(){
                 return ($scope.pagingOptions.pageSize);
-            }
+            };
 
             //eventos
 
             //cargar datos por primera vez
             $scope.getPagedDataInitial = function () {
-                setTimeout(function () {
-                    $scope.pagingOptions.currentPage = 1;
-                    SocioService.getSocios(false, true, $scope.getDesde(), $scope.getHasta()).then(function(data){
+                $scope.pagingOptions.currentPage = 1;
+                SocioService.getSocios(false, true, $scope.getDesde(), $scope.getHasta()).then(function(data){
+                    $scope.sociosList = data;
+                    $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                });
+                SocioService.count().then(function(data){
+                    $scope.totalServerItems = data;
+                });
+            };
+            $scope.getPagedDataInitial();
+
+            //buscar con enter
+            $scope.getPagedDataSearched = function () {
+                if ($scope.filterOptions.filterText) {
+                    var ft = $scope.filterOptions.filterText.toUpperCase();
+                    SocioService.findByFilterText(ft, false, true,$scope.getDesde(), $scope.getHasta()).then(function (data){
                         $scope.sociosList = data;
                         $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
                     SocioService.count().then(function(data){
                         $scope.totalServerItems = data;
                     });
-                }, 100);
-            };
-            $scope.getPagedDataInitial();
-
-            //buscar con enter
-            $scope.getPagedDataSearched = function () {
-                setTimeout(function () {
-                    if ($scope.filterOptions.filterText) {
-                        var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft, false, true,$scope.getDesde(), $scope.getHasta()).then(function (data){
-                            $scope.sociosList = data;
-                            $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                        });
-                        SocioService.count().then(function(data){
-                            $scope.totalServerItems = data;
-                        });
-                    } else {
-                        $scope.getPagedDataInitial();
-                    }
-                }, 100);
+                } else {
+                    $scope.getPagedDataInitial();
+                }
             };
 
             $scope.$watch(
@@ -83,7 +79,7 @@ define(['../module'], function (controllers) {
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
                     } else {
-                        SocioService.getSocios($scope.getDesde(), $scope.getHasta(), false, true).then(function(data){
+                        SocioService.getSocios(false, true, $scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
