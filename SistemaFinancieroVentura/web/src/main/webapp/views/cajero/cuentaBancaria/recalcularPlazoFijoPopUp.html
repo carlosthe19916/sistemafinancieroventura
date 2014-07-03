@@ -1,0 +1,75 @@
+<div>
+    <div>
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()">&times;</button>
+            <h4 class="modal-title">Sing in</h4>
+        </div>
+        <div class="modal-body">
+            <form name="$parent.formRecalcularPopUp" ng-submit="ok()" class="form-horizontal" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Monto:</label>
+                    <div class="col-sm-4">
+                        <label ng-bind="view.saldo | currency: view.moneda.simbolo" class="form-control"></label>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : (formRecalcularPopUp.tasaInteres.$invalid && formRecalcularPopUp.tasaInteres.$dirty)}">
+                    <label class="col-sm-2 control-label">Tasa:</label>
+                    <div class="col-sm-6">
+                        <input type="text" name="tasaInteres" class="form-control" ng-model="view.tasaInteres" required>
+                        <div ng-show="formRecalcularPopUp.tasaInteres.$invalid &&  formRecalcularPopUp.tasaInteres.$dirty">
+                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.required">Ingrese tasa.</span>
+                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.pattern">Tasa invalida.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : (formRecalcularPopUp.fechaIncicio.$invalid && formRecalcularPopUp.fechaIncicio.$dirty) || (formRecalcularPopUp.fechaFin.$invalid && formRecalcularPopUp.fechaFin.$dirty)}">
+                    <label class="col-sm-2 control-label">Fecha I/F:</label>
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <input type="text" name="fechaInicio" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="view.fechaApertura" is-open="openedApertura" datepicker-options="dateOptions" ng-required="true" required="required">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-disabled="true">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </button>
+                            </span>
+                        </div>
+                        <div ng-show="formRecalcularPopUp.fechaInicio.$invalid &&  formRecalcularPopUp.fechaInicio.$dirty">
+                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.required">Ingrese F.inicio.</span>
+                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.pattern">F.inicio invalida.</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <input type="text" name="fechaFin" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="view.fechaCierre" is-open="openedCierre" datepicker-options="dateOptions" ng-required="true" close-text="Close" required="required">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="openCierre($event)">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </button>
+                            </span>
+                        </div>
+                        <div ng-show="formRecalcularPopUp.fechaFin.$invalid &&  formRecalcularPopUp.fechaFin.$dirty">
+                            <span class="help-block" ng-show="formRecalcularPopUp.fechaFin.$error.required">Ingrese F.inicio.</span>
+                            <span class="help-block" ng-show="formRecalcularPopUp.fechaFin.$error.pattern">F.inicio invalida.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Periodo:</label>
+                    <div class="col-sm-4">
+                        <label ng-bind="view.periodo" class="form-control"></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Total:</label>
+                    <div class="col-sm-4">
+                        <label ng-bind="view.total | currency: view.moneda.simbolo" class="form-control"></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" ng-click="ok()">Aceptar</button>
+            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

@@ -19,7 +19,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.IdClass;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -43,7 +42,6 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
-import org.ventura.sistemafinanciero.entity.SocioView;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
@@ -51,7 +49,6 @@ import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
-import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
@@ -623,11 +620,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		
 		if(dateDesde == null || dateHasta == null){
 			Calendar calendar = Calendar.getInstance();
-			//LocalDate localDateHasta = new LocalDate(calendar.getTime());			
-			//LocalDate localDateDesde = localDateHasta.minusDays(30);
+			LocalDate localDateHasta = new LocalDate(calendar.getTime());			
+			LocalDate localDateDesde = localDateHasta.minusDays(30);
 			
-			//desdeQuery = localDateDesde.toDateTimeAtStartOfDay().toDate();
-			//hastaQuery = localDateHasta.toDateTimeAtStartOfDay().toDate();	
+			desdeQuery = localDateDesde.toDateTimeAtStartOfDay().toDate();
+			hastaQuery = localDateHasta.toDateTimeAtStartOfDay().toDate();	
 		} else {
 			desdeQuery = dateDesde;
 			hastaQuery = dateHasta;
@@ -768,7 +765,13 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		if(cuentaBancaria == null)
 			throw new RollbackFailureException("Cuenta bancaria no encontrada");
 		if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.CONGELADO))
-			throw new RollbackFailureException("La cuenta no esta activa, no se puede congelar");
+			throw new RollbackFailureException("La cuenta no esta congelada, no se puede descongelar");
+		if(cuentaBancaria.getTipoCuentaBancaria().equals(TipoCuentaBancaria.PLAZO_FIJO)){
+			Date fechaActual = Calendar.getInstance().getTime();
+			Date fechaCierre = cuentaBancaria.getFechaCierre();
+			if(fechaActual.compareTo(fechaCierre) != 1)
+				throw new RollbackFailureException("Cuenta PLAZO_FIJO, no vencio aun, no se puede descongelar");
+		}
 		cuentaBancaria.setEstado(EstadoCuentaBancaria.ACTIVO);
 		cuentaBancariaDAO.update(cuentaBancaria);
 	}
@@ -802,6 +805,137 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 				return cuentaBancaria;
 			}
 		return null;
+	}
+
+	@Override
+	public void recalcularCuentaPlazoFijo(BigInteger id, int periodo, BigDecimal tasaInteres) throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(id);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta no encontrada");
+		if(cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.INACTIVO))
+			throw new RollbackFailureException("Cuenta inactiva, no se puede recalcular");
+		
+		//carlos
+		LocalDate inicio = new LocalDate(cuentaBancaria.getFechaApertura());
+		LocalDate fin = inicio.plusDays(periodo);
+		
+		//actualizando cuenta
+		cuentaBancaria.setFechaCierre(fin.toDateTimeAtStartOfDay().toDate());		
+		
+		Set<CuentaBancariaTasa> tasas = cuentaBancaria.getCuentaBancariaTasas();
+		CuentaBancariaTasa tasaInteresCuentaBancaria = null;
+		for (CuentaBancariaTasa cuentaBancariaTasa : tasas) {
+			tasaInteresCuentaBancaria = cuentaBancariaTasa;
+		}
+		if(tasaInteresCuentaBancaria == null)
+			throw new RollbackFailureException("Tasa de interes no encontrada");
+		tasaInteresCuentaBancaria.setValor(tasaInteres);
+		
+		
+		cuentaBancariaDAO.update(cuentaBancaria);
+		cuentaBancariaTasaDAO.update(tasaInteresCuentaBancaria);
+	}
+
+	@Override
+	public BigInteger[] renovarCuentaPlazoFijo(BigInteger idCuenta, int periodo, BigDecimal tasaInteres) throws RollbackFailureException {
+		
+		CuentaBancaria cuentaBancariaOld = cuentaBancariaDAO.find(idCuenta);
+		if(cuentaBancariaOld == null)
+			throw new RollbackFailureException("Cuenta bancaria no encontrada");
+		if(!cuentaBancariaOld.getEstado().equals(EstadoCuentaBancaria.ACTIVO))
+			throw new RollbackFailureException("Cuenta bancaria no activa, no se puede renovar.");
+		
+		Calendar calendar = Calendar.getInstance();
+		Date fechaActual = calendar.getTime();
+		
+		if(fechaActual.compareTo(cuentaBancariaOld.getFechaCierre()) != 1)
+			throw new RollbackFailureException("Cuenta aun no vence, no se puede renovar");
+				
+		//crear nueva cuenta bancaria
+		Agencia agencia = ProduceObject.getAgenciafromNumeroCuenta(cuentaBancariaOld.getNumeroCuenta());
+			
+		Moneda moneda = cuentaBancariaOld.getMoneda();				
+		int cantRetirantes = cuentaBancariaOld.getCantidadRetirantes();
+		Set<Titular> titularesOld = cuentaBancariaOld.getTitulars();
+		Set<Beneficiario> beneficiariosOld = cuentaBancariaOld.getBeneficiarios();		
+		Socio socio = cuentaBancariaOld.getSocio();
+		PersonaNatural personaNaturalSocio = socio.getPersonaNatural();
+		PersonaJuridica personaJuridicaSocio = socio.getPersonaJuridica();
+		if(personaNaturalSocio == null && personaJuridicaSocio == null)
+			throw new RollbackFailureException("Socio no tiene una persona asociada");
+		if(personaNaturalSocio != null && personaJuridicaSocio != null)
+			throw new RollbackFailureException("Socio tiene persona natural y juridica asociada");			
+				
+		//obtener el monto de la nueva cuenta
+		BigDecimal monto = cuentaBancariaOld.getSaldo();
+		
+		
+		/**********************CREAR NUEVA CUENTA A PLAZO FIJO************************/																					
+		//crear cuenta bancaria			
+		Date date = calendar.getTime();
+		LocalDate inicio = new LocalDate(date.getTime());
+		LocalDate fin = inicio.plusDays(periodo);
+		
+		CuentaBancaria cuentaBancariaNew = new CuentaBancaria();
+		cuentaBancariaNew.setNumeroCuenta(agencia.getCodigo());
+		cuentaBancariaNew.setBeneficiarios(null);
+		cuentaBancariaNew.setCantidadRetirantes(cantRetirantes);
+		cuentaBancariaNew.setEstado(EstadoCuentaBancaria.ACTIVO);
+		cuentaBancariaNew.setFechaApertura(inicio.toDateTimeAtStartOfDay().toDate());
+		cuentaBancariaNew.setFechaCierre(fin.toDateTimeAtStartOfDay().toDate());
+		cuentaBancariaNew.setMoneda(moneda);
+		cuentaBancariaNew.setSaldo(BigDecimal.ZERO);
+		cuentaBancariaNew.setSocio(socio);
+		cuentaBancariaNew.setTipoCuentaBancaria(TipoCuentaBancaria.PLAZO_FIJO);
+		cuentaBancariaNew.setTitulars(null);
+		cuentaBancariaDAO.create(cuentaBancariaNew);
+		//generar el numero de cuenta de cuenta
+		String numeroCuenta = ProduceObject.getNumeroCuenta(cuentaBancariaNew);
+		cuentaBancariaNew.setNumeroCuenta(numeroCuenta);
+		cuentaBancariaDAO.update(cuentaBancariaNew);
+		
+		for (Titular titularOld : titularesOld) {
+			PersonaNatural persona = titularOld.getPersonaNatural();
+			
+			Titular titularNew = new Titular();
+			titularNew.setCuentaBancaria(cuentaBancariaNew);
+			titularNew.setPersonaNatural(persona);
+			titularDAO.create(titularNew);
+		}
+		if(beneficiariosOld != null)
+			for (Beneficiario beneficiarioOld : beneficiariosOld) {
+				Beneficiario beneficiarioNew = new Beneficiario();
+				beneficiarioNew.setIdBeneficiario(null);
+				beneficiarioNew.setApellidoPaterno(beneficiarioOld.getApellidoPaterno());
+				beneficiarioNew.setApellidoMaterno(beneficiarioOld.getApellidoMaterno());
+				beneficiarioNew.setNombres(beneficiarioOld.getNombres());
+				beneficiarioNew.setNumeroDocumento(beneficiarioOld.getNumeroDocumento());
+				beneficiarioNew.setPorcentajeBeneficio(beneficiarioOld.getPorcentajeBeneficio());
+				beneficiarioNew.setCuentaBancaria(cuentaBancariaNew);
+				beneficiarioDAO.create(beneficiarioNew);
+			}
+		
+		//crear las tasas de interes
+		//crear intereses		
+		CuentaBancariaTasa cuentaBancariaTasa = new CuentaBancariaTasa();
+		cuentaBancariaTasa.setCuentaBancaria(cuentaBancariaNew);
+		cuentaBancariaTasa.setValor(tasaInteres);
+		cuentaBancariaTasaDAO.create(cuentaBancariaTasa);
+		
+		String numeroCuentaOld = cuentaBancariaOld.getNumeroCuenta();
+		String numeroCuentaNew = cuentaBancariaNew.getNumeroCuenta();
+		//crear transferencia
+		BigInteger idTransferencia = cajaSessionService.crearTransferenciaBancaria(numeroCuentaOld, numeroCuentaNew, monto, "TRANSFERENCIA DE RENOVACION DE CUENTA A PLAZO FIJO");
+		
+		
+		cuentaBancariaOld.setEstado(EstadoCuentaBancaria.INACTIVO);
+		cuentaBancariaNew.setEstado(EstadoCuentaBancaria.CONGELADO);
+		cuentaBancariaDAO.update(cuentaBancariaOld);
+		cuentaBancariaDAO.update(cuentaBancariaNew);		
+		
+		BigInteger idCuentaBancariaNew = cuentaBancariaNew.getIdCuentaBancaria();		
+		
+		return new BigInteger[]{idCuentaBancariaNew, idTransferencia};
 	}
 
 

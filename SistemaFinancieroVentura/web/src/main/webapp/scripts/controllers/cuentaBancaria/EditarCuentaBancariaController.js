@@ -161,7 +161,7 @@ define(['../module'], function (controllers) {
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         },
                         function error(error){
-                            $scope.alerts = [{ type: "warning", msg: "Error al congelar cuenta, intente nuevamente."}];
+                            $scope.alerts = [{ type: "warning", msg: "Error:"+error.data.message+"."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         }
                     );
@@ -176,15 +176,59 @@ define(['../module'], function (controllers) {
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         },
                         function error(error){
-                            $scope.alerts = [{ type: "warning", msg: "Error al congelar cuenta, intente nuevamente."}];
+                            $scope.alerts = [{ type: "warning", msg: "Error:"+error.data.message+"."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
                         }
                     );
                 }
             };
-            //carlos
+            //cuenta a plazo fijo carlos
+            $scope.recalcularPlazoFijo = function(){
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/cuentaBancaria/recalcularPlazoFijoPopUp.html',
+                    controller: "RecalcularPlazoFijoPopUpController",
+                    resolve: {
+                        cuentaBancaria: function () {
+                            var cuenta = {
+                                moneda: $scope.cuentaBancaria.moneda,
+                                saldo: $scope.cuentaBancaria.saldo,
+                                tasaInteres: $scope.cuentaBancaria.tasaInteres,
+                                fechaApertura: $scope.cuentaBancaria.fechaApertura,
+                                fechaCierre: $scope.cuentaBancaria.fechaCierre
+                            };
+                            return cuenta;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (result) {
+                    var cuenta = {
+                        periodo: result.periodo,
+                        tasaInteres: result.tasaInteres
+                    };
+                    CuentaBancariaService.recalcularPlazoFijo($scope.cuentaBancaria.id, result).then(
+                        function(data){
+                            $scope.loadCuentaBancaria();
+                        },
+                        function error(error){
+                            $scope.alerts = [{ type: "warning", msg: "Error:"+error.data.message+"."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                }, function () {
+                });
+            };
+
+            $scope.renovarPlazoFijo = function(){
+
+            };
+
             $scope.cancelarCuentaBancaria = function(){
                 if(!angular.isUndefined($scope.cuentaBancaria)){
+                    if($scope.cuentaBancaria.estado != 'ACTIVO'){
+                        $scope.alerts = [{ type: "warning", msg: "Error: La cuenta debe de estar activa."}];
+                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        return;
+                    }
                     $state.transitionTo("app.socio.cancelarCuentaBancaria", { id: $scope.id });
                 }
             };

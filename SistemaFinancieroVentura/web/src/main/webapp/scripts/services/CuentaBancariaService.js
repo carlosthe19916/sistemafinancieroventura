@@ -81,6 +81,9 @@ define(['./module'], function (services) {
                 },
                 cancelarCuenta: function(id){
                     return Restangular.one("cuentaBancaria/"+id).remove();
+                },
+                recalcularPlazoFijo: function(idCuenta, data){
+                    return Restangular.one("cuentaBancaria/"+idCuenta+"/recalcularPlazoFijo").customPUT(data,'',{},{});
                 }
             }
         }])

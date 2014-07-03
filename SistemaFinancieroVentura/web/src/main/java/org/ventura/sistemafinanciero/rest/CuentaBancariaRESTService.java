@@ -576,6 +576,33 @@ public class CuentaBancariaRESTService {
 		return result;		
 	}
 	
+	@PUT
+	@Path("/{id}/recalcularPlazoFijo")
+	@Produces({ "application/xml", "application/json" })
+	public Response recalcularPlazoFijo(@PathParam("id")BigInteger id, CuentaPlazoFijoDTO cuenta) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null || cuenta == null){
+			model = Json.createObjectBuilder().add("message", "id no encontrado").build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {			
+			BigDecimal tasaInteres = cuenta.getTasaInteres();
+			int periodo = cuenta.getPeriodo();
+			cuentaBancariaService.recalcularCuentaPlazoFijo(id, periodo, tasaInteres);
+			model = Json.createObjectBuilder().add("message", "Success").build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
+	}
+	
 	@DELETE
 	@Path("/{id}")
 	@Produces({ "application/xml", "application/json" })

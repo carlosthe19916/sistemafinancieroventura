@@ -3,7 +3,7 @@ define(['../module'], function (controllers) {
     controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$modalInstance", "$state","focus", "CuentaBancariaService","VariablesService",
         function($scope, $modalInstance, $state,focus, CuentaBancariaService, VariablesService) {
 
-            $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();;
+            $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();
             $scope.tipoPersonas = VariablesService.getTipoPersonas();;
             $scope.tipoEstadoCuenta = [];
             $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioActivo());

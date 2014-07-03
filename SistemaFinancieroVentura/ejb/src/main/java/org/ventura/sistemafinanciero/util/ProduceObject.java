@@ -2,9 +2,7 @@ package org.ventura.sistemafinanciero.util;
 
 import java.math.BigInteger;
 
-import javax.inject.Inject;
-
-import org.ventura.sistemafinanciero.dao.DAO;
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.Moneda;
@@ -63,6 +61,11 @@ public class ProduceObject {
 		}
 		
 		return numeroCuenta;
+	}
+	
+	public static Agencia getAgenciafromNumeroCuenta(String numeroCuenta){
+		Agencia agencia = null;
+		return agencia;
 	}
 	
 	public static Moneda getMonedaPrincipal(){
