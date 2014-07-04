@@ -1,11 +1,22 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('VoucherTransaccionAporteController', ["$scope", "$state", "$filter", "SocioService", "TransitionService",
-        function($scope, $state, $filter, SocioService, TransitionService) {
+    controllers.controller('VoucherTransaccionAporteController', ["$scope", "$state", "$filter","focus", "SocioService", "RedirectService",
+        function($scope, $state, $filter,focus, SocioService, RedirectService) {
+
+            $scope.focusElements = {
+                imprimir: 'focusImprimir',
+                salir: 'focusSalir'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.imprimir);
+            };
+            $scope.setInitialFocus();
 
     		SocioService.getVoucherCuentaAporte($scope.id).then(
-                function(transaccionCuentaAporte){
-                    $scope.transaccionCuentaAporte = transaccionCuentaAporte;
+                function(data){
+                    $scope.transaccionCuentaAporte = data;
                 },
                 function error(error){
                     alert("Transaccion Cuenta Aporte no Encontrado");
@@ -13,7 +24,17 @@ define(['../module'], function (controllers) {
             );
 
             $scope.salir = function(){
-                $state.transitionTo(TransitionService.getUrl(), TransitionService.getParameters());
+                $scope.redireccion();
+            };
+
+            $scope.redireccion = function(){
+                if(RedirectService.haveNext()){
+                    var nextState = RedirectService.getNextState();
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
+                } else {
+                    $state.transitionTo('app.transaccion.aporte');
+                }
             };
 
             $scope.imprimir = function(){
@@ -65,6 +86,8 @@ define(['../module'], function (controllers) {
                 qz.append("\x1D\x56\x41");														//cortar papel
                 qz.append("\x1B\x40");
                 qz.print();
+
+                focus($scope.focusElements.salir);
             };
         }]);
 });

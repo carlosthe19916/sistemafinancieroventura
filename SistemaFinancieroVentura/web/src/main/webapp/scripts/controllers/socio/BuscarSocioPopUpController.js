@@ -1,7 +1,17 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarSocioPopUpController", ["$scope","$modalInstance","$state","$timeout","SocioService",
-        function($scope,$modalInstance,$state,$timeout,SocioService) {
+    controllers.controller("BuscarSocioPopUpController", ["$scope","$modalInstance","$state","$timeout","focus","SocioService",
+        function($scope,$modalInstance,$state,$timeout,focus,SocioService) {
+
+            $scope.focusElements = {
+                filterText: 'focusFilterText'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.filterText);
+            };
+            $scope.setInitialFocus();
 
             //configurar tabla
             $scope.sociosList = [];
@@ -59,6 +69,7 @@ define(['../module'], function (controllers) {
                 } else {
                     $scope.getPagedDataInitial();
                 }
+                $scope.setInitialFocus();
             };
 
             $scope.$watch(

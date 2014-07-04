@@ -47,16 +47,14 @@ define(['../module'], function (controllers) {
                 return $scope.pagingOptions.pageSize;
             };
             $scope.getPagedDataInitial = function () {
-                setTimeout(function () {
-                    $scope.pagingOptions.currentPage = 1;
-                    CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta, $scope.getDesde(), $scope.getHasta()).then(function(data){
-                        $scope.cuentasList = data;
-                        $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                    });
-                    CuentaBancariaService.count().then(function(data){
-                        $scope.totalServerItems = data;
-                    });
-                }, 100);
+                $scope.pagingOptions.currentPage = 1;
+                CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta, $scope.getDesde(), $scope.getHasta()).then(function(data){
+                    $scope.cuentasList = data;
+                    $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                });
+                CuentaBancariaService.count().then(function(data){
+                    $scope.totalServerItems = data;
+                });
             };
             $scope.getPagedDataInitial();
             $scope.getPagedDataSearched = function () {
@@ -100,7 +98,6 @@ define(['../module'], function (controllers) {
                     }
                 },true);
 
-            var gridLayoutPlugin = new ngGridLayoutPlugin();
             $scope.gridOptions = {
                 data: 'cuentasList',
                 multiSelect: false,
@@ -109,7 +106,6 @@ define(['../module'], function (controllers) {
                 totalServerItems: 'totalServerItems',
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
-                plugins: [gridLayoutPlugin],
                 columnDefs: [
                     {field:"tipoCuenta", displayName:'TIPO CTA.', width:80},
                     {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:135},
@@ -120,9 +116,6 @@ define(['../module'], function (controllers) {
                     {field:"estadoCuenta", displayName:'ESTADO',width:80},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
                 ]
-            };
-            $scope.updateGridLayout = function(){
-                gridLayoutPlugin.updateGridLayout();
             };
 
             $scope.editCuenta = function(row){
