@@ -13,7 +13,7 @@ define(['../../module'], function (controllers) {
             $scope.setInitialFocus = function($event){
                 if(!angular.isUndefined($event))
                     $event.preventDefault();
-                focus($scope.focusElements.tipoPersona);
+                focus($scope.focusElements.buscarCuenta);
             };
             $scope.setInitialFocus();
 
@@ -79,9 +79,9 @@ define(['../../module'], function (controllers) {
                     size: 'lg'
                 });
                 modalInstance.result.then(function (cuenta) {
-                    focus($scope.focusElements.tipotransaccion);
                     $scope.objetosCargados.cuentaBancaria = cuenta;
                     $scope.view.numeroCuenta = $scope.objetosCargados.cuentaBancaria.numeroCuenta;
+                    focus($scope.focusElements.tipoTransaccion);
                 }, function () {
                 });
             };

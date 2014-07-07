@@ -20,7 +20,7 @@
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && (control.submitted || formCrearTransaccion.numeroCuenta.$dirty)}">
                                         <label>N&uacute;mero Cuenta</label>
                                         <div class="input-group">
-                                            <input type="text" name="numeroCuenta" ng-model="view.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta" readonly required/>
+                                            <input focus-on="focusBuscarCuenta" type="text" name="numeroCuenta" ng-model="view.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta" readonly required/>
                                               <span class="input-group-btn">
                                                 <button focus-on="focusBuscarCuenta" type="button" class="btn btn-default" ng-click="openBuscarCuentaBancaria()" autofocus>
                                                     <span class="glyphicon glyphicon-search"></span>
@@ -54,7 +54,7 @@
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && (control.submitted || formCrearTransaccion.monto.$dirty)}">
                                         <label>Monto</label>
                                         <div class="input-group">
-                                            <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" class="form-control" placeholder="Monto" required/>
+                                            <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" ng-minlength="1" ng-maxlength="18" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="view.numeroCuenta === undefined">
                                                     <span class="glyphicon glyphicon-th-list"></span>
@@ -65,6 +65,15 @@
                                             <p class="help-block" ng-show="formCrearTransaccion.monto.$error.required">
                                                 Ingrese monto valido.
                                             </p>
+                                            <p class="help-block" ng-show="formCrearTransaccion.monto.$error.minlength">
+                                                Numero invalido.
+                                            </p>
+                                            <p class="help-block" ng-show="formCrearTransaccion.monto.$error.maxlength">
+                                                Ingrese menos caracteres.
+                                            </p>
+                                            <p class="help-block" ng-show="formCrearTransaccion.monto.$error.pattern">
+                                                Numero invalido (Ejemplo: 99.99).
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -72,8 +81,8 @@
                                     <div class="form-group">
                                         <label>&nbsp;</label>
                                         <kbd style="display: block;margin-top: 3px;">
-                                            <span ng-bind="objetosCargados.cuentaBancaria.moneda.simbolo"/>
-                                            <span ng-bind="view.monto | number : 2"/>
+                                            <span ng-bind="objetosCargados.cuentaBancaria.moneda.simbolo"></span>
+                                            <span ng-bind="(view.monto * getTipoTransaccion().factor) | number : 2"/>
                                         </kbd>
                                     </div>
                                 </div>
