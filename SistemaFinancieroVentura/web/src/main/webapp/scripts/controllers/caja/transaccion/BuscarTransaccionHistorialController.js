@@ -3,8 +3,15 @@ define(['../../module'], function (controllers) {
     controllers.controller("BuscarTransaccionHistorialController", ["$scope", "$state", "ngProgress","focus", "CajaSessionService",
         function($scope, $state, ngProgress,focus, CajaSessionService) {
 
-            ngProgress.color("#2d6ca2");
-            focus("firstFocus");
+            $scope.focusElements = {
+                filterText: 'focusFilterText'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.filterText);
+            };
+            $scope.setInitialFocus();
 
             $scope.nuevo = function(){
                 $state.transitionTo("app.socio.crearCuentaBancaria");
@@ -32,28 +39,25 @@ define(['../../module'], function (controllers) {
                 }
             };
             $scope.getPagedDataInitial = function () {
-                setTimeout(function () {
-                    $scope.pagingOptions.currentPage = 1;
-                    CajaSessionService.getHistorialTransaccion().then(function(data){
-                        $scope.historialList = data;
-                        $scope.setPagingData($scope.historialList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                    });
-                }, 100);
+                $scope.pagingOptions.currentPage = 1;
+                CajaSessionService.getHistorialTransaccion().then(function(data){
+                    $scope.historialList = data;
+                    $scope.setPagingData($scope.historialList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                });
             };
             $scope.getPagedDataInitial();
             $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-                setTimeout(function () {
-                    var data;
-                    if (searchText) {
-                        var ft = searchText.toLowerCase();
-                        data = $scope.historialList.filter(function(item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
-                        });
-                        $scope.setPagingData(data,page,pageSize);
-                    } else {
-                        $scope.setPagingData($scope.historialList,page,pageSize);
-                    }
-                }, 100);
+                var data;
+                if (searchText) {
+                    var ft = searchText.toLowerCase();
+                    data = $scope.historialList.filter(function(item) {
+                        return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                    });
+                    $scope.setPagingData(data,page,pageSize);
+                } else {
+                    $scope.setPagingData($scope.historialList,page,pageSize);
+                }
+                $scope.setInitialFocus();
             };
 
             $scope.$watch(
