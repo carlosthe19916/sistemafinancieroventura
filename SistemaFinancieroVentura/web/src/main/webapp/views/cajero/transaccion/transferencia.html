@@ -20,9 +20,9 @@
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransferencia.numeroCuentaOrigen.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaOrigen.$dirty)}">
                                         <label>N&uacute;mero Cuenta Origen</label>
                                         <div class="input-group">
-                                            <input type="text" name="numeroCuentaOrigen" ng-model="view.cuentaBancariaOrigen.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta Origen" readonly required autofocus/>
+                                            <input type="text" name="numeroCuentaOrigen" ng-model="view.numeroCuentaOrigen" class="form-control" placeholder="N&uacute;mero de Cuenta Origen" readonly required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancariaOrigen()">
+                                                <button focus-on="focusBuscarCuentaOrigen" type="button" class="btn btn-default" ng-click="openBuscarCuentaBancariaOrigen()" autofocus>
                                                     <span class="glyphicon glyphicon-search"></span>
                                                 </button>
                                               </span>
@@ -40,9 +40,9 @@
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransferencia.numeroCuentaDestino.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaDestino.$dirty)}">
                                         <label>N&uacute;mero Cuenta Destino</label>
                                         <div class="input-group">
-                                            <input type="text" name="numeroCuentaDestino" ng-model="view.cuentaBancariaDestino.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta Destino" readonly required/>
+                                            <input type="text" name="numeroCuentaDestino" ng-model="view.numeroCuentaDestino" class="form-control" placeholder="N&uacute;mero de Cuenta Destino" readonly required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openBuscarCuentaBancariaDestino()">
+                                                <button focus-on="focusBuscarCuentaDestino" type="button" class="btn btn-default" ng-click="openBuscarCuentaBancariaDestino()">
                                                     <span class="glyphicon glyphicon-search"></span>
                                                 </button>
                                               </span>
@@ -60,9 +60,9 @@
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransferencia.monto.$invalid && (control.submitted || formCrearTransferencia.monto.$dirty)}">
                                         <label>Monto</label>
                                         <div class="input-group">
-                                            <input type="text" name="monto" ng-model="view.monto" class="form-control" placeholder="Monto" required/>
+                                            <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" ng-minlength="1" ng-maxlength="18" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="!view.cuentaBancariaOrigen">
+                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="!objetosCargados.cuentaBancariaOrigen">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </button>
                                               </span>
@@ -70,6 +70,15 @@
                                         <div ng-show="formCrearTransferencia.monto.$invalid && (control.submitted || formCrearTransferencia.monto.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransferencia.monto.$error.required">
                                                 Ingrese monto valido.
+                                            </p>
+                                            <p class="help-block" ng-show="formCrearTransferencia.monto.$error.minlength">
+                                                Numero invalido.
+                                            </p>
+                                            <p class="help-block" ng-show="formCrearTransferencia.monto.$error.maxlength">
+                                                Ingrese menos caracteres.
+                                            </p>
+                                            <p class="help-block" ng-show="formCrearTransferencia.monto.$error.pattern">
+                                                Numero invalido (Ejemplo: 99.99).
                                             </p>
                                         </div>
                                     </div>
@@ -106,19 +115,19 @@
                                         <table class="table">
                                             <tr>
                                                 <td style="font-weight: bold;">Socio:</td>
-                                                <td><span ng-bind="view.cuentaBancariaOrigen.socio"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaOrigen.socio"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">Tipo y N&deg; Doc.:</td>
-                                                <td><span ng-bind-template="{{view.cuentaBancariaOrigen.tipoDocumento}}/{{view.cuentaBancariaOrigen.numeroDocumento}}"></span></td>
+                                                <td><span ng-bind-template="{{objetosCargados.cuentaBancariaOrigen.tipoDocumento}}/{{objetosCargados.cuentaBancariaOrigen.numeroDocumento}}"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">Tipo Cuenta:</td>
-                                                <td><span ng-bind="view.cuentaBancariaOrigen.tipoCuenta"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaOrigen.tipoCuenta"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">N&deg; Cuenta:</td>
-                                                <td><span ng-bind="view.cuentaBancariaOrigen.numeroCuenta"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaOrigen.numeroCuenta"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">
@@ -126,12 +135,12 @@
                                                 </td>
                                                 <td>
                                                     <span class="label label-info">Info</span>
-                                                    <span ng-bind="view.cuentaBancariaOrigen.moneda.denominacion"></span>
+                                                    <span ng-bind="objetosCargados.cuentaBancariaOrigen.moneda.denominacion"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">Estado Cuenta:</td>
-                                                <td><span ng-bind="view.cuentaBancariaOrigen.estadoCuenta"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaOrigen.estadoCuenta"></span></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -141,19 +150,19 @@
                                         <table class="table">
                                             <tr>
                                                 <td style="font-weight: bold;">Socio:</td>
-                                                <td><span ng-bind="view.cuentaBancariaDestino.socio"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaDestino.socio"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">Tipo y N&deg; Doc.:</td>
-                                                <td><span ng-bind-template="{{view.cuentaBancariaDestino.tipoDocumento}}/{{view.cuentaBancariaDestino.numeroDocumento}}"></span></td>
+                                                <td><span ng-bind-template="{{objetosCargados.cuentaBancariaDestino.tipoDocumento}}/{{objetosCargados.cuentaBancariaDestino.numeroDocumento}}"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">Tipo Cuenta:</td>
-                                                <td><span ng-bind="view.cuentaBancariaDestino.tipoCuenta"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaDestino.tipoCuenta"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">N&deg; Cuenta:</td>
-                                                <td><span ng-bind="view.cuentaBancariaDestino.numeroCuenta"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaDestino.numeroCuenta"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">
@@ -161,12 +170,12 @@
                                                 </td>
                                                 <td>
                                                     <span class="label label-info">Info</span>
-                                                    <span ng-bind="view.cuentaBancariaDestino.moneda.denominacion"></span>
+                                                    <span ng-bind="objetosCargados.cuentaBancariaDestino.moneda.denominacion"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold;">Estado Cuenta:</td>
-                                                <td><span ng-bind="view.cuentaBancariaDestino.estadoCuenta"></span></td>
+                                                <td><span ng-bind="objetosCargados.cuentaBancariaDestino.estadoCuenta"></span></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -192,7 +201,7 @@
                                     </div>
                                 </div>
                                 <table class="table table-condensed table-striped">
-                                    <tr ng-repeat="titular in view.titularesOrigen | filter:{ estado: true }">
+                                    <tr ng-repeat="titular in objetosCargados.titularesOrigen | filter:{ estado: true }">
                                         <td><span ng-bind-template="{{titular.personaNatural.tipoDocumento.abreviatura}}/{{titular.personaNatural.numeroDocumento}}"></span></td>
                                         <td><span ng-bind-template="{{titular.personaNatural.apellidoPaterno}}&nbsp;{{titular.personaNatural.apellidoMaterno}},{{titular.personaNatural.nombres}}"></span></td>
                                         <td>

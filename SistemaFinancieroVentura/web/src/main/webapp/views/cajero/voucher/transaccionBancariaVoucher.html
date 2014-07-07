@@ -69,7 +69,8 @@
                         <tr>
                             <td colspan="2">IMPORTE PAGADO:</td>
                             <td colspan="2" style="text-align: right;">
-                                <span ng-bind="transaccionCuentaBancaria.monto | currency : transaccionCuentaBancaria.moneda.simbolo"/>
+                                <span ng-bind="transaccionCuentaBancaria.moneda.simbolo"></span>
+                                <span ng-bind="transaccionCuentaBancaria.monto | number : 2"/>
                             </td>
                         </tr>
                         <tr>
