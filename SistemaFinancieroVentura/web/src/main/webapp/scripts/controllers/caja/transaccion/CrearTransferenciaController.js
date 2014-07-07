@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransferenciaController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService","CajaSessionService","MonedaService","TransitionService",
-        function($scope, $state, $window, $filter, $modal,focus, CuentaBancariaService, CajaSessionService, MonedaService, TransitionService) {
+    controllers.controller('CrearTransferenciaController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService","CajaSessionService","MonedaService",
+        function($scope, $state, $window, $filter, $modal,focus, CuentaBancariaService, CajaSessionService, MonedaService) {
 
             $scope.viewState = 'app.transaccion.transferencia';
             $scope.focusElements = {

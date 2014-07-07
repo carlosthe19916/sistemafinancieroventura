@@ -1,9 +1,25 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CompraVentaController', ["$scope", "$state", "$window","$timeout","$filter", "$modal", "CuentaBancariaService", "CajaSessionService","MonedaService",
-        function($scope, $state, $window,$timeout,$filter, $modal, CuentaBancariaService, CajaSessionService, MonedaService) {
+    controllers.controller('CompraVentaController', ["$scope","$state","$window","$timeout","$filter","$modal","focus","CuentaBancariaService","CajaSessionService","MonedaService",
+        function($scope,$state,$window,$timeout,$filter,$modal,focus,CuentaBancariaService,CajaSessionService,MonedaService) {
 
-            $scope.control = {"success":false, "inProcess": false, "submitted":false};
+            $scope.viewState = 'app.transaccion.compraVenta';
+
+            $scope.focusElements = {
+                numeroDocumento: 'focusNumeroDocumento'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.numeroDocumento);
+            };
+            $scope.setInitialFocus();
+
+            $scope.control = {
+                success: false,
+                inProcess: false,
+                submitted : false
+            };
 
             $scope.view = {
                 "numeroDocumento": undefined,
@@ -131,14 +147,15 @@ define(['../../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
+
             $scope.buttonDisableState = function(){
                 return $scope.control.inProcess;
-            }
+            };
 
             $scope.cancel = function(){
 
-            }
+            };
 
         }]);
 });

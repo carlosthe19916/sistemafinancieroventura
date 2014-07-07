@@ -21,7 +21,7 @@
                             <label>DNI/RUC</label>
                             <label style="color: brown;">(*)</label>
                             <div class="input-group">
-                                <input type="text" name="numeroDocumento" ui-keypress="{13:'buscarCliente($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required autofocus/>
+                                <input focus-on="focusNumeroDocumento" type="text" name="numeroDocumento" ui-keypress="{13:'buscarCliente($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required autofocus/>
                                 <span class="input-group-btn">
                                   <button type="button" class="btn btn-default" ng-click="buscarCliente()">
                                       <span class="glyphicon glyphicon-search"></span>

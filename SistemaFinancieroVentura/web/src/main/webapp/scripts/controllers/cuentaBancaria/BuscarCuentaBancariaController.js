@@ -16,7 +16,9 @@ define(['../module'], function (controllers) {
             //variables para busqueda de cuentas
             $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();
             $scope.tipoPersonas = VariablesService.getTipoPersonas();
-            $scope.tipoEstadoCuenta = VariablesService.getEstadosCuentaBancaria();
+            $scope.tipoEstadoCuenta = [];
+            $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioActivo());
+            $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioCongelado());
 
             $scope.nuevo = function(){
                 $state.transitionTo("app.socio.crearCuentaBancaria");

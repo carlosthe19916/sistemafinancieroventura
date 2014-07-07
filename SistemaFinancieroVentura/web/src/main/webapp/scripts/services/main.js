@@ -3,6 +3,7 @@ define([
     './AgenciaSessionService',
     './BeneficiarioService',
     './CajaSessionService',
+    './CajaService',
     './CuentaBancariaService',
     './HistorialCajaService',
     './MaestroService',
@@ -15,7 +16,6 @@ define([
     './UsuarioSessionService',
     './UsuarioService',
     './PendienteCajaService',
-    './TransitionService',
     './RedirectService',
 
     './HotKeysFunctionsService',

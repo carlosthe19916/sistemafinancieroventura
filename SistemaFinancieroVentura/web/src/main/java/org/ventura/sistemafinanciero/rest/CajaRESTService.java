@@ -16,6 +16,9 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
+import java.math.BigInteger;
+
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -29,11 +32,18 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.ventura.sistemafinanciero.entity.Caja;
+import org.ventura.sistemafinanciero.entity.dto.VoucherCompraVenta;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransferenciaBancaria;
+import org.ventura.sistemafinanciero.service.CajaService;
+import org.ventura.sistemafinanciero.service.CajaSessionService;
 
 @Path("/caja")
 @Stateless
 public class CajaRESTService {
     
+	@EJB
+	private CajaService cajaService;
+	
 	@GET
 	@Path("/{id}")
 	@Produces({ "application/xml", "application/json" })
@@ -113,4 +123,13 @@ public class CajaRESTService {
 	public Response updateCaja(@PathParam("id") int id) {				
 		return null;
 	}
+	
+	@GET
+    @Path("{id}/voucherCompraVenta")  
+    @Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+    public Response getVoucherCompraVenta(@PathParam("id") BigInteger idTransfereciaCompraVenta){
+		VoucherCompraVenta voucherCompraVenta = cajaService.getVoucherCompraVenta(idTransfereciaCompraVenta);    	
+		return Response.status(Response.Status.OK).entity(voucherCompraVenta).build(); 
+    }
 }

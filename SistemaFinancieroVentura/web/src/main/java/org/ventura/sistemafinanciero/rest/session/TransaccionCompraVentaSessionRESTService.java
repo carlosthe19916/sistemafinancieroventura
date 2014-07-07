@@ -14,10 +14,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
-import org.ventura.sistemafinanciero.rest.dto.TransaccionBancariaDTO;
 import org.ventura.sistemafinanciero.rest.dto.TransaccionCompraVentaDTO;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 
@@ -27,7 +25,6 @@ public class TransaccionCompraVentaSessionRESTService {
 	
 	@EJB
 	private CajaSessionService cajaSessionService;
-
 
 	@RolesAllowed("CAJERO")
 	@POST

@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService", "CajaSessionService","MonedaService","TransitionService",
-        function($scope, $state, $window, $filter, $modal,focus,CuentaBancariaService, CajaSessionService, MonedaService, TransitionService) {
+    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService", "CajaSessionService","MonedaService",
+        function($scope, $state, $window, $filter, $modal,focus,CuentaBancariaService, CajaSessionService, MonedaService) {
 
             $scope.viewState = 'app.socio.crearCuentaBancaria';
 
