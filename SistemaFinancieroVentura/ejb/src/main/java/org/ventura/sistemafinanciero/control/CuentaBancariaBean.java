@@ -48,7 +48,9 @@ import org.ventura.sistemafinanciero.entity.TasaInteres;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.TransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.dto.VoucherTransaccionBancaria;
+import org.ventura.sistemafinanciero.entity.dto.VoucherTransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
@@ -87,6 +89,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	private DAO<Object, CuentaBancariaTasa> cuentaBancariaTasaDAO;
 	@Inject
 	private DAO<Object, TransaccionBancaria> transaccionBancariaDAO;
+	@Inject
+	private DAO<Object, TransferenciaBancaria> transferenciaBancariaDAO;
 	@Inject
 	private DAO<Object, Agencia> agenciaDAO;
 	@Inject
@@ -749,6 +753,66 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		}
 		return voucherTransaccion;
 	}
+	
+	@Override
+	public VoucherTransferenciaBancaria getVoucherTransferenciaBancaria(BigInteger idTransferencia) {
+		VoucherTransferenciaBancaria voucherTransaccion = new VoucherTransferenciaBancaria();
+		
+		// recuperando transaccion
+		TransferenciaBancaria transferencia = transferenciaBancariaDAO.find(idTransferencia);
+		CuentaBancaria cuentaBancariaOrigen = transferencia.getCuentaBancariaOrigen();
+		CuentaBancaria cuentaBancariaDestino = transferencia.getCuentaBancariaDestino();
+		Socio socio = cuentaBancariaOrigen.getSocio();
+		Moneda moneda = cuentaBancariaOrigen.getMoneda();
+		Caja caja = transferencia.getHistorialCaja().getCaja();
+		Set<BovedaCaja> list = caja.getBovedaCajas();
+		Agencia agencia = null;
+		for (BovedaCaja bovedaCaja : list) {
+			agencia = bovedaCaja.getBoveda().getAgencia();
+			break;
+		}
+		
+		Hibernate.initialize(moneda);
+		
+		//Poniendo datos de transaccion
+		voucherTransaccion.setIdTransferenciaBancaria(transferencia.getIdTransferenciaBancaria());		
+		voucherTransaccion.setMoneda(moneda);				
+		voucherTransaccion.setFecha(transferencia.getFecha());
+		voucherTransaccion.setHora(transferencia.getHora());
+		voucherTransaccion.setNumeroOperacion(transferencia.getNumeroOperacion());
+		voucherTransaccion.setMonto(transferencia.getMonto());
+		voucherTransaccion.setReferencia(transferencia.getReferencia());							
+		voucherTransaccion.setObservacion(transferencia.getObservacion());
+				
+		//Poniendo datos de cuenta bancaria			
+		voucherTransaccion.setNumeroCuentaOrigen(cuentaBancariaOrigen.getNumeroCuenta());
+		voucherTransaccion.setNumeroCuentaDestino(cuentaBancariaDestino.getNumeroCuenta());
+				
+		//Poniendo datos de agencia
+		voucherTransaccion.setAgenciaDenominacion(agencia.getDenominacion());
+		voucherTransaccion.setAgenciaAbreviatura(agencia.getAbreviatura());
+				
+		//Poniendo datos de caja
+		voucherTransaccion.setCajaDenominacion(caja.getDenominacion());
+		voucherTransaccion.setCajaAbreviatura(caja.getAbreviatura());
+				
+		//Poniendo datos del socio
+		PersonaNatural personaNatural = socio.getPersonaNatural();
+		PersonaJuridica personaJuridica = socio.getPersonaJuridica();
+		if (personaJuridica == null) {
+			voucherTransaccion.setIdSocio(socio.getIdSocio());
+			voucherTransaccion.setTipoDocumento(socio.getPersonaNatural().getTipoDocumento());			//
+			voucherTransaccion.setNumeroDocumento(socio.getPersonaNatural().getNumeroDocumento());
+			voucherTransaccion.setSocio(personaNatural.getApellidoPaterno() + " " + personaNatural.getApellidoMaterno() + ", " + personaNatural.getNombres());
+		}
+		if (personaNatural == null) {
+			voucherTransaccion.setIdSocio(socio.getIdSocio());
+			voucherTransaccion.setTipoDocumento(socio.getPersonaJuridica().getTipoDocumento());			//
+			voucherTransaccion.setNumeroDocumento(socio.getPersonaJuridica().getNumeroDocumento());
+			voucherTransaccion.setSocio(personaJuridica.getRazonSocial());
+		}
+		return voucherTransaccion;		
+	}
 
 	@Override
 	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta,
@@ -800,6 +864,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	protected DAO<Object, CuentaBancaria> getDAO() {
 		return this.cuentaBancariaDAO;
 	}
+
+	
 
 	
 
