@@ -2,14 +2,16 @@
     <fieldset>
         <legend>Transaccion boveda - caja</legend>
 
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            {{alert.msg}}
+        </alert>
 
         <form name="formCrearTransaccionBovedaCaja" ng-submit="crearTransaccion()" novalidate>
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted}">
                         <label>Boveda(*)</label>
-                        <select name="boveda" ng-options="boveda as boveda.denominacion for boveda in bovedas" ng-model="boveda" class="form-control" required autofocus>
+                        <select name="boveda" ng-options="boveda.id as boveda.denominacion for boveda in combo.boveda" ng-model="view.idBoveda" class="form-control" required autofocus>
                         </select>
                         <div ng-show="formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearTransaccionBovedaCaja.boveda.$error.required">
@@ -22,7 +24,7 @@
                     <div class="form-group" style="height: 59px;">
                         <label>&nbsp;</label>
                         <div class="form-control-static">
-                            <button type="button" class="btn btn-default" ng-click="cargarDetalle()">
+                            <button type="button" class="btn btn-default" ng-click="loadDetalleBoveda()">
                                 <span class="glyphicon glyphicon-search"></span>
                             </button>
                         </div>
@@ -42,7 +44,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="detalle in detalles">
+                            <tr ng-repeat="detalle in objetosCargados.detalles">
                                 <td style="width: 20%;">
                                     <span ng-bind="detalle.valor | currency: boveda.moneda.simbolo"/>
                                 </td>
@@ -66,7 +68,7 @@
                             <tfoot>
                             <tr ng-class="{'danger': total() == 0 || total() === undefined}">
                                 <td colspan="2">
-                                    Total: <span ng-bind="total() | currency : boveda.moneda.simbolo"></span>
+                                    Total: <span ng-bind="total() | currency : ''"></span>
                                 </td>
                                 <td ng-show="total() == 0 || total() === undefined">
                                     Invalido

@@ -321,7 +321,7 @@ define(['./app'], function(app) {
                 url: "/voucherTransaccionBovedaCaja/:id",
                 views: {
                     "viewContent":{
-                        templateUrl: "views/cajero/voucher/transaccionBovedaCaja.html",
+                        templateUrl: "views/cajero/voucher/transaccionBovedaCajaVoucher.html",
                         controller: function($scope, $stateParams) {
                             $scope.id = $stateParams.id;
                         }

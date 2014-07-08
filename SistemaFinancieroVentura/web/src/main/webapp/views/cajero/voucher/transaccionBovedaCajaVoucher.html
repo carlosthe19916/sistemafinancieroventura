@@ -1,7 +1,100 @@
-<div>
-    Voucher de transaccion Boveda caja
+<div ng-controller="VoucherTransaccionBovedaCajaController">
+    <div class="row">
+        <div class="col-md-5" id="voucher">
+            <div>
+                <fieldset>
+                    <legend>VOUCHER TRANSACCION BOVEDA/CAJA</legend>
+                </fieldset>
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading" style="text-align: center;">
+                        <label><strong>C.A.C. CAJA VENTURA</strong></label><br />
+                        <label ng-bind="transaccionCuentaBancaria.tipoTransaccion"></label>
+                        <label>&nbsp;CUENTA&nbsp;</label>
+                        <label ng-bind="transaccionCuentaBancaria.tipoCuentaBancaria"></label>
+                    </div>
+                    <!-- Table -->
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>AGENCIA:</td>
+                            <td>
+                                <span ng-bind="transaccionCuentaBancaria.agenciaAbreviatura"/>
+                            </td>
+                            <td>N&deg; TRANS:</td>
+                            <td>
+                                <span ng-bind="transaccionCuentaBancaria.idTransaccionBancaria"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CAJA:</td>
+                            <td>
+                                <span ng-bind="transaccionCuentaBancaria.cajaDenominacion"/>
+                                <span ng-bind="'(' + transaccionCuentaBancaria.cajaAbreviatura + ')'"/>
+                            </td >
+                            <td>N&deg; OP:</td>
+                            <td>
+                                <span ng-bind="transaccionCuentaBancaria.numeroOperacion"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>FECHA:</td>
+                            <td colspan="3">
+                                <span ng-bind="transaccionCuentaBancaria.fecha | date : 'dd/MM/yyyy'"/>
+                                <span ng-bind="transaccionCuentaBancaria.hora | date : 'HH:mm:ss'"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CUENTA:</td>
+                            <td colspan="3"><span ng-bind="transaccionCuentaBancaria.numeroCuenta"/> </td>
+                        </tr>
+                        <tr>
+                            <td>SOCIO:</td>
+                            <td colspan="3">
+                                <span ng-bind="transaccionCuentaBancaria.socio"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MONEDA:</td>
+                            <td colspan="3"><span ng-bind="transaccionCuentaBancaria.moneda.denominacion"/>
+                                <span ng-bind="'(' + transaccionCuentaBancaria.moneda.simbolo + ')'"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>REF:</td>
+                            <td colspan="3">
+                                <span ng-bind="transaccionCuentaBancaria.referencia"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">IMPORTE PAGADO:</td>
+                            <td colspan="2" style="text-align: right;">
+                                <span ng-bind="transaccionCuentaBancaria.moneda.simbolo"></span>
+                                <span ng-bind="transaccionCuentaBancaria.monto | number : 2"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: center; font-size: 12px">
+                                <p>&nbsp;</p>
+                                <p>Verifique su dinero antes de retirarse de ventanilla.</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-success" ng-click="imprimir()">Imprimir</button>
+                <button type="button" class="btn btn-primary" ng-click="salir()">Continuar »</button>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-
-
+<applet id="qz"
+        archive="bower_components/qz-print/qz-print.jar"
+        name="QZ Print Plugin" code="qz.PrintApplet.class"
+        width="55"
+        height="55">
+    <param name="jnlp_href" value="bower_components/qz-print/qz-print_jnlp.jnlp">
+    <param name="cache_option" value="plugin">
+    <param name="disable_logging" value="false">
+    <param name="initial_focus" value="false">
+</applet>

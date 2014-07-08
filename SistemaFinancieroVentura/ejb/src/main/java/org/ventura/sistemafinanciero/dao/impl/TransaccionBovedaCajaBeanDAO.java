@@ -35,7 +35,6 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
-import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
 
 /**
  * A minimalistic CRUD implementation. Usually provides the implementation of

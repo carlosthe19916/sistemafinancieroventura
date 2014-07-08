@@ -17,15 +17,9 @@ import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
-import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.Moneda;
-import org.ventura.sistemafinanciero.entity.PersonaJuridica;
-import org.ventura.sistemafinanciero.entity.PersonaNatural;
-import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
-import org.ventura.sistemafinanciero.entity.TransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.dto.VoucherCompraVenta;
-import org.ventura.sistemafinanciero.entity.dto.VoucherTransferenciaBancaria;
 import org.ventura.sistemafinanciero.service.CajaService;
 
 @Named

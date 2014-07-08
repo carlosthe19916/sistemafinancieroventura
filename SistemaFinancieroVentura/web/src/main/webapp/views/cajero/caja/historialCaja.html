@@ -6,7 +6,7 @@
                 <div class="col-md-4">
                     <div class="input-group">
                         <span class="input-group-addon">Desde</span>
-                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="desde" is-open="openedDesde" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="desde" is-open="openedDesde" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openDesde($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
@@ -15,7 +15,7 @@
                 <div class="col-md-4">
                     <div class="input-group">
                         <span class="input-group-addon">Hasta</span>
-                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="hasta" is-open="openedHasta" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="hasta" is-open="openedHasta" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openHasta($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>

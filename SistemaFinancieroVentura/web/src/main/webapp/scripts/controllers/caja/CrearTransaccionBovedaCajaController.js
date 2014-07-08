@@ -1,48 +1,79 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "MonedaService", "CajaSessionService",
-        function($scope, $state, $filter, MonedaService,CajaSessionService) {
+    controllers.controller('CrearTransaccionBovedaCajaController', ['$scope','$state', '$filter','focus', "MonedaService", "CajaSessionService",
+        function($scope,$state,$filter,focus,MonedaService,CajaSessionService) {
 
-            $scope.control = {"success":false, "inProcess": false, "submitted" : false};
+            $scope.focusElements = {
+                boveda: 'focusBoveda'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                focus($scope.focusElements.boveda);
+            };
+            $scope.setInitialFocus();
 
-            //objetos de transaccion
-            $scope.boveda;
-            $scope.detalles = [];
-            //bovedas de caja
-            $scope.bovedas = [];
+            $scope.control = {
+                success:false,
+                inProcess: false,
+                submitted : false
+            };
 
+            $scope.view = {
+              idBoveda: undefined
+            };
 
-            CajaSessionService.getBovedasOfCurrentCaja().then(
-                function(bovedas){
-                    $scope.bovedas = bovedas;
-                }
-            );
+            $scope.combo = {
+                boveda: undefined
+            };
 
-            $scope.cargarDetalle = function(){
-                MonedaService.getDenominaciones($scope.boveda.moneda.id).then(
-                    function(detalle){
-                        $scope.detalles = detalle;
-                    },
-                    function error(error){
-                        //mostrar error al usuario
-                        $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+            $scope.objetosCargados = {
+                detalles: []
+            };
+
+            $scope.loadBovedas = function(){
+                CajaSessionService.getBovedasOfCurrentCaja().then(
+                    function(data){
+                        $scope.combo.boveda = data;
                     }
                 );
-            }
+            };
+            $scope.loadBovedas();
+
+            $scope.loadDetalleBoveda = function(){
+                if(!angular.isUndefined($scope.view.idBoveda)){
+                    MonedaService.getDenominaciones($scope.view.idBoveda).then(
+                        function(data){
+                            $scope.objetosCargados.detalles = data;
+                        },
+                        function error(error){
+                            $scope.objetosCargados.detalles = [];
+                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
+                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                        }
+                    );
+                }
+            };
+            $scope.$watch('view.idBoveda', function(newVal, oldVal){
+                if(newVal != oldVal){
+                    if(!angular.isUndefined($scope.view.idBoveda)){
+                        $scope.loadDetalleBoveda();
+                    }
+                }
+            });
 
             $scope.total = function(){
                 var total = 0;
-                for(var i = 0; i<$scope.detalles.length; i++){
-                    total = total + ($scope.detalles[i].valor * $scope.detalles[i].cantidad);
+                for(var i = 0; i<$scope.objetosCargados.detalles.length; i++){
+                    total = total + ($scope.objetosCargados.detalles[i].valor * $scope.objetosCargados.detalles[i].cantidad);
                 }
                 return total;
-            }
+            };
 
             $scope.crearTransaccion = function(){
                 if ($scope.formCrearTransaccionBovedaCaja.$valid && ($scope.total() != 0 || $scope.total() !== undefined)) {
                     $scope.control.inProcess = true;
-                    CajaSessionService.crearTransaccionBovedaCaja($scope.boveda.id,$scope.detalles).then(
+                    CajaSessionService.crearTransaccionBovedaCaja($scope.view.idBoveda,$scope.objetosCargados.detalles).then(
                         function(data){
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
@@ -52,7 +83,6 @@ define(['../module'], function (controllers) {
                         function error(error){
                             $scope.control.inProcess = false;
                             $scope.control.success = false;
-
                             //mostrar error al usuario
                             $scope.alerts = [{ type: "danger", msg: "Error: " + error.data + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
