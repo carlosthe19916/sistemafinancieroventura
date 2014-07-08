@@ -9,9 +9,9 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading" style="text-align: center;">
                         <label><strong>C.A.C. CAJA VENTURA</strong></label><br />
-                        <label ng-bind="transaccionCuentaBancaria.tipoTransaccion"></label>
+                        <label ng-bind="transaccionBovedaCaja.tipoTransaccion"></label>
                         <label>&nbsp;CUENTA&nbsp;</label>
-                        <label ng-bind="transaccionCuentaBancaria.tipoCuentaBancaria"></label>
+                        <label ng-bind="transaccionBovedaCaja.tipoCuentaBancaria"></label>
                     </div>
                     <!-- Table -->
                     <table class="table">
@@ -19,58 +19,45 @@
                         <tr>
                             <td>AGENCIA:</td>
                             <td>
-                                <span ng-bind="transaccionCuentaBancaria.agenciaAbreviatura"/>
+                                <span ng-bind="transaccionBovedaCaja.agenciaAbreviatura"/>
                             </td>
                             <td>N&deg; TRANS:</td>
                             <td>
-                                <span ng-bind="transaccionCuentaBancaria.idTransaccionBancaria"/>
+                                <span ng-bind="transaccionBovedaCaja.id"/>
                             </td>
                         </tr>
                         <tr>
                             <td>CAJA:</td>
                             <td>
-                                <span ng-bind="transaccionCuentaBancaria.cajaDenominacion"/>
-                                <span ng-bind="'(' + transaccionCuentaBancaria.cajaAbreviatura + ')'"/>
+                                <span ng-bind="transaccionBovedaCaja.cajaDenominacion"/>
+                                <span ng-bind="'(' + transaccionBovedaCaja.cajaAbreviatura + ')'"/>
                             </td >
-                            <td>N&deg; OP:</td>
-                            <td>
-                                <span ng-bind="transaccionCuentaBancaria.numeroOperacion"/>
-                            </td>
                         </tr>
                         <tr>
                             <td>FECHA:</td>
                             <td colspan="3">
-                                <span ng-bind="transaccionCuentaBancaria.fecha | date : 'dd/MM/yyyy'"/>
-                                <span ng-bind="transaccionCuentaBancaria.hora | date : 'HH:mm:ss'"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>CUENTA:</td>
-                            <td colspan="3"><span ng-bind="transaccionCuentaBancaria.numeroCuenta"/> </td>
-                        </tr>
-                        <tr>
-                            <td>SOCIO:</td>
-                            <td colspan="3">
-                                <span ng-bind="transaccionCuentaBancaria.socio"/>
+                                <span ng-bind="transaccionBovedaCaja.fecha | date : 'dd/MM/yyyy'"/>
+                                <span ng-bind="transaccionBovedaCaja.hora | date : 'HH:mm:ss'"/>
                             </td>
                         </tr>
                         <tr>
                             <td>MONEDA:</td>
-                            <td colspan="3"><span ng-bind="transaccionCuentaBancaria.moneda.denominacion"/>
-                                <span ng-bind="'(' + transaccionCuentaBancaria.moneda.simbolo + ')'"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>REF:</td>
                             <td colspan="3">
-                                <span ng-bind="transaccionCuentaBancaria.referencia"/>
+                                <span ng-bind="transaccionBovedaCaja.moneda.denominacion"/>
+                                <span ng-bind="'(' + transaccionBovedaCaja.moneda.simbolo + ')'"/>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">IMPORTE PAGADO:</td>
-                            <td colspan="2" style="text-align: right;">
-                                <span ng-bind="transaccionCuentaBancaria.moneda.simbolo"></span>
-                                <span ng-bind="transaccionCuentaBancaria.monto | number : 2"/>
+                            <td>ORIGEN:</td>
+                            <td colspan="3">
+                                <span ng-bind="transaccionBovedaCaja.origen"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MONTO:</td>
+                            <td colspan="3" style="text-align: right;">
+                                <span ng-bind="transaccionBovedaCaja.moneda.simbolo"></span>
+                                <span ng-bind="transaccionBovedaCaja.monto | number : 2"/>
                             </td>
                         </tr>
                         <tr>

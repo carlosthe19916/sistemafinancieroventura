@@ -91,6 +91,11 @@ define(['../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
+
+            $scope.cancelar = function(){
+                $state.transitionTo('app.caja.buscarTransaccionBovedaCaja');
+            };
+
         }]);
 });

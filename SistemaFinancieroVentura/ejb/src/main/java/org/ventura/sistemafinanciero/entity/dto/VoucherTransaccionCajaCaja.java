@@ -9,11 +9,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.ventura.sistemafinanciero.entity.Moneda;
-import org.ventura.sistemafinanciero.entity.type.TransaccionBovedaCajaOrigen;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class VoucherTransaccionBovedaCaja implements java.io.Serializable {
+public class VoucherTransaccionCajaCaja implements java.io.Serializable {
 
 	/**
 	 * 
@@ -26,7 +25,9 @@ public class VoucherTransaccionBovedaCaja implements java.io.Serializable {
 	private Date hora;
 	private BigInteger id;
 	private String observacion;
-	private TransaccionBovedaCajaOrigen origen;
+	private String origen;
+	private BigDecimal saldoDisponibleDestino;
+	private BigDecimal saldoDisponibleOrigen;
 	private Moneda moneda;
 	private BigDecimal monto;
 	private String trabajador;
@@ -36,7 +37,6 @@ public class VoucherTransaccionBovedaCaja implements java.io.Serializable {
 	private String cajaDenominacion;
 	private String cajaAbreviatura;
 
-	
 	public Boolean getEstadoConfirmacion() {
 		return estadoConfirmacion;
 	}
@@ -85,12 +85,28 @@ public class VoucherTransaccionBovedaCaja implements java.io.Serializable {
 		this.observacion = observacion;
 	}
 
-	public TransaccionBovedaCajaOrigen getOrigen() {
+	public String getOrigen() {
 		return origen;
 	}
 
-	public void setOrigen(TransaccionBovedaCajaOrigen origen) {
+	public void setOrigen(String origen) {
 		this.origen = origen;
+	}
+
+	public BigDecimal getSaldoDisponibleDestino() {
+		return saldoDisponibleDestino;
+	}
+
+	public void setSaldoDisponibleDestino(BigDecimal saldoDisponibleDestino) {
+		this.saldoDisponibleDestino = saldoDisponibleDestino;
+	}
+
+	public BigDecimal getSaldoDisponibleOrigen() {
+		return saldoDisponibleOrigen;
+	}
+
+	public void setSaldoDisponibleOrigen(BigDecimal saldoDisponibleOrigen) {
+		this.saldoDisponibleOrigen = saldoDisponibleOrigen;
 	}
 
 	public Moneda getMoneda() {

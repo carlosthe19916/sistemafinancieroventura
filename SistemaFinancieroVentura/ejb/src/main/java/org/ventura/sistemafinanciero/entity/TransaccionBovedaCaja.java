@@ -97,7 +97,7 @@ public class TransaccionBovedaCaja implements java.io.Serializable {
 		this.transaccionBovedaCajaDetalls = transaccionBovedaCajaDetalls;
 	}
 
-	@XmlTransient
+	@XmlElement(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	@Column(name = "ID_TRANSACCION_BOVEDA_CAJA", unique = true, nullable = false, precision = 22, scale = 0)
