@@ -124,8 +124,6 @@ define(['../module'], function (controllers) {
                 );
             };
 
-
-
             //editar persona socio
             $scope.editarSocioPersonaNatural = function(){
                 var savedParameters = {
@@ -405,6 +403,19 @@ define(['../module'], function (controllers) {
             };
 
 
+            $scope.salir = function(){
+                $scope.redireccion();
+            };
+
+            $scope.redireccion = function(){
+                if(RedirectService.haveNext()){
+                    var nextState = RedirectService.getNextState();
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
+                } else {
+                    $state.transitionTo('app.administracion.buscarPersonaNatural');
+                }
+            };
 
         }]);
 });

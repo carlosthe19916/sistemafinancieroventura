@@ -5,6 +5,16 @@ define(['../module'], function (controllers) {
 
             $scope.viewState = "app.socio.panelSocio";
 
+            $scope.loadRedireccion = function(){
+                if(RedirectService.haveNext()){
+                    var state = RedirectService.getNextState();
+                    if(state == $scope.viewState){
+                        $window.scroll(0,0);
+                        RedirectService.clearLast();
+                    }
+                }
+            };
+
             $scope.loadSocio = function(){
                 if(!angular.isUndefined($scope.id)){
                     SocioService.getSocio($scope.id).then(
@@ -66,6 +76,7 @@ define(['../module'], function (controllers) {
                 }
             };
 
+            $scope.loadRedireccion();
             $scope.loadSocio();
             $scope.loadCuentaAporte();
             $scope.loadPersonaNatural();

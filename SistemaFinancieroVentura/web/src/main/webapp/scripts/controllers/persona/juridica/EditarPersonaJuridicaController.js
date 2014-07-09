@@ -14,7 +14,9 @@ define(['../../module'], function (controllers) {
             $scope.setInitialFocus = function($event){
                 if(!angular.isUndefined($event))
                     $event.preventDefault();
-                focus($scope.focusElements.tipoDocumento);
+                $timeout(function() {
+                    focus($scope.focusElements.tipoDocumento);
+                }, 500);
                 $window.scrollTo(0, 0);
             };
             $scope.setInitialFocus();

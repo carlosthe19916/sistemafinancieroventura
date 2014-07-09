@@ -14,7 +14,40 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-4">
+                <button type="button" ng-click="changeStateBusquedaAvanzada()" class="btn btn-link">Avanzado</button>
+            </div>
         </form>
+    </div>
+    <div class="row" collapse="view.busquedaAvanzada">
+        <div class="col-sm-12">
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.ahorroSelection" ng-change="changeTipoCuentaBancaria()"> Ahorro
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.corrienteSelection" ng-change="changeTipoCuentaBancaria()"> Corriente
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.plazoFijoSelection" ng-change="changeTipoCuentaBancaria()"> P.Fijo
+            </label>
+            &nbsp;&nbsp;||&nbsp;&nbsp;
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.personaNaturalSelection" ng-change="changeTipoPersonas()"> P.Natural
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.personaJuridicaSelection" ng-change="changeTipoPersonas()"> P.Juridica
+            </label>
+            &nbsp;&nbsp;||&nbsp;&nbsp;
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.estadoActivoSelection" ng-change="changeTipoEstadoCuenta()"> Cta.Activa
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.estadoCongeladoSelection" ng-change="changeTipoEstadoCuenta()"> Cta.Congelada
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="view.estadoInactivoSelection" ng-change="changeTipoEstadoCuenta()"> Cta.Inactiva
+            </label>
+        </div>
     </div>
     <br/>
     <div class="row">

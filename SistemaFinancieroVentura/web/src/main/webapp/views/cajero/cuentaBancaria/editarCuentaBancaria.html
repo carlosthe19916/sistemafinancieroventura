@@ -7,7 +7,7 @@
         <legend style="padding-bottom: 5px;">
             <div class="row">
                 <div class="col-sm-6">
-                    Socio
+                    Cuenta Bancaria
                     <span ng-if="cuentaBancaria.estado == 'INACTIVO'" class="label label-danger">Cuenta inactiva</span>
                 </div>
                 <div class="col-sm-6" nf-if="cuentaBancaria.estado != 'INACTIVO'" style="text-align: right;">
@@ -298,4 +298,5 @@
             </div>
         </div>
     </div>
+    <button type="button" ng-click="salir()" class="btn btn-default">Salir</button>
 </div>

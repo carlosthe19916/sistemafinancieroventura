@@ -6,15 +6,43 @@
                 <div class="form-group">
                     <div class="input-group">
                         <input focus-on="focusFilterText" type="text" name="filterText" class="form-control" ng-model="filterOptions.filterText" placeholder="Buscar Socio" autofocus>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </span>
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
                     </div>
                 </div>
             </div>
+            <div class="col-sm-4">
+                <button type="button" ng-click="changeStateBusquedaAvanzada()" class="btn btn-link">Avanzado</button>
+            </div>
         </form>
+    </div>
+    <div class="row" collapse="view.busquedaAvanzada">
+        <div class="col-sm-12">
+            <label class="radio-inline">
+                <input type="radio" ng-model="searchOptions.estadoCuentaAporte" ng-value="false">
+                Socio con cta.aporte
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="searchOptions.estadoCuentaAporte" ng-value="true">
+                Socio con/sin cta.aporte
+            </label>
+            &nbsp;&nbsp;||&nbsp;&nbsp;
+            <label class="radio-inline">
+                <input type="radio" ng-model="searchOptions.estadoSocio" ng-value="true">
+                Socio activo
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="searchOptions.estadoSocio" ng-value="false">
+                Socio inactivo
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="searchOptions.estadoSocio" ng-value="null">
+                Todos
+            </label>
+        </div>
     </div>
     <br/>
     <div class="row">

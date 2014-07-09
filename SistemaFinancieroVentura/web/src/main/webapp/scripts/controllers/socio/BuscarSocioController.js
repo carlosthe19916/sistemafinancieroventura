@@ -13,6 +13,21 @@ define(['../module'], function (controllers) {
             };
             $scope.setInitialFocus();
 
+            $scope.view = {
+                busquedaAvanzada: true
+            };
+
+            $scope.changeStateBusquedaAvanzada = function(){
+                $scope.view.busquedaAvanzada = !$scope.view.busquedaAvanzada;
+                if($scope.view.busquedaAvanzada){
+                    $scope.searchOptions.estadoCuentaAporte = true;
+                    $scope.searchOptions.estadoSocio = true;
+                }
+            };
+            $scope.searchOptions = {
+                estadoCuentaAporte: true,
+                estadoSocio: true
+            };
 
             $scope.nuevo = function(){
                 RedirectService.limpiar();
@@ -22,7 +37,7 @@ define(['../module'], function (controllers) {
             $scope.editSocio = function(row){
                 RedirectService.limpiar();
                 $state.transitionTo("app.socio.panelSocio", { id: row.id });
-            }
+            };
 
             $scope.sociosList = [];
 
@@ -53,7 +68,7 @@ define(['../module'], function (controllers) {
             //cargar datos por primera vez
             $scope.getPagedDataInitial = function () {
                 $scope.pagingOptions.currentPage = 1;
-                SocioService.getSocios(null,null, $scope.getDesde(), $scope.getHasta()).then(function(data){
+                SocioService.getSocios($scope.searchOptions.estadoCuentaAporte, $scope.searchOptions.estadoSocio, $scope.getDesde(), $scope.getHasta()).then(function(data){
                     $scope.sociosList = data;
                     $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                 });
@@ -67,7 +82,7 @@ define(['../module'], function (controllers) {
             $scope.getPagedDataSearched = function () {
                 if ($scope.filterOptions.filterText) {
                     var ft = $scope.filterOptions.filterText.toUpperCase();
-                    SocioService.findByFilterText(ft,null,null,$scope.getDesde(), $scope.getHasta()).then(function (data){
+                    SocioService.findByFilterText(ft,$scope.searchOptions.estadoCuentaAporte, $scope.searchOptions.estadoSocio,$scope.getDesde(), $scope.getHasta()).then(function (data){
                         $scope.sociosList = data;
                         $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
@@ -94,12 +109,12 @@ define(['../module'], function (controllers) {
                     }
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
-                        SocioService.findByFilterText(ft,null,null, $scope.getDesde(), $scope.getHasta()).then(function(data){
+                        SocioService.findByFilterText(ft,$scope.searchOptions.estadoCuentaAporte, $scope.searchOptions.estadoSocio, $scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
                     } else {
-                        SocioService.getSocios(null, null,$scope.getDesde(), $scope.getHasta()).then(function(data){
+                        SocioService.getSocios($scope.searchOptions.estadoCuentaAporte, $scope.searchOptions.estadoSocio,$scope.getDesde(), $scope.getHasta()).then(function(data){
                             $scope.sociosList = data;
                             $scope.setPagingData($scope.sociosList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
