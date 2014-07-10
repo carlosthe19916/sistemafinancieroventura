@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService", "CajaSessionService","MonedaService",
-        function($scope, $state, $window, $filter, $modal,focus,CuentaBancariaService, CajaSessionService, MonedaService) {
+    controllers.controller('CrearTransaccionDepositoRetiroController', ["$scope", "$state", "$window", "$filter", "$modal","focus","CuentaBancariaService", "CajaSessionService","MonedaService","RedirectService",
+        function($scope, $state, $window, $filter, $modal,focus,CuentaBancariaService, CajaSessionService, MonedaService,RedirectService) {
 
             $scope.viewState = 'app.socio.crearCuentaBancaria';
 
@@ -214,7 +214,17 @@ define(['../../module'], function (controllers) {
             };
 
             $scope.cancel = function(){
+                $scope.redireccion();
+            };
 
+            $scope.redireccion = function(){
+                if(RedirectService.haveNext()){
+                    var nextState = RedirectService.getNextState();
+                    var parametros = RedirectService.getNextParamsState();
+                    $state.transitionTo(nextState,parametros);
+                } else {
+                    $state.transitionTo($scope.viewState);
+                }
             };
 
             $scope.loadParametros();

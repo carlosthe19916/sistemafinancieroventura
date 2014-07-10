@@ -19,7 +19,7 @@
             <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.tipoPersona.$invalid && control.submitted}">
                 <label>Tipo Persona</label>
                 <label style="color: brown;">(*)</label>
-                <select focus-on="focusTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in combo.tipoPersonas" ng-model="view.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
+                <select focus-on="focusTipoPersona"  name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in combo.tipoPersonas" ng-model="view.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
                 </select>
                 <div ng-show="formCrearCuenta.tipoPersona.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">
@@ -129,7 +129,7 @@
                     </kbd>
                     <div ng-if="login.result" ng-class="{ 'has-error' : formCrearCuenta.tasaInteresEdited.$invalid && formCrearCuenta.tasaInteresEdited.$dirty}">
                         <div class="input-group">
-                            <input id="txtTasaInteresEdited" type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="login.tasaInteres" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa Interes" required/>
+                            <input focus-on="focusTasaInteresEdited" type="text" name="tasaInteresEdited" ui-keypress="{13:'setTasaInteres($event)'}" ng-model="login.tasaInteres" ng-minlength="1" ng-maxlength="6" class="form-control" placeholder="Tasa Interes" required/>
                              <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="setTasaInteres()" >
                                     <span class="glyphicon glyphicon-ok"></span>
@@ -258,7 +258,7 @@
         </div>
     </div>
 </fieldset>
-<button type="submit" class="btn btn-primary">Guardar</button>
+<button focus-on="focusBtnGuardar" type="submit" class="btn btn-primary">Guardar</button>
 <button type="button" class="btn btn-default">Cancelar</button>
 </ng-form>
 </form>

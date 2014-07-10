@@ -1,9 +1,23 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("LoginPopUpController", ["$scope", "$modalInstance", "UsuarioService",
-        function($scope, $modalInstance, UsuarioService) {
+    controllers.controller("LoginPopUpController", ["$scope","$timeout","$modalInstance","focus","UsuarioService",
+        function($scope,$timeout, $modalInstance,focus,UsuarioService) {
 
-            $scope.control = {"submited":false,"inProgress":false, "failure" : true};
+            $scope.focusElements = {
+                tipoPersona: 'focusUsername'
+            };
+            $scope.setInitialFocus = function(){
+                $timeout(function() {
+                    focus($scope.focusElements.tipoPersona);
+                }, 100);
+            };
+            $scope.setInitialFocus();
+
+            $scope.control = {
+                submited:false,
+                inProgress:false,
+                failure : true
+            };
 
             $scope.usuario = {"username":"", "password":""};
             $scope.login = {"result" : false};

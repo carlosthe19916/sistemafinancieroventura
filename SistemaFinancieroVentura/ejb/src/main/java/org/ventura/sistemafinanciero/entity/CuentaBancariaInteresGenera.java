@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,7 +25,15 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "CUENTA_BANCARIA_INTERES_GENERA", schema = "BDSISTEMAFINANCIERO")
+@NamedQueries({ @NamedQuery(name = CuentaBancariaInteresGenera.findByIdAndDate, query = "SELECT c FROM CuentaBancariaInteresGenera c WHERE c.cuentaBancaria.idCuentaBancaria = :idCuentaBancaria AND c.fecha BETWEEN :desde AND :hasta") })
 public class CuentaBancariaInteresGenera implements java.io.Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public final static String findByIdAndDate = "CuentaBancariaInteresGenera.findByIdAndDate";
 
 	private BigDecimal idCuentaBancariaInteresGen;
 	private CuentaBancaria cuentaBancaria;

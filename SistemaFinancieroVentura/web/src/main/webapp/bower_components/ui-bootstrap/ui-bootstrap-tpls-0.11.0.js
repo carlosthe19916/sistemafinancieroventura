@@ -1852,8 +1852,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.transition'])
           // trigger CSS transitions
           scope.animate = true;
           // focus a freshly-opened modal
-          element.find('[autofocus]').focus();
-          //element[0].focus();
+          element[0].focus();
         });
 
         scope.close = function (evt) {

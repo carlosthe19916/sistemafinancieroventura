@@ -63,6 +63,7 @@ import org.ventura.sistemafinanciero.rest.dto.CuentaAhorroDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaCorrienteDTO;
 import org.ventura.sistemafinanciero.rest.dto.CuentaPlazoFijoDTO;
 import org.ventura.sistemafinanciero.rest.dto.TitularDTO;
+import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
@@ -85,6 +86,9 @@ public class CuentaBancariaRESTService {
 	private PersonaJuridicaService personaJuridicaService;
 	@EJB
 	private SocioService socioService;
+	
+	@EJB
+	private CajaSessionService cajaSessionService;
 	
 	@GET
 	@Path("/")
@@ -293,7 +297,7 @@ public class CuentaBancariaRESTService {
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 			
-			BigInteger idCuenta = cuentaBancariaService.crearCuentaBancaria(TipoCuentaBancaria.AHORRO, agencia.getCodigo(), idMoneda, tasaInteres, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);			
+			BigInteger idCuenta = cuentaBancariaService.crearCuentaBancaria(TipoCuentaBancaria.AHORRO, agencia.getCodigo(), idMoneda, tasaInteres, tipoPersona, idPersona,null, cantRetirantes, titulares, beneficiarios);			
 			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {
@@ -364,7 +368,7 @@ public class CuentaBancariaRESTService {
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 			
-			BigInteger idCuenta = cuentaBancariaService.crearCuentaBancaria(TipoCuentaBancaria.CORRIENTE, agencia.getCodigo(), idMoneda, tasaInteres, tipoPersona, idPersona, cantRetirantes, titulares, beneficiarios);					
+			BigInteger idCuenta = cuentaBancariaService.crearCuentaBancaria(TipoCuentaBancaria.CORRIENTE, agencia.getCodigo(), idMoneda, tasaInteres, tipoPersona, idPersona,null, cantRetirantes, titulares, beneficiarios);					
 			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", idCuenta).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {
@@ -436,7 +440,7 @@ public class CuentaBancariaRESTService {
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 									
-			BigInteger[] result = cuentaBancariaService.crearCuentaBancariaPlazoFijoConDeposito(agencia.getCodigo(), idMoneda, tipoPersona, idPersona, cantRetirantes, monto, periodo, tasaInteres, titulares, beneficiarios);			
+			BigInteger[] result = cajaSessionService.crearCuentaBancariaPlazoFijoConDeposito(agencia.getCodigo(), idMoneda, tipoPersona, idPersona, cantRetirantes, monto, periodo, tasaInteres, titulares, beneficiarios);			
 			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", result[0]).add("idTransaccion", result[1]).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {

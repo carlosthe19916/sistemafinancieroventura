@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
+import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.HistorialCaja;
@@ -19,6 +20,7 @@ import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
+import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
@@ -51,4 +53,7 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	public BigInteger crearAporte(BigInteger idSocio, BigDecimal monto, int mes, int anio, String referencia) throws RollbackFailureException;
 	public BigInteger retiroCuentaAporte(BigInteger idSocio) throws RollbackFailureException;
 	public BigInteger crearTransferenciaBancaria(String numeroCuentaOrigen, String numeroCuentaDestino, BigDecimal monto, String referencia) throws RollbackFailureException;
+	
+	public BigInteger[] crearCuentaBancariaPlazoFijoConDeposito(String codigo, BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes, BigDecimal monto, int periodo, BigDecimal tasaInteres, List<BigInteger> titulares, List<Beneficiario> beneficiarios) throws RollbackFailureException;
+	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger id) throws RollbackFailureException;
 }

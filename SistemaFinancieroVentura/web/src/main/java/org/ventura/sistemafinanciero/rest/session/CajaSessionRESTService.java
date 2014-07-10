@@ -20,6 +20,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -196,6 +197,30 @@ public class CajaSessionRESTService {
 		} catch (EJBException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
+	}
+	
+	@DELETE
+	@Path("/cuentaBancaria/{id}")
+	@Produces({ "application/xml", "application/json" })
+	public Response deleteCuentaBancaria(@PathParam("id") BigInteger id) {				
+		Response result = null;
+		JsonObject model = null;		
+		if(id == null){
+			model = Json.createObjectBuilder().add("message", "Id no valido").build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {
+			BigInteger idTransaccion = cajaSessionService.cancelarCuentaBancariaConRetiro(id);
+			model = Json.createObjectBuilder().add("id", idTransaccion).build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;	
 	}
 	
 }

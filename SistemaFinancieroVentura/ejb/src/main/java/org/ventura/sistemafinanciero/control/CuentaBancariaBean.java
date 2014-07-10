@@ -44,7 +44,6 @@ import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
-import org.ventura.sistemafinanciero.entity.TasaInteres;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
@@ -239,7 +238,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	@Override
 	public BigInteger crearCuentaBancaria(TipoCuentaBancaria tipoCuentaBancaria, String codigoAgencia,
 			BigInteger idMoneda, BigDecimal tasaInteres,
-			TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes,
+			TipoPersona tipoPersona, BigInteger idPersona, Integer periodo, int cantRetirantes,
 			List<BigInteger> titulares, List<Beneficiario> beneficiarios)
 			throws RollbackFailureException {
 		
@@ -308,7 +307,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			socioDAO.create(socio);
 		}		
 		
-		//crear cuenta bancaria
+		//crear cuenta bancaria				
 		CuentaBancaria cuentaBancaria = new CuentaBancaria();
 		cuentaBancaria.setNumeroCuenta(codigoAgencia);
 		cuentaBancaria.setBeneficiarios(null);
@@ -316,6 +315,13 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancaria.setEstado(EstadoCuentaBancaria.ACTIVO);
 		cuentaBancaria.setFechaApertura(calendar.getTime());
 		cuentaBancaria.setFechaCierre(null);
+		if(tipoCuentaBancaria.equals(TipoCuentaBancaria.PLAZO_FIJO)){
+			if(periodo == null)
+				throw new RollbackFailureException("Periodo de plazo fijo no definido");
+			LocalDate fechaCierre = new LocalDate(calendar.getTime());
+			fechaCierre = fechaCierre.plusDays(periodo);
+			cuentaBancaria.setFechaCierre(fechaCierre.toDate());
+		}
 		cuentaBancaria.setMoneda(moneda);
 		cuentaBancaria.setSaldo(BigDecimal.ZERO);
 		cuentaBancaria.setSocio(socio);
@@ -347,17 +353,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancariaTasaDAO.create(cuentaBancariaTasa);
 		
 		return cuentaBancaria.getIdCuentaBancaria();
-	}
-	
-	@Override
-	public BigInteger[] crearCuentaBancariaPlazoFijoConDeposito(String codigo,
-			BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona,
-			int cantRetirantes, BigDecimal monto, int periodo,
-			BigDecimal tasaInteres, List<BigInteger> titulares,
-			List<Beneficiario> beneficiarios) throws RollbackFailureException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}		
 
 	@Override
 	public void congelarCuentaBancaria(BigInteger idCuentaBancaria)
@@ -490,7 +486,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		capitalizarCuenta(cuentaBancariaOld.getIdCuentaBancaria());
 		
 		//crear cuenta nueva
-		BigInteger idCuentaBancariaNew = crearCuentaBancaria(TipoCuentaBancaria.PLAZO_FIJO, codigoAgencia, idMoneda, tasaInteres, tipoPersona, idPersona, cantRetirantes, listaTitulares, listaBeneficiarios);
+		BigInteger idCuentaBancariaNew = crearCuentaBancaria(TipoCuentaBancaria.PLAZO_FIJO, codigoAgencia, idMoneda, tasaInteres, tipoPersona, idPersona,new Integer(periodo), cantRetirantes, listaTitulares, listaBeneficiarios);
 		CuentaBancaria cuentaBancariaNew = cuentaBancariaDAO.find(idCuentaBancariaNew);
 		
 		//crear transferencia		
@@ -508,7 +504,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	}
 
 	
-	private void capitalizarCuenta(BigInteger idCuentaBancaria) throws RollbackFailureException {
+	@Override
+	public void capitalizarCuenta(BigInteger idCuentaBancaria) throws RollbackFailureException {
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
 		if(cuentaBancaria == null)
 			throw new RollbackFailureException("Cuenta bancaria no encontrada");
@@ -526,21 +523,43 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 			tasaInteres = tasa.getValor();
 		}
 		
+		Calendar calendar = Calendar.getInstance();				
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH) + 1;
+		int day = calendar.get(Calendar.DAY_OF_MONTH);								
+		LocalDate desde = new LocalDate(year, month, 1);
+		LocalDate hasta = new LocalDate(year, month, day);	
+		QueryParameter queryParameter;
+		List<CuentaBancariaInteresGenera> interesesGenerados;
+		BigDecimal totalInteres;
+		
 		switch (tipoCuentaBancaria) {
-		case AHORRO:
-				CuentaBancariaTasa cuentaBancariaTasa = null;
-				Set<CuentaBancariaTasa> tasasCuentaBancaria = cuentaBancaria.getCuentaBancariaTasas();
-				if(tasasCuentaBancaria.size() != 1)
-					throw new RollbackFailureException("No se encontró tasas de interes para la cuenta bancaria");
-				for (CuentaBancariaTasa tasa : tasasCuentaBancaria) {
-					cuentaBancariaTasa = tasa;
+		case AHORRO:																							
+				queryParameter = QueryParameter.with("idCuentaBancaria", idCuentaBancaria).and("desde", desde.toDate()).and("hasta", hasta.toDate());
+				interesesGenerados = cuentaBancariaInteresGeneraDAO.findByNamedQuery(CuentaBancariaInteresGenera.findByIdAndDate, queryParameter.parameters());				
+				
+				totalInteres = BigDecimal.ZERO;
+				for (CuentaBancariaInteresGenera cuentaBancariaInteresGenera : interesesGenerados) {
+					BigDecimal interes = cuentaBancariaInteresGenera.getInteresGenerado();
+					totalInteres = totalInteres.add(interes);
 				}
 				
-				throw new RollbackFailureException("No se implemento el metodo de capitalizacion para cuenta ahorro");
-			//break;
-		case CORRIENTE:
-				throw new RollbackFailureException("No se implemento el metodo de capitalizacion para cuenta corriente");
-			//break;
+				cuentaBancaria.setSaldo(totalInteres.add(capital));
+				cuentaBancariaDAO.update(cuentaBancaria);								
+			break;
+		case CORRIENTE:				
+				queryParameter = QueryParameter.with("idCuentaBancaria", idCuentaBancaria).and("desde", desde.toDate()).and("hasta", hasta.toDate());
+				interesesGenerados = cuentaBancariaInteresGeneraDAO.findByNamedQuery(CuentaBancariaInteresGenera.findByIdAndDate, queryParameter.parameters());				
+				
+				totalInteres = BigDecimal.ZERO;
+				for (CuentaBancariaInteresGenera cuentaBancariaInteresGenera : interesesGenerados) {
+					BigDecimal interes = cuentaBancariaInteresGenera.getInteresGenerado();
+					totalInteres = totalInteres.add(interes);
+				}
+				
+				cuentaBancaria.setSaldo(totalInteres.add(capital));
+				cuentaBancariaDAO.update(cuentaBancaria);	
+			break;
 		case PLAZO_FIJO:	
 			Date fechaApertura = cuentaBancaria.getFechaApertura();
 			Date fechaCierre = cuentaBancaria.getFechaCierre();			
@@ -588,27 +607,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		}		
 		cuentaBancaria.setEstado(EstadoCuentaBancaria.INACTIVO);
 		cuentaBancariaDAO.update(cuentaBancaria);
-	}
-
-	@Override
-	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger idCuentaBancaria)
-			throws RollbackFailureException {
-		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
-		if(cuentaBancaria == null)
-			throw new RollbackFailureException("Cuenta bancaria no encontrada");
-		if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO))
-			throw new RollbackFailureException("La cuenta no esta activa, no se puede cancelar");
-		
-		capitalizarCuenta(idCuentaBancaria);
-		
-		String numeroCuenta = cuentaBancaria.getNumeroCuenta();
-		BigDecimal monto = cuentaBancaria.getSaldo();
-		String referencia = "RETIRO POR CANCELACION DE CUENTA";
-		
-		BigInteger idTransaccion = cajaSessionService.crearRetiroBancario(numeroCuenta, monto, referencia);		
-		cancelarCuentaBancaria(idCuentaBancaria);
-		return idTransaccion;
-	}
+	}	
 
 	@Override
 	public Set<Titular> getTitulares(BigInteger idCuentaBancaria, boolean mode) {

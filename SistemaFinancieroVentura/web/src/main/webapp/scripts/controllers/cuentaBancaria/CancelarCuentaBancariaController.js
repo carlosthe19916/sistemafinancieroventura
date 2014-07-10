@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('CancelarCuentaBancariaController', [ "$scope","$state","$location","$filter","$window","focus","$modal","CuentaBancariaService","RedirectService",
-        function($scope,$state,$location,$filter,$window,focus,$modal,CuentaBancariaService,RedirectService) {
+    controllers.controller('CancelarCuentaBancariaController', [ "$scope","$state","$location","$filter","$window","focus","$modal","CuentaBancariaService","CajaSessionService","RedirectService",
+        function($scope,$state,$location,$filter,$window,focus,$modal,CuentaBancariaService,CajaSessionService,RedirectService) {
 
             $scope.viewState = "app.socio.cancelarCuentaBancaria";
 
@@ -36,37 +36,23 @@ define(['../module'], function (controllers) {
             };
             $scope.loadCuentaBancaria();
 
-            $scope.crearTransaccion = function(){
-                if(!angular.isUndefined($scope.cuentaBancaria)){
-                    if($scope.cuentaBancaria.saldo > 0){
-                        var savedParameters = {
-                            id: $scope.id
-                        };
-                        var sendParameters = {
-                            numeroCuenta: $scope.cuentaBancaria.numeroCuenta,
-                            tipoTransaccion: 'RETIRO',
-                            monto: $scope.cuentaBancaria.saldo,
-                            referencia: 'RETIRO POR CANCELACION DE CUENTA'
-                        };
-                        var nextState = $scope.viewState;
-                        RedirectService.addNext(nextState, savedParameters);
-                        $state.transitionTo('app.transaccion.depositoRetiro', sendParameters);
-                    }
-                }
-            };
             $scope.cancelarCuentaBancaria = function(){
                 if($scope.view.condiciones == true){
                     if(!angular.isUndefined($scope.cuentaBancaria)){
-                        if($scope.cuentaBancaria.saldo == 0){
-                            CuentaBancariaService.cancelarCuenta($scope.cuentaBancaria.id).then(
-                                function(data){
-                                    $state.transitionTo("app.socio.editarCuentaBancaria", { id: $scope.cuentaBancaria.id, redirect: true});
-                                }, function error(error){
-                                    $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
-                                    $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                                }
-                            );
-                        }
+                        CajaSessionService.cancelarCuentaBancaria($scope.cuentaBancaria.id).then(
+                            function(data){
+                                var savedParameters = {
+                                    id: $scope.cuentaBancaria.id
+                                };
+                                var sendParameters = { id: data.id };
+                                var nextState = 'app.socio.editarCuentaBancaria';
+                                RedirectService.addNext(nextState, savedParameters);
+                                $state.transitionTo('app.transaccion.depositoRetiroVoucher', sendParameters);
+                            }, function error(error){
+                                $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            }
+                        );
                     }
                 } else {
                     alert("acepte los terminos y condiciones");

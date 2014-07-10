@@ -413,7 +413,7 @@ define(['../module'], function (controllers) {
                     var parametros = RedirectService.getNextParamsState();
                     $state.transitionTo(nextState,parametros);
                 } else {
-                    $state.transitionTo('app.administracion.buscarPersonaNatural');
+                    $state.transitionTo('app.socio.buscarCuentaBancaria');
                 }
             };
 

@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.dao.QueryParameter;
 import org.ventura.sistemafinanciero.entity.Agencia;
+import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.Boveda;
 import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
@@ -61,13 +61,17 @@ import org.ventura.sistemafinanciero.entity.TransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
+import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
+import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPendiente;
+import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccionbancaria;
 import org.ventura.sistemafinanciero.entity.type.Tipotransaccioncompraventa;
 import org.ventura.sistemafinanciero.entity.type.TransaccionBovedaCajaOrigen;
 import org.ventura.sistemafinanciero.exception.IllegalResultException;
 import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
+import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.MonedaService;
 import org.ventura.sistemafinanciero.util.AllowedTo;
 import org.ventura.sistemafinanciero.util.EntityManagerProducer;
@@ -131,10 +135,12 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	@Inject
 	private DAO<Object, TransaccionCompraVenta> transaccionCompraVentaDAO;
 	@Inject
-	private DAO<Object, HistorialTransaccionCaja> historialTransaccionCajaDAO;
+	private DAO<Object, HistorialTransaccionCaja> historialTransaccionCajaDAO;		
 	
 	@EJB
 	private MonedaService monedaService;
+	@EJB
+	private CuentaBancariaService cuentaBancariaService;
 	
 	private Logger LOGGER = LoggerFactory.getLogger(CajaSessionService.class);
 
@@ -765,6 +771,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		//obteniendo saldo disponible de cuenta
 		BigDecimal saldoDisponible = cuentaBancaria.getSaldo().add(monto);
 		cuentaBancaria.setSaldo(saldoDisponible);
+		if(cuentaBancaria.getTipoCuentaBancaria().equals(TipoCuentaBancaria.PLAZO_FIJO)){
+			cuentaBancaria.setEstado(EstadoCuentaBancaria.CONGELADO);
+		}
 		cuentaBancariaDAO.update(cuentaBancaria);
 		
 		Calendar calendar = Calendar.getInstance();
@@ -1028,6 +1037,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		cuentaBancariaOrigen.setSaldo(saldoDisponibleOrigen);
 		cuentaBancariaDestino.setSaldo(saldoDisponibleDestino);
+		if(cuentaBancariaDestino.getTipoCuentaBancaria().equals(TipoCuentaBancaria.PLAZO_FIJO)){
+			cuentaBancariaDestino.setEstado(EstadoCuentaBancaria.CONGELADO);
+		}
 		cuentaBancariaDAO.update(cuentaBancariaOrigen);
 		cuentaBancariaDAO.update(cuentaBancariaDestino);
 		
@@ -1090,4 +1102,44 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		return transaccionCompraVenta.getIdTransaccionCompraVenta();
 	}
 
+	@Override
+	public BigInteger[] crearCuentaBancariaPlazoFijoConDeposito(String codigo,
+			BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona,
+			int cantRetirantes, BigDecimal monto, int periodo,
+			BigDecimal tasaInteres, List<BigInteger> titulares,
+			List<Beneficiario> beneficiarios) throws RollbackFailureException {
+		
+		BigInteger idCuentaBancaria = cuentaBancariaService.crearCuentaBancaria(TipoCuentaBancaria.PLAZO_FIJO, 
+				codigo, idMoneda, tasaInteres, tipoPersona, idPersona, new Integer(periodo),
+				cantRetirantes, titulares, beneficiarios);
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
+		String numeroCuenta = cuentaBancaria.getNumeroCuenta();
+		BigInteger idTransaccion = crearDepositoBancario(numeroCuenta, monto, "APERTURA CUENTA BANCARIA PLAZO FIJO");
+		
+		return new BigInteger[]{idCuentaBancaria,idTransaccion};
+	}
+	
+	@Override
+	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger idCuentaBancaria) throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuentaBancaria == null)
+			throw new RollbackFailureException("Cuenta bancaria no encontrada");
+		if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO))
+			throw new RollbackFailureException("La cuenta no esta activa, no se puede cancelar");
+		if(cuentaBancaria.getTipoCuentaBancaria().equals(TipoCuentaBancaria.PLAZO_FIJO)){
+			if(cuentaBancaria.getFechaCierre().compareTo(Calendar.getInstance().getTime()) == 1)
+				throw new RollbackFailureException("La cuenta PLAZO_FIJO tiene fecha de cierre aun no vencida");
+		}	
+		
+		cuentaBancariaService.capitalizarCuenta(idCuentaBancaria);
+		
+		String numeroCuenta = cuentaBancaria.getNumeroCuenta();
+		BigDecimal monto = cuentaBancaria.getSaldo().negate();
+		String referencia = "RETIRO POR CANCELACION DE CUENTA";
+		
+		BigInteger idTransaccion = crearRetiroBancario(numeroCuenta, monto, referencia);		
+		cuentaBancariaService.cancelarCuentaBancaria(idCuentaBancaria);
+		return idTransaccion;
+	}
+	
 }

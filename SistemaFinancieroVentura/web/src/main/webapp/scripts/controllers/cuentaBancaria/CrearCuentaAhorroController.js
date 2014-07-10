@@ -10,12 +10,18 @@ define(['../module'], function (controllers) {
                 numeroDocumento: 'focusNumeroDocumento',
                 tipoDocumentoTitular: 'focusTipoDocumentoTitular',
                 numeroDocumentoTitular: 'focusNumeroDocumentoTitular',
-                numeroDocumentoBeneficiario: 'focusNumeroDocumentoBeneficiario'
+                numeroDocumentoBeneficiario: 'focusNumeroDocumentoBeneficiario',
+
+                tasaInteresEdited: 'focusTasaInteresEdited',
+                btnGuardar: 'focusBtnGuardar'
             };
+
             $scope.setInitialFocus = function($event){
                 if(!angular.isUndefined($event))
                     $event.preventDefault();
-                focus($scope.focusElements.tipoPersona);
+                $timeout(function() {
+                    focus($scope.focusElements.tipoPersona);
+                }, 100);
                 $window.scrollTo(0, 0);
             };
             $scope.setInitialFocus();
@@ -240,7 +246,7 @@ define(['../module'], function (controllers) {
                 modalInstance.result.then(function (result) {
                     $scope.login.result = result;
                     $timeout(function() {
-                        angular.element(document.querySelector('#txtTasaInteresEdited')).focus();
+                        focus($scope.focusElements.tasaInteresEdited);
                     }, 100);
                 }, function () {
                 });
@@ -252,7 +258,11 @@ define(['../module'], function (controllers) {
                     if(final >= 0 && final <= 100) {
                         $scope.view.tasaInteres = final / 100;
                         $scope.login.result = false;
-                        angular.element(document.querySelector('#btnGuardar')).focus();
+
+                        $timeout(function() {
+                            focus($scope.focusElements.btnGuardar);
+                        }, 100);
+
                         if(!angular.isUndefined($event))
                             $event.preventDefault();
                     } else {

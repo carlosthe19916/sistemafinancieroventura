@@ -86,6 +86,9 @@ define(['./module'], function (services) {
                 },
                 getCountHistorialTransaccion: function(){
                     return Restangular.all("caja/session/historialTransaccion/count").getList();
+                },
+                cancelarCuentaBancaria: function(idCuentaBancaria){
+                    return Restangular.one("caja/session/cuentaBancaria/"+idCuentaBancaria).remove();
                 }
             }
         }])
