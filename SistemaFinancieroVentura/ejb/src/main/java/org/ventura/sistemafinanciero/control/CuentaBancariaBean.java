@@ -399,7 +399,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		LocalDate inicio = new LocalDate(cuentaBancaria.getFechaApertura());
 		LocalDate fin = inicio.plusDays(periodo);
 		
-		Date fechaCierre = fin.toDateTimeAtStartOfDay().toDate();
+		Date fechaCierre = fin.toDate();
 		
 		//actualizando cuenta
 		cuentaBancaria.setFechaCierre(fechaCierre);		
@@ -417,10 +417,11 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancariaDAO.update(cuentaBancaria);
 		cuentaBancariaTasaDAO.update(tasaInteresCuentaBancaria);
 		
-		if(fechaCierre.compareTo(Calendar.getInstance().getTime()) == -1){
-			descongelarCuentaBancaria(idCuenta);
+		if(fechaCierre.compareTo(Calendar.getInstance().getTime()) == -1){			
+				descongelarCuentaBancaria(idCuenta);
 		} else {
-			congelarCuentaBancaria(idCuenta);
+			if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.CONGELADO))
+				congelarCuentaBancaria(idCuenta);
 		}
 	}
 

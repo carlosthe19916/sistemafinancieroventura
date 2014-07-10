@@ -545,6 +545,28 @@ define(['./app'], function(app) {
                     }
                 }
             })
+            .state('app.socio.recalcularPlazoFijo', {
+                url: "/cuentaBancaria/recalcularPlazoFijo/:id",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/cuentaBancaria/recalcularPlazoFijo.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
+            .state('app.socio.renovarPlazoFijo', {
+                url: "/cuentaBancaria/renovarPlazoFijo/:id",
+                views: {
+                    "viewContent": {
+                        templateUrl: "views/cajero/cuentaBancaria/renovarPlazoFijo.html",
+                        controller: function($scope, $stateParams) {
+                            $scope.id = $stateParams.id;
+                        }
+                    }
+                }
+            })
             .state('app.socio.buscarCuentaBancaria', {
                 url: "/buscarCuentaBancaria",
                 views: {

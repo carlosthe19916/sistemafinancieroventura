@@ -40,7 +40,7 @@ define([
     './cuentaBancaria/TitularPopUpController',
     './cuentaBancaria/FirmasCuentaBancariaController',
     './cuentaBancaria/CancelarCuentaBancariaController',
-    './cuentaBancaria/RecalcularPlazoFijoPopUpController',
+    './cuentaBancaria/RecalcularPlazoFijoController',
 
     './persona/natural/BuscarPersonaNaturalController',
     './persona/natural/CrearPersonaNaturalController',

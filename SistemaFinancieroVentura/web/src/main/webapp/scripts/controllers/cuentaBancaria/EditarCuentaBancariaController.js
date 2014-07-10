@@ -15,6 +15,10 @@ define(['../module'], function (controllers) {
               "titular": {"success": false, "message": undefined}
             };
 
+            $scope.login = {
+                result: false
+            };
+
             $scope.loadRedireccion = function(){
                 if(RedirectService.haveNext()){
                     var state = RedirectService.getNextState();
@@ -182,42 +186,33 @@ define(['../module'], function (controllers) {
             };
             //cuenta a plazo fijo carlos
             $scope.recalcularPlazoFijo = function(){
-                var modalInstance = $modal.open({
-                    templateUrl: 'views/cajero/cuentaBancaria/recalcularPlazoFijoPopUp.html',
-                    controller: "RecalcularPlazoFijoPopUpController",
-                    resolve: {
-                        cuentaBancaria: function () {
-                            var cuenta = {
-                                moneda: $scope.cuentaBancaria.moneda,
-                                saldo: $scope.cuentaBancaria.saldo,
-                                tasaInteres: $scope.cuentaBancaria.tasaInteres,
-                                fechaApertura: $scope.cuentaBancaria.fechaApertura,
-                                fechaCierre: $scope.cuentaBancaria.fechaCierre
-                            };
-                            return cuenta;
-                        }
-                    }
-                });
-                modalInstance.result.then(function (result) {
-                    var cuenta = {
-                        periodo: result.periodo,
-                        tasaInteres: result.tasaInteres
-                    };
-                    CuentaBancariaService.recalcularPlazoFijo($scope.cuentaBancaria.id, result).then(
-                        function(data){
-                            $scope.loadCuentaBancaria();
-                        },
-                        function error(error){
-                            $scope.alerts = [{ type: "warning", msg: "Error:"+error.data.message+"."}];
-                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                        }
-                    );
-                }, function () {
-                });
+                $scope.openLoginPopUp('app.socio.recalcularPlazoFijo');
             };
 
             $scope.renovarPlazoFijo = function(){
+                $scope.openLoginPopUp('app.socio.renovarPlazoFijo');
+            };
 
+            $scope.openLoginPopUp = function (paginaSiguiente) {
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/util/loginPopUp.html',
+                    controller: "LoginPopUpController"
+                });
+                modalInstance.result.then(function (result) {
+                    $scope.login.result = result;
+
+                    //redireccionar
+                    var savedParameters = {
+                        id: $scope.id
+                    };
+                    var sendParameters = {
+                        id: $scope.id
+                    };
+                    var nextState = $scope.viewState;
+                    RedirectService.addNext(nextState, savedParameters);
+                    $state.transitionTo(paginaSiguiente, sendParameters);
+                }, function () {
+                });
             };
 
             $scope.cancelarCuentaBancaria = function(){
