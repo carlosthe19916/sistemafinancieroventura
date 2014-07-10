@@ -1,75 +1,156 @@
-<div ng-controller="RecalcularPlazoFijoController">
-    <div>
-        <div class="modal-header">
-            <button type="button" class="close" ng-click="cancel()">&times;</button>
-            <h4 class="modal-title">Recalcular cuenta</h4>
-        </div>
-        <div class="modal-body">
-            <form name="$parent.formRecalcularPopUp" ng-submit="ok()" class="form-horizontal" novalidate>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Monto:</label>
-                    <div class="col-sm-4">
-                        <label ng-bind="view.saldo | currency: view.moneda.simbolo" class="form-control"></label>
-                    </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : (formRecalcularPopUp.tasaInteres.$invalid && formRecalcularPopUp.tasaInteres.$dirty)}">
-                    <label class="col-sm-2 control-label">Tasa:</label>
-                    <div class="col-sm-6">
-                        <input type="text" name="tasaInteres" class="form-control" ng-model="view.tasaInteres" required>
-                        <div ng-show="formRecalcularPopUp.tasaInteres.$invalid &&  formRecalcularPopUp.tasaInteres.$dirty">
-                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.required">Ingrese tasa.</span>
-                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.pattern">Tasa invalida.</span>
+<div ng-controller="RenovarPlazoFijoController">
+    <fieldset>
+        <legend>Renovar Cuenta Plazo Fijo</legend>
+
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            {{alert.msg}}
+        </alert>
+
+        <form name="formRecalcularCuenta" ng-submit="crearTransaccion()" novalidate>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Datos de Recalculo</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formRecalcularCuenta.monto.$invalid && (control.submitted || formRecalcularCuenta.monto.$dirty)}">
+                                        <label>Monto</label>
+                                        <label style="color: brown;">(*)</label>
+                                        <label ng-bind="cuentaBancaria.saldo | currency: cuentaBancaria.moneda.simbolo" name="monto" class="form-control"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formRecalcularCuenta.tasaInteres.$invalid && (control.submitted || formRecalcularCuenta.tasaInteres.$dirty)}">
+                                        <label>Tasa interes</label>
+                                        <label style="color: brown;">(*)</label>
+                                        <input focus-on="focusTasaInteres" type="text" name="tasaInteres" ng-model="view.tasaInteres" ng-minlength="1" ng-maxlength="6" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Tasa Interes" required/>
+                                        <div ng-show="formRecalcularCuenta.tasaInteres.$invalid && (control.submitted || formRecalcularCuenta.tasaInteres.$dirty)">
+                                            <p class="help-block" ng-show="formRecalcularCuenta.tasaInteres.$error.required">
+                                                Ingrese Monto valido.
+                                            </p>
+                                            <p class="help-block" ng-show="formRecalcularCuenta.tasaInteres.$error.minlength">
+                                                Numero invalido.
+                                            </p>
+                                            <p class="help-block" ng-show="formRecalcularCuenta.tasaInteres.$error.maxlength">
+                                                Numero invalido.
+                                            </p>
+                                            <p class="help-block" ng-show="formRecalcularCuenta.tasaInteres.$error.pattern">
+                                                Numero invalido (Ejemplo: 99.99).
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : formRecalcularCuenta.fechaApertura.$invalid && control.submitted}">
+                                        <label>F.Apertura</label>
+                                        <label style="color: brown;">(*)</label>
+                                        <label ng-bind="cuentaBancaria.fechaApertura | date: 'dd/MM/yyyy'" name="fechaApertura" class="form-control"></label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : formRecalcularCuenta.fechaCierre.$invalid && (control.submitted || formRecalcularCuenta.fechaCierre.$dirty)}">
+                                        <label>F.Cierre</label>
+                                        <label style="color: brown;">(*)</label>
+                                        <div class="input-group">
+                                            <input type="text" name="fechaCierre" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="view.fechaCierre" min-date="cuentaBancaria.fechaApertura" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" required>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" ng-click="open($event)">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div ng-show="formRecalcularCuenta.fechaCierre.$invalid && (control.submitted || formRecalcularCuenta.fechaCierre.$dirty)">
+                                            <p class="help-block" ng-show="formRecalcularCuenta.fechaCierre.$error.required">
+                                                Ingrese Fecha.
+                                            </p>
+                                            <p class="help-block" ng-show="formRecalcularCuenta.fechaCierre.$invalid">
+                                                Fecha no Valida.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formRecalcularCuenta.periodo.$invalid && control.submitted}">
+                                        <label>Periodo</label>
+                                        <label style="color: brown;">(*)</label>
+                                        <label ng-bind="view.periodo" class="form-control"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : formRecalcularCuenta.total.$invalid && control.submitted}">
+                                        <label>Total</label>
+                                        <label style="color: brown;">(*)</label>
+                                        <label ng-bind="view.total | currency:''" class="form-control"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
+                            <button type="button" class="btn btn-default" ng-click="cancelar()">Cancelar</button>
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-class="{ 'has-error' : (formRecalcularPopUp.fechaIncicio.$invalid && formRecalcularPopUp.fechaIncicio.$dirty) || (formRecalcularPopUp.fechaFin.$invalid && formRecalcularPopUp.fechaFin.$dirty)}">
-                    <label class="col-sm-2 control-label">Fecha I/F:</label>
-                    <div class="col-sm-5">
-                        <div class="input-group">
-                            <input type="text" name="fechaInicio" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="view.fechaApertura" is-open="openedApertura" datepicker-options="dateOptions" ng-required="true" required="required">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-disabled="true">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </button>
-                            </span>
-                        </div>
-                        <div ng-show="formRecalcularPopUp.fechaInicio.$invalid &&  formRecalcularPopUp.fechaInicio.$dirty">
-                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.required">Ingrese F.inicio.</span>
-                            <span class="help-block" ng-show="formRecalcularPopUp.fechaInicio.$error.pattern">F.inicio invalida.</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        <div class="input-group">
-                            <input type="text" name="fechaFin" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="view.fechaCierre" is-open="openedCierre" datepicker-options="dateOptions" ng-required="true" close-text="Close" required="required">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="openCierre($event)">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </button>
-                            </span>
-                        </div>
-                        <div ng-show="formRecalcularPopUp.fechaFin.$invalid &&  formRecalcularPopUp.fechaFin.$dirty">
-                            <span class="help-block" ng-show="formRecalcularPopUp.fechaFin.$error.required">Ingrese F.inicio.</span>
-                            <span class="help-block" ng-show="formRecalcularPopUp.fechaFin.$error.pattern">F.inicio invalida.</span>
-                        </div>
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Cuenta Plazo Fijo</h3></div>
+                        <table class="table">
+                            <tr>
+                                <td><strong>Socio:</strong></td>
+                                <td colspan="3">
+                                    <span ng-if="socio.personaNatural" ng-bind-template="{{socio.personaNatural.apellidoPaterno}} {{socio.personaNatural.apellidoMaterno}}, {{socio.personaNatural.nombres}}"></span>
+                                    <span ng-if="socio.personaJuridica" ng-bind="socio.personaJuridica.razonSocial"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documento:</strong></td>
+                                <td colspan="3">
+                                    <span ng-if="socio.personaNatural" ng-bind-template="{{socio.personaNatural.tipoDocumento.abreviatura}}/{{socio.personaNatural.numeroDocumento}}"></span>
+                                    <span ng-if="socio.personaJuridica" ng-bind-template="{{socio.personaJuridica.tipoDocumento.abreviatura}}/{{socio.personaJuridica.numeroDocumento}}"></span>
+                                </td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td><strong>Tipo Cuenta:</strong></td>
+                                <td colspan="3"><span ng-bind="cuentaBancaria.tipoCuentaBancaria"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Numero Cuenta:</strong></td>
+                                <td colspan="3"><span ng-bind="cuentaBancaria.numeroCuenta"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Estado:</strong></td>
+                                <td colspan="3"><span ng-bind="cuentaBancaria.estado"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Moneda:</strong></td>
+                                <td colspan="3"><span ng-bind="cuentaBancaria.moneda.denominacion"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Saldo:</strong></td>
+                                <td colspan="3"><span ng-bind="cuentaBancaria.saldo | currency:''"></span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>F.Apertura:</strong></td>
+                                <td><span ng-bind="cuentaBancaria.fechaApertura | date:'dd/MM/yyyy'"></span></td>
+                                <td><strong>F.Cierre:</strong></td>
+                                <td><span ng-bind="cuentaBancaria.fechaCierre | date:'dd/MM/yyyy'"></span></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Periodo:</label>
-                    <div class="col-sm-4">
-                        <label ng-bind="view.periodo" class="form-control"></label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Total:</label>
-                    <div class="col-sm-4">
-                        <label ng-bind="view.total | currency: view.moneda.simbolo" class="form-control"></label>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" ng-click="ok()">Aceptar</button>
-            <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
-        </div>
-    </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
+            </div>
+        </form>
+    </fieldset>
+</div>

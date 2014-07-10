@@ -41,6 +41,7 @@ define([
     './cuentaBancaria/FirmasCuentaBancariaController',
     './cuentaBancaria/CancelarCuentaBancariaController',
     './cuentaBancaria/RecalcularPlazoFijoController',
+    './cuentaBancaria/RenovarPlazoFijoController',
 
     './persona/natural/BuscarPersonaNaturalController',
     './persona/natural/CrearPersonaNaturalController',

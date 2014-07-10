@@ -4,11 +4,6 @@ import org.hibernate.dialect.pagination.AbstractLimitHandler;
 import org.hibernate.dialect.pagination.LimitHelper;
 import org.hibernate.engine.spi.RowSelection;
 
-/**
- * LIMIT clause handler compatible with ISO and ANSI SQL:2008 standard.
- * 
- * @author zhouyanming (zhouyanming@gmail.com)
- */
 public class SQL2008StandardLimitHandler extends AbstractLimitHandler {
 
 	/**

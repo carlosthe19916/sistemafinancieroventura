@@ -3,6 +3,7 @@ package org.ventura.sistemafinanciero.entity;
 // Generated 02-may-2014 11:48:28 by Hibernate Tools 4.0.0
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.annotation.Generated;
@@ -35,7 +36,7 @@ public class CuentaBancariaInteresGenera implements java.io.Serializable {
 
 	public final static String findByIdAndDate = "CuentaBancariaInteresGenera.findByIdAndDate";
 
-	private BigDecimal idCuentaBancariaInteresGen;
+	private BigInteger idCuentaBancariaInteresGen;
 	private CuentaBancaria cuentaBancaria;
 	private BigDecimal capital;
 	private BigDecimal interesGenerado;
@@ -44,11 +45,11 @@ public class CuentaBancariaInteresGenera implements java.io.Serializable {
 	public CuentaBancariaInteresGenera() {
 	}
 
-	public CuentaBancariaInteresGenera(BigDecimal idCuentaBancariaInteresGen) {
+	public CuentaBancariaInteresGenera(BigInteger idCuentaBancariaInteresGen) {
 		this.idCuentaBancariaInteresGen = idCuentaBancariaInteresGen;
 	}
 
-	public CuentaBancariaInteresGenera(BigDecimal idCuentaBancariaInteresGen,
+	public CuentaBancariaInteresGenera(BigInteger idCuentaBancariaInteresGen,
 			CuentaBancaria cuentaBancaria, BigDecimal capital,
 			BigDecimal interesGenerado, Date fecha) {
 		this.idCuentaBancariaInteresGen = idCuentaBancariaInteresGen;
@@ -58,16 +59,16 @@ public class CuentaBancariaInteresGenera implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@Column(name = "ID_CUENTA_BANCARIA_INTERES_GEN", unique = true, nullable = false, precision = 22, scale = 0)
-	public BigDecimal getIdCuentaBancariaInteresGen() {
+	public BigInteger getIdCuentaBancariaInteresGen() {
 		return this.idCuentaBancariaInteresGen;
 	}
 
 	public void setIdCuentaBancariaInteresGen(
-			BigDecimal idCuentaBancariaInteresGen) {
-		this.idCuentaBancariaInteresGen = idCuentaBancariaInteresGen;
+			BigInteger idCuentaBancariaInteresGen) {
+		this.idCuentaBancariaInteresGen = idCuentaBancariaInteresGen;				
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
