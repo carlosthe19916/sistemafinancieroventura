@@ -112,12 +112,12 @@ define(['../module'], function (controllers) {
                 filterOptions: $scope.filterOptions,
                 plugins: [gridLayoutPlugin],
                 columnDefs: [
-                    {field:"tipoDocumento", displayName:'T.DOC.', width:60},
-                    {field:"numeroDocumento", displayName:'NUMERO',width:100},
-                    {field:"socio", displayName:'SOCIO',width:250},
-                    {field:"fechaAsociado | date : 'dd/MM/yyyy'", displayName:'F.ASOCIADO'},
+                    {field:"tipoDocumento", displayName:'TIPO DOC.', width:120},
+                    {field:"numeroDocumento", displayName:'Nº DOCUMENTO', width:130},
+                    {field:"socio", displayName:'SOCIO'}, 
+                    {field:"fechaAsociado | date : 'dd/MM/yyyy'", displayName:'FEC. ASOCIADO', width:120},
                     {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">INACTIVO</span></div>', width:80},
-                    {displayName: 'Select', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="selectSocio(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>'}
+                    {displayName: 'Select', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="selectSocio(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>', width:80}
                 ]
             };
             $scope.updateGridLayout = function(){
