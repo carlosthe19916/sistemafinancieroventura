@@ -116,14 +116,14 @@ define(['../../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:'tipoDocumento.abreviatura', displayName:'DOCUMENTO'},
-                    {field:'numeroDocumento', displayName:'NUM.DOCUMENTO'},
-                    {field:'apellidoPaterno', displayName:'AP.PATERNO'},
-                    {field:'apellidoMaterno', displayName:'AP.MATERNO'},
+                    {field:'tipoDocumento.abreviatura', displayName:'TIPO DOC.', width:80},
+                    {field:'numeroDocumento', displayName:'NUM. DOC.', width:100},
+                    {field:'apellidoPaterno', displayName:'AP. PATERNO', width:130},
+                    {field:'apellidoMaterno', displayName:'AP. MATERNO', width:130},
                     {field:'nombres', displayName:'NOMBRES'},
-                    {field:'sexo', displayName:'SEXO'},
-                    {field:"fechaNacimiento | date:'dd/MM/yyyy'", displayName:'F.NACIMIENTO'},
-                    {displayName: 'EDITAR', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editar(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button></div>'}]
+                    {field:'sexo', displayName:'SEXO', width:90},
+                    {field:"fechaNacimiento | date:'dd/MM/yyyy'", displayName:'F. NACIMIENTO', width:100},
+                    {displayName: 'EDITAR', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editar(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button></div>', width:80}]
             };
         }]);
 });

@@ -106,13 +106,13 @@ define(['../../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:'tipoDocumento.abreviatura', displayName:'DOCUMENTO'},
-                    {field:'numeroDocumento', displayName:'NUM.DOCUMENTO'},
+                    {field:'tipoDocumento.abreviatura', displayName:'TIPO DOC.', width:70},
+                    {field:'numeroDocumento', displayName:'Nº DOCUMENTO', width:100},
                     {field:'razonSocial', displayName:'RAZON SOCIAL'},
-                    {field:'nombreComercial', displayName:'N.COMERCIAL'},
-                    {field:'tipoEmpresa', displayName:'T.EMPRESA'},
-                    {field:"fechaConstitucion | date:'dd/MM/yyyy'", displayName:'F.CONSTITUCION'},
-                    {displayName: 'EDITAR', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editar(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button></div>'}]
+                    {field:'nombreComercial', displayName:'N.COMERCIAL', width:150},
+                    {field:'tipoEmpresa', displayName:'TIPO EMPRESA', width:100},
+                    {field:"fechaConstitucion | date:'dd/MM/yyyy'", displayName:'F. CONSTITUCION', width:120},
+                    {displayName: 'EDITAR', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editar(row.entity)"><span class="glyphicon glyphicon-share"></span>Edit</button></div>', width:80}]
             };
         }]);
 });

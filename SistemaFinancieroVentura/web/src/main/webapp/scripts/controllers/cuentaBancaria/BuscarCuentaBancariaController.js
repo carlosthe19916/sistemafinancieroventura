@@ -175,14 +175,14 @@ define(['../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:"tipoCuenta", displayName:'TIPO CTA.', width:80},
-                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:135},
-                    {field:"tipoDocumento", displayName:'T.DOC.', width:60},
-                    {field:"numeroDocumento", displayName:'NUMERO',width:100},
-                    {field:"socio", displayName:'SOCIO',width:220},
-                    {field:"moneda.denominacion", displayName:'MONEDA'},
-                    {field:"estadoCuenta", displayName:'ESTADO',width:80},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>'}
+                    {field:"tipoCuenta", displayName:'TIPO CTA', width:90},
+                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:125},
+                    {field:"tipoDocumento", displayName:'T DOC.', width:60},
+                    {field:"numeroDocumento", displayName:'Nº DOC.',width:100},
+                    {field:"socio", displayName:'SOCIO'},
+                    {field:"moneda.simbolo", displayName:'MONEDA', width:70},
+                    {field:"estadoCuenta", displayName:'ESTADO',width:100},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>', width:80}
                 ]
             };
 

@@ -130,14 +130,14 @@ define(['../module'], function (controllers) {
                 pagingOptions: $scope.pagingOptions,
                 filterOptions: $scope.filterOptions,
                 columnDefs: [
-                    {field:'id', displayName:'C.SOCIO', width:"8%"},
-                    {field:'tipoDocumento', displayName:'TIPO DOC.',width:"9%"},
-                    {field:'numeroDocumento', displayName:'NUM. DOC.',width:"12%"},
-                    {field:'tipoPersona', displayName:'PERSONA',width:"9%"},
-                    {field:'socio', displayName:'SOCIO',width:"25%"},
-                    {displayName: 'NUM.CTA.AP.', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center; width: 100%;"><span ng-show="row.entity.numeroCuentaAporte">{{row.entity.numeroCuentaAporte}}</span><span ng-hide="row.entity.numeroCuentaAporte">NO REGISTRADO</span></div>', width:"13%"},
-                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">INACTIVO</span></div>', width:"8%"},
-                    {field:"fechaAsociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:"9%"},
+                    {field:'id', displayName:'C. SOCIO', width:80},
+                    {field:'tipoDocumento', displayName:'T DOC.',width:60},
+                    {field:'numeroDocumento', displayName:'Nº DOC.',width:100},
+                    {field:'tipoPersona', displayName:'PERSONA',width:80},
+                    {field:'socio', displayName:'SOCIO'},
+                    {displayName: 'Nº CTA APORTE', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center; width: 100%;"><span ng-show="row.entity.numeroCuentaAporte">{{row.entity.numeroCuentaAporte}}</span><span ng-hide="row.entity.numeroCuentaAporte">NO REGISTRADO</span></div>', width:110},
+                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">INACTIVO</span></div>', width:70},
+                    {field:"fechaAsociado | date:'dd-MM-yyyy'", displayName:'F. ASOCIADO',width:90},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="editSocio(row.entity)"><span class="glyphicon glyphicon-share"></span>Editar</button></div>', width:"7%"}
                 ]
             };
