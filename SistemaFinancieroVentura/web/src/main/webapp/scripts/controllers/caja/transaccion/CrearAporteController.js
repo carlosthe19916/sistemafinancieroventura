@@ -44,7 +44,7 @@ define(['../../module'], function (controllers) {
             };
 
             $scope.view = {
-                monto: parseFloat("0.00"),
+                monto: "10.00",
                 mes: undefined,
                 anio: new Date().getFullYear()
             };
@@ -53,6 +53,12 @@ define(['../../module'], function (controllers) {
                 cuentaAporte: undefined,
                 socio: undefined
             };
+
+            $scope.setCurrentMonth = function(){
+                var currentDate = new Date();
+                $scope.view.mes = $scope.combo.mes[currentDate.getMonth()];
+            };
+            $scope.setCurrentMonth();
 
             $scope.openBuscarSocio = function () {
                 var modalInstance = $modal.open({
@@ -65,6 +71,7 @@ define(['../../module'], function (controllers) {
                     $scope.objetosCargados.socio = socio;
                     focus($scope.focusElements.monto);
                 }, function () {
+                    $scope.setInitialFocus();
                 });
             };
 
@@ -75,6 +82,23 @@ define(['../../module'], function (controllers) {
                 });
 
                 modalInstance.result.then(function (total) {
+                    $scope.view.monto = total;
+                    focus($scope.focusElements.mes);
+                }, function () {
+                });
+            };
+
+            $scope.buscarHistorialAportes = function(){
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/socio/historialAportesPopUp.html',
+                    controller: "HistorialAportesPopUpController",
+                    resolve: {
+                        idSocio: function () {
+                            return $scope.objetosCargados.socio.id
+                        }
+                    }
+                });
+                modalInstance.result.then(function (mes, anio) {
                     $scope.view.monto = total;
                     focus($scope.focusElements.mes);
                 }, function () {

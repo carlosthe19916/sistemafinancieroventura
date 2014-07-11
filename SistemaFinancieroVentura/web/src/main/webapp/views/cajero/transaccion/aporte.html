@@ -44,7 +44,7 @@
                                         <div class="input-group">
                                             <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" ng-minlength="1" ng-maxlength="6" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="objetosCargados.socio">
+                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="true">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </button>
                                               </span>
@@ -95,7 +95,7 @@
                                         <div class="input-group">
                                             <input type="text" name="anio" ng-model="view.anio" class="form-control" placeholder="Año" required/>
                                               <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="openCalculadora()" ng-disabled="objetosCargados.socio">
+                                                <button type="button" class="btn btn-default" ng-click="buscarHistorialAportes()" ng-disabled="!objetosCargados.socio">
                                                     <span class="glyphicon glyphicon-th-list"></span>
                                                 </button>
                                               </span>

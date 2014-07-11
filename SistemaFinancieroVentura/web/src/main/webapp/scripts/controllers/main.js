@@ -57,6 +57,7 @@ define([
     './socio/BuscarSocioPopUpController',
     './socio/ApoderadoPopUpController',
     './socio/ContratoInactivadoSocioController',
+    './socio/HistorialAportesPopUpController',
 
     './util/CalculadoraController',
     './util/LoginPopUpController',

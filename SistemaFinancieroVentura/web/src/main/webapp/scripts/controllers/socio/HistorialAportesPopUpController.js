@@ -1,32 +1,60 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$modalInstance", "$state","focus", "CuentaBancariaService","VariablesService",
-        function($scope, $modalInstance, $state,focus, CuentaBancariaService, VariablesService) {
+    controllers.controller("HistorialAportesPopUpController", ["$scope","$timeout","$modalInstance","idSocio","focus",
+        function($scope,$timeout,$modalInstance,idSocio,focus) {
 
             $scope.focusElements = {
-                filterText: 'focusFilterText'
+                mesDesde: 'focusMesDesde'
             };
+
             $scope.setInitialFocus = function($event){
                 if(!angular.isUndefined($event))
                     $event.preventDefault();
                 $timeout(function() {
-                    focus($scope.focusElements.filterText);
+                    focus($scope.focusElements.mesDesde);
                 }, 100);
             };
             $scope.setInitialFocus();
 
-            $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();
-            $scope.tipoPersonas = VariablesService.getTipoPersonas();;
-            $scope.tipoEstadoCuenta = [];
-            $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioActivo());
-
-            //configurar tabla
-            $scope.cuentasList = [];
-
-            $scope.filterOptions = {
-                filterText: "",
-                useExternalFilter: true
+            $scope.view = {
+                mesDesde: undefined,
+                anioDesde: undefined,
+                mesHasta: undefined,
+                anioHasta: undefined
             };
+
+            $scope.combo = {
+                mes: [
+                    {"denominacion":"ENERO","value":0},
+                    {"denominacion":"FEBRERO","value":1},
+                    {"denominacion":"MARZO","value":2},
+                    {"denominacion":"ABRIL","value":3},
+                    {"denominacion":"MAYO","value":4},
+                    {"denominacion":"JUNIO","value":5},
+                    {"denominacion":"JULIO","value":6},
+                    {"denominacion":"AGOSTO","value":7},
+                    {"denominacion":"SEPTIEMBRE","value":8},
+                    {"denominacion":"OCTUBRE","value":9},
+                    {"denominacion":"NOVIEMBRE","value":10},
+                    {"denominacion":"DICIEMBRE","value":11}
+                ]
+            };
+
+            $scope.setDefaultDates = function(){
+                var pastDate = new Date();
+                pastDate.setMonth(pastDate.getMonth()-12);
+                $scope.view.anioDesde = pastDate.getFullYear();
+                $scope.view.mesDesde = $scope.combo.mes[pastDate.getMonth()];
+
+                var currentDate = new Date();
+                $scope.view.anioHasta = currentDate.getFullYear();
+                $scope.view.mesHasta = $scope.combo.mes[currentDate.getMonth()];
+            };
+            $scope.setDefaultDates();
+
+            //definicion de la tabla
+            $scope.aportesList = [];
+
             $scope.totalServerItems = 0;
             $scope.pagingOptions = {
                 pageSizes: [10, 20, 40],
@@ -34,7 +62,7 @@ define(['../module'], function (controllers) {
                 currentPage: 1
             };
             $scope.setPagingData = function(data, page, pageSize){
-                $scope.cuentasList = data;
+                $scope.aportesList = data;
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
@@ -49,8 +77,8 @@ define(['../module'], function (controllers) {
             $scope.getPagedDataInitial = function () {
                 $scope.pagingOptions.currentPage = 1;
                 CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta,$scope.getDesde(), $scope.getHasta()).then(function(data){
-                    $scope.cuentasList = data;
-                    $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                    $scope.aportesList = data;
+                    $scope.setPagingData($scope.aportesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                 });
                 CuentaBancariaService.count().then(function(data){
                     $scope.totalServerItems = data;
@@ -62,8 +90,8 @@ define(['../module'], function (controllers) {
                 if ($scope.filterOptions.filterText) {
                     var ft = $scope.filterOptions.filterText.toUpperCase();
                     CuentaBancariaService.findByFilterTextView(ft, $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta,$scope.getDesde(), $scope.getHasta()).then(function (data){
-                        $scope.cuentasList = data;
-                        $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                        $scope.aportesList = data;
+                        $scope.setPagingData($scope.aportesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
                     CuentaBancariaService.count().then(function(data){
                         $scope.totalServerItems = data;
@@ -88,21 +116,20 @@ define(['../module'], function (controllers) {
                     if ($scope.filterOptions.filterText) {
                         var ft = $scope.filterOptions.filterText.toUpperCase();
                         CuentaBancariaService.findByFilterTextView(ft, $scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta, $scope.getDesde(), $scope.getHasta()).then(function (data){
-                            $scope.cuentasList = data;
-                            $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
-                            $scope.cuentasListAuxiliar = angular.copy(data);
+                            $scope.aportesList = data;
+                            $scope.setPagingData($scope.aportesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
                     } else {
                         CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta, $scope.getDesde(), $scope.getHasta()).then(function(data){
-                            $scope.cuentasList = data;
-                            $scope.setPagingData($scope.cuentasList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
+                            $scope.aportesList = data;
+                            $scope.setPagingData($scope.aportesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
                     }
                 },true);
 
             var gridLayoutPlugin = new ngGridLayoutPlugin();
             $scope.gridOptions = {
-                data: 'cuentasList',
+                data: 'aportesList',
                 selectedItems: [],
                 multiSelect: false,
                 enablePaging: true,
@@ -131,19 +158,9 @@ define(['../module'], function (controllers) {
                 angular.element(document.querySelector('#txtBuscarCuenta')).focus();
             }, 100);
 
-            $scope.selectCuenta = function(row){
-                $scope.cuentaSelected = row;
-                $scope.ok();
-            }
 
             $scope.ok = function () {
-                var cta = $scope.gridOptions.selectedItems[0];
-                if(cta !== undefined && cta !== null){
-                    $scope.cuentaSelected = cta;
-                }
-                if ($scope.cuentaSelected !== undefined && $scope.cuentaSelected !== null) {
-                    $modalInstance.close($scope.cuentaSelected);
-                }
+
             };
 
             $scope.cancel = function () {

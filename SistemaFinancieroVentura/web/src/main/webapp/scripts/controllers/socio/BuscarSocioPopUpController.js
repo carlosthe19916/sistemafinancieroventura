@@ -9,7 +9,9 @@ define(['../module'], function (controllers) {
             $scope.setInitialFocus = function($event){
                 if(!angular.isUndefined($event))
                     $event.preventDefault();
-                focus($scope.focusElements.filterText);
+                $timeout(function() {
+                    focus($scope.focusElements.filterText);
+                }, 100);
             };
             $scope.setInitialFocus();
 
@@ -123,8 +125,7 @@ define(['../module'], function (controllers) {
             }
             setTimeout(function () {
                 $scope.updateGridLayout();
-                angular.element(document.querySelector('#txtBuscarCuenta')).focus();
-            }, 300);
+            }, 500);
 
             $scope.selectSocio = function(row){
                 $scope.socioSelected = row;
