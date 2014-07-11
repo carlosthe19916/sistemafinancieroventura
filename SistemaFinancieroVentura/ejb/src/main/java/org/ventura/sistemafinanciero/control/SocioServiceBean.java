@@ -672,13 +672,20 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	public List<HistorialAportesView> getHistorialAportes(BigInteger idSocio, Date desde, Date hasta, BigInteger offset, BigInteger limit) {		
 		LocalDate desdeLocalDate = new LocalDate(desde);
 		LocalDate hastaLocalDate = new LocalDate(hasta);
-		int anioDesde = desdeLocalDate.getYear();
-		int anioHasta = hastaLocalDate.getYear();
-		int mesDesde = desdeLocalDate.getMonthOfYear();
-		int mesHasta = hastaLocalDate.getMonthOfYear();
 		
-		QueryParameter queryParameter = QueryParameter.with("idSocio", idSocio).and("desde", desde).and("hasta", hasta);
-		//List<HistorialAportesView> list = historialAportesViewDAO.findByNamedQuery(HistorialAportesView.findByIdSocioAndFecha,queryParameter.parameters(), offset, limit);
+		if(offset == null) {			
+			offset = BigInteger.ZERO;			
+		}
+		offset = offset.abs();
+		if(limit != null){
+			limit = limit.abs();			
+		}		
+		Integer offSetInteger = offset.intValue();
+		Integer limitInteger = (limit != null ? limit.intValue() : null);
+		
+		QueryParameter queryParameter = QueryParameter.with("idSocio", idSocio).and("desde", desdeLocalDate.toDate()).and("hasta", hastaLocalDate.toDate());
+		List<HistorialAportesView> list = historialAportesViewDAO.findByNamedQuery(HistorialAportesView.findByIdSocioAndFecha,queryParameter.parameters(), offSetInteger, limitInteger);
+		
 		return null;
 	}
 }

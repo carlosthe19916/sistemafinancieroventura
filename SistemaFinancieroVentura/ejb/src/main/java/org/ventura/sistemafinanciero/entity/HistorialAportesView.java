@@ -1,22 +1,23 @@
 package org.ventura.sistemafinanciero.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
-import org.ventura.sistemafinanciero.dao.QueryParameter;
-import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
-import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
-import org.ventura.sistemafinanciero.entity.type.TipoPersona;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
 
 /**
  * The persistent class for the CUENTA_BANCARIA_VIEW database table.
@@ -26,18 +27,17 @@ import java.util.Date;
 @Table(name = "HISTORIAL_APORTES_VIEW", schema = "BDSISTEMAFINANCIERO")
 @XmlRootElement(name = "historial_aportes_view")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = HistorialAportesView.findByIdSocioAndFecha, query = "SELECT h from HistorialAportesView h WHERE h.idSocio = :idSocio") })
+@NamedQueries({ @NamedQuery(name = HistorialAportesView.findByIdSocioAndFecha, query = "SELECT h from HistorialAportesView h WHERE h.idSocio = :idSocio AND h.fecha BETWEEN :desde AND :hasta") })
 public class HistorialAportesView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	// public final static String FindByFilterTextCuentaBancariaView =
-	// "CuentaBancariaView.FindByFilterTextCuentaBancariaView";
 	public final static String findByIdSocioAndFecha = "HistorialAportesView.findByIdSocioAndFecha";
 
 	private BigInteger idSocio;
 	private int anio;
 	private int mes;
+	private Date fecha;
 	private BigDecimal monto;
 
 	public HistorialAportesView() {
@@ -82,6 +82,17 @@ public class HistorialAportesView implements Serializable {
 
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
+	}
+
+	@XmlElement
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA", nullable = false, length = 7)
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 
 }

@@ -28,18 +28,18 @@ define(['../../module'], function (controllers) {
 
             $scope.combo = {
                 mes: [
-                    {"denominacion":"ENERO","value":0},
-                    {"denominacion":"FEBRERO","value":1},
-                    {"denominacion":"MARZO","value":2},
-                    {"denominacion":"ABRIL","value":3},
-                    {"denominacion":"MAYO","value":4},
-                    {"denominacion":"JUNIO","value":5},
-                    {"denominacion":"JULIO","value":6},
-                    {"denominacion":"AGOSTO","value":7},
-                    {"denominacion":"SEPTIEMBRE","value":8},
-                    {"denominacion":"OCTUBRE","value":9},
-                    {"denominacion":"NOVIEMBRE","value":10},
-                    {"denominacion":"DICIEMBRE","value":11}
+                    {"denominacion":"ENERO","value":1},
+                    {"denominacion":"FEBRERO","value":2},
+                    {"denominacion":"MARZO","value":3},
+                    {"denominacion":"ABRIL","value":4},
+                    {"denominacion":"MAYO","value":5},
+                    {"denominacion":"JUNIO","value":6},
+                    {"denominacion":"JULIO","value":7},
+                    {"denominacion":"AGOSTO","value":8},
+                    {"denominacion":"SEPTIEMBRE","value":9},
+                    {"denominacion":"OCTUBRE","value":10},
+                    {"denominacion":"NOVIEMBRE","value":11},
+                    {"denominacion":"DICIEMBRE","value":12}
                 ]
             };
 
