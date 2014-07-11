@@ -26,6 +26,9 @@ define(['./module'], function (services) {
                     } else if (arguments.length == 3) {
                         return Restangular.one("tasa/plazoFijo/"+idMoneda+"/"+periodo+"/"+monto).get();
                     }
+                },
+                getTasaCambio: function(idMonedaRecibida, idMonedaEntregada){
+                    return Restangular.one("tasa/tasaCambio").get({idMonedaRecibida:idMonedaRecibida,idMonedaEntregada:idMonedaEntregada},{});
                 }
             }
         }])

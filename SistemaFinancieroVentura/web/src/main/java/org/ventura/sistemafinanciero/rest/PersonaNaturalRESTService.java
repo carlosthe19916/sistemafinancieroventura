@@ -189,7 +189,7 @@ public class PersonaNaturalRESTService {
 		} catch (PreexistingEntityException e) {
 			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, CONFLICT_MESSAGE).build();
 			result = Response.status(Response.Status.CONFLICT).entity(model).build();
-		} catch (ConstraintViolationException e) {
+		} catch (javax.validation.ConstraintViolationException e) {
 			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, BAD_REQUEST_MESSAGE).build();
 			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		} catch (EJBException e) {

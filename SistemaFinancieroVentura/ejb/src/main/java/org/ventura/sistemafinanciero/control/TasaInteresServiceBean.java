@@ -102,6 +102,6 @@ public class TasaInteresServiceBean extends AbstractServiceBean<TasaInteres> imp
 	@Override
 	protected DAO<Object, TasaInteres> getDAO() {
 		return tasaInteresDAO;
-	}
+	}	
 	
 }
