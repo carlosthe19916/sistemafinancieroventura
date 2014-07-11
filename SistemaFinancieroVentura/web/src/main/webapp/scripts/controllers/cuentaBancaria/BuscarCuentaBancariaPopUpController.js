@@ -1,6 +1,6 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$timeout","$modalInstance", "$state","focus", "CuentaBancariaService","VariablesService",
+    controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$timeout","$modalInstance","$state","focus", "CuentaBancariaService","VariablesService",
         function($scope,$timeout, $modalInstance, $state,focus, CuentaBancariaService, VariablesService) {
 
             $scope.focusElements = {
@@ -15,11 +15,12 @@ define(['../module'], function (controllers) {
             };
             $scope.setInitialFocus();
 
-            $scope.tipoCuentasBancarias = VariablesService.getTipoCuentasBancarias();
+            $scope.tipoCuentasBancarias = [];
             $scope.tipoPersonas = VariablesService.getTipoPersonas();;
             $scope.tipoEstadoCuenta = [];
             $scope.tipoEstadoCuenta.push(VariablesService.getEstadoBancarioActivo());
-
+            $scope.tipoCuentasBancarias.push(VariablesService.getAhorro());
+            $scope.tipoCuentasBancarias.push(VariablesService.getCorriente());
             //configurar tabla
             $scope.cuentasList = [];
 
@@ -128,7 +129,7 @@ define(['../module'], function (controllers) {
             }
             setTimeout(function () {
                 $scope.updateGridLayout();
-            }, 100);
+            }, 500);
 
             $scope.selectCuenta = function(row){
                 $scope.cuentaSelected = row;
