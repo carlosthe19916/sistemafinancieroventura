@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$modalInstance", "$state","focus", "CuentaBancariaService","VariablesService",
-        function($scope, $modalInstance, $state,focus, CuentaBancariaService, VariablesService) {
+    controllers.controller("BuscarCuentaBancariaPopUpController", ["$scope","$timeout","$modalInstance", "$state","focus", "CuentaBancariaService","VariablesService",
+        function($scope,$timeout, $modalInstance, $state,focus, CuentaBancariaService, VariablesService) {
 
             $scope.focusElements = {
                 filterText: 'focusFilterText'
@@ -128,7 +128,6 @@ define(['../module'], function (controllers) {
             }
             setTimeout(function () {
                 $scope.updateGridLayout();
-                angular.element(document.querySelector('#txtBuscarCuenta')).focus();
             }, 100);
 
             $scope.selectCuenta = function(row){

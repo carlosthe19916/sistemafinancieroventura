@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.hibernate.Hibernate;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ventura.sistemafinanciero.dao.DAO;
@@ -27,6 +29,7 @@ import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.HistorialAportesView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
@@ -67,6 +70,11 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	private DAO<Object, PersonaNatural> personaNaturalDAO;
 	@Inject
 	private DAO<Object, TransaccionCuentaAporte> transaccionCuentaAporteDAO;
+	
+	@Inject
+	private DAO<Object, HistorialAportesView> historialAportesViewDAO;
+	
+	
 	
 	@EJB
 	private PersonaNaturalService personaNaturalService;
@@ -658,5 +666,19 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 			voucherTransaccion.setSocio(personaJuridica.getRazonSocial());
 		}
 		return voucherTransaccion;
+	}
+	
+	@Override
+	public List<HistorialAportesView> getHistorialAportes(BigInteger idSocio, Date desde, Date hasta, BigInteger offset, BigInteger limit) {		
+		LocalDate desdeLocalDate = new LocalDate(desde);
+		LocalDate hastaLocalDate = new LocalDate(hasta);
+		int anioDesde = desdeLocalDate.getYear();
+		int anioHasta = hastaLocalDate.getYear();
+		int mesDesde = desdeLocalDate.getMonthOfYear();
+		int mesHasta = hastaLocalDate.getMonthOfYear();
+		
+		QueryParameter queryParameter = QueryParameter.with("idSocio", idSocio).and("desde", desde).and("hasta", hasta);
+		//List<HistorialAportesView> list = historialAportesViewDAO.findByNamedQuery(HistorialAportesView.findByIdSocioAndFecha,queryParameter.parameters(), offset, limit);
+		return null;
 	}
 }

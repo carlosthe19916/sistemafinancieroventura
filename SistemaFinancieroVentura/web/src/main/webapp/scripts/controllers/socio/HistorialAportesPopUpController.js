@@ -73,7 +73,7 @@ define(['../module'], function (controllers) {
             $scope.getHasta = function(){
                 return $scope.pagingOptions.pageSize;
             };
-
+/*
             $scope.getPagedDataInitial = function () {
                 $scope.pagingOptions.currentPage = 1;
                 CuentaBancariaService.getCuentasBancariasView($scope.tipoCuentasBancarias, $scope.tipoPersonas, $scope.tipoEstadoCuenta,$scope.getDesde(), $scope.getHasta()).then(function(data){
@@ -84,8 +84,8 @@ define(['../module'], function (controllers) {
                     $scope.totalServerItems = data;
                 });
             };
-            $scope.getPagedDataInitial();
-
+            $scope.getPagedDataInitial();*/
+/*
             $scope.getPagedDataSearched = function () {
                 if ($scope.filterOptions.filterText) {
                     var ft = $scope.filterOptions.filterText.toUpperCase();
@@ -100,8 +100,8 @@ define(['../module'], function (controllers) {
                     $scope.getPagedDataInitial();
                 }
                 $scope.setInitialFocus();
-            };
-
+            };*/
+/*
             $scope.$watch(
                 function () {
                     return {
@@ -125,7 +125,7 @@ define(['../module'], function (controllers) {
                             $scope.setPagingData($scope.aportesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                         });
                     }
-                },true);
+                },true);*/
 
             var gridLayoutPlugin = new ngGridLayoutPlugin();
             $scope.gridOptions = {
@@ -136,16 +136,12 @@ define(['../module'], function (controllers) {
                 showFooter: true,
                 totalServerItems: 'totalServerItems',
                 pagingOptions: $scope.pagingOptions,
-                filterOptions: $scope.filterOptions,
                 plugins: [gridLayoutPlugin],
                 columnDefs: [
-                    {field:"tipoCuenta", displayName:'TIPO CTA.', width:80},
-                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:135},
-                    {field:"tipoDocumento", displayName:'T.DOC.', width:60},
-                    {field:"numeroDocumento", displayName:'NUMERO',width:100},
-                    {field:"socio", displayName:'SOCIO',width:220},
-                    {field:"moneda.denominacion", displayName:'MONEDA'},
-                    {field:"estadoCuenta", displayName:'ESTADO',width:80},
+                    {field:"anio", displayName:'AÑO'},
+                    {field:"mes", displayName:'MES'},
+                    {field:"monto", displayName:'MONTO APORTE'},
+                    {field:"estado", displayName:'ESTADO'},
                     {displayName: 'Select', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="selectCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>'}
                 ]
             };
@@ -155,7 +151,6 @@ define(['../module'], function (controllers) {
             }
             setTimeout(function () {
                 $scope.updateGridLayout();
-                angular.element(document.querySelector('#txtBuscarCuenta')).focus();
             }, 100);
 
 
