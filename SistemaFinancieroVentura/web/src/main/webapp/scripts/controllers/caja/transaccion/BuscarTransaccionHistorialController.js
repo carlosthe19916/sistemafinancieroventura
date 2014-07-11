@@ -102,13 +102,13 @@ define(['../../module'], function (controllers) {
                 filterOptions: $scope.filterOptions,
                 plugins: [gridLayoutPlugin],
                 columnDefs: [
-                    {field:"tipoTransaccion", displayName:'TIPO TRANS.', width:120},
-                    {field:"id.numeroOperacion", displayName:'NUM.OPERACION', width:125},
-                    {field:"moneda", displayName:'MONEDA', width:100},
-                    {field:"monto", displayName:'MONTO', width:130},
-                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'FECHA',width:100},
-                    {field:"hora | date : 'HH:mm:ss'", displayName:'HORA',width:100},
-                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">EXTORNADO</span></div>',width:90},
+                    {field:"tipoTransaccion", displayName:'TIPO TRANS.', width:90},
+                    {field:"id.numeroOperacion", displayName:'Nº OP.', width:60},
+                    {field:"moneda", displayName:'MONEDA'},
+                    {field:"monto", displayName:'MONTO', width:120},
+                    {field:"fecha | date : 'dd/MM/yyyy'", displayName:'FECHA', width:80},
+                    {field:"hora | date : 'HH:mm:ss'", displayName:'HORA', width:70},
+                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">EXTORNADO</span></div>', width:70},
                     {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="extornar(row.entity)"><span class="glyphicon glyphicon-remove"></span>Extornar</button></div>',width:160}
                 ]
             };

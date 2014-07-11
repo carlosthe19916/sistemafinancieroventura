@@ -113,14 +113,14 @@ define(['../module'], function (controllers) {
                 filterOptions: $scope.filterOptions,
                 plugins: [gridLayoutPlugin],
                 columnDefs: [
-                    {field:"tipoCuenta", displayName:'TIPO CTA.', width:80},
-                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:135},
-                    {field:"tipoDocumento", displayName:'T.DOC.', width:60},
-                    {field:"numeroDocumento", displayName:'NUMERO',width:100},
-                    {field:"socio", displayName:'SOCIO',width:220},
-                    {field:"moneda.denominacion", displayName:'MONEDA'},
-                    {field:"estadoCuenta", displayName:'ESTADO',width:80},
-                    {displayName: 'Select', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="selectCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>'}
+                    {field:"tipoCuenta", displayName:'TIPO CTA', width:90},
+                    {field:"numeroCuenta", displayName:'NUMERO CUENTA', width:120},
+                    {field:"tipoDocumento", displayName:'TIPO DOC', width:75},
+                    {field:"numeroDocumento", displayName:'Nº DOCUMENTO', width:100},
+                    {field:"socio", displayName:'SOCIO'},
+                    {field:"moneda.simbolo", displayName:'MONEDA', width:60},
+                    {field:"estadoCuenta", displayName:'ESTADO', width:70},
+                    {displayName: 'Select', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="selectCuenta(row.entity)"><span class="glyphicon glyphicon-share"></span>Select</button></div>',  width:70}
                 ]
             };
 
