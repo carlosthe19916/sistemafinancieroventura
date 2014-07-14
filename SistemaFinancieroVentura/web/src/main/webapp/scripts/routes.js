@@ -30,19 +30,19 @@ define(['./app'], function(app) {
                     '<div class="navbar-collapse collapse">' +
                     '<ul class="nav navbar-nav">'+
                     '<li ng-class="{active: $state.includes(&#39;app.home&#39;)}">'+
-                    '   <a href="#" ui-sref="app.home({redirect:true})">Página Principal</a>'+
+                    '   <a href="#" ui-sref="app.home({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.home&#39;)}">Página Principal</a>'+
                     '</li>'+
                     '<li ng-class="{active: $state.includes(&#39;app.caja&#39;)}">'+
-                    '   <a href="#contact" ui-sref="app.caja({redirect:true})">Caja</a>'+
+                    '   <a href="#contact" ui-sref="app.caja({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.caja&#39;)}">Caja</a>'+
                     '</li>'+
                     '<li ng-class="{active: $state.includes(&#39;app.transaccion&#39;)}">'+
-                    '<a href="#about" ui-sref="app.transaccion({redirect:true})">Transacciones</a>'+
+                    '<a href="#about" ui-sref="app.transaccion({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.transaccion&#39;)}">Transacciones</a>'+
                     '</li>'+
                     '<li ng-class="{active: $state.includes(&#39;app.socio&#39;)}">'+
-                    '<a href="#contact" ui-sref="app.socio({redirect:true})">Cuentas Personales</a>'+
+                    '<a href="#contact" ui-sref="app.socio({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.socio&#39;)}">Cuentas Personales</a>'+
                     '</li>'+
                     '<li ng-class="{active: $state.includes(&#39;app.administracion&#39;)}">'+
-                    '<a href="#contact" ui-sref="app.administracion({redirect:true})">Administracion</a>'+
+                    '<a href="#contact" ui-sref="app.administracion({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.administracion&#39;)}">Administracion</a>'+
                     '</li>'+
                     '</ul>'+
                     '<ul class="nav navbar-nav navbar-right" ng-controller="CajaNavbarController">'+
