@@ -3,7 +3,7 @@
         <div class="col-md-5" id="voucher">
             <div>
                 <fieldset>
-                    <legend>VOUCHER TRANSFERENCIA BANCARIA</legend>
+                    <legend style="font-size: 18px;">VOUCHER TRANSFERENCIA BANCARIA</legend>
                 </fieldset>
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
@@ -15,63 +15,63 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>AGENCIA:</td>
-                            <td>
+                            <td style="font-size: 13px;">AGENCIA:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.agenciaAbreviatura"/>
                             </td>
-                            <td>N&deg; TRANS:</td>
-                            <td>
+                            <td style="font-size: 13px;">N&deg; TRANS:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.id"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>CAJA:</td>
-                            <td>
+                            <td style="font-size: 13px;">CAJA:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.cajaDenominacion"/>
                                 <span ng-bind="'(' + transferenciaCuentaBancaria.cajaAbreviatura + ')'"/>
                             </td >
-                            <td>N&deg; OP:</td>
-                            <td>
+                            <td style="font-size: 13px;">N&deg; OP:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.numeroOperacion"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>FECHA:</td>
-                            <td colspan="3">
+                            <td style="font-size: 13px;">FECHA:</td>
+                            <td colspan="3" style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.fecha | date : 'dd/MM/yyyy'"/>
                                 <span ng-bind="transferenciaCuentaBancaria.hora | date : 'HH:mm:ss'"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>CUENTA ORIGEN.:</td>
-                            <td colspan="3"><span ng-bind="transferenciaCuentaBancaria.numeroCuentaOrigen"/> </td>
+                            <td style="font-size: 13px;">CUENTA ORIGEN.:</td>
+                            <td colspan="3" style="font-size: 13px;"><span ng-bind="transferenciaCuentaBancaria.numeroCuentaOrigen"/> </td>
                         </tr>
                         <tr>
-                            <td>CUENTA DESTINO.:</td>
-                            <td colspan="3"><span ng-bind="transferenciaCuentaBancaria.numeroCuentaDestino"/> </td>
+                            <td style="font-size: 13px;">CUENTA DESTINO.:</td>
+                            <td colspan="3" style="font-size: 13px;"><span ng-bind="transferenciaCuentaBancaria.numeroCuentaDestino"/> </td>
                         </tr>
                         <tr>
-                            <td>SOCIO:</td>
-                            <td colspan="3">
+                            <td style="font-size: 13px;">SOCIO:</td>
+                            <td colspan="3" style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.socio"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>MONEDA:</td>
-                            <td colspan="3">
+                            <td style="font-size: 13px;">MONEDA:</td>
+                            <td colspan="3" style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.moneda.denominacion"/>
                                 <span ng-bind="'(' + transferenciaCuentaBancaria.moneda.simbolo + ')'"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>REF:</td>
-                            <td colspan="3">
+                            <td style="font-size: 13px;">REF:</td>
+                            <td colspan="3" style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.referencia"/>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">IMPORTE PAGADO:</td>
-                            <td colspan="2" style="text-align: right;">
+                            <td colspan="2" style="font-size: 13px;">IMPORTE PAGADO:</td>
+                            <td colspan="2" style="text-align: right;" style="font-size: 13px;">
                                 <span ng-bind="transferenciaCuentaBancaria.moneda.simbolo"></span>
                                 <span ng-bind="transferenciaCuentaBancaria.monto | number : 2"/>
                             </td>
