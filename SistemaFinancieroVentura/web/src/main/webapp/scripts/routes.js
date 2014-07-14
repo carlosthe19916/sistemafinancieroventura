@@ -51,14 +51,28 @@ define(['./app'], function(app) {
                     '<span ng-show="cajaSession.abierto && cajaSession.estadoMovimiento" ng-cloak class="label label-info">Abierto</span>'+
                     '<span ng-show="cajaSession.abierto && !cajaSession.estadoMovimiento" ng-cloak class="label label-warning">Congelado</span>'+
                     '<span ng-show="!cajaSession.abierto" ng-cloak class="label label-danger">Cerrado</span>'+
-                    '<strong><span ng-bind="cajaSession.denominacion"></span></strong>'+
+                    '&nbsp;<strong><span ng-bind="cajaSession.denominacion"></span></strong>'+
                     '</a>'+
                     '</li>'+
-                    '<li>'+
+                    '<li style="cursor: auto;">'+
                     '<a>||</a>'+
                     '</li>'+
                     '<li>'+
-                    '<a><span ng-bind="usuarioSession"></span></a>'+
+
+                    '<div class="btn-group" dropdown style="padding-top: 10px;">'+
+                        '<button type="button" class="btn btn-link dropdown-toggle" style="color:#29465F">'+
+                            '<span class="glyphicon glyphicon-user">&nbsp;</span>'+
+                            '{{usuarioSession}}&nbsp;&nbsp;&nbsp;' +
+                            '<span class="caret"></span>'+
+                        '</button>'+
+                        '<ul class="dropdown-menu" role="menu">'+
+                            '<li><a href="#">Ver perfil</a></li>'+
+                            '<li><a href="#">Configuracion</a></li>'+
+                            '<li class="divider"></li>'+
+                            '<li><a href="/SistemaFinancieroVentura-web/logout">Salir</a></li>'+
+                        '</ul>'+
+                    '</div>'+
+
                     '</li>'+
                     '<li>'+
                     '<a class="gwt-Anchor  sf-notification-image" style="padding-right: 30px"></a>'+

@@ -8,7 +8,8 @@ define(['../../module'], function (controllers) {
             $scope.focusElements = {
                 numeroDocumento: 'focusNumeroDocumento',
                 tipoOperacion: 'focusTipoOperacion',
-                monto: 'focusMontoRecibido',
+                montoRecibido: 'focusMontoRecibido',
+                montoEntregado: 'focusMontoEntregado',
 
                 linkEditar:'focusLinkEditar',
                 tasaInteres: 'focusTasaInteresEdited'
@@ -117,7 +118,14 @@ define(['../../module'], function (controllers) {
                         $scope.view.tasaCambio = final;
                         $scope.login.result = false;
                         $timeout(function() {
-                            focus($scope.focusElements.monto);
+                            if(!angular.isUndefined($scope.view.tipoOperacion)){
+                                if($scope.view.tipoOperacion.denominacion == 'COMPRA'){
+                                    focus($scope.focusElements.montoRecibido);
+                                }
+                                if($scope.view.tipoOperacion.denominacion == 'VENTA'){
+                                    focus($scope.focusElements.montoEntregado);
+                                }
+                            }
                         }, 100);
                     }
                 }
@@ -199,11 +207,28 @@ define(['../../module'], function (controllers) {
             },true);
 
             $scope.$watch("view.montoRecibido",function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    if(!angular.isUndefined($scope.view.tasaCambio)){
-                        $scope.view.montoEntregado = parseFloat($scope.view.montoRecibido)*$scope.view.tasaCambio;
-                    } else {
-                        $scope.view.montoEntregado = 0;
+                if(!angular.isUndefined($scope.view.tipoOperacion)){
+                    if($scope.view.tipoOperacion.denominacion == 'COMPRA'){
+                        if (newVal !== oldVal) {
+                            if(!angular.isUndefined($scope.view.tasaCambio)){
+                                $scope.view.montoEntregado = parseFloat($scope.view.montoRecibido)*$scope.view.tasaCambio;
+                            } else {
+                                $scope.view.montoEntregado = 0;
+                            }
+                        }
+                    }
+                }
+            },true);
+            $scope.$watch("view.montoEntregado",function (newVal, oldVal) {
+                if(!angular.isUndefined($scope.view.tipoOperacion)){
+                    if($scope.view.tipoOperacion.denominacion == 'VENTA'){
+                        if (newVal !== oldVal) {
+                            if(!angular.isUndefined($scope.view.tasaCambio)){
+                                $scope.view.montoRecibido = parseFloat($scope.view.montoEntregado)*$scope.view.tasaCambio;
+                            } else {
+                                $scope.view.montoEntregado = 0;
+                            }
+                        }
                     }
                 }
             },true);

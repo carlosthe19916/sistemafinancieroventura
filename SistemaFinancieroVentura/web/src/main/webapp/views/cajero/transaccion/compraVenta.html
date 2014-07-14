@@ -144,7 +144,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div ng-show="view.tipoOperacion.denominacion == 'COMPRA'" class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)}">
                             <label>Monto Recibido</label>
                             <label style="color: brown;">(*)</label>
@@ -170,7 +170,42 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-8">
+                    <div ng-show="view.tipoOperacion.denominacion == 'VENTA'" class="col-sm-4">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)}">
+                            <label>Monto Recibido</label>
+                            <p>
+                                <span ng-bind="getTipoMonedaRecibida().simbolo" style="font-size: 1.5em;"></span>
+                                <span ng-bind="view.montoRecibido |currency:''" style="font-size: 1.5em;"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div ng-show="view.tipoOperacion.denominacion == 'VENTA'" class="col-sm-4">
+                        <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)}">
+                            <label>Monto Entregado</label>
+                            <label style="color: brown;">(*)</label>
+                            <div class="input-group">
+                                <div class="input-group">
+                                    <span ng-bind="getTipoMonedaEntregada().simbolo" class="input-group-addon"></span>
+                                    <input focus-on="focusMontoEntregado" type="text" name="montoEntregado" ng-model="view.montoEntregado" ng-minlength="1" ng-maxlength="18" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
+                                </div>
+                            </div>
+                            <div ng-show="formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)">
+                                <p class="help-block" ng-show="formCrearCompraVenta.montoEntregado.$error.required">
+                                    Ingrese monto valido.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.montoEntregado.$error.minlength">
+                                    Numero invalido.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.montoEntregado.$error.maxlength">
+                                    Maximo 18 caracteres.
+                                </p>
+                                <p class="help-block" ng-show="formCrearCompraVenta.montoEntregado.$error.pattern">
+                                    Numero invalido (Ejemplo: 99.99).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="view.tipoOperacion.denominacion == 'COMPRA'" class="col-sm-8">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)}">
                             <label>Monto Entregado</label>
                             <p>

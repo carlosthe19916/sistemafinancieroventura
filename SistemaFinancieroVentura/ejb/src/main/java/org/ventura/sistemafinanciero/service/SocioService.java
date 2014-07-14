@@ -9,6 +9,7 @@ import javax.ejb.Remote;
 
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.HistorialAportesSP;
 import org.ventura.sistemafinanciero.entity.HistorialAportesView;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
@@ -61,7 +62,7 @@ public interface SocioService extends AbstractService<Socio> {
 
 	public Set<CuentaBancaria> getCuentasBancarias(BigInteger idSocio);
 
-	public List<HistorialAportesView> getHistorialAportes(BigInteger idSocio, Date desde, Date hasta, BigInteger offset, BigInteger limit);
+	public List<HistorialAportesSP> getHistorialAportes(BigInteger idSocio, Date desde, Date hasta, BigInteger offset, BigInteger limit);
 	// transaccional
 	public BigInteger create(BigInteger idAgencia, TipoPersona tipoPersona, 
 			BigInteger idDocSocio, String numDocSocio, BigInteger 

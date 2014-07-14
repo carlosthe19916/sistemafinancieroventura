@@ -16,6 +16,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 
 import org.hibernate.Hibernate;
 import org.joda.time.LocalDate;
@@ -29,6 +31,7 @@ import org.ventura.sistemafinanciero.entity.BovedaCaja;
 import org.ventura.sistemafinanciero.entity.Caja;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.HistorialAportesSP;
 import org.ventura.sistemafinanciero.entity.HistorialAportesView;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
@@ -46,6 +49,7 @@ import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaJuridicaService;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.SocioService;
+import org.ventura.sistemafinanciero.util.EntityManagerProducer;
 import org.ventura.sistemafinanciero.util.ProduceObject;
 
 @Named
@@ -80,6 +84,9 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	private PersonaNaturalService personaNaturalService;
 	@EJB
 	private PersonaJuridicaService personaJuridicaService;
+	
+	@Inject
+	private EntityManagerProducer em;
 	
 	@Override
 	public List<SocioView> findAllView() {
@@ -669,7 +676,7 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 	}
 	
 	@Override
-	public List<HistorialAportesView> getHistorialAportes(BigInteger idSocio, Date desde, Date hasta, BigInteger offset, BigInteger limit) {		
+	public List<HistorialAportesSP> getHistorialAportes(BigInteger idSocio, Date desde, Date hasta, BigInteger offset, BigInteger limit) {		
 		LocalDate desdeLocalDate = new LocalDate(desde);
 		LocalDate hastaLocalDate = new LocalDate(hasta);
 		
@@ -685,6 +692,14 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		
 		QueryParameter queryParameter = QueryParameter.with("idSocio", idSocio).and("desde", desdeLocalDate.toDate()).and("hasta", hastaLocalDate.toDate());
 		List<HistorialAportesView> list = historialAportesViewDAO.findByNamedQuery(HistorialAportesView.findByIdSocioAndFecha,queryParameter.parameters(), offSetInteger, limitInteger);
+				
+		//Query query = em.getEm().createNativeQuery("BEGIN VALIDATE_EMP(P_EMP_ID=>?); END;");
+		//query.setParameter(1, empId);
+		//query.executeUpdate();
+		//QueryParameter query = em.createNamedStoredProcedureQuery("ReadAddressById");
+		//query.setParameter("P_ADDRESS_ID", 12345);
+		//query.execute();
+		//List<Address> result = (List<Address>)query.getOutputParameterValue("CUR_ADDRESS");
 		
 		return null;
 	}
