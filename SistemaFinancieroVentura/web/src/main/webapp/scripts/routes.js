@@ -29,19 +29,19 @@ define(['./app'], function(app) {
                     '</div>' +
                     '<div class="navbar-collapse collapse">' +
                     '<ul class="nav navbar-nav">'+
-                    '<li ui-sref-active="active" class="active">'+
+                    '<li ng-class="{active: $state.includes(&#39;app.home&#39;)}">'+
                     '   <a href="#" ui-sref="app.home({redirect:true})">Página Principal</a>'+
                     '</li>'+
-                    '<li ui-sref-active="active">'+
+                    '<li ng-class="{active: $state.includes(&#39;app.caja&#39;)}">'+
                     '   <a href="#contact" ui-sref="app.caja({redirect:true})">Caja</a>'+
                     '</li>'+
-                    '<li ui-sref-active="active">'+
+                    '<li ng-class="{active: $state.includes(&#39;app.transaccion&#39;)}">'+
                     '<a href="#about" ui-sref="app.transaccion({redirect:true})">Transacciones</a>'+
                     '</li>'+
-                    '<li ui-sref-active="active">'+
+                    '<li ng-class="{active: $state.includes(&#39;app.socio&#39;)}">'+
                     '<a href="#contact" ui-sref="app.socio({redirect:true})">Cuentas Personales</a>'+
                     '</li>'+
-                    '<li ui-sref-active="active">'+
+                    '<li ng-class="{active: $state.includes(&#39;app.administracion&#39;)}">'+
                     '<a href="#contact" ui-sref="app.administracion({redirect:true})">Administracion</a>'+
                     '</li>'+
                     '</ul>'+
@@ -87,7 +87,7 @@ define(['./app'], function(app) {
                     "<a class='gwt-Anchor sf-nav-bar-left-menuitem-header ng-binding' style='background-color: #F7F7F7;width: 100%;'>{{menu.name}}</a>"+
                     "<div class='sf-nav-bar-left-submenu'>" +
                     "<ul class='sf-ul-submenu-position sf-ul-submenu-theme'>" +
-                    "<li ng-repeat='submenu in menu.submenus' ui-sref-active = 'GGLKX0UBOUD' class='sf-li-submenu ng-scope'>"+
+                    "<li ng-repeat='submenu in menu.submenus' ng-class='{GGLKX0UBOUD: $state.includes(&#39;{{submenu.state}}&#39;)}' class='sf-li-submenu ng-scope'>"+
                     "<a ui-sref='{{submenu.state}}({redirect:true})' class='gwt-Anchor sf-link-submenu ng-binding'>{{submenu.name}}</a>"+
                     "</li>" +
                     "</ul>" +
@@ -642,7 +642,9 @@ define(['./app'], function(app) {
                     }
                 }
             })
-    }).run(function($rootScope) {
+    })
+        /*.run(function($rootScope) {
+
 
         $rootScope.$on("$stateChangeStart", function (event, toState, toStateParams, fromState, fromStateParams) {
             var isLoading = toState;
@@ -659,5 +661,30 @@ define(['./app'], function(app) {
             alert("error al cargar los datos");
         });
 
-    });
+    });*/
+
+    .run(['$rootScope', '$state', '$stateParams',
+            function ($rootScope,   $state,   $stateParams) {
+
+                $rootScope.$state = $state;
+                $rootScope.$stateParams = $stateParams;
+
+                $rootScope.$on("$stateChangeStart", function (event, toState, toStateParams, fromState, fromStateParams) {
+                    var isLoading = toState;
+                    if (isLoading) {
+                        $rootScope.loadingStateProgress = true;
+                    }
+                });
+                $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+                    //hide loading
+                    $rootScope.loadingStateProgress = false;
+                });
+                $rootScope.$on("$stateChangeError", function (event, toState, toParams, fromState, fromParams, error) {
+                    //hide loading
+                    alert("error al cargar los datos");
+                });
+            }
+        ]
+    );
+
 });
