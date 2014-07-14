@@ -63,6 +63,24 @@ define(['../../module'], function (controllers) {
             };
             $scope.loadMonedas();
 
+            $scope.getTipoMonedaRecibida = function(){
+              if(!angular.isUndefined($scope.view.idMonedaRecibida) && !angular.isUndefined($scope.combo.moneda)){
+                  for(var i=0;i<$scope.combo.moneda.length;i++)
+                      if($scope.view.idMonedaRecibida == $scope.combo.moneda[i].id)
+                        return $scope.combo.moneda[i];
+              } else{
+                  return undefined;
+              }
+            };
+            $scope.getTipoMonedaEntregada = function(){
+                if(!angular.isUndefined($scope.view.idMonedaEntregada) && !angular.isUndefined($scope.combo.moneda)){
+                    for(var i=0;i<$scope.combo.moneda.length;i++)
+                        if($scope.view.idMonedaEntregada == $scope.combo.moneda[i].id)
+                            return $scope.combo.moneda[i];
+                } else{
+                    return undefined;
+                }
+            };
 
             $scope.buscarCliente = function($event){
                 PersonaNaturalService.findByTipoNumeroDocumento(1, $scope.view.numeroDocumento).then(
