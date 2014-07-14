@@ -253,7 +253,8 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumentoRepresentante.$dirty)}">
-                <label>Tipo Documento(*)</label>
+                <label>Tipo Documento</label>
+                <label style="color: brown;">(*)</label>
                 <select name="tipoDocumentoRepresentante" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentosPN | orderBy : 'id'" ng-model="view.idTipoDocumentoPN" class="form-control" required>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumentoRepresentante.$dirty)">
@@ -265,7 +266,8 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoRepresentante.$dirty)}">
-                <label>N&uacute;mero Documento(*)</label>
+                <label>N&uacute;mero Documento</label>
+                <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <input focus-on="focusNumeroDocumentoRepresentante" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="view.numeroDocumentoPN" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="N&uacute;mero Documento" required/>
                       <span class="input-group-btn">
