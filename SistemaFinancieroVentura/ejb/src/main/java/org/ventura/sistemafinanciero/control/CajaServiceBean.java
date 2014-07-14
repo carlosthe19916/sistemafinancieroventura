@@ -87,7 +87,7 @@ public class CajaServiceBean extends AbstractServiceBean<Caja> implements CajaSe
 		
 		voucherCompraVenta.setNumeroOperacion(compraVenta.getNumeroOperacion());
 		voucherCompraVenta.setObservacion(compraVenta.getObservacion());
-		voucherCompraVenta.setReferencia(compraVenta.getReferencia());
+		voucherCompraVenta.setReferencia(compraVenta.getCliente());
 		voucherCompraVenta.setTipoCambio(compraVenta.getTipoCambio());
 		voucherCompraVenta.setTipoTransaccion(compraVenta.getTipoTransaccion());												
 				

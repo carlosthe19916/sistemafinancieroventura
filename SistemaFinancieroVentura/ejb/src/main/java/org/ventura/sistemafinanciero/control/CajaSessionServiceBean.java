@@ -1093,7 +1093,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		transaccionCompraVenta.setMontoRecibido(montoRecibido);
 		transaccionCompraVenta.setNumeroOperacion(this.getNumeroOperacion());
 		transaccionCompraVenta.setObservacion("Doc:"+natural.getTipoDocumento().getAbreviatura()+"/"+natural.getNumeroDocumento()+"Trabajador:"+natural.getApellidoPaterno()+" "+natural.getApellidoMaterno()+","+natural.getNombres());
-		transaccionCompraVenta.setReferencia(referencia);
+		transaccionCompraVenta.setCliente(referencia);
 		transaccionCompraVenta.setTipoCambio(tasaCambio);
 		transaccionCompraVenta.setTipoTransaccion(tipoTransaccion);
 		
