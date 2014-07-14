@@ -119,6 +119,18 @@ define(['./app'], function(app) {
 
                     '</div>'+
                     '</div>'+
+
+                    '<div class="row">'+
+                    '<div class="col-sm-12">'+
+                    '<div class="center-block text-center" style="font-size: 11px; padding-bottom: 10px;">'+
+                    '<span class="l3">'+
+                    '<span dir="ltr">©2014&nbsp;Cooperativa Ventura</span>'+
+                    '</span>&nbsp;-&nbsp;'+
+                    '<a href="#" target="_blank" class="l9">Términos y privacidad</a>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+
                     '</div>'
                 ,
                 controller: function($scope, $stateParams) {
@@ -127,7 +139,7 @@ define(['./app'], function(app) {
             })
             .state('app.home', {
                 url: '/home',
-                template: '</br></br></br></br><div class="center-block"><h3 class="text-center">Bienvenido al sistema</h3></div>'
+                template: '</br></br></br></br><div class="center-block"><h3 class="text-center">Bienvenido al sistema</h3></div></br></br></br></br></div></br></br></br></br></br></br></br></br></br></br></br>'
             })
             .state('app.caja', {
                 url: "/caja",
