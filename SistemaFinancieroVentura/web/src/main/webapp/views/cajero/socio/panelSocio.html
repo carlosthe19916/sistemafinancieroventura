@@ -7,13 +7,13 @@
         <div class="row">
             <div class="col-sm-6">
                 Socio
-                <span ng-if="!socio.estado" class="label label-danger">Socio inactivo</span>
+                <span ng-if="!socio.estado" class="label label-danger">Socio Inactivo</span>
             </div>
             <div class="col-sm-6" ng-if="socio.estado" style="text-align: right;">
                 <div class="btn-group">
-                    <button type="button" ng-if="cuentaAporte.estadoCuenta == 'ACTIVO'" ng-click="congelarCuentaAporte()" class="btn btn-warning">Congelar cuenta aporte</button>
-                    <button type="button" ng-if="cuentaAporte.estadoCuenta == 'CONGELADO'" ng-click="descongelarCuentaAporte()" class="btn btn-default">Descongelar cuenta aporte</button>
-                    <button type="button" ng-click="inactivarSocio()" class="btn btn-danger">Inactivar socio</button>
+                    <button type="button" ng-if="cuentaAporte.estadoCuenta == 'ACTIVO'" ng-click="congelarCuentaAporte()" class="btn btn-warning">Congelar Cuenta Aporte</button>
+                    <button type="button" ng-if="cuentaAporte.estadoCuenta == 'CONGELADO'" ng-click="descongelarCuentaAporte()" class="btn btn-default">Descongelar Cuenta Aporte</button>
+                    <button type="button" ng-click="inactivarSocio()" class="btn btn-danger">Inactivar Socio</button>
                 </div>
             </div>
         </div>
