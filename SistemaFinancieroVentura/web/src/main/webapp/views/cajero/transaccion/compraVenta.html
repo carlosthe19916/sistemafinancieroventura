@@ -1,6 +1,6 @@
 <div ng-controller="CompraVentaController">
 <fieldset>
-<legend>Compra venta de moneda extrangera</legend>
+<legend>Compra Venta de Moneda Extranjera</legend>
 
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
     <span ng-bind="alert.msg"></span>
@@ -21,7 +21,7 @@
                             <label>DNI/RUC</label>
                             <label style="color: brown;">(*)</label>
                             <div class="input-group">
-                                <input focus-on="focusNumeroDocumento" type="text" name="numeroDocumento" ui-keypress="{13:'buscarCliente($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required autofocus/>
+                                <input focus-on="focusNumeroDocumento" type="text" name="numeroDocumento" ui-keypress="{13:'buscarCliente($event)'}" ng-model="view.numeroDocumento" ng-minlength="1" ng-maxlength="20" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="N&uacute;mero Documento" required autofocus/>
                                 <span class="input-group-btn">
                                   <button type="button" class="btn btn-default" ng-click="buscarCliente()">
                                       <span class="glyphicon glyphicon-search"></span>
@@ -46,8 +46,9 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.nombreCliente.$invalid && (control.submitted || formCrearCompraVenta.nombreCliente.$dirty)}">
-                            <label>Apellidos y nombres/Razon social</label>
-                            <input type="text" name="nombreCliente" ng-model="view.nombreCliente" class="form-control" ng-minlength="1" ng-maxlength="40" placeholder="Nombre/razon social" required autofocus/>
+                            <label>Apellidos y Nombres / Raz&oacute;n Social</label>
+                            <label style="color: brown;">(*)</label>
+                            <input type="text" name="nombreCliente" ng-model="view.nombreCliente" class="form-control" ng-minlength="1" ng-maxlength="40" placeholder="Apellidos y Nombre / Raz&oacute;n Social" required autofocus/>
                             <div ng-show="formCrearCompraVenta.nombreCliente.$invalid && (control.submitted || formCrearCompraVenta.nombreCliente.$dirty)">
                                 <p class="help-block" ng-show="formCrearCompraVenta.nombreCliente.$error.required">
                                     Ingrese Numero Documento Valido.
@@ -65,7 +66,8 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.tipoOperacion.$invalid && (control.submitted || formCrearCompraVenta.tipoOperacion.$dirty)}">
-                            <label>Tipo Operacion</label>
+                            <label>Tipo Operaci&oacute;n</label>
+                            <label style="color: brown;">(*)</label>
                             <select focus-on="focusTipoOperacion" name="tipoOperacion" ng-options="tipoOperacion as tipoOperacion.denominacion for tipoOperacion in combo.tipoOperacion" ng-model="view.tipoOperacion" class="form-control" required>
                             </select>
                             <div ng-show="formCrearCompraVenta.tipoOperacion.$invalid && (control.submitted || formCrearCompraVenta.tipoOperacion.$dirty)">
@@ -79,7 +81,8 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.monedaRecibida.$invalid && (control.submitted || formCrearCompraVenta.monedaRecibida.$dirty)}">
-                            <label>Moneda recibida</label>
+                            <label>Moneda Recibida</label>
+                            <label style="color: brown;">(*)</label>
                             <select name="monedaRecibida" ng-options="moneda.id as moneda.denominacion for moneda in combo.moneda | orderBy : 'id'" ng-model="view.idMonedaRecibida" class="form-control" required>
                             </select>
                             <div ng-show="formCrearCompraVenta.monedaRecibida.$invalid && (control.submitted || formCrearCompraVenta.monedaRecibida.$dirty)">
@@ -94,7 +97,8 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.monedaEntregada.$invalid && (control.submitted || formCrearCompraVenta.monedaEntregada.$dirty)}">
-                            <label>Moneda entregada</label>
+                            <label>Moneda Entregada</label>
+                            <label style="color: brown;">(*)</label>
                             <select name="monedaEntregada" ng-options="moneda.id as moneda.denominacion for moneda in combo.moneda | orderBy : 'id'" ng-model="view.idMonedaEntregada" class="form-control" required>
                             </select>
                             <div ng-show="formCrearCompraVenta.monedaEntregada.$invalid && (control.submitted || formCrearCompraVenta.monedaEntregada.$dirty)">
@@ -143,6 +147,7 @@
                     <div class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)}">
                             <label>Monto Recibido</label>
+                            <label style="color: brown;">(*)</label>
                             <div class="input-group">
                                 <div class="input-group">
                                     <span ng-bind="getTipoMonedaRecibida().simbolo" class="input-group-addon"></span>
@@ -175,7 +180,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Guardar</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="buttonDisableState()">Aceptar</button>
                 <button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
             </div>
         </div>

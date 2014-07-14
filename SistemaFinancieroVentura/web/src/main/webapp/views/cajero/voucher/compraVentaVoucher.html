@@ -52,7 +52,7 @@
                         </tr>
                         <tr>
                             <td style="font-size: 13px;">TIPO CAMBIO:</td>
-                            <td colspan="3" style="font-size: 13px;"><span ng-bind="compraVentaMoneda.tipoCambio"/> </td>
+                            <td colspan="3" style="font-size: 13px;"><span ng-bind="compraVentaMoneda.tipoCambio | currency : compraVentaMoneda.monedaEntregada.simbolo"/> </td>
                         </tr>
                         <tr>
                             <td style="font-size: 13px;">CLIENTE:</td>
