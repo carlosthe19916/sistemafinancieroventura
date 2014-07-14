@@ -144,7 +144,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div ng-show="view.tipoOperacion.denominacion == 'COMPRA'" class="col-sm-4">
+                    <div ng-if="view.tipoOperacion.denominacion == 'COMPRA'" class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)}">
                             <label>Monto Recibido</label>
                             <label style="color: brown;">(*)</label>
@@ -170,7 +170,7 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-show="view.tipoOperacion.denominacion == 'VENTA'" class="col-sm-4">
+                    <div ng-if="view.tipoOperacion.denominacion == 'VENTA'" class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoRecibido.$invalid && (control.submitted || formCrearCompraVenta.montoRecibido.$dirty)}">
                             <label>Monto Recibido</label>
                             <p>
@@ -179,7 +179,7 @@
                             </p>
                         </div>
                     </div>
-                    <div ng-show="view.tipoOperacion.denominacion == 'VENTA'" class="col-sm-4">
+                    <div ng-if="view.tipoOperacion.denominacion == 'VENTA'" class="col-sm-4">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)}">
                             <label>Monto Entregado</label>
                             <label style="color: brown;">(*)</label>
@@ -205,7 +205,7 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-show="view.tipoOperacion.denominacion == 'COMPRA'" class="col-sm-8">
+                    <div ng-if="view.tipoOperacion.denominacion == 'COMPRA'" class="col-sm-8">
                         <div class="form-group" ng-class="{ 'has-error' : formCrearCompraVenta.montoEntregado.$invalid && (control.submitted || formCrearCompraVenta.montoEntregado.$dirty)}">
                             <label>Monto Entregado</label>
                             <p>
