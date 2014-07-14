@@ -2,7 +2,7 @@ define(['./app'], function(app) {
     'use strict';
     return app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-        RestangularProvider.setBaseUrl("http://localhost:8080/SistemaFinancieroVentura-web/services");
+        RestangularProvider.setBaseUrl('http://localhost:8080/SistemaFinancieroVentura-web/services');
 
         $urlRouterProvider.when('', '/app/home');
 
@@ -11,7 +11,7 @@ define(['./app'], function(app) {
         $stateProvider
             .state('app', {
                 abstract: true,
-                url: "/app?redirect",
+                url: '/app?redirect',
                 template: '' +
                     '<div class="container" ng-controller="MainController" style="padding-top: 70px;">' +
                     '<div class="navbar navbar-default navbar-fixed-top" role="navigation">' +
@@ -79,42 +79,43 @@ define(['./app'], function(app) {
                     '<div class="container">'+
                     '<div class="row" ui-view>'+
 
-                    "<div class='col-sm-6 col-md-3'>" +
-                    "<div class='thumbnail' style='min-height: 500px;'>" +
-                    "<div class='caption sf-nav-bar-left-content ng-scope' ui-view='viewMenu' style='width: 88%;'>"+
-                    "<ul class='ng-scope'>" +
-                    "<li ng-repeat='menu in menus' class='sf-nav-bar-left-menuitem ng-scope sf-nav-bar-left-menuitem-selected'>"+
-                    "<a class='gwt-Anchor sf-nav-bar-left-menuitem-header ng-binding' style='background-color: #F7F7F7;width: 100%;'>{{menu.name}}</a>"+
-                    "<div class='sf-nav-bar-left-submenu'>" +
-                    "<ul class='sf-ul-submenu-position sf-ul-submenu-theme'>" +
-                    "<li ng-repeat='submenu in menu.submenus' ng-class='{GGLKX0UBOUD: $state.includes(&#39;{{submenu.state}}&#39;)}' class='sf-li-submenu ng-scope'>"+
-                    "<a ui-sref='{{submenu.state}}({redirect:true})' class='gwt-Anchor sf-link-submenu ng-binding'>{{submenu.name}}</a>"+
-                    "</li>" +
-                    "</ul>" +
-                    "</div>"+
-                    "</li>" +
-                    "</ul>"+
-                    "</div>"+
-                    "</div>" +
-                    "</div>"+
+                    '<div class="col-sm-6 col-md-3">' +
+                    '<div class="thumbnail" style="min-height: 500px;">' +
+                    '<div class="caption sf-nav-bar-left-content ng-scope" ui-view="viewMenu" style="width: 88%;">'+
+                    '<ul class="ng-scope">' +
+                    '<li ng-repeat="menu in menus" class="sf-nav-bar-left-menuitem ng-scope sf-nav-bar-left-menuitem-selected">'+
+                    '<a class="gwt-Anchor sf-nav-bar-left-menuitem-header ng-binding" style="background-color: #F7F7F7;width: 100%;">{{menu.name}}</a>'+
+                    '<div class="sf-nav-bar-left-submenu">' +
+                    '<ul class="sf-ul-submenu-position sf-ul-submenu-theme">' +
+                    '<li ng-repeat="submenu in menu.submenus" ng-class="{GGLKX0UBOUD: $state.includes(&#39;{{submenu.state}}&#39;)}" class="sf-li-submenu ng-scope">'+
+                    '<a ui-sref="{{submenu.state}}({redirect:true})" class="gwt-Anchor sf-link-submenu ng-binding">{{submenu.name}}</a>'+
+                    '</li>' +
+                    '</ul>' +
+                    '</div>'+
+                    '</li>' +
+                    '</ul>'+
+                    '</div>'+
+                    '</div>' +
+                    '</div>'+
 
-                    "<div class='col-sm-6 col-md-9'>"+
-                    "<div class='thumbnail'>"+
+                    '<div class="col-sm-6 col-md-9">'+
+                    '<div class="thumbnail">'+
 
-                    "<div ng-show='loadingStateProgress' class='row'>" +
-                        "<div class='col-md-1 col-md-offset-5'>" +
-                            "<br/>"+"<br/>"+"<br/>"+"<br/>"+"<br/>"+
-                            "<span class='navbar-spinner'>"+
-                                "<img src='images/loader.gif'>"+
-                            "</span>"+
-                            "<br/>"+"<br/>"+"<br/>"+"<br/>"+"<br/>"+
-                        "</div>"+
-                    "</div>"+
+                    '<div ng-show="loadingStateProgress" class="row">' +
+                        '<div class="col-md-1 col-md-offset-5">' +
+                            '<br/>'+'<br/>'+'<br/>'+'<br/>'+'<br/>'+
+                            '<span class="navbar-spinner">'+
+                                '<img src="images/loader.gif">'+
+                            '</span>'+
+                            '<br/>'+'<br/>'+'<br/>'+'<br/>'+'<br/>'+
+                        '</div>'+
+                    '</div>'+
 
-                    "<div ui-view='viewContent' ng-hide='loadingStateProgress' class='caption'>"+
-                    "</div>"+
-                    "</div>"+
-                    "</div>"+
+                    '<div ui-view="viewContent" ng-hide="loadingStateProgress" class="caption">'+
+                    '</div>'+
+
+                    '</div>'+
+                    '</div>'+
 
                     '</div>'+
                     '</div>'+

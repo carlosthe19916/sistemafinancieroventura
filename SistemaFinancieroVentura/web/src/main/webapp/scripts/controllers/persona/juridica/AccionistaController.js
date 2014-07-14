@@ -68,14 +68,16 @@ define(['../../module'], function (controllers) {
                 $scope.validarNumeroDocumentoAccionista();
             });
             $scope.validarNumeroDocumentoAccionista = function(){
+                console.log($scope.view.idTipoDocumentoAccionista+"---"+$scope.view.numeroDocumentoAccionista);
                 if(!angular.isUndefined($scope.formAccionista.numeroDocumento)){
                     if(!angular.isUndefined($scope.view.numeroDocumentoAccionista)){
                         if(!angular.isUndefined($scope.view.idTipoDocumentoAccionista)){
                             var tipoDoc = $scope.getTipoDocumento();
                             if(!angular.isUndefined(tipoDoc)) {
                                 if($scope.view.numeroDocumentoAccionista.length == tipoDoc.numeroCaracteres) {
+                                    console.log("true");
                                     $scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",true);
-                                } else {$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
+                                } else {console.log("false"); $scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
                             } else {$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
                         } else{$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formAccionista.numeroDocumento.$setValidity("sgmaxlength",false);}}
