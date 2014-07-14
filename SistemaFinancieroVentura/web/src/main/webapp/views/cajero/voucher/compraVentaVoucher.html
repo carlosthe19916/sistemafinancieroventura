@@ -3,7 +3,7 @@
         <div class="col-md-5" id="voucher">
             <div>
                 <fieldset>
-                    <legend>VOUCHER COMPRA/VENTA</legend>
+                    <legend style="font-size: 18px;">VOUCHER COMPRA / VENTA</legend>
                 </fieldset>
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
@@ -15,48 +15,48 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td>AGENCIA:</td>
-                            <td>
+                            <td style="font-size: 13px;">AGENCIA:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="compraVentaMoneda.agenciaAbreviatura"/>
                             </td>
-                            <td>N&deg; TRANS:</td>
-                            <td>
+                            <td style="font-size: 13px;">N&deg; TRANS:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="compraVentaMoneda.id"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>CAJA:</td>
-                            <td>
+                            <td style="font-size: 13px;">CAJA:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="compraVentaMoneda.cajaDenominacion"/>
                                 <span ng-bind="'(' + compraVentaMoneda.cajaAbreviatura + ')'"/>
                             </td >
-                            <td>N&deg; OP:</td>
-                            <td>
+                            <td style="font-size: 13px;">N&deg; OP:</td>
+                            <td style="font-size: 13px;">
                                 <span ng-bind="compraVentaMoneda.numeroOperacion"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>FECHA:</td>
-                            <td colspan="3">
+                            <td style="font-size: 13px;">FECHA:</td>
+                            <td colspan="3" style="font-size: 13px;">
                                 <span ng-bind="compraVentaMoneda.fecha | date : 'dd/MM/yyyy'"/>
                                 <span ng-bind="compraVentaMoneda.hora | date : 'HH:mm:ss'"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>RECIBIDO:</td>
-                            <td colspan="3"><span ng-bind="compraVentaMoneda.montoRecibido | currency : compraVentaMoneda.monedaRecibida.simbolo"/> </td>
+                            <td style="font-size: 13px;">RECIBIDO:</td>
+                            <td colspan="3" style="font-size: 13px;"><span ng-bind="compraVentaMoneda.montoRecibido | currency : compraVentaMoneda.monedaRecibida.simbolo"/> </td>
                         </tr>
                         <tr>
-                            <td>ENTREGADO:</td>
-                            <td colspan="3"><span ng-bind="compraVentaMoneda.montoEntregado | currency : compraVentaMoneda.monedaEntregada.simbolo"/> </td>
+                            <td style="font-size: 13px;">ENTREGADO:</td>
+                            <td colspan="3" style="font-size: 13px;"><span ng-bind="compraVentaMoneda.montoEntregado | currency : compraVentaMoneda.monedaEntregada.simbolo"/> </td>
                         </tr>
                         <tr>
-                            <td>TIPO CAMBIO:</td>
-                            <td colspan="3"><span ng-bind="compraVentaMoneda.tipoCambio"/> </td>
+                            <td style="font-size: 13px;">TIPO CAMBIO:</td>
+                            <td colspan="3" style="font-size: 13px;"><span ng-bind="compraVentaMoneda.tipoCambio"/> </td>
                         </tr>
                         <tr>
-                            <td>CLIENTE:</td>
-                            <td colspan="3">
+                            <td style="font-size: 13px;">CLIENTE:</td>
+                            <td colspan="3" style="font-size: 13px;">
                                 <span ng-bind="compraVentaMoneda.referencia"/>
                             </td>
                         </tr>
