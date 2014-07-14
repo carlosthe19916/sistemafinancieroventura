@@ -63,9 +63,9 @@
         </div>
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : (control.errorForm.numeroDocumento || formCrearPersonanatural.numeroDocumento.$invalid) && (control.submitted || formCrearPersonanatural.numeroDocumento.$dirty)}">
-                <label>Numero Documento</label>
+                <label>N&uacute;mero Documento</label>
                 <label style="color: brown;">(*)</label>
-                <input name="numeroDocumento" type="text" ng-model="view.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Nro documento" required/>
+                <input name="numeroDocumento" type="text" ng-model="view.numeroDocumento" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="N&uacute;mero Documento" required/>
                 <div ng-show="formCrearPersonanatural.numeroDocumento.$invalid && (control.submitted || formCrearPersonanatural.numeroDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonanatural.numeroDocumento.$error.required">
                         Ingrese Numero de Documento.
@@ -240,8 +240,8 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.direccion.$invalid && control.submitted}">
-                <label>Direccion</label>
-                <input name="direccion" type="text" ng-model="view.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" capitalize />
+                <label>Direcci&oacute;n</label>
+                <input name="direccion" type="text" ng-model="view.direccion" ng-maxlength="70" class="form-control" placeholder="Direcci&oacute;n" capitalize />
                 <div ng-show="formCrearPersonanatural.direccion.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.direccion.$error.maxlength">
                         Maximo 70 Caracteres.
@@ -262,8 +262,8 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.ocupacion.$invalid && control.submitted}">
-                <label>Ocupacion</label>
-                <input name="ocupacion" type="text" ng-model="view.ocupacion" ng-maxlength="70" class="form-control" placeholder="Ocupacion" capitalize />
+                <label>Ocupaci&oacute;n</label>
+                <input name="ocupacion" type="text" ng-model="view.ocupacion" ng-maxlength="70" class="form-control" placeholder="Ocupaci&oacute;n" capitalize />
                 <div ng-show="formCrearPersonanatural.nombres.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.ocupacion.$error.maxlength">
                         Maximo 70 Caracteres.

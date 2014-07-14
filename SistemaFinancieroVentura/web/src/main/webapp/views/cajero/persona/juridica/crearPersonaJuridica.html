@@ -27,9 +27,9 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numeroDocumentoPJ.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoPJ.$dirty)}">
-                <label>Numero Documento</label>
+                <label>N&uacute;mero Documento</label>
                 <label style="color: brown;">(*)</label>
-                <input name="numeroDocumentoPJ" type="text" ng-model="view.numeroDocumentoPJ" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
+                <input name="numeroDocumentoPJ" type="text" ng-model="view.numeroDocumentoPJ" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="N&uacute;mero Documento" required/>
                 <div ng-show="formCrearPersonaJuridica.numeroDocumentoPJ.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoPJ.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.numeroDocumento.$error.required">
                         Ingrese Numero de Documento.
@@ -51,9 +51,9 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.razonSocial.$invalid && (control.submitted || formCrearPersonaJuridica.razonSocial.$dirty)}">
-                <label>Razon Social</label>
+                <label>Raz&oacute;n Social</label>
                 <label style="color: brown;">(*)</label>
-                <input name="razonSocial" type="text" ng-model="view.razonSocial" ng-minlength="1" ng-maxlength="40" class="form-control" placeholder="Razon Social" capitalize required/>
+                <input name="razonSocial" type="text" ng-model="view.razonSocial" ng-minlength="1" ng-maxlength="150" class="form-control" placeholder="Raz&oacute;n Social" capitalize required/>
                 <div ng-show="formCrearPersonaJuridica.razonSocial.$invalid && (control.submitted || formCrearPersonaJuridica.razonSocial.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.razonSocial.$error.required">
                         Ingrese Razon Social.
@@ -62,7 +62,7 @@
                         Minimo 1 Caracter.
                     </p>
                     <p class="help-block" ng-show="formCrearPersonaJuridica.razonSocial.$error.maxlength">
-                        Maximo 40 Caracteres.
+                        Maximo 150 Caracteres.
                     </p>
                 </div>
             </div>
@@ -101,7 +101,7 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.fechaConstitucion.$invalid && (control.submitted || formCrearPersonaJuridica.fechaConstitucion.$dirty)}">
-                <label>Fecha Constitucion</label>
+                <label>Fecha Constituci&oacute;n</label>
                 <label style="color: brown;">(*)</label>
                 <div class="input-group">
                     <input type="text" name="fechaConstitucion" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="view.fechaConstitucion" is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" required>
@@ -188,7 +188,7 @@
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.direccion.$invalid && (control.submitted || formCrearPersonaJuridica.direccion.$dirty)}">
-                <label>Direccion</label>
+                <label>Direcci&oacute;n</label>
                 <input name="direccion" type="text" ng-model="view.direccion" ng-maxlength="70" class="form-control" placeholder="Direccion" capitalize/>
                 <div ng-show="formCrearPersonaJuridica.direccion.$invalid && (control.submitted || formCrearPersonaJuridica.direccion.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.direccion.$error.maxlength">
@@ -235,7 +235,7 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.email.$invalid && (control.submitted || formCrearPersonaJuridica.email.$dirty)}">
                 <label>Email</label>
-                <input name="email" type="email" ng-model="view.email" ng-maxlength="30" class="form-control" placeholder="correo@dominio.com" capitalize/>
+                <input name="email" type="email" ng-model="view.email" ng-maxlength="30" class="form-control" placeholder="correo@dominio.com"/>
                 <div ng-show="formCrearPersonaJuridica.email.$invalid && (control.submitted || formCrearPersonaJuridica.email.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.email.$invalid">
                         Email Incorrecto.
@@ -265,9 +265,9 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.numeroDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoRepresentante.$dirty)}">
-                <label>Numero Documento(*)</label>
+                <label>N&uacute;mero Documento(*)</label>
                 <div class="input-group">
-                    <input focus-on="focusNumeroDocumentoRepresentante" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="view.numeroDocumentoPN" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="Numero documento" required/>
+                    <input focus-on="focusNumeroDocumentoRepresentante" name="numeroDocumentoRepresentante" type="text" ui-keypress="{13:'buscarRepresentanteLegal($event)'}" ng-model="view.numeroDocumentoPN" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="N&uacute;mero Documento" required/>
                       <span class="input-group-btn">
                        <button type="button" class="btn btn-default" ng-click="buscarRepresentanteLegal()" >
                            <span class="glyphicon glyphicon-search"></span>
@@ -297,7 +297,7 @@
             <div class="form-group">
                 <label>&nbsp;</label>
                 <div>
-                    <button type="button" class="btn btn-link" ng-click="nuevaPersonaRepresentanteLegal()">Registrar persona</button>
+                    <button type="button" class="btn btn-link" ng-click="nuevaPersonaRepresentanteLegal()">Registrar Persona</button>
                 </div>
             </div>
         </div>
