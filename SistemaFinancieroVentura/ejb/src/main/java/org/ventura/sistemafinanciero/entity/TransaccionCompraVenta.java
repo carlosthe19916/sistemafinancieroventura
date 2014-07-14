@@ -45,7 +45,7 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 	private BigDecimal montoRecibido;
 	private BigDecimal montoEntregado;
 	private BigDecimal tipoCambio;
-	private String referencia;
+	private String cliente;
 	private int estado;
 	private String observacion;
 	private Tipotransaccioncompraventa tipoTransaccion;
@@ -90,7 +90,7 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 		this.montoRecibido = montoRecibido;
 		this.montoEntregado = montoEntregado;
 		this.tipoCambio = tipoCambio;
-		this.referencia = referencia;
+		this.setCliente(referencia);
 		this.estado = (estado ? 1 : 0);
 		;
 		this.observacion = observacion;
@@ -194,15 +194,6 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 		this.tipoCambio = tipoCambio;
 	}
 
-	@Column(name = "REFERENCIA", length = 140, columnDefinition = "nvarchar2")
-	public String getReferencia() {
-		return this.referencia;
-	}
-
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
-	}
-
 	@Column(name = "ESTADO", nullable = false, precision = 22, scale = 0)
 	public boolean getEstado() {
 		return (this.estado == 1 ? true : false);
@@ -230,6 +221,15 @@ public class TransaccionCompraVenta implements java.io.Serializable {
 
 	public void setTipoTransaccion(Tipotransaccioncompraventa tipoTransaccion) {
 		this.tipoTransaccion = tipoTransaccion;
+	}
+
+	@Column(name = "CLIENTE", length = 140, columnDefinition = "nvarchar2")
+	public String getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(String cliente) {
+		this.cliente = cliente;
 	}
 
 }
