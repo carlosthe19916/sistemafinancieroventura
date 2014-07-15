@@ -3,7 +3,6 @@ package org.ventura.sistemafinanciero.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.Moneda;
@@ -15,6 +14,13 @@ public class ProduceObject {
 	public final static String CODIGO_CUENTA_AHORRO = "11";
 	public final static String CODIGO_CUENTA_CORRIENTE = "12";
 	public final static String CODIGO_CUENTA_PLAZO_FIJO = "13";
+	
+	final private  static String[] units = {"CERO","UNO","DOS","TRES","CUATRO",
+		"CINCO","SEIS","SIETE","OCHO","NUEVE","DIEZ",
+		"ONCE","DOCE","TRECE","CATORCE","QUINCE",
+		"DIECISEIS","DIECISIETE","DIECIOCHO","DIECINUEVE"};
+	final private static String[] tens = {"","","VEINTE","TREINTA","CUARENTA","CINCUENTA",
+		"SESENTA","SETENTA","OCHENTA","NOVENTA"};
 	
 	public static String completar(String cad, int caracteres){
 		StringBuffer sb = new StringBuffer(cad);
@@ -67,7 +73,7 @@ public class ProduceObject {
 	public static String getCodigoAgenciaFromNumeroCuenta(String numeroCuenta){
 		if(numeroCuenta == null)
 			return null;
-		return numeroCuenta.substring(0, 2);
+		return numeroCuenta.substring(0, 3);
 	}
 	
 	public static Moneda getMonedaPrincipal(){
@@ -88,5 +94,13 @@ public class ProduceObject {
 		result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
 		
 		return result;
+	}
+	
+	public static String getTextOfNumber(int i){		
+		if( i < 20)  return units[i];
+		if( i < 100) return tens[i/10] + ((i % 10 > 0)? " " + getTextOfNumber(i % 10):"");
+		if( i < 1000) return units[i/100] + " CIEN" + ((i % 100 > 0)?" Y " + getTextOfNumber(i % 100):"");
+		if( i < 1000000) return getTextOfNumber(i / 1000) + " MIL " + ((i % 1000 > 0)? " " + getTextOfNumber(i % 1000):"") ;
+		return getTextOfNumber(i / 1000000) + " MILLON " + ((i % 1000000 > 0)? " " + getTextOfNumber(i % 1000000):"") ;
 	}
 }

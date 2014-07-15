@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
+import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
@@ -156,5 +157,7 @@ public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {
 	public List<EstadocuentaBancariaView> getEstadoCuenta(BigInteger idCuenta, Date dateDesde, Date dateHasta);
 
 	public CuentaBancariaView find(String numeroCuenta);
+	
+	public Agencia getAgencia(BigInteger idCuentaBancaria);
 
 }

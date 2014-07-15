@@ -412,5 +412,10 @@ define(['../module'], function (controllers) {
                 }
             };
 
+            $scope.imprimirCertificado = function(){
+              $window.open('http://localhost:8080/SistemaFinancieroVentura-web/services/cuentaBancaria/'+
+                  $scope.id+'/certificado');
+            };
+
         }]);
 });

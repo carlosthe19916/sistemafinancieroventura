@@ -16,8 +16,17 @@
  */
 package org.ventura.sistemafinanciero.rest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -70,6 +79,23 @@ import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.SocioService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
+import org.ventura.sistemafinanciero.util.ProduceObject;
+
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @Path("/cuentaBancaria")
 public class CuentaBancariaRESTService {
@@ -383,6 +409,151 @@ public class CuentaBancariaRESTService {
 		}			
 	}
 	
+	@GET
+	@Path("{id}/certificado")
+	public Response getJson(@PathParam("id")BigInteger idCuentaBancaria) throws IOException, DocumentException {
+		OutputStream file;		
+					
+		String titular = null;
+		String documento = null;
+		
+		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(idCuentaBancaria);
+		Socio socio = socioService.find(cuentaBancaria.getIdCuentaBancaria());
+		PersonaNatural socioNatural = socio.getPersonaNatural();
+		PersonaJuridica socioJuridico = socio.getPersonaJuridica();
+		Agencia agencia = cuentaBancariaService.getAgencia(idCuentaBancaria);
+		if(socioNatural == null && socioJuridico == null)
+			System.out.println("errorrr");
+		if(agencia == null)
+			System.out.println("errorrr");
+		if(socioNatural != null){
+			documento = socioNatural.getTipoDocumento().getAbreviatura()+":"+socioNatural.getNumeroDocumento();
+			titular = socioNatural.getApellidoPaterno()+" "+socioNatural.getApellidoMaterno()+","+socioNatural.getNombres();	
+		}
+		if(socioJuridico != null){
+			documento = socioJuridico.getTipoDocumento().getAbreviatura()+":"+socioJuridico.getNumeroDocumento();
+			titular = socioJuridico.getRazonSocial();	
+		}			
+		
+		try {
+			file = new FileOutputStream(new File("D:\\pdf\\"+idCuentaBancaria+".pdf"));
+			Document document = new Document(PageSize.A5.rotate());																																																																																																																																			
+			PdfWriter writer = PdfWriter.getInstance(document, file);		    												
+		    document.open();
+		    
+		    Font font = FontFactory.getFont("Times-Roman", 7);	
+		    
+		    document.add(new Paragraph("\n"));
+		    document.add(new Paragraph("\n"));
+		    document.add(new Paragraph("\n"));
+		    document.add(new Paragraph("\n"));
+		    document.add(new Paragraph("\n"));
+		    document.add(new Paragraph("\n"));
+		    
+		    Paragraph paragraph1 = new Paragraph();		
+		    paragraph1.setFont(font);
+		    Chunk numeroCuenta1 = new Chunk("Nº CUENTA:");
+		    Chunk numeroCuenta2 = new Chunk(cuentaBancaria.getNumeroCuenta());
+		    paragraph1.add(numeroCuenta1);
+		    paragraph1.add(Chunk.SPACETABBING);
+		    paragraph1.add(numeroCuenta2);		    
+		    document.add(paragraph1);
+		    
+		    Paragraph paragraph2 = new Paragraph();
+		    paragraph2.setFont(font);
+		    Chunk agencia1 = new Chunk("AGENCIA:");
+		    Chunk agencia2 = new Chunk(agencia.getCodigo()+" - "+agencia.getDenominacion().toUpperCase());
+		    paragraph2.add(agencia1);
+		    paragraph2.add(Chunk.SPACETABBING);
+		    paragraph2.add(Chunk.SPACETABBING);
+		    paragraph2.add(agencia2);		    
+		    document.add(paragraph2);	
+		    
+		    Paragraph paragraph3 = new Paragraph();	
+		    paragraph3.setFont(font);
+		    Chunk monto1 = new Chunk("MONTO:");
+		    Chunk monto2 = new Chunk(cuentaBancaria.getMoneda().getSimbolo()+cuentaBancaria.getSaldo().toString()+" - "+ProduceObject.getTextOfNumber(cuentaBancaria.getSaldo().intValue()));
+		    paragraph3.add(monto1);
+		    paragraph3.add(Chunk.SPACETABBING);
+		    paragraph3.add(Chunk.SPACETABBING);
+		    paragraph3.add(monto2);		    
+		    document.add(paragraph3);
+		    
+		    Paragraph paragraph4 = new Paragraph();		
+		    paragraph4.setFont(font);
+		    Chunk socio1 = new Chunk("SOCIO:");
+		    Chunk socio2 = new Chunk(titular.toUpperCase());
+		    Chunk codigoSocio1 = new Chunk("CODIGO:");
+		    Chunk codigoSocio2 = new Chunk(socio.getIdSocio().toString());
+		    paragraph4.add(socio1);
+		    paragraph4.add(Chunk.SPACETABBING);	
+		    paragraph4.add(Chunk.SPACETABBING);	
+		    paragraph4.add(socio2);	
+		    paragraph4.add(Chunk.SPACETABBING);		    
+		    paragraph4.add(codigoSocio1);		    	
+		    paragraph4.add(Chunk.SPACETABBING);				    
+		    paragraph4.add(codigoSocio2);		    
+		    document.add(paragraph4);
+		    
+		    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");		    
+		    String fechaAperturaString = df.format(cuentaBancaria.getFechaApertura());
+		    String fechaVencimientoString = df.format(cuentaBancaria.getFechaCierre());
+
+		    Paragraph paragraph6 = new Paragraph();		
+		    paragraph6.setFont(font);
+		    Chunk fechaApertura1 = new Chunk("F. APERTURA:");
+		    Chunk fechaApertura2 = new Chunk(fechaAperturaString);
+		    Chunk fechaVencimiento1 = new Chunk("F. VENCIMIENTO:");
+		    Chunk fechaVencimiento2 = new Chunk(fechaVencimientoString);
+		    paragraph6.add(fechaApertura1);
+		    paragraph6.add(Chunk.SPACETABBING);		   
+		    paragraph6.add(fechaApertura2);	
+		    paragraph6.add(Chunk.SPACETABBING);
+		    paragraph6.add(Chunk.SPACETABBING);
+		    paragraph6.add(Chunk.SPACETABBING);
+		    paragraph6.add(fechaVencimiento1);
+		    paragraph6.add(Chunk.SPACETABBING);		   
+		    paragraph6.add(fechaVencimiento2);	
+		    document.add(paragraph6);
+		    		 
+		    Paragraph paragraph5 = new Paragraph();		 
+		    paragraph5.setFont(font);
+		    Chunk tasa1 = new Chunk("TASA INTERES EFECTIVA:");
+		    Chunk tasa2 = new Chunk("6.00");
+		    Chunk plazo1 = new Chunk("PLAZO:");
+		    Chunk plazo2 = new Chunk("90 dias");		   
+		    paragraph5.add(tasa1);
+		    paragraph5.add(Chunk.SPACETABBING);
+		    paragraph5.add(tasa2);
+		    paragraph5.add(Chunk.SPACETABBING);
+		    paragraph5.add(Chunk.SPACETABBING);
+		    paragraph5.add(plazo1);
+		    paragraph5.add(Chunk.SPACETABBING);
+		    paragraph5.add(plazo2);			 			    		    
+		    document.add(paragraph5);						    		    
+		    
+		    document.close();
+		    file.close();		    
+		} catch (FileNotFoundException e) {			
+			e.printStackTrace();
+		} catch (DocumentException e) {			
+			e.printStackTrace();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		
+		
+		PdfReader reader = new PdfReader("D:\\pdf\\"+idCuentaBancaria+".pdf");
+	    	    
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();
+	    PdfStamper pdfStamper = new PdfStamper(reader, out);
+	    AcroFields acroFields = pdfStamper.getAcroFields();
+	    acroFields.setField("field_title", "test");
+	    pdfStamper.close();
+	    reader.close();
+	    return Response.ok(out.toByteArray()).type("application/pdf").build();
+	}
+	
 	@POST
 	@Path("/plazoFijo")
 	@Consumes({ "application/xml", "application/json" })
@@ -440,7 +611,8 @@ public class CuentaBancariaRESTService {
 			List<BigInteger> titulares = cuenta.getTitulares();
 			List<Beneficiario> beneficiarios = cuenta.getBeneficiarios();
 									
-			BigInteger[] result = cajaSessionService.crearCuentaBancariaPlazoFijoConDeposito(agencia.getCodigo(), idMoneda, tipoPersona, idPersona, cantRetirantes, monto, periodo, tasaInteres, titulares, beneficiarios);			
+			BigInteger[] result = cajaSessionService.crearCuentaBancariaPlazoFijoConDeposito(agencia.getCodigo(), idMoneda, tipoPersona, idPersona, cantRetirantes, monto, periodo, tasaInteres, titulares, beneficiarios);										   
+		      
 			model = Json.createObjectBuilder().add("message", "Cuenta creada").add("id", result[0]).add("idTransaccion", result[1]).build();
 			return Response.status(Response.Status.OK).entity(model).build();
 		} catch (NonexistentEntityException e) {

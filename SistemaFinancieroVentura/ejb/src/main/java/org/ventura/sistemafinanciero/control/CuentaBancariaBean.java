@@ -865,8 +865,18 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		return this.cuentaBancariaDAO;
 	}
 
-	
-
-	
+	@Override
+	public Agencia getAgencia(BigInteger idCuentaBancaria) {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
+		if(cuentaBancaria==null)
+			return null;
+		String numeroCuenta = cuentaBancaria.getNumeroCuenta();
+		String codigoAgencia = ProduceObject.getCodigoAgenciaFromNumeroCuenta(numeroCuenta);
+		QueryParameter queryParameter = QueryParameter.with("codigo", codigoAgencia);
+		List<Agencia> list = agenciaDAO.findByNamedQuery(Agencia.findByCodigo, queryParameter.parameters());
+		if(list.size() != 1)
+			return null;
+		return list.get(0);
+	}	
 
 }
