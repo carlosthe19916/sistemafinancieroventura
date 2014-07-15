@@ -7,10 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import java.sql.Timestamp;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -21,14 +18,18 @@ import java.util.Date;
 @Table(name = "HISTORIAL_TRANSACCION_CAJA")
 @XmlRootElement(name = "moneda")
 @XmlAccessorType(XmlAccessType.NONE)
-@NamedQueries({ @NamedQuery(name = HistorialTransaccionCaja.findByHistorialCaja, query = "SELECT h FROM HistorialTransaccionCaja h WHERE h.id.idHistorialCaja = :idHistorialCaja ORDER BY h.id.numeroOperacion") })
+@NamedQueries({ @NamedQuery(name = HistorialTransaccionCaja.findByHistorialCaja, query = "SELECT h FROM HistorialTransaccionCaja h WHERE h.idHistorialCaja = :idHistorialCaja ORDER BY h.numeroOperacion") })
 public class HistorialTransaccionCaja implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public final static String findByHistorialCaja = "findByHistorialCaja";
 
-	private HistorialTransaccionCajaId id;
+	private BigInteger idTransaccion;
+	
+	private BigInteger idHistorialCaja;
+
+	private BigInteger numeroOperacion;
 
 	private Date fecha;
 
@@ -44,18 +45,16 @@ public class HistorialTransaccionCaja implements Serializable {
 
 	public HistorialTransaccionCaja() {
 	}
-
-	@XmlElement(name = "id")
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "idHistorialCaja", column = @Column(name = "ID_HISTORIAL_CAJA", nullable = false, precision = 22, scale = 0)),
-			@AttributeOverride(name = "numeroOperacion", column = @Column(name = "NUMERO_OPERACION", nullable = false, precision = 22, scale = 0)) })
-	public HistorialTransaccionCajaId getId() {
-		return id;
+	
+	@XmlElement
+	@Id
+	@Column(name = "ID_TRANSACCION", unique = true, nullable = false)
+	public BigInteger getIdTransaccion() {
+		return idTransaccion;
 	}
 
-	public void setId(HistorialTransaccionCajaId id) {
-		this.id = id;
+	public void setIdTransaccion(BigInteger idTransaccion) {
+		this.idTransaccion = idTransaccion;
 	}
 
 	@XmlElement
@@ -120,4 +119,23 @@ public class HistorialTransaccionCaja implements Serializable {
 		this.tipoTransaccion = tipoTransaccion;
 	}
 
+	@XmlElement
+	@Column(name = "ID_HISTORIAL_CAJA")
+	public BigInteger getIdHistorialCaja() {
+		return idHistorialCaja;
+	}
+
+	public void setIdHistorialCaja(BigInteger idHistorialCaja) {
+		this.idHistorialCaja = idHistorialCaja;
+	}
+
+	@XmlElement
+	@Column(name = "NUMERO_OPERACION")
+	public BigInteger getNumeroOperacion() {
+		return numeroOperacion;
+	}
+
+	public void setNumeroOperacion(BigInteger numeroOperacion) {
+		this.numeroOperacion = numeroOperacion;
+	}
 }
