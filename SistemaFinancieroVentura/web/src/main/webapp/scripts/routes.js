@@ -24,7 +24,7 @@ define(['./app'], function(app) {
                     '               <span class="icon-bar"></span>' +
                     '</button>' +
                     '<a class="navbar-brand" href="#">' +
-                    '<img alt="Google AdSense" src="images/logo.png">' +
+                    '<img alt="Logo Caja Ventura" src="images/logos_coop/logo_coop_header.png">' +
                     '</a>' +
                     '</div>' +
                     '<div class="navbar-collapse collapse">' +
@@ -42,7 +42,7 @@ define(['./app'], function(app) {
                     '<a href="#contact" ui-sref="app.socio({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.socio&#39;)}">Cuentas Personales</a>'+
                     '</li>'+
                     '<li ng-class="{active: $state.includes(&#39;app.administracion&#39;)}">'+
-                    '<a href="#contact" ui-sref="app.administracion({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.administracion&#39;)}">Administracion</a>'+
+                    '<a href="#contact" ui-sref="app.administracion({redirect:true})" ng-class="{&#39;sf-nav-bar-menu sf-nav-bar-menu-selected&#39;: $state.includes(&#39;app.administracion&#39;)}">Administración</a>'+
                     '</li>'+
                     '</ul>'+
                     '<ul class="nav navbar-nav navbar-right" ng-controller="CajaNavbarController">'+
@@ -138,7 +138,7 @@ define(['./app'], function(app) {
                     '<div class="col-sm-12">'+
                     '<div class="center-block text-center" style="font-size: 11px; padding-bottom: 10px;">'+
                     '<span class="l3">'+
-                    '<span dir="ltr">©2014&nbsp;Cooperativa Ventura</span>'+
+                    '<span style="font-weight: bold;" dir="ltr">©2014&nbsp;Cooperativa de Ahorro y Crédito Caja Ventura</span>'+
                     '</span>&nbsp;-&nbsp;'+
                     '<a href="#" target="_blank" class="l9">Términos y privacidad</a>'+
                     '</div>'+
@@ -153,7 +153,8 @@ define(['./app'], function(app) {
             })
             .state('app.home', {
                 url: '/home',
-                template: '</br></br></br></br><div class="center-block"><h3 class="text-center">Bienvenido al sistema</h3></div></br></br></br></br></div></br></br></br></br></br></br></br></br></br></br></br>'
+                template: '</br><div class="center-block"><h3 class="text-center" style="font-weight: bold; color: seagreen;">Bienvenido al Sistema Financiero</h3></div></br></br>' + 
+                		  '<h3 class="text-center"><img alt="Caja Ventura" src="images/logos_coop/logo_coop.png"></h3></br></br></br>'
             })
             .state('app.caja', {
                 url: "/caja",
@@ -198,7 +199,7 @@ define(['./app'], function(app) {
                                     { 'name':'Compra/Venta' , 'state':'app.transaccion.compraVenta'}
                                 ]},
                                 {'name':'Historial', submenus:[
-                                    { 'name':'Buscar Transaccion' , 'state':'app.transaccion.buscarTransaccion'}
+                                    { 'name':'Buscar Transacción' , 'state':'app.transaccion.buscarTransaccion'}
                                 ]}
                             ];
                         }
@@ -242,7 +243,7 @@ define(['./app'], function(app) {
                                     { 'name':'Nuevo' , 'state':'app.administracion.crearPersonaNatural'},
                                     { 'name':'Buscar' , 'state':'app.administracion.buscarPersonaNatural'}
                                 ]},
-                                {'name':'Persona Juridica', submenus:[
+                                {'name':'Persona Jurídica', submenus:[
                                     { 'name':'Nuevo' , 'state':'app.administracion.crearPersonaJuridica'},
                                     { 'name':'Buscar' , 'state':'app.administracion.buscarPersonaJuridica'}
                                 ]}
