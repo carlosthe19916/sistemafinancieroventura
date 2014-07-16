@@ -13,10 +13,11 @@
     <legend style="background: whitesmoke;">Datos Principales</legend>
     <div class="row">
         <div class="col-sm-4">
-            <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipodocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumento.$dirty)}">
+            <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.tipoDocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumento.$dirty)}">
                 <label>Tipo Documento</label>
                 <label style="color: brown;">(*)</label>
                 <select focus-on="focusTipoDocumento" name="tipoDocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentosPJ | orderBy : 'id'" ng-model="view.idTipoDocumentoPJ" class="form-control" required autofocus>
+                	<option value="">--Seleccione--</option>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoDocumento.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.tipoDocumento.$error.required">
@@ -31,7 +32,7 @@
                 <label style="color: brown;">(*)</label>
                 <input name="numeroDocumentoPJ" type="text" ng-model="view.numeroDocumentoPJ" ng-pattern="/^[0-9]+$/" ng-minlength="1" ng-maxlength="20" class="form-control" placeholder="N&uacute;mero Documento" required/>
                 <div ng-show="formCrearPersonaJuridica.numeroDocumentoPJ.$invalid && (control.submitted || formCrearPersonaJuridica.numeroDocumentoPJ.$dirty)">
-                    <p class="help-block" ng-show="formCrearPersonaJuridica.numeroDocumento.$error.required">
+                    <p class="help-block" ng-show="formCrearPersonaJuridica.numeroDocumentoPJ.$error.required">
                         Ingrese Numero de Documento.
                     </p>
                     <p class="help-block" ng-show="formCrearPersonaJuridica.numeroDocumentoPJ.$error.minlength">
@@ -128,6 +129,7 @@
                 <label>Tipo Empresa</label>
                 <label style="color: brown;">(*)</label>
                 <select name="tipoEmpresa" ng-options="tipoEmpresa as tipoEmpresa for tipoEmpresa in combo.tiposEmpresa" ng-model="view.tipoEmpresa" class="form-control" required>
+                	<option value="">--Seleccione--</option>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoEmpresa.$invalid && (control.submitted || formCrearPersonaJuridica.tipoEmpresa.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.tipoEmpresa.$error.required">
@@ -154,7 +156,9 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.departamento.$invalid && control.submitted}">
                 <label>Departamento</label>
-                <select name="departamento" ng-options="departamento.codigo as departamento.denominacion for departamento in combos.departamentos" ng-model="ubigeo.codigoDepartamento" ng-change="changeDepartamento()" class="form-control"></select>
+                <select name="departamento" ng-options="departamento.codigo as departamento.denominacion for departamento in combos.departamentos" ng-model="ubigeo.codigoDepartamento" ng-change="changeDepartamento()" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonaJuridica.departamento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.departamento.$error.required">
                         Ingrese Departamento.
@@ -165,7 +169,9 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.provincia.$invalid && control.submitted}">
                 <label>Provincia</label>
-                <select name="provincia" ng-options="provincia.codigo as provincia.denominacion for provincia in combos.provincias" ng-model="ubigeo.codigoProvincia" ng-change="changeProvincia()" class="form-control"></select>
+                <select name="provincia" ng-options="provincia.codigo as provincia.denominacion for provincia in combos.provincias" ng-model="ubigeo.codigoProvincia" ng-change="changeProvincia()" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonaJuridica.provincia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.provincia.$error.required">
                         Ingrese Provincia.
@@ -176,7 +182,9 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonaJuridica.distrito.$invalid && control.submitted}">
                 <label>Distrito</label>
-                <select name="distrito" ng-options="distrito.codigo as distrito.denominacion for distrito in combos.distritos" ng-model="ubigeo.codigoDistrito" ng-change="changeDistrito()" class="form-control"></select>
+                <select name="distrito" ng-options="distrito.codigo as distrito.denominacion for distrito in combos.distritos" ng-model="ubigeo.codigoDistrito" ng-change="changeDistrito()" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonaJuridica.distrito.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.distrito.$error.required">
                         Ingrese Distrito.
@@ -256,6 +264,7 @@
                 <label>Tipo Documento</label>
                 <label style="color: brown;">(*)</label>
                 <select name="tipoDocumentoRepresentante" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentosPN | orderBy : 'id'" ng-model="view.idTipoDocumentoPN" class="form-control" required>
+                	<option value="">--Seleccione--</option>
                 </select>
                 <div ng-show="formCrearPersonaJuridica.tipoDocumentoRepresentante.$invalid && (control.submitted || formCrearPersonaJuridica.tipoDocumentoRepresentante.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonaJuridica.tipoDocumentoRepresentante.$error.required">

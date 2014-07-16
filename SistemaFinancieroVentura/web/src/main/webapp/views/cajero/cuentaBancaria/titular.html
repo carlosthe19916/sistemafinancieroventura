@@ -12,6 +12,7 @@
                            <label>Tipo Documento</label>
                            <label style="color: brown;">(*)</label>
                            <select focus-on="focusTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumentoTitular" class="form-control" required autofocus>
+                           		<option value="">--Seleccione--</option>
                            </select>
                            <div ng-show="formTitular.tipoDocumento.$invalid && control.submitted">
                                <p class="help-block" ng-show="formTitular.tipoDocumento.$error.required">

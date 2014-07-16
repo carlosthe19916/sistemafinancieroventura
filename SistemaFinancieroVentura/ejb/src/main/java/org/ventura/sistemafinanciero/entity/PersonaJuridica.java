@@ -41,7 +41,7 @@ import org.ventura.sistemafinanciero.entity.type.TipoEmpresa;
 @NamedQueries({
 		@NamedQuery(name = PersonaJuridica.FindAll, query = "SELECT p FROM PersonaJuridica p"),
 		@NamedQuery(name = PersonaJuridica.FindByTipoAndNumeroDocumento, query = "SELECT p FROM PersonaJuridica p WHERE p.tipoDocumento.idTipoDocumento = :idtipodocumento AND p.numeroDocumento = :numerodocumento"),
-		@NamedQuery(name = PersonaJuridica.FindByFilterText, query = "SELECT p FROM PersonaJuridica p WHERE p.numeroDocumento = :filtertext OR UPPER(p.razonSocial) LIKE :filtertext") })
+		@NamedQuery(name = PersonaJuridica.FindByFilterText, query = "SELECT p FROM PersonaJuridica p WHERE p.numeroDocumento like :filtertext OR UPPER(p.razonSocial) LIKE :filtertext") })
 public class PersonaJuridica implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

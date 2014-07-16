@@ -20,6 +20,7 @@
                 <label>Tipo Persona</label>
                 <label style="color: brown;">(*)</label>
                 <select focus-on="focusTipoPersona"  name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in combo.tipoPersonas" ng-model="view.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
+                	<option value="">--Seleccione--</option>
                 </select>
                 <div ng-show="formCrearCuenta.tipoPersona.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearCuenta.tipoPersona.$error.required">
@@ -35,6 +36,7 @@
                 <label>Tipo Documento</label>
                 <label style="color: brown;">(*)</label>
                 <select name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumento" class="form-control" required>
+                	<option value="">--Seleccione--</option>
                 </select>
                 <div ng-show="formCrearCuenta.tipoDocumento.$invalid && (control.submitted || formCrearCuenta.tipoDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearCuenta.tipoDocumento.$error.required">
@@ -93,6 +95,7 @@
                     <label>Moneda</label>
                     <label style="color: brown;">(*)</label>
                     <select name="moneda" ng-options="moneda.id as moneda.denominacion for moneda in combo.monedas | orderBy : 'id'" ng-model="view.idMoneda" ng-change="monedaChange()" class="form-control" required>
+                    	<option value="">--Seleccione--</option>
                     </select>
                     <div ng-show="formCrearCuenta.moneda.$invalid && control.submitted">
                         <p class="help-block" ng-show="formCrearCuenta.moneda.$error.required">
