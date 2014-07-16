@@ -138,7 +138,7 @@ define(['./app'], function(app) {
                     '<div class="col-sm-12">'+
                     '<div class="center-block text-center" style="font-size: 11px; padding-bottom: 10px;">'+
                     '<span class="l3">'+
-                    '<span style="font-weight: bold;" dir="ltr">©2014&nbsp;Cooperativa de Ahorro y Crédito Caja Ventura</span>'+
+                    '<span dir="ltr">©2014&nbsp;Cooperativa de Ahorro y Crédito Caja Ventura</span>'+
                     '</span>&nbsp;-&nbsp;'+
                     '<a href="#" target="_blank" class="l9">Términos y privacidad</a>'+
                     '</div>'+
@@ -153,7 +153,7 @@ define(['./app'], function(app) {
             })
             .state('app.home', {
                 url: '/home',
-                template: '</br><div class="center-block"><h3 class="text-center" style="font-weight: bold; color: seagreen;">Bienvenido al Sistema Financiero</h3></div></br></br>' + 
+                template: '</br><div class="center-block"><h2 class="text-center" style="font-weight: bold; color: seagreen;">Bienvenido al Sistema Financiero</h2></div></br></br>' + 
                 		  '<h3 class="text-center"><img alt="Caja Ventura" src="images/logos_coop/logo_coop.png"></h3></br></br></br>'
             })
             .state('app.caja', {
@@ -180,7 +180,9 @@ define(['./app'], function(app) {
                         }
                     },
                     "viewContent":{
-                        template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                        template: "<div ui-view='viewContent' style='min-height: 472px;'><h4 class='text-center' style='font-weight: bold; color: blue;'>CAJA</h4>" +
+                        "Permite registrar todas las transacciones y movimientos realizados con las bovedas y cajas que tiene la institución y proporciona información general y detallada de las mismas."+
+                        "</div>"
                     }
                 }
             })
@@ -205,7 +207,9 @@ define(['./app'], function(app) {
                         }
                     },
                     "viewContent":{
-                        template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                        template: "<div ui-view='viewContent' style='min-height: 472px;'><h4 class='text-center' style='font-weight: bold; color: blue;'>TRANSACCIONES</h4>" +
+                        "Permite registrar todas las transacciones y movimientos realizados en las diferentes cuentas bancarias que tiene la institución y proporciona información general y detallada de las mismas."+
+                        "</div>"
                     }
                 }
             })
