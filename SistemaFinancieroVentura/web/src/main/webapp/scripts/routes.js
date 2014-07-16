@@ -181,7 +181,8 @@ define(['./app'], function(app) {
                     },
                     "viewContent":{
                         template: "<div ui-view='viewContent' style='min-height: 472px;'><h4 class='text-center' style='font-weight: bold; color: blue;'>CAJA</h4>" +
-                        "Permite registrar todas las transacciones y movimientos realizados con las bovedas y cajas que tiene la institución y proporciona información general y detallada de las mismas."+
+                        "Permite registrar todas las transacciones y movimientos realizados con las bovedas y cajas que tiene la institución y proporciona información general y detallada de las mismas." +
+                        '</br></br><h3 class="text-center"><img alt="Caja Ventura" src="images/modules/caja.gif"></h3></br></br>' +
                         "</div>"
                     }
                 }
@@ -209,6 +210,7 @@ define(['./app'], function(app) {
                     "viewContent":{
                         template: "<div ui-view='viewContent' style='min-height: 472px;'><h4 class='text-center' style='font-weight: bold; color: blue;'>TRANSACCIONES</h4>" +
                         "Permite registrar todas las transacciones y movimientos realizados en las diferentes cuentas bancarias que tiene la institución y proporciona información general y detallada de las mismas."+
+                        '</br></br><h3 class="text-center"><img alt="Caja Ventura" src="images/modules/deposito.png"></h3></br></br>' +
                         "</div>"
                     }
                 }
@@ -233,7 +235,9 @@ define(['./app'], function(app) {
                         }
                     },
                     "viewContent":{
-                        template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                        template: "<div ui-view='viewContent' style='min-height: 472px;'><h4 class='text-center' style='font-weight: bold; color: blue;'>CUENTAS PERSONALES</h4>" +
+                        		  '</br></br><h3 class="text-center"><img alt="Caja Ventura" src="images/modules/plazoFijo.jpg"></h3></br></br>' +
+                        		"</div>"
                     }
                 }
             })
@@ -255,7 +259,9 @@ define(['./app'], function(app) {
                         }
                     },
                     "viewContent":{
-                        template: "<div ui-view='viewContent' style='min-height: 472px;'></div>"
+                        template: "<div ui-view='viewContent' style='min-height: 472px;'> <h4 class='text-center' style='font-weight: bold; color: blue;'>ADMINISTRAR PERSONA</h4>" +
+                        		  '</br></br><h3 class="text-center"><img alt="Caja Ventura" src="images/modules/registrarPersona.png"></h3></br></br>' +
+                        		"</div>"
                     }
                 }
             })

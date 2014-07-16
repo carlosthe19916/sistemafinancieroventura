@@ -69,6 +69,7 @@
                             <label>Tipo Operaci&oacute;n</label>
                             <label style="color: brown;">(*)</label>
                             <select focus-on="focusTipoOperacion" name="tipoOperacion" ng-options="tipoOperacion as tipoOperacion.denominacion for tipoOperacion in combo.tipoOperacion" ng-model="view.tipoOperacion" class="form-control" required>
+                            	<option value="">--Seleccione--</option>
                             </select>
                             <div ng-show="formCrearCompraVenta.tipoOperacion.$invalid && (control.submitted || formCrearCompraVenta.tipoOperacion.$dirty)">
                                 <p class="help-block" ng-show="formCrearCompraVenta.tipoOperacion.$error.required">
@@ -101,6 +102,7 @@
                             <label>Moneda Entregada</label>
                             <label style="color: brown;">(*)</label>
                             <select name="monedaEntregada" ng-options="moneda.id as moneda.denominacion for moneda in combo.moneda | orderBy : 'id'" ng-model="view.idMonedaEntregada" class="form-control" required>
+                            	<option value="">--Seleccione--</option>
                             </select>
                             <div ng-show="formCrearCompraVenta.monedaEntregada.$invalid && (control.submitted || formCrearCompraVenta.monedaEntregada.$dirty)">
                                 <p class="help-block" ng-show="formCrearCompraVenta.monedaEntregada.$error.required">

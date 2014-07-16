@@ -10,7 +10,9 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearSocio.tipoPersona.$invalid && (control.submitted || formCrearSocio.tipoPersona.$dirty)}">
                     <label>Tipo Persona</label>
+                    <label style="color: brown;">(*)</label>
                     <select focus-on="focusTipoPersona" name="tipoPersona" ng-options="tipoPersona.denominacion as tipoPersona.denominacion for tipoPersona in combo.tipoPersonas" ng-model="view.tipoPersona" ng-change="tipoPersonaChange()" class="form-control" required autofocus>
+                    	<option value="">--Seleccione--</option>
                     </select>
                     <div ng-show="formCrearSocio.tipoPersona.$invalid && (control.submitted || formCrearSocio.tipoPersona.$dirty)">
                         <p class="help-block" ng-show="formCrearSocio.tipoPersona.$error.required">
@@ -24,7 +26,9 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearSocio.tipoDocumentoSocio.$invalid && (control.submitted || formCrearSocio.tipoDocumentoSocio.$dirty)}">
                     <label>Tipo Documento Socio</label>
+                    <label style="color: brown;">(*)</label>
                     <select name="tipoDocumentoSocio" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentosSocio | orderBy : 'id'" ng-model="view.idTipoDocumentoSocio" class="form-control" required>
+                    	<option value="">--Seleccione--</option>
                     </select>
                     <div ng-show="formCrearSocio.tipoDocumentoSocio.$invalid && (control.submitted || formCrearSocio.tipoDocumentoSocio.$dirty)">
                         <p class="help-block" ng-show="formCrearSocio.tipoDocumentoSocio.$error.required">
@@ -36,6 +40,7 @@
             <div class="col-sm-4">
                 <div class="form-group" ng-class="{ 'has-error' : formCrearSocio.numeroDocumentoSocio.$invalid && (control.submitted || formCrearSocio.numeroDocumentoSocio.$dirty)}">
                     <label>N&uacute;mero Documento Socio</label>
+                    <label style="color: brown;">(*)</label>
                     <div class="input-group">
                         <input focus-on="focusNumeroDocumentoSocio" type="text" name="numeroDocumentoSocio" ui-keypress="{13:'buscarPersonaSocio($event)'}" ng-model="view.numeroDocumentoSocio" ng-minlength="1" ng-maxlength="20" ng-trim="false" ng-pattern="/^[0-9]+$/" class="form-control" placeholder="Numero Documento" required/>
                         <span class="input-group-btn">
@@ -77,6 +82,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : formCrearSocio.tipoDocumentoApoderado.$invalid && (control.submitted || formCrearSocio.tipoDocumentoApoderado.$dirty)}">
                     <label>Tipo Documento Apoderado</label>
                     <select name="tipoDocumentoApoderado" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentosApoderado | orderBy : 'id'" ng-model="view.idTipoDocumentoApoderado" class="form-control">
+                    	<option value="">--Seleccione--</option>
                     </select>
                     <div ng-show="formCrearSocio.tipoDocumentoApoderado.$invalid && (control.submitted || formCrearSocio.tipoDocumentoApoderado.$dirty)">
                         <p class="help-block" ng-show="formCrearSocio.tipoDocumentoApoderado.$error.required">

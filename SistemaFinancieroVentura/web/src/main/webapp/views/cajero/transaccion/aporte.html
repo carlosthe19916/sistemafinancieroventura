@@ -80,6 +80,7 @@
                                         <label>Mes</label>
                                         <label style="color: brown;">(*)</label>
                                         <select focus-on="focusMes" name="mes" ng-options="mes as mes.denominacion for mes in combo.mes" ng-model="view.mes" class="form-control" ng-required="true" required>
+                                        	<option value="">--Seleccione--</option>
                                         </select>
                                         <div ng-show="formCrearTransaccion.mes.$invalid && control.submitted">
                                             <p class="help-block" ng-show="formCrearTransaccion.mes.$error.required">

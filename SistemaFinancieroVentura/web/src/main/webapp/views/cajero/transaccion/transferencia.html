@@ -19,6 +19,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransferencia.numeroCuentaOrigen.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaOrigen.$dirty)}">
                                         <label>N&uacute;mero Cuenta Origen</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input type="text" name="numeroCuentaOrigen" ng-model="view.numeroCuentaOrigen" class="form-control" placeholder="N&uacute;mero de Cuenta Origen" readonly required/>
                                               <span class="input-group-btn">
@@ -27,9 +28,9 @@
                                                 </button>
                                               </span>
                                         </div>
-                                        <div ng-show="formCrearTransferencia.numeroCuenta.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaOrigen.$dirty)">
+                                        <div ng-show="formCrearTransferencia.numeroCuentaOrigen.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaOrigen.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransferencia.numeroCuentaOrigen.$error.required">
-                                                Ingrese N&uacute;mero de Cuenta.
+                                                Ingrese N&uacute;mero de Cuenta Origen.
                                             </p>
                                         </div>
                                     </div>
@@ -39,6 +40,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransferencia.numeroCuentaDestino.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaDestino.$dirty)}">
                                         <label>N&uacute;mero Cuenta Destino</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input type="text" name="numeroCuentaDestino" ng-model="view.numeroCuentaDestino" class="form-control" placeholder="N&uacute;mero de Cuenta Destino" readonly required/>
                                               <span class="input-group-btn">
@@ -49,7 +51,7 @@
                                         </div>
                                         <div ng-show="formCrearTransferencia.numeroCuentaDestino.$invalid && (control.submitted || formCrearTransferencia.numeroCuentaDestino.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransferencia.numeroCuentaDestino.$error.required">
-                                                Ingrese N&uacute;mero de Cuenta.
+                                                Ingrese N&uacute;mero de Cuenta Destino.
                                             </p>
                                         </div>
                                     </div>
@@ -59,6 +61,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransferencia.monto.$invalid && (control.submitted || formCrearTransferencia.monto.$dirty)}">
                                         <label>Monto</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" ng-minlength="1" ng-maxlength="18" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">

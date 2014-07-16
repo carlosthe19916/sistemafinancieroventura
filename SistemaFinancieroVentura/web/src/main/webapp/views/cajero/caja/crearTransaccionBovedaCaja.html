@@ -1,6 +1,6 @@
 <div ng-controller="CrearTransaccionBovedaCajaController">
     <fieldset>
-        <legend>Transaccion boveda - caja</legend>
+        <legend>Transacci&oacute;n Boveda - Caja</legend>
 
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             {{alert.msg}}
@@ -10,8 +10,10 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted}">
-                        <label>Boveda(*)</label>
+                        <label>Boveda</label>
+                        <label style="color: brown;">(*)</label>
                         <select name="boveda" ng-options="boveda.id as boveda.denominacion for boveda in combo.boveda" ng-model="view.idBoveda" class="form-control" required autofocus>
+                        	<option value="">--Seleccione--</option>
                         </select>
                         <div ng-show="formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted">
                             <p class="help-block" ng-show="formCrearTransaccionBovedaCaja.boveda.$error.required">
@@ -34,11 +36,12 @@
             <div class="row">
                 <div class="col-sm-8">
                     <div class="form-group">
-                        <label>Detalle(*)</label>
+                        <label>Detalle</label>
+                        <label style="color: brown;">(*)</label>
                         <table class="table table-striped table-bordered table-condensed">
                             <thead>
                             <tr>
-                                <th>Denominacion</th>
+                                <th>Denominaci&oacute;n</th>
                                 <th>Cantidad</th>
                                 <th>Subtotal</th>
                             </tr>

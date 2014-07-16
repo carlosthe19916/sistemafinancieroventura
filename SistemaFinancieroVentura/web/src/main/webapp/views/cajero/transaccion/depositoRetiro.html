@@ -19,6 +19,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.numeroCuenta.$invalid && (control.submitted || formCrearTransaccion.numeroCuenta.$dirty)}">
                                         <label>N&uacute;mero Cuenta</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input focus-on="focusBuscarCuenta" type="text" name="numeroCuenta" ng-model="view.numeroCuenta" class="form-control" placeholder="N&uacute;mero de Cuenta" readonly required/>
                                               <span class="input-group-btn">
@@ -39,7 +40,9 @@
                                 <div class="col-sm-12">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.tipotransaccion.$invalid && (control.submitted || formCrearTransaccion.tipotransaccion.$dirty)}">
                                         <label>Tipo Transacci&oacute;n</label>
+                                        <label style="color: brown;">(*)</label>
                                         <select focus-on="focusTipoTransaccion" name="tipotransaccion" ng-options="tipotransaccion.denominacion as tipotransaccion.denominacion for tipotransaccion in combo.tipoTransacciones" ng-model="view.tipoTransaccion" class="form-control" required>
+                                        	<option value="">--Seleccione--</option>
                                         </select>
                                         <div ng-show="formCrearTransaccion.tipotransaccion.$invalid && (control.submitted || formCrearTransaccion.tipotransaccion.$dirty)">
                                             <p class="help-block" ng-show="formCrearTransaccion.tipotransaccion.$error.required">
@@ -53,6 +56,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccion.monto.$invalid && (control.submitted || formCrearTransaccion.monto.$dirty)}">
                                         <label>Monto</label>
+                                        <label style="color: brown;">(*)</label>
                                         <div class="input-group">
                                             <input focus-on="focusMonto" type="text" name="monto" ng-model="view.monto" ng-minlength="1" ng-maxlength="18" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                                               <span class="input-group-btn">
