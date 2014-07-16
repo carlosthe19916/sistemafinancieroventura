@@ -15,6 +15,7 @@ import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPersona;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -35,16 +36,21 @@ public class CuentaBancariaView implements Serializable {
 	public final static String findByNumeroCuenta = "CuentaBancariaView.findByNumeroCuenta";
 
 	private String numerocuenta;
-	private BigDecimal idcuentabancaria;
+	private BigInteger idcuentabancaria;
 	private EstadoCuentaBancaria estadocuenta;
 	private Date fecnac_fecconst;
 	private Moneda moneda;
-	private BigDecimal idsocio;
+	private BigInteger idsocio;
 	private String numerodocumento;
 	private String socio;
 	private TipoCuentaBancaria tipocuenta;
 	private String tipodocumento;
 	private TipoPersona tipopersona;
+
+	private BigDecimal tasaInteres;
+	private BigDecimal saldo;
+	private Date fechaApertura;
+	private Date fechaCierre;
 
 	public CuentaBancariaView() {
 	}
@@ -52,11 +58,11 @@ public class CuentaBancariaView implements Serializable {
 	@XmlElement(name = "id")
 	@Id
 	@Column(name = "IDCUENTABANCARIA", unique = true, nullable = false)
-	public BigDecimal getIdcuentabancaria() {
+	public BigInteger getIdcuentabancaria() {
 		return this.idcuentabancaria;
 	}
 
-	public void setIdcuentabancaria(BigDecimal idcuentabancaria) {
+	public void setIdcuentabancaria(BigInteger idcuentabancaria) {
 		this.idcuentabancaria = idcuentabancaria;
 	}
 
@@ -104,12 +110,12 @@ public class CuentaBancariaView implements Serializable {
 	}
 
 	@XmlTransient
-	@Column(name = "IDSOCIO", precision = 22, scale = 0)
-	public BigDecimal getIdsocio() {
+	@Column(name = "IDSOCIO")
+	public BigInteger getIdsocio() {
 		return this.idsocio;
 	}
 
-	public void setIdsocio(BigDecimal idsocio) {
+	public void setIdsocio(BigInteger idsocio) {
 		this.idsocio = idsocio;
 	}
 
@@ -163,6 +169,48 @@ public class CuentaBancariaView implements Serializable {
 
 	public void setTipopersona(TipoPersona tipopersona) {
 		this.tipopersona = tipopersona;
+	}
+
+	@XmlElement(name = "tasaInteres")
+	@Column(name = "TASA_INTERES")
+	public BigDecimal getTasaInteres() {
+		return tasaInteres;
+	}
+
+	public void setTasaInteres(BigDecimal tasaInteres) {
+		this.tasaInteres = tasaInteres;
+	}
+
+	@XmlElement(name = "saldo")
+	@Column(name = "SALDO")
+	public BigDecimal getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
+	}
+
+	@XmlElement(name = "fechaApertura")
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA_APERTURA", nullable = false, length = 7)
+	public Date getFechaApertura() {
+		return fechaApertura;
+	}
+
+	public void setFechaApertura(Date fechaApertura) {
+		this.fechaApertura = fechaApertura;
+	}
+
+	@XmlElement(name = "fechaCierre")
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA_CIERRE", nullable = false, length = 7)
+	public Date getFechaCierre() {
+		return fechaCierre;
+	}
+
+	public void setFechaCierre(Date fechaCierre) {
+		this.fechaCierre = fechaCierre;
 	}
 
 }

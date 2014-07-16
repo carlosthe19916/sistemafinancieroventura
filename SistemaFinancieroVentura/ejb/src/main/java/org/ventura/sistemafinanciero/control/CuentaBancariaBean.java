@@ -119,6 +119,14 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 	}	
 	
 	@Override
+	public CuentaBancariaView findView(BigInteger idCuentaBancaria) {
+		CuentaBancariaView cuentaBancariaView = cuentaBancariaViewDAO.find(idCuentaBancaria);
+		Moneda moneda = cuentaBancariaView.getMoneda();
+		Hibernate.initialize(moneda);
+		return cuentaBancariaView;
+	}	
+	
+	@Override
 	public List<CuentaBancaria> findAll() {
 		List<CuentaBancaria> list = this.cuentaBancariaDAO.findAll();
 		for (CuentaBancaria cuentaBancaria : list) {

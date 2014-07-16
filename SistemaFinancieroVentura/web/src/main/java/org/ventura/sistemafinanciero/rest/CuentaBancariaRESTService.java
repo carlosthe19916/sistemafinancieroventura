@@ -173,6 +173,17 @@ public class CuentaBancariaRESTService {
 	}
 	
 	@GET
+	@Path("/view/{id}")
+	@Produces({ "application/xml", "application/json" })
+	public Response findCuentaBancariaView(@PathParam("id")BigInteger id) {				
+		CuentaBancariaView cuentaBancaria = cuentaBancariaService.findView(id);
+		if(cuentaBancaria == null)
+			return Response.status(Response.Status.NOT_FOUND).entity("No encontrado").build();
+		else 
+			return Response.status(Response.Status.OK).entity(cuentaBancaria).build();
+	}
+	
+	@GET
 	@Path("/{id}")
 	@Produces({ "application/xml", "application/json" })
 	public Response findCuentaBancaria(@PathParam("id")BigInteger id) {				

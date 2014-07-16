@@ -12,8 +12,8 @@
                 </div>
                 <div class="col-sm-6" nf-if="cuentaBancaria.estado != 'INACTIVO'" style="text-align: right;right;font-size: 14px;">
                     <div class="btn-group">
-                        <button type="button" ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" ng-click="renovarPlazoFijo()" class="btn btn-default">Renovar</button>
-                        <button type="button" ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" ng-click="recalcularPlazoFijo()" class="btn btn-default">Recalcular</button>
+                        <button type="button" ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" ng-click="renovarPlazoFijo()" popover="Renovar cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default">Renovar</button>
+                        <button type="button" ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" ng-click="recalcularPlazoFijo()" popover="Recalcular cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default">Recalcular</button>
 
                         <button type="button" ng-if="cuentaBancaria.estado == 'ACTIVO'" ng-click="congelarCuentaBancaria()" popover="Congelar cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default">Congelar</button>
                         <button type="button" ng-if="cuentaBancaria.estado == 'CONGELADO'" ng-click="descongelarCuentaBancaria()" popover="Descongelar cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default active">Congelar</button>
@@ -270,7 +270,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="text-right">
-                                    <button type="button" ng-click="changeEstadoCuentaSearcher()" class="btn btn-link" style="padding: 0px 12px;">
+                                    <button type="button" class="btn btn-link" style="padding: 0px 12px;">
                                         Pdf
                                     </button>
                                     <button type="button" ng-click="changeEstadoCuentaSearcher()" class="btn btn-link" style="padding: 0px 12px;">
@@ -281,28 +281,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="panel-body" ng-show="transacciones.length == 0">
-                    <p>Estado de Cuenta no Encontrado</p>
-                </div>
-                <table class="table table-striped table-condensed" ng-show="transacciones.length != 0">
-                    <thead>
-                    <th>Fecha</th>
-                    <th>Descripci&oacute;n</th>
-                    <th>Monto</th>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="transaccion in transacciones">
-                        <td>
-                            <span ng-bind="transaccion.fecha | date : 'dd/MM/yyyy'"></span></td>
-                        <td>
-                            <span ng-bind="transaccion.tipoTransaccion"></span>
-                        </td>
-                        <td>
-                            <span ng-bind="transaccion.monto | currency : ''"></span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div ng-grid="gridOptions" style="border: 1px solid rgb(212,212,212); height: 190px; font-size: 12px"></div>
                 <div class="panel-footer">
                     Saldo Disponible:
                     <strong ng-bind="cuentaBancaria.saldo | currency : cuentaBancaria.moneda.simbolo"></strong>

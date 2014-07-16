@@ -78,17 +78,30 @@ define(['../module'], function (controllers) {
                     );
                 };
             };
+
+            $scope.transacciones = [];
             $scope.loadEstadoCuenta = function(){
                 if(!angular.isUndefined($scope.id)){
                     CuentaBancariaService.getEstadoCuenta($scope.id).then(
                         function(data){
                             $scope.transacciones = data;
                         }, function error(error){
-                            $scope.transacciones = undefined;
+                            $scope.transacciones = [];
                             $scope.alerts.push({ type: "danger", msg: "Estado de cuenta no encontrado."});
                         }
                     );
                 };
+            };
+
+            $scope.gridOptions = {
+                data: 'transacciones',
+                multiSelect: false,
+                enablePaging: true,
+                columnDefs: [
+                    {field:"fecha | date:'dd/MM/yyyy'", displayName:'FECHA'},
+                    {field:"tipoTransaccion", displayName:'DESCRIPCION'},
+                    {field:"monto", displayName:'MONTO'}
+                ]
             };
 
             $scope.loadSocio();

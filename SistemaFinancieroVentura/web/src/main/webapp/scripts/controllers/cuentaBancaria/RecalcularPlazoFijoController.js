@@ -15,6 +15,8 @@ define(['../module'], function (controllers) {
             };
             $scope.setInitialFocus();
 
+            $scope.alerts = [];
+
             $scope.control = {
                 success: false,
                 inProcess: false,
@@ -41,10 +43,11 @@ define(['../module'], function (controllers) {
 
             $scope.loadCuentaBancaria = function(){
                 if(!angular.isUndefined($scope.id)){
-                    CuentaBancariaService.getCuentasBancaria($scope.id).then(
+                    CuentaBancariaService.getCuentasBancariaView($scope.id).then(
                         function(data){
                             $scope.cuentaBancaria = data;
                             $scope.view.fechaCierre = $scope.cuentaBancaria.fechaCierre;
+                            $scope.view.tasaInteres = ($scope.cuentaBancaria.tasaInteres*100).toString();
                         }, function error(error){
                             $scope.cuentaBancaria = undefined;
                             $scope.alerts.push({ type: "danger", msg: "Cuenta bancaria no encontrada."});
@@ -109,7 +112,7 @@ define(['../module'], function (controllers) {
                     //poniendo variables
                     var data = {
                         "periodo": $scope.view.periodo,
-                        "tasaInteres": $scope.view.tasaInteres
+                        "tasaInteres": $scope.view.tasaInteres/100
                     };
 
                     CuentaBancariaService.recalcularPlazoFijo($scope.id, data).then(

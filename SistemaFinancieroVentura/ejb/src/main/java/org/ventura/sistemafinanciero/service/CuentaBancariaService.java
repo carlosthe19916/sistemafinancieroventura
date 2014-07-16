@@ -24,6 +24,8 @@ import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 @Remote
 public interface CuentaBancariaService extends AbstractService<CuentaBancaria> {	
 	
+	public CuentaBancariaView findView(BigInteger idCuentaBancaria);
+	
 	/**
      * Devuelve la lista de cuentas bancarias que cumplan con los datos 
      * de condiciones enviados
