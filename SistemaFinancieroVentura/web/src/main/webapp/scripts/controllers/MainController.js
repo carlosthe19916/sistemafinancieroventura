@@ -43,16 +43,5 @@ define(['./module'], function (controllers) {
                 }
             );
 
-            hotkeys.add({
-                combo: 'ctrl+enter',
-                description: 'Guardar',
-                allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-                callback: function(event, hotkey) {
-                    var crearTransaccion = HotKeysFunctionsService.getEnterFunction();
-                    crearTransaccion();
-                    event.preventDefault();
-                }
-            });
-
         }]);
 });
