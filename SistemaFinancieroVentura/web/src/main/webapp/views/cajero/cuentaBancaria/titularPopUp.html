@@ -15,7 +15,7 @@
                     (formTitular.numeroDocumento.$invalid && (control.submitted || formTitular.numeroDocumento.$dirty))}">
                         <label class="col-sm-2 control-label">Documento:</label>
                         <div class="col-sm-4">
-                            <select name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="titular.tipoDocumento" class="form-control" required autofocus>
+                            <select focus-on="focusTipoDocumentoTitular" name="tipoDocumento" ng-options="tipoDocumento as tipoDocumento.abreviatura for tipoDocumento in tipoDocumentos | orderBy : 'id'" ng-model="titular.tipoDocumento" class="form-control" required autofocus>
                             </select>
                             <div ng-show="formTitular.tipoDocumento.$invalid && (control.submitted || formTitular.tipoDocumento.$dirty)">
                                 <span class="help-block" ng-show="formTitular.numeroDocumento.$error.required">Ingrese Documento.</span>

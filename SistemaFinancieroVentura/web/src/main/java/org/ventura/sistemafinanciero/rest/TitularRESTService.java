@@ -35,6 +35,7 @@ import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.Titular;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.BeneficiarioService;
 import org.ventura.sistemafinanciero.service.TitularService;
 
@@ -102,9 +103,14 @@ public class TitularRESTService {
 	public Response deteleTitular(@PathParam("id") BigInteger id) {
 		if(id!= null){
 			try {
-				titularService.delete(id);
-				JsonObject model = Json.createObjectBuilder().add("message", "Titular eliminado").build();
-				return Response.status(Response.Status.OK).entity(model).build();
+				try {
+					titularService.delete(id);
+					JsonObject model = Json.createObjectBuilder().add("message", "Titular eliminado").build();
+					return Response.status(Response.Status.OK).entity(model).build();
+				} catch (RollbackFailureException e) {
+					JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+					return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+				}				
 			} catch (NonexistentEntityException e) {
 				JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
 				return Response.status(Response.Status.NOT_FOUND).entity(model).build();

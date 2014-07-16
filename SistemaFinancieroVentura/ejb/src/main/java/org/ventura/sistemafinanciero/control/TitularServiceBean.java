@@ -17,7 +17,9 @@ import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
 import org.ventura.sistemafinanciero.entity.TipoDocumento;
 import org.ventura.sistemafinanciero.entity.Titular;
+import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.TitularService;
 
 @Named
@@ -42,7 +44,7 @@ public class TitularServiceBean extends AbstractServiceBean<Titular> implements 
 	}
 	
 	@Override
-	public void delete(BigInteger idTitular) throws NonexistentEntityException {
+	public void delete(BigInteger idTitular) throws NonexistentEntityException, RollbackFailureException {
 		Titular titular = titularDAO.find(idTitular);
 		if(titular == null)
 			throw new NonexistentEntityException("Titular no existente");
@@ -55,6 +57,8 @@ public class TitularServiceBean extends AbstractServiceBean<Titular> implements 
 		PersonaNatural personaNatural = socio.getPersonaNatural();
 		PersonaJuridica personaJuridica = socio.getPersonaJuridica();
 		
+		if(cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.INACTIVO))
+			throw new RollbackFailureException("Cuenta INACTIVA, no se pueden modificar titulares");
 		if(personaNatural != null){
 			if(personaTitular.equals(personaNatural))
 				throw new NonexistentEntityException("No se puede eliminar el titular principal");

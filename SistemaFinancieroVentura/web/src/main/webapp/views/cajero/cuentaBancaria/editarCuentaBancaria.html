@@ -10,14 +10,14 @@
                     Cuenta Bancaria
                     <span ng-if="cuentaBancaria.estado == 'INACTIVO'" class="label label-danger">Cuenta inactiva</span>
                 </div>
-                <div class="col-sm-6" nf-if="cuentaBancaria.estado != 'INACTIVO'" style="text-align: right;">
+                <div class="col-sm-6" nf-if="cuentaBancaria.estado != 'INACTIVO'" style="text-align: right;right;font-size: 14px;">
                     <div class="btn-group">
                         <button type="button" ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" ng-click="renovarPlazoFijo()" class="btn btn-default">Renovar</button>
                         <button type="button" ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" ng-click="recalcularPlazoFijo()" class="btn btn-default">Recalcular</button>
 
-                        <button type="button" ng-if="cuentaBancaria.estado == 'ACTIVO'" ng-click="congelarCuentaBancaria()" class="btn btn-warning">Congelar</button>
-                        <button type="button" ng-if="cuentaBancaria.estado == 'CONGELADO'" ng-click="descongelarCuentaBancaria()" class="btn btn-default">Descongelar</button>
-                        <button type="button" ng-if="cuentaBancaria.estado == 'ACTIVO' || cuentaBancaria.estado == 'CONGELADO'" ng-click="cancelarCuentaBancaria()" class="btn btn-danger">Cancelar</button>
+                        <button type="button" ng-if="cuentaBancaria.estado == 'ACTIVO'" ng-click="congelarCuentaBancaria()" popover="Congelar cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default">Congelar</button>
+                        <button type="button" ng-if="cuentaBancaria.estado == 'CONGELADO'" ng-click="descongelarCuentaBancaria()" popover="Descongelar cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default active">Congelar</button>
+                        <button type="button" ng-if="cuentaBancaria.estado == 'ACTIVO' || cuentaBancaria.estado == 'CONGELADO'" ng-click="cancelarCuentaBancaria()" popover="Cancelar cuenta" popover-trigger="mouseenter" popover-placement="bottom" class="btn btn-default">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                         <div class="col-md-6">
                             <div class="text-right">
                                 <button ng-if="cuentaBancaria" type="button" ng-click="imprimirCertificado()" class="btn btn-link" style="padding: 0px 12px;">
-                                    Editar
+                                    Certificado
                                 </button>
                             </div>
                         </div>

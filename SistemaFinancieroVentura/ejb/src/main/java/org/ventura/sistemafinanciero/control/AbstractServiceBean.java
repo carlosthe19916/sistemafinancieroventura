@@ -14,6 +14,7 @@ import javax.validation.Validator;
 import org.ventura.sistemafinanciero.dao.DAO;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.AbstractService;
 
 public abstract class AbstractServiceBean<T> implements AbstractService<T>{
@@ -49,7 +50,7 @@ public abstract class AbstractServiceBean<T> implements AbstractService<T>{
 			throw new NonexistentEntityException("Objeto no existente");				
 	}
 
-	public void delete(BigInteger id) throws NonexistentEntityException {		
+	public void delete(BigInteger id) throws NonexistentEntityException, RollbackFailureException {		
 		T t = getDAO().find(id);
 		if (t != null)
 			getDAO().delete(t);

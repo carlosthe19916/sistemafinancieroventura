@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 
 public interface AbstractService<T> {
 
@@ -12,7 +13,7 @@ public interface AbstractService<T> {
 	
 	public void update(BigInteger id, T t) throws NonexistentEntityException, PreexistingEntityException;
 
-	public void delete(BigInteger id) throws NonexistentEntityException;
+	public void delete(BigInteger id) throws NonexistentEntityException, RollbackFailureException;
 
 	public T findById(BigInteger id);
 	

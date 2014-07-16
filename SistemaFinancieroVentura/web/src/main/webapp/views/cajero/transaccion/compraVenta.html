@@ -84,6 +84,7 @@
                             <label>Moneda Recibida</label>
                             <label style="color: brown;">(*)</label>
                             <select name="monedaRecibida" ng-options="moneda.id as moneda.denominacion for moneda in combo.moneda | orderBy : 'id'" ng-model="view.idMonedaRecibida" class="form-control" required>
+                                <option value="">--Seleccione--</option>
                             </select>
                             <div ng-show="formCrearCompraVenta.monedaRecibida.$invalid && (control.submitted || formCrearCompraVenta.monedaRecibida.$dirty)">
                                 <p class="help-block" ng-show="formCrearCompraVenta.monedaRecibida.$error.required">

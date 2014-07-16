@@ -13,7 +13,7 @@
                     <div class="form-group" ng-class="{ 'has-error' : formBeneficiario.numeroDocumento.$invalid && (control.submitted || formBeneficiario.numeroDocumento.$dirty)}">
                         <label class="col-sm-2 control-label">N&deg; Doc.:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero Documento" capitalize autofocus/>
+                            <input focus-on="focusNumeroDocumentoBeneficiario" type="text" name="numeroDocumento" ng-model="beneficiario.numeroDocumento" ng-maxlength="20" class="form-control" placeholder="Numero Documento" capitalize autofocus/>
                             <div ng-show="formBeneficiario.numeroDocumento.$invalid && (control.submitted || formBeneficiario.numeroDocumento.$dirty)">
                                 <span class="help-block" ng-show="formBeneficiario.numeroDocumento.$error.maxlength">Maximo 15 Caracteres.</span>
                             </div>

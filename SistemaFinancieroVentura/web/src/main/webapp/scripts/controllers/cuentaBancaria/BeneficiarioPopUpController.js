@@ -1,7 +1,19 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('BeneficiarioPopUpController', [ "$scope", "$modalInstance", "total", "obj",
-        function($scope, $modalInstance, total, obj) {
+    controllers.controller('BeneficiarioPopUpController', [ "$scope","$timeout","$modalInstance","focus","total", "obj",
+        function($scope,$timeout,$modalInstance,focus, total, obj) {
+
+            $scope.focusElements = {
+                numeroDocumentoBeneficiario: 'focusNumeroDocumentoBeneficiario'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                $timeout(function() {
+                    focus($scope.focusElements.numeroDocumentoBeneficiario);
+                }, 100);
+            };
+            $scope.setInitialFocus();
 
             $scope.control = {"submitted" : false};
 
@@ -12,7 +24,7 @@ define(['../module'], function (controllers) {
                 "apellidoMaterno" : undefined,
                 "nombres" : undefined,
                 "porcentajeBeneficio" : undefined
-            }
+            };
 
             //cargar beneficiario si es enviado
             $scope.loadParameters = function(){
@@ -26,7 +38,7 @@ define(['../module'], function (controllers) {
 
                     total = total - $scope.beneficiario.porcentajeBeneficio;
                 }
-            }
+            };
             $scope.loadParameters();
 
             $scope.formBeneficiario = {};
@@ -43,7 +55,7 @@ define(['../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
 
             $scope.ok = function () {
                 $modalInstance.close($scope.beneficiario);

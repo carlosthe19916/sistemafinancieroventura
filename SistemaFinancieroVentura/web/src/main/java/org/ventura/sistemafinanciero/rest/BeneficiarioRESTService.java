@@ -34,6 +34,7 @@ import javax.ws.rs.core.Response;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.BeneficiarioService;
 
 @Path("/beneficiario")
@@ -49,19 +50,14 @@ public class BeneficiarioRESTService {
 		if (id != null) {
 			Beneficiario beneficiario = beneficiarioService.findById(id);
 			if (beneficiario != null) {
-				return Response.status(Response.Status.OK).entity(beneficiario)
-						.build();
+				return Response.status(Response.Status.OK).entity(beneficiario).build();
 			} else {
-				JsonObject model = Json.createObjectBuilder()
-						.add("message", "Beneficiario no encontrado").build();
-				return Response.status(Response.Status.NOT_FOUND).entity(model)
-						.build();
+				JsonObject model = Json.createObjectBuilder().add("message", "Beneficiario no encontrado").build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();
 			}
 		} else {
-			JsonObject model = Json.createObjectBuilder()
-					.add("message", "solicitud invalida").build();
-			return Response.status(Response.Status.BAD_REQUEST).entity(model)
-					.build();
+			JsonObject model = Json.createObjectBuilder().add("message", "solicitud invalida").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}
 	}
 
@@ -74,31 +70,21 @@ public class BeneficiarioRESTService {
 		BigInteger idbeneficiario = beneficiario.getIdBeneficiario();
 		if (idbeneficiario != null) {
 			try {
-				Beneficiario beneficiarioDB = beneficiarioService
-						.findById(idbeneficiario);
-				beneficiario.setCuentaBancaria(beneficiarioDB
-						.getCuentaBancaria());
+				Beneficiario beneficiarioDB = beneficiarioService.findById(idbeneficiario);
+				beneficiario.setCuentaBancaria(beneficiarioDB.getCuentaBancaria());
 				beneficiarioService.update(idbeneficiario, beneficiario);
-				JsonObject model = Json.createObjectBuilder()
-						.add("message", "Beneficiario actualizado").build();
-				return Response.status(Response.Status.OK).entity(model)
-						.build();
+				JsonObject model = Json.createObjectBuilder().add("message", "Beneficiario actualizado").build();
+				return Response.status(Response.Status.OK).entity(model).build();
 			} catch (NonexistentEntityException e) {
-				JsonObject model = Json.createObjectBuilder()
-						.add("message", e.getMessage()).build();
-				return Response.status(Response.Status.NOT_FOUND).entity(model)
-						.build();
+				JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();
 			} catch (PreexistingEntityException e) {
-				JsonObject model = Json.createObjectBuilder()
-						.add("message", e.getMessage()).build();
-				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(model).build();
+				JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 			}
 		} else {
-			JsonObject model = Json.createObjectBuilder()
-					.add("message", "solicitud invalida").build();
-			return Response.status(Response.Status.BAD_REQUEST).entity(model)
-					.build();
+			JsonObject model = Json.createObjectBuilder().add("message", "solicitud invalida").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}
 	}
 
@@ -116,21 +102,18 @@ public class BeneficiarioRESTService {
 		if (id != null) {
 			try {
 				beneficiarioService.delete(id);
-				JsonObject model = Json.createObjectBuilder()
-						.add("message", "Beneficiario eliminado").build();
-				return Response.status(Response.Status.OK).entity(model)
-						.build();
+				JsonObject model = Json.createObjectBuilder().add("message", "Beneficiario eliminado").build();
+				return Response.status(Response.Status.OK).entity(model).build();
 			} catch (NonexistentEntityException e) {
-				JsonObject model = Json.createObjectBuilder()
-						.add("message", e.getMessage()).build();
-				return Response.status(Response.Status.NOT_FOUND).entity(model)
-						.build();
+				JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+			} catch (RollbackFailureException e) {
+				JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+				return Response.status(Response.Status.NOT_FOUND).entity(model).build();
 			}
 		} else {
-			JsonObject model = Json.createObjectBuilder()
-					.add("message", "solicitud invalida").build();
-			return Response.status(Response.Status.BAD_REQUEST).entity(model)
-					.build();
+			JsonObject model = Json.createObjectBuilder().add("message", "solicitud invalida").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}
 
 	}

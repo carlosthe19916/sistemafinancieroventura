@@ -36,6 +36,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.exception.NonexistentEntityException;
 import org.ventura.sistemafinanciero.exception.PreexistingEntityException;
+import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
@@ -212,6 +213,9 @@ public class PersonaNaturalRESTService {
 		} catch (NonexistentEntityException e) {
 			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, NOT_FOUND_MESSAGE).build();
 			result = Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
 		} catch (EJBException e) {
 			log.log(Level.SEVERE, e.getMessage());
 			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, e.getMessage()).build();

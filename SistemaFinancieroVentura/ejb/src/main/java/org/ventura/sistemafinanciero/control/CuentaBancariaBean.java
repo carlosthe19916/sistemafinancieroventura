@@ -642,6 +642,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(id);
 		if(cuentaBancaria == null)
 			throw new RollbackFailureException("Cuenta bancaria no encotrada");
+		if(cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.INACTIVO))
+			throw new RollbackFailureException("Cuena INACTIVA, no se puede modificar beneficiarios");
 		beneficiario.setIdBeneficiario(null);
 		beneficiario.setCuentaBancaria(cuentaBancaria);
 		
@@ -661,6 +663,8 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuenta);
 		if(cuentaBancaria == null)
 			throw new RollbackFailureException("Cuenta bancaria no encotrada");		
+		if(cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.INACTIVO))
+			throw new RollbackFailureException("Cuenta bancaria inactiva, no se puede modificar titulares");
 		
 		PersonaNatural personaNatural = titular.getPersonaNatural();
 		personaNatural = personaNaturalService.find(personaNatural.getTipoDocumento().getIdTipoDocumento(), personaNatural.getNumeroDocumento());

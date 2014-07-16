@@ -1,7 +1,19 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('TitularPopUpController', [ "$scope", "MaestroService", "PersonaNaturalService", "$modalInstance",
-        function($scope, MaestroService, PersonaNaturalService, $modalInstance) {
+    controllers.controller('TitularPopUpController', [ "$scope","$timeout","MaestroService","PersonaNaturalService", "$modalInstance","focus",
+        function($scope,$timeout, MaestroService, PersonaNaturalService, $modalInstance,focus) {
+
+            $scope.focusElements = {
+                tipoDocumentoTitular: 'focusTipoDocumentoTitular'
+            };
+            $scope.setInitialFocus = function($event){
+                if(!angular.isUndefined($event))
+                    $event.preventDefault();
+                $timeout(function() {
+                    focus($scope.focusElements.tipoDocumentoTitular);
+                }, 100);
+            };
+            $scope.setInitialFocus();
 
             $scope.control = {"submitted" : false};
 
@@ -10,7 +22,7 @@ define(['../module'], function (controllers) {
                 "numeroDocumento" : undefined,
                 "tipoDocumento" : undefined,
                 "persona": undefined
-            }
+            };
 
             //cargar tipos documento
             MaestroService.getTipoDocumentoPN().then(function(data){
@@ -24,7 +36,7 @@ define(['../module'], function (controllers) {
                 } else {
                     $scope.control.submitted = true;
                 }
-            }
+            };
 
             $scope.buscarPersonaTitular = function($event){
                 if($scope.formTitular.$valid){
@@ -43,7 +55,8 @@ define(['../module'], function (controllers) {
 
                 if(!angular.isUndefined($event))
                     $event.preventDefault();
-            }
+            };
+
             $scope.$watch("titular.numeroDocumento", function(){$scope.validarNumeroDocumentoTitular();});
             $scope.$watch("titular.tipoDocumento", function(){$scope.validarNumeroDocumentoTitular();});
             $scope.validarNumeroDocumentoTitular = function(){
@@ -55,7 +68,7 @@ define(['../module'], function (controllers) {
                             } else {$scope.formTitular.numeroDocumento.$setValidity("sgmaxlength",false);}
                         } else{$scope.formTitular.numeroDocumento.$setValidity("sgmaxlength",false);}
                     } else {$scope.formTitular.numeroDocumento.$setValidity("sgmaxlength",false);}}
-            }
+            };
 
             $scope.ok = function () {
                 if(!angular.isUndefined($scope.titular.persona)){
