@@ -10,28 +10,18 @@ define(['../module'], function (controllers) {
             $scope.siguiente = function(){
                 if(!angular.isUndefined($scope.id)){
                     if($scope.view.condiciones == true)
-                        $scope.retirarSaldoCuentaAporte();
+                        $scope.inactivarSocio();
+                    else
+                        alert("Acepte los términos y condiciones");
                 }
             };
 
-            $scope.retirarSaldoCuentaAporte = function(){
+            $scope.inactivarSocio = function(){
                 if(!angular.isUndefined($scope.id)){
-                    CajaSessionService.crearRetiroCuentaAporte($scope.id).then(
+                    CajaSessionService.inactivarSocio($scope.id).then(
                         function(data){
                             var idTransaccion = data.id;
                             $state.transitionTo("app.socio.voucherCancelacionCuenta", { id:$scope.id, idTransaccion:idTransaccion });
-                        }, function error(error){
-                            $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
-                            $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                        }
-                    );
-                }
-            };
-            $scope.inactivarSocio = function(){
-                if(!angular.isUndefined($scope.id)){
-                    SocioService.inactivarSocio($scope.id).then(
-                        function(data){
-                            $state.transitionTo("app.socio.panelSocio", { id:$scope.id});
                         }, function error(error){
                             $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
                             $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};

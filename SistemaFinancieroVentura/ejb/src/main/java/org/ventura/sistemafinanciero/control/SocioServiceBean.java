@@ -16,8 +16,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
 
 import org.hibernate.Hibernate;
 import org.joda.time.LocalDate;

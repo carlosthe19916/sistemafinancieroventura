@@ -85,8 +85,8 @@ public class TransaccionCuentaAporteSessionRESTService {
 			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
 		}
 		try {
-			BigInteger idTransaccion = cajaSessionService.retiroCuentaAporte(id);
-			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, "Transaccion Creada").add(ID_RESPONSE, idTransaccion).build();
+			BigInteger idTransaccion = cajaSessionService.cancelarSocioConRetiro(id);
+			model = Json.createObjectBuilder().add(MESSAGE_RESPONSE, "Socio inactivado").add(ID_RESPONSE, idTransaccion).build();
 			result = Response.status(Response.Status.OK).entity(model).build();
 		} catch (RollbackFailureException e) {
 			model = Json.createObjectBuilder().add("message", e.getMessage()).build();

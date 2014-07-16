@@ -120,7 +120,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : formCrearCuenta.monto.$invalid && (control.submitted || formCrearCuenta.monto.$dirty)}">
                     <label ng-cloak>Monto</label>
                     <label style="color: brown;">(*)</label>
-                    <label>&rarr; {{view.monto | currency : view.moneda.simbolo}}</label>
+                    <label>&rarr; {{getMoneda().simbolo}}{{view.monto | currency : ''}}</label>
                     <input type="text" name="monto" ui-keypress="{13:'actualizarTasaInteres($event)'}" ng-model="view.monto" ng-minlength="1" ng-maxlength="30" ng-pattern="/^(\d+|\d+.\d{1,2})$/" class="form-control" placeholder="Monto" required/>
                     <div ng-show="formCrearCuenta.monto.$invalid && (control.submitted || formCrearCuenta.monto.$dirty)">
                         <p class="help-block" ng-show="formCrearCuenta.monto.$error.required">
@@ -178,7 +178,8 @@
                 <div>
                     <label>Total Interes</label>
                     <p>
-                    	<strong ng-bind="view.total | currency: view.moneda.simbolo" style="font-size: 1.4em;"></strong>
+                        <strong ng-bind="getMoneda().simbolo" style="font-size: 1.4em;"></strong>
+                    	<strong ng-bind="view.total | currency: ''" style="font-size: 1.4em;"></strong>
                     </p>
                 </div>
             </div>

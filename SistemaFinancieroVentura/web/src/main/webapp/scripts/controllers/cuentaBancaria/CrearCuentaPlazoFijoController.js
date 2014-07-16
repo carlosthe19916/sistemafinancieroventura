@@ -133,6 +133,17 @@ define(['../module'], function (controllers) {
                 );
             };
 
+            $scope.getMoneda = function(){
+                if(!angular.isUndefined($scope.combo.monedas) &&
+                    !angular.isUndefined($scope.view.idMoneda)){
+                    for(var i=0 ; i<$scope.combo.monedas.length; i++)
+                        if($scope.view.idMoneda == $scope.combo.monedas[i].id)
+                            return $scope.combo.monedas[i];
+                } else {
+                    return undefined;
+                }
+            };
+
             $scope.buscarPersonaSocio = function($event){
                 if(angular.isUndefined($scope.view.idTipoDocumento) || angular.isUndefined($scope.view.numeroDocumento)){
                     if(!angular.isUndefined($event))

@@ -72,7 +72,7 @@ define(['./module'], function (services) {
                 crearAporte: function(transaccion){
                     return Restangular.all("caja/session/transaccionCuentaAporte/deposito").post(transaccion);
                 },
-                crearRetiroCuentaAporte: function(idSocio){
+                inactivarSocio: function(idSocio){
                     return Restangular.all("caja/session/transaccionCuentaAporte/retiro/"+idSocio).post();
                 },
                 getVoucherCancelacionCuentaAporte: function(idTransaccion){

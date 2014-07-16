@@ -61,6 +61,7 @@ import org.ventura.sistemafinanciero.entity.TransferenciaBancaria;
 import org.ventura.sistemafinanciero.entity.Usuario;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
+import org.ventura.sistemafinanciero.entity.type.EstadoCuentaAporte;
 import org.ventura.sistemafinanciero.entity.type.EstadoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoCuentaBancaria;
 import org.ventura.sistemafinanciero.entity.type.TipoPendiente;
@@ -73,6 +74,7 @@ import org.ventura.sistemafinanciero.exception.RollbackFailureException;
 import org.ventura.sistemafinanciero.service.CajaSessionService;
 import org.ventura.sistemafinanciero.service.CuentaBancariaService;
 import org.ventura.sistemafinanciero.service.MonedaService;
+import org.ventura.sistemafinanciero.service.SocioService;
 import org.ventura.sistemafinanciero.util.AllowedTo;
 import org.ventura.sistemafinanciero.util.EntityManagerProducer;
 import org.ventura.sistemafinanciero.util.Guard;
@@ -141,6 +143,8 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private MonedaService monedaService;
 	@EJB
 	private CuentaBancariaService cuentaBancariaService;
+	@EJB
+	private SocioService socioService;
 	
 	private Logger LOGGER = LoggerFactory.getLogger(CajaSessionService.class);
 
@@ -1120,6 +1124,24 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	}
 	
 	@Override
+	public BigInteger cancelarSocioConRetiro(BigInteger idSocio) throws RollbackFailureException {
+		Socio socio = socioDAO.find(idSocio);
+		if(socio == null)
+			throw new RollbackFailureException("Socio no encontrado");
+		if(socio.getEstado() == false)
+			throw new RollbackFailureException("Socio ya esta inactivo.");
+		CuentaAporte cuentaAporte = socio.getCuentaAporte();
+		if(cuentaAporte == null)
+			throw new RollbackFailureException("Cuenta de aporte no existente");
+		if(!cuentaAporte.getEstadoCuenta().equals(EstadoCuentaAporte.ACTIVO))
+			throw new RollbackFailureException("Cuenta de aportes CONGELADO, no se puede hacer el retiro de fondos");
+		
+		BigInteger idTransaccion = retiroCuentaAporte(idSocio);
+		socioService.inactivarSocio(idSocio);
+		return idTransaccion;
+	}
+	
+	@Override
 	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger idCuentaBancaria) throws RollbackFailureException {
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(idCuentaBancaria);
 		if(cuentaBancaria == null)
@@ -1141,5 +1163,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		cuentaBancariaService.cancelarCuentaBancaria(idCuentaBancaria);
 		return idTransaccion;
 	}
+
+	
 	
 }

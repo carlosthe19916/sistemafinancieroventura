@@ -56,4 +56,5 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	
 	public BigInteger[] crearCuentaBancariaPlazoFijoConDeposito(String codigo, BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes, BigDecimal monto, int periodo, BigDecimal tasaInteres, List<BigInteger> titulares, List<Beneficiario> beneficiarios) throws RollbackFailureException;
 	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger id) throws RollbackFailureException;
+	public BigInteger cancelarSocioConRetiro(BigInteger idSocio) throws RollbackFailureException;
 }
