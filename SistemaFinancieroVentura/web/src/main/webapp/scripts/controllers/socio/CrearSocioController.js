@@ -5,7 +5,9 @@ define(['../module'], function (controllers) {
         function($scope, $state,$window,$timeout,$location, focus, MaestroService, PersonaNaturalService, PersonaJuridicaService, SocioService,RedirectService) {
 
             $scope.focusElements = {
-                tipoPersona: 'focusTipoPersona'
+                tipoPersona: 'focusTipoPersona',
+                numeroDocumentoSocio: 'focusNumeroDocumentoSocio',
+                numeroDocumentoApoderado: 'focusNumeroDocumentoApoderado'
             };
             $scope.setInitialFocus = function($event){
                 if(!angular.isUndefined($event))
@@ -71,10 +73,10 @@ define(['../module'], function (controllers) {
                     var state = RedirectService.getNextState();
                     if(state == $scope.viewState){
                         $scope.view = RedirectService.getNextObject();
-                        //var focusElem = RedirectService.getNextFocusElement();
+                        var focusElem = RedirectService.getNextFocusElement();
                         RedirectService.clearLast();
                         $timeout(function() {
-                            //focusElem.focus();
+                            focus(focusElem);
                         }, 100);
                         $scope.tipoPersonaChange();
                         $scope.buscarPersonaSocio();
@@ -192,7 +194,7 @@ define(['../module'], function (controllers) {
                     };
 
                     var nextState = $scope.viewState;
-                    var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
+                    var elementFocus = $scope.focusElements.numeroDocumentoSocio;
                     RedirectService.addNext(nextState,{},$scope.view, elementFocus);
 
                     if($scope.view.tipoPersona == 'NATURAL'){
@@ -212,7 +214,7 @@ define(['../module'], function (controllers) {
                 };
 
                 var nextState = $scope.viewState;
-                var elementFocus = angular.element(document.querySelector('#txtNumeroDocumentoRepresentanteLegal'));
+                var elementFocus = $scope.focusElements.numeroDocumentoApoderado;
                 RedirectService.addNext(nextState,{},$scope.view, elementFocus);
                 $state.transitionTo('app.administracion.crearPersonaNatural', sendParameters);
             };
