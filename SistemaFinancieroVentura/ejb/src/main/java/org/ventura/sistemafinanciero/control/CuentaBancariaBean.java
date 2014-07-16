@@ -426,6 +426,7 @@ public class CuentaBancariaBean extends AbstractServiceBean<CuentaBancaria> impl
 		cuentaBancariaTasaDAO.update(tasaInteresCuentaBancaria);
 		
 		if(fechaCierre.compareTo(Calendar.getInstance().getTime()) == -1){			
+			if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO))	
 				descongelarCuentaBancaria(idCuenta);
 		} else {
 			if(!cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.CONGELADO))

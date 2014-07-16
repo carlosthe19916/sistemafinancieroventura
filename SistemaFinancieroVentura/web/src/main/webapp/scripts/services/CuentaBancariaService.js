@@ -90,6 +90,9 @@ define(['./module'], function (services) {
                 },
                 recalcularPlazoFijo: function(idCuenta, data){
                     return Restangular.one("cuentaBancaria/"+idCuenta+"/recalcularPlazoFijo").customPUT(data,'',{},{});
+                },
+                renovarPlazoFijo: function(idCuenta, data){
+                    return Restangular.one("cuentaBancaria/"+idCuenta+"/renovarPlazoFijo").customPUT(data,'',{},{});
                 }
             }
         }])

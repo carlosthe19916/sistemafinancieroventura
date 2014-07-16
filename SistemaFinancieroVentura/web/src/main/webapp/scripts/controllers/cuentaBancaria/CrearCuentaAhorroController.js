@@ -43,7 +43,7 @@ define(['../module'], function (controllers) {
                 idTipoDocumento: undefined,
                 numeroDocumento: undefined,
                 idMoneda: undefined,
-                tasaInteres: undefined,
+                tasaInteres: 0,
                 cantRetirantes: 1,
                 titulares: [],
                 titularesFinal: [],

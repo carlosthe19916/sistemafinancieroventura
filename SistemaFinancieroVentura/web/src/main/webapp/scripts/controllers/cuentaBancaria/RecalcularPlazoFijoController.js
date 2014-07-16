@@ -94,7 +94,7 @@ define(['../module'], function (controllers) {
                     else
                         $scope.view.periodo = periodo;
 
-                    var tasa = $scope.view.tasaInteres;
+                    var tasa = $scope.view.tasaInteres/100;
                     var peri = $scope.view.periodo;
                     var monto = angular.isUndefined($scope.cuentaBancaria) ? 0 : $scope.cuentaBancaria.saldo;
 

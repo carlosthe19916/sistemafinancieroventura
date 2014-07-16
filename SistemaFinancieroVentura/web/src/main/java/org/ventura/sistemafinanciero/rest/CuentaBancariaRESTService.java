@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -84,15 +83,11 @@ import org.ventura.sistemafinanciero.util.ProduceObject;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.AcroFields;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -779,6 +774,33 @@ public class CuentaBancariaRESTService {
 			BigDecimal tasaInteres = cuenta.getTasaInteres();
 			int periodo = cuenta.getPeriodo();
 			cuentaBancariaService.recalcularCuentaPlazoFijo(id, periodo, tasaInteres);
+			model = Json.createObjectBuilder().add("message", "Success").build();
+			result = Response.status(Response.Status.OK).entity(model).build();
+		} catch (RollbackFailureException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+		} catch (EJBException e) {
+			model = Json.createObjectBuilder().add("message", e.getMessage()).build();
+			result = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+		}			
+		return result;		
+	}
+	
+	@PUT
+	@Path("/{id}/renovarPlazoFijo")
+	@Produces({ "application/xml", "application/json" })
+	public Response renovarPlazoFijo(@PathParam("id")BigInteger id, CuentaPlazoFijoDTO cuenta) {				
+		Response result = null;
+		JsonObject model = null;
+		
+		if(id == null || cuenta == null){
+			model = Json.createObjectBuilder().add("message", "id no encontrado").build();
+			result = Response.status(Response.Status.BAD_REQUEST).entity(model).build();	
+		}			
+		try {			
+			BigDecimal tasaInteres = cuenta.getTasaInteres();
+			int periodo = cuenta.getPeriodo();
+			cuentaBancariaService.renovarCuentaPlazoFijo(id, periodo, tasaInteres);
 			model = Json.createObjectBuilder().add("message", "Success").build();
 			result = Response.status(Response.Status.OK).entity(model).build();
 		} catch (RollbackFailureException e) {

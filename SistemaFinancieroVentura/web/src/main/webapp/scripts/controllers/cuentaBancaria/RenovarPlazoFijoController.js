@@ -22,11 +22,13 @@ define(['../module'], function (controllers) {
             };
 
             $scope.view = {
+                monto: undefined,
                 tasaInteres: 0,
-                fechaCierre: undefined,
                 periodo: 0,
                 total: 0
             };
+
+            $scope.alerts = [];
 
             $scope.dateOptions = {
                 formatYear: 'yyyy',
@@ -41,10 +43,21 @@ define(['../module'], function (controllers) {
 
             $scope.loadCuentaBancaria = function(){
                 if(!angular.isUndefined($scope.id)){
-                    CuentaBancariaService.getCuentasBancaria($scope.id).then(
+                    CuentaBancariaService.getCuentasBancariaView($scope.id).then(
                         function(data){
                             $scope.cuentaBancaria = data;
-                            $scope.view.fechaCierre = $scope.cuentaBancaria.fechaCierre;
+                            $scope.view.tasaInteres = ($scope.cuentaBancaria.tasaInteres*100).toString();
+
+                            var fechaInicioString = $filter('date')($scope.cuentaBancaria.fechaApertura, 'yyyy-MM-dd');
+                            var fechaFinString = $filter('date')($scope.cuentaBancaria.fechaCierre, 'yyyy-MM-dd');
+                            var fechaInicio = new Date(fechaInicioString);
+                            var fechaFin = new Date(fechaFinString);
+
+                            var tasa = $scope.cuentaBancaria.tasaInteres;
+                            var periodo = Math.round((fechaFin.getTime() - fechaInicio.getTime())/(24*60*60*1000));
+                            $scope.view.periodo = periodo;
+                            var monto = $scope.cuentaBancaria.saldo;
+                            $scope.view.monto = TasaInteresService.getInteresGenerado(tasa, periodo, monto);
                         }, function error(error){
                             $scope.cuentaBancaria = undefined;
                             $scope.alerts.push({ type: "danger", msg: "Cuenta bancaria no encontrada."});
@@ -77,31 +90,6 @@ define(['../module'], function (controllers) {
                 }
             };
 
-            $scope.recalcular = function(){
-                if(!angular.isUndefined($scope.cuentaBancaria)){
-
-                    var fechaInicioString = $filter('date')($scope.cuentaBancaria.fechaApertura, 'yyyy-MM-dd');
-                    var fechaFinString = $filter('date')($scope.view.fechaCierre, 'yyyy-MM-dd');
-                    var fechaInicio = new Date(fechaInicioString);
-                    var fechaFin = new Date(fechaFinString);
-
-                    var periodo = Math.round((fechaFin.getTime() - fechaInicio.getTime())/(24*60*60*1000));
-                    if(periodo < 0)
-                        return;
-                    else
-                        $scope.view.periodo = periodo;
-
-                    var tasa = $scope.view.tasaInteres;
-                    var peri = $scope.view.periodo;
-                    var monto = angular.isUndefined($scope.cuentaBancaria) ? 0 : $scope.cuentaBancaria.saldo;
-
-                    if(!angular.isUndefined(tasa) &&  !angular.isUndefined(peri) && !angular.isUndefined(monto))
-                        $scope.view.total = TasaInteresService.getInteresGenerado(tasa, peri, monto);
-                    else
-                        $scope.view.total = 0;
-                }
-            };
-
             $scope.crearTransaccion = function(){
                 if ($scope.formRecalcularCuenta.$valid) {
                     $scope.control.inProcess = true;
@@ -109,10 +97,10 @@ define(['../module'], function (controllers) {
                     //poniendo variables
                     var data = {
                         "periodo": $scope.view.periodo,
-                        "tasaInteres": $scope.view.tasaInteres
+                        "tasaInteres": $scope.view.tasaInteres/100
                     };
 
-                    CuentaBancariaService.recalcularPlazoFijo($scope.id, data).then(
+                    CuentaBancariaService.renovarPlazoFijo($scope.id, data).then(
                         function(data){
                             $scope.control.inProcess = false;
                             $scope.control.success = true;
@@ -134,12 +122,14 @@ define(['../module'], function (controllers) {
                 }
             };
 
-            $scope.$watch("view.fechaCierre", function(){
-                $scope.recalcular();
-            });
-
             $scope.$watch('view.tasaInteres', function () {
-                $scope.recalcular();
+                $scope.view.total = TasaInteresService.getInteresGenerado($scope.view.tasaInteres/100, $scope.view.periodo, $scope.view.monto);
+            });
+            $scope.$watch('view.monto', function () {
+                $scope.view.total = TasaInteresService.getInteresGenerado($scope.view.tasaInteres/100, $scope.view.periodo, $scope.view.monto);
+            });
+            $scope.$watch('view.periodo', function () {
+                $scope.view.total = TasaInteresService.getInteresGenerado($scope.view.tasaInteres/100, $scope.view.periodo, $scope.view.monto);
             });
 
             $scope.cancelar = function () {
