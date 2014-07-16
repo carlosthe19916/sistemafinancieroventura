@@ -11,6 +11,7 @@
                         <div class="form-group" ng-class="{ 'has-error' : formAccionista.tipoDocumento.$invalid && (control.submitted || formAccionista.tipoDocumento.$dirty)}">
                             <label>Tipo Documento</label>
                             <select focus-on="focusTipoDocumentoAccionista" name="tipoDocumento" ng-options="tipoDocumento.id as tipoDocumento.abreviatura for tipoDocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumentoAccionista" class="form-control" required autofocus>
+                            	<option value="">--Seleccione--</option>
                             </select>
                             <div ng-show="formAccionista.tipoDocumento.$invalid && (control.submitted || formAccionista.tipoDocumento.$dirty)">
                                 <p class="help-block" ng-show="formAccionista.tipoDocumento.$error.required">

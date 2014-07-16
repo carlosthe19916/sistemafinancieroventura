@@ -37,6 +37,7 @@
                 <div class="input-group">
                     <span ng-bind="view.codigoPais" class="input-group-addon"></span>
                     <select focus-on="focusPais" name="pais" ng-options="pais.abreviatura as pais.denominacion for pais in combo.paises" ng-model="view.codigoPais" class="form-control" required autofocus>
+                    	<option value="">--Seleccione--</option>
                     </select>
                 </div>
                 <div ng-show="formCrearPersonanatural.pais.$invalid && (control.submitted || formCrearPersonanatural.pais.$dirty)">
@@ -53,6 +54,7 @@
                 <label>Tipo Documento</label>
                 <label style="color: brown;">(*)</label>
                 <select name="tipoDocumento" ng-options="tipodocumento.id as tipodocumento.abreviatura for tipodocumento in combo.tipoDocumentos | orderBy : 'id'" ng-model="view.idTipoDocumento" class="form-control" required>
+                	<option value="">--Seleccione--</option>
                 </select>
                 <div ng-show="formCrearPersonanatural.tipoDocumento.$invalid && (control.submitted || formCrearPersonanatural.tipoDocumento.$dirty)">
                     <p class="help-block" ng-show="formCrearPersonanatural.tipoDocumento.$error.required">
@@ -176,7 +178,9 @@
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.sexo.$invalid && control.submitted}">
                 <label>Sexo</label>
                 <label style="color: brown;">(*)</label>
-                <select name="sexo" ng-options="sexo as sexo for sexo in combo.sexos" ng-model="view.sexo" class="form-control" required></select>
+                <select name="sexo" ng-options="sexo as sexo for sexo in combo.sexos" ng-model="view.sexo" class="form-control" required>
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonanatural.sexo.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.sexo.$error.required">
                         Seleccione Sexo.
@@ -187,7 +191,9 @@
         <div class="col-sm-6">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.estadocivil.$invalid && formCrearPersonanatural.submitted}">
                 <label>Estado Civil</label>
-                <select name="estadocivil" ng-options="estadocivil as estadocivil for estadocivil in combo.estadosCiviles" ng-model="view.estadoCivil" class="form-control"></select>
+                <select name="estadocivil" ng-options="estadocivil as estadocivil for estadocivil in combo.estadosCiviles" ng-model="view.estadoCivil" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonanatural.estadocivil.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.estadocivil.$invalid">
                         Estado Civil Invalido.
@@ -206,7 +212,9 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.departamento.$invalid && control.submitted}">
                 <label>Departamento</label>
-                <select name="departamento" ng-options="departamento.codigo as departamento.denominacion for departamento in combos.departamentos" ng-model="ubigeo.codigoDepartamento" ng-change="changeDepartamento()" class="form-control"></select>
+                <select name="departamento" ng-options="departamento.codigo as departamento.denominacion for departamento in combos.departamentos" ng-model="ubigeo.codigoDepartamento" ng-change="changeDepartamento()" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonanatural.departamento.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.departamento.$error.required">
                         Ingrese Departamento.
@@ -217,7 +225,9 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.provincia.$invalid && control.submitted}">
                 <label>Provincia</label>
-                <select name="provincia" ng-options="provincia.codigo as provincia.denominacion for provincia in combos.provincias" ng-model="ubigeo.codigoProvincia" ng-change="changeProvincia()" class="form-control"></select>
+                <select name="provincia" ng-options="provincia.codigo as provincia.denominacion for provincia in combos.provincias" ng-model="ubigeo.codigoProvincia" ng-change="changeProvincia()" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonanatural.provincia.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.provincia.$error.required">
                         Ingrese Provincia.
@@ -228,7 +238,9 @@
         <div class="col-sm-4">
             <div class="form-group" ng-class="{ 'has-error' : formCrearPersonanatural.distrito.$invalid && control.submitted}">
                 <label>Distrito</label>
-                <select name="distrito" ng-options="distrito.codigo as distrito.denominacion for distrito in combos.distritos" ng-model="ubigeo.codigoDistrito" ng-change="changeDistrito()" class="form-control"></select>
+                <select name="distrito" ng-options="distrito.codigo as distrito.denominacion for distrito in combos.distritos" ng-model="ubigeo.codigoDistrito" ng-change="changeDistrito()" class="form-control">
+                	<option value="">--Seleccione--</option>
+                </select>
                 <div ng-show="formCrearPersonanatural.distrito.$invalid && control.submitted">
                     <p class="help-block" ng-show="formCrearPersonanatural.distrito.$error.required">
                         Ingrese Distrito.
