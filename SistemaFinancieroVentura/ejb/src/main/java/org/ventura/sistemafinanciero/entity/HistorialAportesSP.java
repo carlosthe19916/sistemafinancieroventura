@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * 
  */
 @NamedStoredProcedureQuery(
-	name = HistorialAportesSP.findAll, 
+	name = "prueba", 
 	resultClasses = HistorialAportesSP.class, 
 	procedureName = "HISTORIAL_APORTES_SP", 
 	parameters = { 
@@ -46,6 +46,7 @@ import javax.xml.bind.annotation.XmlTransient;
 				type = void.class)
 	}
 )
+//@Entity
 public class HistorialAportesSP implements Serializable {
 
 	private static final long serialVersionUID = 1L;

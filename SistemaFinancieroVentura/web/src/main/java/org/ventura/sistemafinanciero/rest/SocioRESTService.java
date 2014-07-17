@@ -17,6 +17,7 @@
 package org.ventura.sistemafinanciero.rest;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +43,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.CuentaAporte;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
+import org.ventura.sistemafinanciero.entity.HistorialAportesSP;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
@@ -354,6 +356,28 @@ public class SocioRESTService {
 		}	
 	}
      		
+	@GET
+	@Path("/{id}/historialAportes")
+	@Produces({ "application/xml", "application/json" })
+	public Response getAportesHistorial(@PathParam("id")BigInteger idSocio,
+			@QueryParam("desde") Long desde, @QueryParam("hasta") Long hasta) {				
+		if(idSocio == null)
+			return Response.status(Response.Status.BAD_REQUEST).entity("id no valido").build();
+		Date dateDesde = (desde != null ? new Date(desde) : null);
+		Date dateHasta = (desde != null ? new Date(hasta) : null);
+		if(desde == null || hasta== null){
+			desde = null;
+			hasta = null;
+		}
+		List<HistorialAportesSP> result = socioService.getHistorialAportes(idSocio, dateDesde, dateHasta, null, null);		
+		if(result == null){
+			return Response.status(Response.Status.NOT_FOUND).entity("Socio no encontrado").build();	
+		}			
+		else {		
+			return Response.status(Response.Status.OK).entity(result).build();
+		}	
+	}
+	
 	@POST
 	@Produces({ "application/xml", "application/json" })
 	public Response createSocio(SocioDTO socioDTO, @Context SecurityContext context) {

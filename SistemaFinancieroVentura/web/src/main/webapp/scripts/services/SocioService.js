@@ -90,23 +90,20 @@ define(['./module'], function (services) {
                 },
                 getVoucherCuentaAporte: function(id) {
                     return Restangular.one("socio/"+id+"/voucherCuentaAporte").get();
+                },
+                getHistorialAportes: function(idSocio,desde, hasta, offset, limit){
+                    if(arguments.length == 1){
+                        return Restangular.all("socio/"+idSocio+"/historialAportes").getList({},{});
+                    } else if(arguments.length == 2){
+                        return Restangular.all("socio/"+idSocio+"/historialAportes").getList({desde:desde},{});
+                    } else if(arguments.length == 3){
+                        return Restangular.all("socio/"+idSocio+"/historialAportes").getList({desde:desde, hasta:hasta},{});
+                    } else if(arguments.length == 4){
+                        return Restangular.all("socio/"+idSocio+"/historialAportes").getList({desde:desde, hasta:hasta,offset:offset},{});
+                    } else if(arguments.length == 5){
+                        return Restangular.all("socio/"+idSocio+"/historialAportes").getList({desde:desde, hasta:hasta,offset:offset,limit:limit},{});
+                    }
                 }
             }
         }])
 });
-
-
-/*crear: function(tipoPersona, idTipoDocumentoSocio, numeroDocumentoSocio, idTipoDocumentoApoderado,numeroDocumentoApoderado){
- var data = $.param({
- tipoPersona:tipoPersona,
- idTipoDocumentoSocio:idTipoDocumentoSocio,
- numeroDocumentoSocio:numeroDocumentoSocio,
- idTipoDocumentoApoderado:idTipoDocumentoApoderado,
- numeroDocumentoApoderado:numeroDocumentoApoderado}
- );
- return Restangular.one("socio").customPOST(
- data,
- '',{},{
- "Content-Type":"application/x-www-form-urlencoded"}
- );
- },*/

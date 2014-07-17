@@ -16,8 +16,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.ParameterMode;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
+import javax.persistence.TemporalType;
 
 import org.hibernate.Hibernate;
+import org.hibernate.dialect.OracleTypesHelper;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -688,17 +693,24 @@ public class SocioServiceBean extends AbstractServiceBean<Socio> implements Soci
 		Integer offSetInteger = offset.intValue();
 		Integer limitInteger = (limit != null ? limit.intValue() : null);
 		
-		QueryParameter queryParameter = QueryParameter.with("idSocio", idSocio).and("desde", desdeLocalDate.toDate()).and("hasta", hastaLocalDate.toDate());
-		List<HistorialAportesView> list = historialAportesViewDAO.findByNamedQuery(HistorialAportesView.findByIdSocioAndFecha,queryParameter.parameters(), offSetInteger, limitInteger);
-				
-		//Query query = em.getEm().createNativeQuery("BEGIN VALIDATE_EMP(P_EMP_ID=>?); END;");
-		//query.setParameter(1, empId);
-		//query.executeUpdate();
-		//QueryParameter query = em.createNamedStoredProcedureQuery("ReadAddressById");
-		//query.setParameter("P_ADDRESS_ID", 12345);
-		//query.execute();
-		//List<Address> result = (List<Address>)query.getOutputParameterValue("CUR_ADDRESS");
+		StoredProcedureQuery query = em.getEm().createNamedStoredProcedureQuery("prueba");
+		query.setParameter("ID_SOCIO_ENVIADO", idSocio);
+		query.setParameter("DESDE", desde);
+		query.setParameter("HASTA", hasta);
+		query.execute();
+		List<HistorialAportesSP> result = (List<HistorialAportesSP>)query.getOutputParameterValue("CURSOR_");
 		
+		/*ArrayList<Object> list = new ArrayList<>();
+		Query query = em.getEm().createNativeQuery("BEGIN HISTORIAL_APORTES_SP(ID_SOCIO_ENVIADO=>?,DESDE=>?,HASTA=>?); END;");
+		query.setParameter(1, idSocio);
+		query.setParameter(2, desde, TemporalType.DATE);
+		query.setParameter(3, hasta, TemporalType.DATE);
+		query.setParameter(4, list, OracleTypesHelper.INSTANCE);*/
+				
+		//for (Object object : result) {
+		//	System.out.println(object.toString());
+		//}
+				
 		return null;
 	}
 }
