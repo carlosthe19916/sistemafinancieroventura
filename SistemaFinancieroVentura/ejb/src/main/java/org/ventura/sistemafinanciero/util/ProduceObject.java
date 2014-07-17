@@ -13,14 +13,7 @@ public class ProduceObject {
 	public final static String CODIGO_CUENTA_APORTE = "10";
 	public final static String CODIGO_CUENTA_AHORRO = "11";
 	public final static String CODIGO_CUENTA_CORRIENTE = "12";
-	public final static String CODIGO_CUENTA_PLAZO_FIJO = "13";
-	
-	final private  static String[] units = {"CERO","UNO","DOS","TRES","CUATRO",
-		"CINCO","SEIS","SIETE","OCHO","NUEVE","DIEZ",
-		"ONCE","DOCE","TRECE","CATORCE","QUINCE",
-		"DIECISEIS","DIECISIETE","DIECIOCHO","DIECINUEVE"};
-	final private static String[] tens = {"","","VEINTE","TREINTA","CUARENTA","CINCUENTA",
-		"SESENTA","SETENTA","OCHENTA","NOVENTA"};
+	public final static String CODIGO_CUENTA_PLAZO_FIJO = "13";		
 	
 	public static String completar(String cad, int caracteres){
 		StringBuffer sb = new StringBuffer(cad);
@@ -95,12 +88,5 @@ public class ProduceObject {
 		
 		return result;
 	}
-	
-	public static String getTextOfNumber(int i){		
-		if( i < 20)  return units[i];
-		if( i < 100) return tens[i/10] + ((i % 10 > 0)? " " + getTextOfNumber(i % 10):"");
-		if( i < 1000) return units[i/100] + " CIEN" + ((i % 100 > 0)?" Y " + getTextOfNumber(i % 100):"");
-		if( i < 1000000) return getTextOfNumber(i / 1000) + " MIL " + ((i % 1000 > 0)? " " + getTextOfNumber(i % 1000):"") ;
-		return getTextOfNumber(i / 1000000) + " MILLON " + ((i % 1000000 > 0)? " " + getTextOfNumber(i % 1000000):"") ;
-	}
+		
 }

@@ -24,10 +24,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.ejb.EJB;
@@ -48,11 +53,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.ventura.sistemafinanciero.entity.Agencia;
 import org.ventura.sistemafinanciero.entity.Beneficiario;
 import org.ventura.sistemafinanciero.entity.CuentaBancaria;
 import org.ventura.sistemafinanciero.entity.CuentaBancariaView;
 import org.ventura.sistemafinanciero.entity.EstadocuentaBancariaView;
+import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PersonaJuridica;
 import org.ventura.sistemafinanciero.entity.PersonaNatural;
 import org.ventura.sistemafinanciero.entity.Socio;
@@ -78,6 +86,8 @@ import org.ventura.sistemafinanciero.service.PersonaNaturalService;
 import org.ventura.sistemafinanciero.service.SocioService;
 import org.ventura.sistemafinanciero.service.TrabajadorService;
 import org.ventura.sistemafinanciero.service.UsuarioService;
+import org.ventura.sistemafinanciero.util.NumLetrasJ;
+import org.ventura.sistemafinanciero.util.NumLetrasJ.Tipo;
 import org.ventura.sistemafinanciero.util.ProduceObject;
 
 import com.itextpdf.text.Chunk;
@@ -420,24 +430,25 @@ public class CuentaBancariaRESTService {
 	public Response getJson(@PathParam("id")BigInteger idCuentaBancaria) throws IOException, DocumentException {
 		OutputStream file;		
 					
-		String titular = null;
-		String documento = null;
+		String titular = null;	
 		
-		CuentaBancaria cuentaBancaria = cuentaBancariaService.findById(idCuentaBancaria);
-		Socio socio = socioService.find(cuentaBancaria.getIdCuentaBancaria());
+		CuentaBancariaView cuentaBancaria = cuentaBancariaService.findView(idCuentaBancaria);
+		Socio socio = socioService.find(cuentaBancaria.getIdcuentabancaria());
 		PersonaNatural socioNatural = socio.getPersonaNatural();
 		PersonaJuridica socioJuridico = socio.getPersonaJuridica();
 		Agencia agencia = cuentaBancariaService.getAgencia(idCuentaBancaria);
-		if(socioNatural == null && socioJuridico == null)
-			System.out.println("errorrr");
-		if(agencia == null)
-			System.out.println("errorrr");
-		if(socioNatural != null){
-			documento = socioNatural.getTipoDocumento().getAbreviatura()+":"+socioNatural.getNumeroDocumento();
+		if(socioNatural == null && socioJuridico == null){
+			JsonObject model = Json.createObjectBuilder().add("message", "Socio no encontrado").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}			
+		if(agencia == null){
+			JsonObject model = Json.createObjectBuilder().add("message", "Agencia no encontrado").build();
+			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
+		}			
+		if(socioNatural != null){			
 			titular = socioNatural.getApellidoPaterno()+" "+socioNatural.getApellidoMaterno()+","+socioNatural.getNombres();	
 		}
-		if(socioJuridico != null){
-			documento = socioJuridico.getTipoDocumento().getAbreviatura()+":"+socioJuridico.getNumeroDocumento();
+		if(socioJuridico != null){			
 			titular = socioJuridico.getRazonSocial();	
 		}			
 		
@@ -459,7 +470,7 @@ public class CuentaBancariaRESTService {
 		    Paragraph paragraph1 = new Paragraph();		
 		    paragraph1.setFont(font);
 		    Chunk numeroCuenta1 = new Chunk("Nº CUENTA:");
-		    Chunk numeroCuenta2 = new Chunk(cuentaBancaria.getNumeroCuenta());
+		    Chunk numeroCuenta2 = new Chunk(cuentaBancaria.getNumerocuenta());
 		    paragraph1.add(numeroCuenta1);
 		    paragraph1.add(Chunk.SPACETABBING);
 		    paragraph1.add(numeroCuenta2);		    
@@ -475,10 +486,26 @@ public class CuentaBancariaRESTService {
 		    paragraph2.add(agencia2);		    
 		    document.add(paragraph2);	
 		    
+		    Moneda moneda = cuentaBancaria.getMoneda();
+		    BigDecimal saldo = cuentaBancaria.getSaldo();   	
+		    BigDecimal decimalValue = saldo.subtract(saldo.setScale(0, RoundingMode.FLOOR)).movePointRight(saldo.scale());
+		    Long integerValue = saldo.longValue();
+		    
+		    String decimalString = decimalValue.toString();
+		    if(decimalString.length() < 2)
+		    	decimalString = "0"+decimalString;
+		    
+		    NumberFormat df1 = NumberFormat.getCurrencyInstance();
+		    DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+		    dfs.setCurrencySymbol("");
+		    dfs.setGroupingSeparator(',');
+		    dfs.setMonetaryDecimalSeparator('.');
+		    ((DecimalFormat) df1).setDecimalFormatSymbols(dfs);		    	    	  
+		    
 		    Paragraph paragraph3 = new Paragraph();	
 		    paragraph3.setFont(font);
 		    Chunk monto1 = new Chunk("MONTO:");
-		    Chunk monto2 = new Chunk(cuentaBancaria.getMoneda().getSimbolo()+cuentaBancaria.getSaldo().toString()+" - "+ProduceObject.getTextOfNumber(cuentaBancaria.getSaldo().intValue()));
+		    Chunk monto2 = new Chunk(moneda.getSimbolo() + df1.format(saldo) + " - " + NumLetrasJ.Convierte(integerValue.toString()+"", Tipo.Pronombre).toUpperCase() + " Y " + decimalString+"/100 "+moneda.getDenominacion());
 		    paragraph3.add(monto1);
 		    paragraph3.add(Chunk.SPACETABBING);
 		    paragraph3.add(Chunk.SPACETABBING);
@@ -522,12 +549,18 @@ public class CuentaBancariaRESTService {
 		    paragraph6.add(fechaVencimiento2);	
 		    document.add(paragraph6);
 		    		 
+		    Date fechaApertura = cuentaBancaria.getFechaApertura();
+			Date fechaCierre = cuentaBancaria.getFechaCierre();			
+			LocalDate localDateApertura = new LocalDate(fechaApertura);
+			LocalDate localDateCierre = new LocalDate(fechaCierre);
+			Days days = Days.daysBetween(localDateApertura, localDateCierre);
+			
 		    Paragraph paragraph5 = new Paragraph();		 
 		    paragraph5.setFont(font);
 		    Chunk tasa1 = new Chunk("TASA INTERES EFECTIVA:");
-		    Chunk tasa2 = new Chunk("6.00");
+		    Chunk tasa2 = new Chunk(cuentaBancaria.getTasaInteres().multiply(new BigDecimal(100)).toString());
 		    Chunk plazo1 = new Chunk("PLAZO:");
-		    Chunk plazo2 = new Chunk("90 dias");		   
+		    Chunk plazo2 = new Chunk(days.getDays()+" DIAS");		   
 		    paragraph5.add(tasa1);
 		    paragraph5.add(Chunk.SPACETABBING);
 		    paragraph5.add(tasa2);
