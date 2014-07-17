@@ -1,7 +1,7 @@
 <div ng-controller="CerrarCajaController">
 
     <div class="alert alert-info" ng-show="alertMessageDisplay()">
-        <p><strong>Info:</strong>La caja ya esta cerrada, o no se pudo cargar correctamente</p>
+        <p><strong>INFO:</strong>La caja ya esta cerrada, o no se pudo cargar correctamente...</p>
     </div>
 
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
@@ -10,30 +10,30 @@
     </alert>
 
     <fieldset>
-        <legend>Cerrar caja</legend>
+        <legend style="font-size: 16px; font-weight: bold;">CERRAR CAJA</legend>
         <div class="row">
             <div class="col-sm-4">
                 <div>
-                    <label>Agencia</label>
-                    <p><span ng-bind="agenciaSession.denominacion"/></p>
+                    <label>AGENCIA</label>
+                    <p style="font-size: 13px;"><span ng-bind="agenciaSession.denominacion"/></p>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>Caja</label>
-                    <p><span ng-bind="cajaSession.denominacion"/><span>-</span><span ng-bind="cajaSession.abreviatura"/></p>
+                    <label>CAJA</label>
+                    <p style="font-size: 13px;"><span ng-bind="cajaSession.denominacion"/><span>-</span><span ng-bind="cajaSession.abreviatura"/></p>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label>Estado</label>
-                    <p><span ng-bind-template="{{cajaSession.abierto ? 'Abierto' : 'Cerrado'}}"/></p>
+                    <label>ESTADO</label>
+                    <p style="font-size: 13px;"><span ng-bind-template="{{cajaSession.abierto ? 'ABIERTO' : 'CERRADO'}}"/></p>
                 </div>
             </div>
         </div>
     </fieldset>
     <fieldset>
-        <legend>Detalle Caja</legend>
+        <legend style="font-size: 16px; font-weight: bold;">DETALLE CAJA</legend>
         <form name="abrirCajaForm" ng-submit="cerrarCaja()" novalidate>
             <div class="row">
                 <div class="col-sm-4">
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12" style="font-size: 13px;">
                     <tabset>
                         <tab ng-repeat="detalle in detalleCajaInicial" select="updateLayout($index)" heading="{{detalle.moneda.simbolo}} {{detalle.moneda.denominacion}} &rarr; Total:{{totalFinal[$index]()}}">
                             <div class="row" style="padding-top: 10px;">

@@ -210,7 +210,7 @@ define(['./app'], function(app) {
                     "viewContent":{
                         template: "<div ui-view='viewContent' style='min-height: 472px;'><h4 class='text-center' style='font-weight: bold; color: blue;'>TRANSACCIONES</h4>" +
                         "Permite registrar todas las transacciones y movimientos realizados en las diferentes cuentas bancarias que tiene la institución y proporciona información general y detallada de las mismas."+
-                        '</br></br><h3 class="text-center"><img alt="Caja Ventura" src="images/modules/deposito.png"></h3></br></br>' +
+                        '</br></br><h3 class="text-center"><img alt="Caja Ventura" src="images/modules/transacciones.png"></h3></br></br>' +
                         "</div>"
                     }
                 }
