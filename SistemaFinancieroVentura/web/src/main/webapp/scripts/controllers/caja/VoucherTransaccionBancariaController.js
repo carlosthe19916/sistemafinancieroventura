@@ -33,6 +33,7 @@ define(['../module'], function (controllers) {
                 qz.append("\x1B\x21\x08");														//texto en negrita
                 qz.append(String.fromCharCode(27) + "\x61" + "\x31");							//texto centrado
                 qz.append("C.A.C. CAJA VENTURA \r\n");											// \r\n salto de linea
+                
                 qz.append(($scope.transaccionCuentaBancaria.tipoTransaccion) + " CUENTA " + ($scope.transaccionCuentaBancaria.tipoCuentaBancaria) + "\r\n");
                 																				// \t tabulador
                 qz.append("\x1B\x21\x01");														//texto normal (no negrita)
