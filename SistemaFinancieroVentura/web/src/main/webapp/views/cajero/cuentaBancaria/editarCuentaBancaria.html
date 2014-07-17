@@ -111,7 +111,7 @@
                         <div class="col-md-6" style="font-weight: bold;">Cuenta Bancaria</div>
                         <div class="col-md-6">
                             <div class="text-right">
-                                <button ng-if="cuentaBancaria" type="button" ng-click="imprimirCertificado()" class="btn btn-link" style="padding: 0px 12px;">
+                                <button ng-if="cuentaBancaria.tipoCuentaBancaria == 'PLAZO_FIJO'" type="button" ng-click="imprimirCertificado()" class="btn btn-link" style="padding: 0px 12px;">
                                     Certificado
                                 </button>
                             </div>

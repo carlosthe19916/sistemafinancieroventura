@@ -560,7 +560,7 @@ public class CuentaBancariaRESTService {
 		    Chunk tasa1 = new Chunk("TASA INTERES EFECTIVA:");
 		    Chunk tasa2 = new Chunk(cuentaBancaria.getTasaInteres().multiply(new BigDecimal(100)).toString());
 		    Chunk plazo1 = new Chunk("PLAZO:");
-		    Chunk plazo2 = new Chunk(days.getDays()+"");		   
+		    Chunk plazo2 = new Chunk(days.getDays()+" DIAS");		   
 		    paragraph5.add(tasa1);
 		    paragraph5.add(Chunk.SPACETABBING);
 		    paragraph5.add(tasa2);
