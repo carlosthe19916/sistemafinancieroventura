@@ -110,18 +110,28 @@ define(['../../module'], function (controllers) {
                     {field:"fecha | date : 'dd/MM/yyyy'", displayName:'FECHA', width:80},
                     {field:"hora | date : 'HH:mm:ss'", displayName:'HORA', width:70},
                     {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">EXTORNADO</span></div>', width:70},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="extornar(row.entity)"><span class="glyphicon glyphicon-remove"></span>Extornar</button></div>', width:150}
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="voucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="extornar(row.entity)"><span class="glyphicon glyphicon-remove"></span>Extornar</button></div>', width:150}
                 ]
             };
             $scope.updateGridLayout = function(){
                 gridLayoutPlugin.updateGridLayout();
-            }
+            };
 
-            $scope.getVoucher = function(row){
-                $state.transitionTo("app.socio.editarCuentaBancaria", { id: row.id });
-            }
-            $scope.extornar = function(row){
-                $state.transitionTo("app.socio.editarCuentaBancaria", { id: row.id });
-            }
+            $scope.voucher = function(transaccion){
+            	if(transaccion.tipoTransaccion == "APORTE")
+            		$state.transitionTo("app.transaccion.aporteVoucher", { id: transaccion.idTransaccion});
+            	else if(transaccion.tipoTransaccion == "DEPOSITO" || transaccion.tipoTransaccion == "RETIRO")
+            		$state.transitionTo("app.transaccion.depositoRetiroVoucher", { id: transaccion.idTransaccion});
+            	else if(transaccion.tipoTransaccion == "COMPRA" || transaccion.tipoTransaccion == "VENTA")
+            		$state.transitionTo("app.transaccion.compraVentaVoucher", { id: transaccion.idTransaccion});
+            	else if(transaccion.tipoTransaccion == "TRANSFERENCIA")
+            		$state.transitionTo("app.transaccion.transferenciaVoucher", { id: transaccion.idTransaccion});
+            	else
+                	alert("Tipo de transacción no encontrado");
+            };
+            
+            $scope.extornar = function(transaccion){
+                $state.transitionTo("app.socio.editarCuentaBancaria", { id: transaccion.id});
+            };
         }]);
 });

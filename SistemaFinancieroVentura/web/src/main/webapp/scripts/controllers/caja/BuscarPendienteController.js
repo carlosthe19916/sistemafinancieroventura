@@ -5,7 +5,7 @@ define(['../module'], function (controllers) {
 
             $scope.crear = function(){
                 $state.transitionTo('app.caja.pendienteCrear');
-            }
+            };
 
             CajaSessionService.getPendientes().then(
                 function(pendientes){
