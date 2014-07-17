@@ -31,6 +31,12 @@ define(['./module'], function (services) {
                     var copy = Restangular.copy(detalle);
                     return Restangular.all("caja/session/transaccioncajacaja").post(copy ,{"boveda":boveda});
                 },
+                cancelarTransaccionBovedaCaja: function(id){
+                    return Restangular.all("caja/session/transaccionbovedacaja/"+id+"/cancelar").post();
+                },
+                confirmarTransaccionBovedaCaja: function(id){
+                    return Restangular.all("caja/session/transaccionbovedacaja/"+id+"/confirmar").post();
+                },
                 getTransaccionBovedaCajaEnviadas: function(){
                     return Restangular.all("caja/session/transaccionbovedacaja/enviados").getList();
                 },

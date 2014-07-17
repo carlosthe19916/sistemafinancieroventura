@@ -54,6 +54,7 @@ import org.ventura.sistemafinanciero.entity.TrabajadorUsuario;
 import org.ventura.sistemafinanciero.entity.TransaccionBancaria;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaDetalle;
+import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaView;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionCompraVenta;
 import org.ventura.sistemafinanciero.entity.TransaccionCuentaAporte;
@@ -138,6 +139,8 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	private DAO<Object, TransaccionCompraVenta> transaccionCompraVentaDAO;
 	@Inject
 	private DAO<Object, HistorialTransaccionCaja> historialTransaccionCajaDAO;		
+	@Inject
+	private DAO<Object, TransaccionBovedaCajaView> transaccionBovedaCajaViewDAO;
 	
 	@EJB
 	private MonedaService monedaService;
@@ -517,6 +520,43 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 
 	@Override
 	@AllowedTo(Permission.ABIERTO)
+	public void cancelarTransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja) throws RollbackFailureException{
+		TransaccionBovedaCaja transaccionBovedaCaja = transaccionBovedaCajaDAO.find(idTransaccionBovedaCaja);
+		if(transaccionBovedaCaja == null)
+			throw new RollbackFailureException("Transaccion no encontrada");
+		if(transaccionBovedaCaja.getEstadoConfirmacion() == true)
+			throw new RollbackFailureException("Transaccion ya fue CONFIRMADA, no se puede cancelar");
+		if(transaccionBovedaCaja.getEstadoSolicitud() == false)
+			throw new RollbackFailureException("Transaccion ya fue CANCELADA, no se puede cancelar nuevamente");
+		if(!transaccionBovedaCaja.getOrigen().equals(TransaccionBovedaCajaOrigen.CAJA))
+			throw new RollbackFailureException("No se puede cancelar una transaccion solicitada por una boveda");
+		transaccionBovedaCaja.setEstadoSolicitud(false);
+		transaccionBovedaCajaDAO.update(transaccionBovedaCaja);
+	}
+	
+	@Override
+	@AllowedTo(Permission.ABIERTO)
+	public void confirmarTransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja)throws RollbackFailureException{
+		TransaccionBovedaCaja transaccionBovedaCaja = transaccionBovedaCajaDAO.find(idTransaccionBovedaCaja);
+		if(transaccionBovedaCaja == null)
+			throw new RollbackFailureException("Transaccion no encontrada");
+		if(transaccionBovedaCaja.getEstadoSolicitud() == false)
+			throw new RollbackFailureException("Transaccion ya fue CANCELADA, no se puede confirmar");
+		if(transaccionBovedaCaja.getEstadoConfirmacion() == true)
+			throw new RollbackFailureException("Transaccion ya fue CONFIRMADA, no se puede confirmar nuevamente");
+		if(!transaccionBovedaCaja.getOrigen().equals(TransaccionBovedaCajaOrigen.BOVEDA))
+			throw new RollbackFailureException("No se puede confirmar una transaccion solicitada por una caja");
+		TransaccionBovedaCajaView view = transaccionBovedaCajaViewDAO.find(idTransaccionBovedaCaja);
+		BigDecimal monto = view.getMonto();
+		Moneda moneda = transaccionBovedaCaja.getHistorialBoveda().getBoveda().getMoneda();
+		this.actualizarSaldoCaja(monto.negate(), moneda.getIdMoneda());
+		
+		transaccionBovedaCaja.setEstadoConfirmacion(true);
+		transaccionBovedaCajaDAO.update(transaccionBovedaCaja);	
+	}
+	
+	@Override
+	@AllowedTo(Permission.ABIERTO)
 	public BigInteger crearTransaccionBovedaCaja(BigInteger idBoveda,Set<GenericDetalle> detalleTransaccion)throws RollbackFailureException {
 		Boveda boveda = bovedaDAO.find(idBoveda);
 		Caja caja = getCaja();
@@ -666,29 +706,20 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	}
 
 	@Override
-	public Set<TransaccionBovedaCaja> getTransaccionesEnviadasBovedaCaja() {
-		HistorialCaja historial = getHistorialActivo();
-		Set<TransaccionBovedaCaja> enviados = historial.getTransaccionBovedaCajas();
-		Set<TransaccionBovedaCaja> result = new HashSet<>();
-		for (TransaccionBovedaCaja transaccionBovedaCaja : enviados) {
-			if(transaccionBovedaCaja.getOrigen().equals(TransaccionBovedaCajaOrigen.CAJA))
-				result.add(transaccionBovedaCaja);
-		}
-		Hibernate.initialize(result);
-		return result;
+	public List<TransaccionBovedaCajaView> getTransaccionesEnviadasBovedaCaja() {
+		HistorialCaja historial = getHistorialActivo();		
+		QueryParameter queryParameter = QueryParameter.with("idHistorialCaja", historial.getIdHistorialCaja()).and("origen", TransaccionBovedaCajaOrigen.CAJA);
+		List<TransaccionBovedaCajaView> list = transaccionBovedaCajaViewDAO.findByNamedQuery(TransaccionBovedaCajaView.findByHistorialCajaEnviados, queryParameter.parameters());
+				
+		return list;
 	}
 
 	@Override
-	public Set<TransaccionBovedaCaja> getTransaccionesRecibidasBovedaCaja() {
-		HistorialCaja historial = getHistorialActivo();
-		Set<TransaccionBovedaCaja> enviados = historial.getTransaccionBovedaCajas();
-		Set<TransaccionBovedaCaja> result = new HashSet<>();
-		for (TransaccionBovedaCaja transaccionBovedaCaja : enviados) {
-			if(transaccionBovedaCaja.getOrigen().equals(TransaccionBovedaCajaOrigen.BOVEDA))
-				result.add(transaccionBovedaCaja);
-		}
-		Hibernate.initialize(result);
-		return result;
+	public List<TransaccionBovedaCajaView> getTransaccionesRecibidasBovedaCaja() {
+		HistorialCaja historial = getHistorialActivo();		
+		QueryParameter queryParameter = QueryParameter.with("idHistorialCaja", historial.getIdHistorialCaja()).and("origen", TransaccionBovedaCajaOrigen.BOVEDA);
+		List<TransaccionBovedaCajaView> list = transaccionBovedaCajaViewDAO.findByNamedQuery(TransaccionBovedaCajaView.findByHistorialCajaRecibidos, queryParameter.parameters());				
+		return list;
 	}
 
 	@Override

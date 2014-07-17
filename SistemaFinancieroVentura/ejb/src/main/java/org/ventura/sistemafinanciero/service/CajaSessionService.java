@@ -17,6 +17,7 @@ import org.ventura.sistemafinanciero.entity.HistorialTransaccionCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
+import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaView;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
 import org.ventura.sistemafinanciero.entity.dto.GenericMonedaDetalle;
@@ -30,13 +31,16 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	
 	public Set<Moneda> getMonedas();
 	public Set<GenericMonedaDetalle> getDetalleCaja();
-	public Set<TransaccionBovedaCaja> getTransaccionesEnviadasBovedaCaja();
-	public Set<TransaccionBovedaCaja> getTransaccionesRecibidasBovedaCaja();
+	public List<TransaccionBovedaCajaView> getTransaccionesEnviadasBovedaCaja();
+	public List<TransaccionBovedaCajaView> getTransaccionesRecibidasBovedaCaja();
 	public Set<TransaccionCajaCaja> getTransaccionesEnviadasCajaCaja();
 	public Set<TransaccionCajaCaja> getTransaccionesRecibidasCajaCaja();
 	public Set<PendienteCaja> getPendientesCaja();
 	public Set<HistorialCaja> getHistorialCaja(Date dateDesde, Date dateHasta);
 	public List<HistorialTransaccionCaja> getHistorialTransaccion();
+	
+	public void cancelarTransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja) throws RollbackFailureException;
+	public void confirmarTransaccionBovedaCaja(BigInteger idTransaccionBovedaCaja)throws RollbackFailureException;
 	
 	//transacciones
 	public BigInteger abrirCaja() throws RollbackFailureException;

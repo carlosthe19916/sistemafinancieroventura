@@ -5,18 +5,24 @@ define(['../module'], function (controllers) {
 
             $scope.nuevo = function(){
                 $state.transitionTo('app.caja.createTransaccionBovedaCaja');
-            }
+            };
 
-            CajaSessionService.getTransaccionBovedaCajaEnviadas().then(
-                function(enviados){
-                    $scope.transaccionesEnviadas = enviados;
-                }
-            );
-            CajaSessionService.getTransaccionBovedaCajaRecibidas().then(
-                function(recibidos){
-                    $scope.transaccionesRecibidas = recibidos;
-                }
-            );
+            $scope.loadTransaccionEnviadas = function(){
+                CajaSessionService.getTransaccionBovedaCajaEnviadas().then(
+                    function(enviados){
+                        $scope.transaccionesEnviadas = enviados;
+                    }
+                );
+            };
+            $scope.loadTransaccionRecibidas = function(){
+                CajaSessionService.getTransaccionBovedaCajaRecibidas().then(
+                    function(recibidos){
+                        $scope.transaccionesRecibidas = recibidos;
+                    }
+                );
+            };
+            $scope.loadTransaccionEnviadas();
+            $scope.loadTransaccionRecibidas();
 
             $scope.gridOptionsRecibidos = {
                 data: 'transaccionesRecibidas',
@@ -41,7 +47,15 @@ define(['../module'], function (controllers) {
                     {displayName: 'Estado confirmacion', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estadoConfirmacion">CONFIRMADO</span><span ng-hide="row.entity.estadoConfirmacion">NO CONFIRMADO</span></div>'},
                     {field:"origen", displayName:'Origen', width: "12%"},
                     {field:"monto | currency :''", displayName:'Monto'},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="cancelarTransaccion(row.entity)"><span class="glyphicon glyphicon-remove"></span>Cancelar</button></div>'}]
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="getVoucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="cancelarTransaccion(row.entity)" ng-disabled="getDisabledStateExtornar(row.entity)"><span class="glyphicon glyphicon-remove"></span>Cancelar</button></div>'}]
+            };
+
+            $scope.getDisabledStateExtornar = function(row){
+                if(row.estadoSolicitud == false)
+                    return true;
+                if(row.estadoConfirmacion == true)
+                    return true;
+                return false;
             };
 
             $scope.getVoucher = function(row){
@@ -49,7 +63,26 @@ define(['../module'], function (controllers) {
             };
 
             $scope.cancelarTransaccion = function(row){
-
+                CajaSessionService.cancelarTransaccionBovedaCaja(row.id).then(
+                    function(data){
+                        $scope.loadTransaccionEnviadas();
+                    }
+                    ,function error(error){
+                        $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                    }
+                );
+            };
+            $scope.confirmarTransaccion = function(row){
+                CajaSessionService.confirmarTransaccionBovedaCaja(row.id).then(
+                    function(data){
+                        $scope.loadTransaccionRecibidas();
+                    }
+                    ,function error(error){
+                        $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                    }
+                );
             };
 
         }]);
