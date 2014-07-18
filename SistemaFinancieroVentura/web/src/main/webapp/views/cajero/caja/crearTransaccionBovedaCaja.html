@@ -12,7 +12,7 @@
                     <div class="form-group" ng-class="{ 'has-error' : formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted}">
                         <label>Boveda</label>
                         <label style="color: brown;">(*)</label>
-                        <select name="boveda" ng-options="boveda.id as boveda.denominacion for boveda in combo.boveda" ng-model="view.idBoveda" class="form-control" required autofocus>
+                        <select focus-on="focusBoveda" name="boveda" ng-options="boveda.id as boveda.denominacion for boveda in combo.boveda" ng-model="view.idBoveda" class="form-control" required autofocus>
                         	<option value="">--Seleccione--</option>
                         </select>
                         <div ng-show="formCrearTransaccionBovedaCaja.boveda.$invalid && control.submitted">

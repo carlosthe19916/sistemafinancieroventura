@@ -1,7 +1,7 @@
 define(['../module'], function (controllers) {
     'use strict';
-    controllers.controller('BuscarTransaccionBovedaCajaController', ['$scope', "$state", '$filter', "CajaSessionService",
-        function($scope, $state, $filter, CajaSessionService) {
+    controllers.controller('BuscarTransaccionBovedaCajaController', ['$scope', '$state', '$filter','$modal','CajaSessionService',
+        function($scope, $state, $filter,$modal, CajaSessionService) {
 
             $scope.nuevo = function(){
                 $state.transitionTo('app.caja.createTransaccionBovedaCaja');
@@ -63,26 +63,44 @@ define(['../module'], function (controllers) {
             };
 
             $scope.cancelarTransaccion = function(row){
-                CajaSessionService.cancelarTransaccionBovedaCaja(row.id).then(
-                    function(data){
-                        $scope.loadTransaccionEnviadas();
-                    }
-                    ,function error(error){
-                        $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                    }
-                );
+                if(!angular.isUndefined(row)){
+                    var modalInstance = $modal.open({
+                        templateUrl: 'views/cajero/util/confirmPopUp.html',
+                        controller: "ConfirmPopUpController"
+                    });
+                    modalInstance.result.then(function (result) {
+                        CajaSessionService.cancelarTransaccionBovedaCaja(row.id).then(
+                            function(data){
+                                $scope.loadTransaccionEnviadas();
+                            }
+                            ,function error(error){
+                                $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            }
+                        );
+                    }, function () {
+                    });
+                }
             };
             $scope.confirmarTransaccion = function(row){
-                CajaSessionService.confirmarTransaccionBovedaCaja(row.id).then(
-                    function(data){
-                        $scope.loadTransaccionRecibidas();
-                    }
-                    ,function error(error){
-                        $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
-                        $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
-                    }
-                );
+                if(!angular.isUndefined(row)){
+                    var modalInstance = $modal.open({
+                        templateUrl: 'views/cajero/util/confirmPopUp.html',
+                        controller: "ConfirmPopUpController"
+                    });
+                    modalInstance.result.then(function (result) {
+                        CajaSessionService.confirmarTransaccionBovedaCaja(row.id).then(
+                            function(data){
+                                $scope.loadTransaccionRecibidas();
+                            }
+                            ,function error(error){
+                                $scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);};
+                            }
+                        );
+                    }, function () {
+                    });
+                }
             };
 
         }]);
