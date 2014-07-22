@@ -1,5 +1,8 @@
 <div ng-controller="BuscarTransaccionHistorialController">
     <br/>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+    	<span ng-bind-html="alert.msg"></span>
+	</alert>
     <div class="row">
         <form name="formBuscar" ng-submit="getPagedDataSearched()" novalidate>
             <div class="col-sm-8">

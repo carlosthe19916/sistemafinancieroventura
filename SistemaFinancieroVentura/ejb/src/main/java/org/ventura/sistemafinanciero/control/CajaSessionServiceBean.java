@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -555,6 +556,113 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		transaccionBovedaCajaDAO.update(transaccionBovedaCaja);	
 	}
 	
+	@Override
+	@AllowedTo(Permission.ABIERTO)
+	public void extornarTransaccion(BigInteger idTransaccion) throws RollbackFailureException {
+		HistorialTransaccionCaja transaccion = historialTransaccionCajaDAO.find(idTransaccion);
+		System.out.println("Tipo Cuenta " + transaccion.getTipoCuenta());
+		if (transaccion.getTipoCuenta().equalsIgnoreCase("AHORRO") || transaccion.getTipoCuenta().equalsIgnoreCase("CORRIENTE"))
+			extornarTransaccionBancaria(transaccion.getIdTransaccion());
+		else if (transaccion.getTipoCuenta().equalsIgnoreCase("APORTE"))
+			extornarTransaccionCuentaAporte(transaccion.getIdTransaccion());
+		else if (transaccion.getTipoCuenta().equalsIgnoreCase("COMPRA_VENTA"))
+			extornarTransaccionCompraVenta(transaccion.getIdTransaccion());
+		else if (transaccion.getTipoCuenta().equalsIgnoreCase("TRANSFERENCIA"))
+			extornarTransferenciaBancaria(transaccion.getIdTransaccion());
+		else 
+			throw new RollbackFailureException("Tipo de cuenta no encontrada");
+	}
+	
+	
+	private void extornarTransaccionBancaria(BigInteger idTransaccion) throws RollbackFailureException {
+		TransaccionBancaria transaccionBancaria = transaccionBancariaDAO.find(idTransaccion);
+		if (transaccionBancaria.getTipoTransaccion().equals(Tipotransaccionbancaria.DEPOSITO))
+			extornarCuentaBancariaDeposito(transaccionBancaria);
+		else 
+			extornarCuentaBancariaRetiro(transaccionBancaria);
+	}
+
+	private void extornarCuentaBancariaDeposito(TransaccionBancaria transaccionBancaria) throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(transaccionBancaria.getCuentaBancaria().getIdCuentaBancaria());
+		HistorialCaja historialCajaActivo = new HistorialCaja();
+		for (HistorialCaja historialCaja : getCaja().getHistorialCajas()) {
+			historialCajaActivo = historialCaja;
+		}
+		
+		if(transaccionBancaria.getEstado() == true && cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO) && transaccionBancaria.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
+			if (cuentaBancaria.getSaldo().compareTo(transaccionBancaria.getMonto()) != -1) {
+				cuentaBancaria.setSaldo(cuentaBancaria.getSaldo().subtract(transaccionBancaria.getMonto()));
+				transaccionBancaria.setEstado(false);
+			}else
+				throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: La cuenta bancaria no tiene suficiente dinero");
+		}else
+			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n o cuenta bancaria no activa");
+	}
+
+	private void extornarCuentaBancariaRetiro(TransaccionBancaria transaccionBancaria) throws RollbackFailureException {
+		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(transaccionBancaria.getCuentaBancaria().getIdCuentaBancaria());
+		HistorialCaja historialCajaActivo = new HistorialCaja();
+		for (HistorialCaja historialCaja : getCaja().getHistorialCajas()) {
+			historialCajaActivo = historialCaja;
+		}
+		
+		if(transaccionBancaria.getEstado() == true && cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO) && transaccionBancaria.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
+				cuentaBancaria.setSaldo(cuentaBancaria.getSaldo().subtract(transaccionBancaria.getMonto()));
+				transaccionBancaria.setEstado(false);
+		}else
+			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n o cuenta bancaria no activa");
+	}
+
+	private void extornarTransaccionCuentaAporte(BigInteger idTransaccion) throws RollbackFailureException {
+		TransaccionCuentaAporte transaccionCuentaAporte = transaccionCuentaAporteDAO.find(idTransaccion);
+		CuentaAporte cuentaAporte = cuentaAporteDAO.find(transaccionCuentaAporte.getCuentaAporte().getIdCuentaaporte());
+		HistorialCaja historialCajaActivo = new HistorialCaja();
+		for (HistorialCaja historialCaja : getCaja().getHistorialCajas()) {
+			historialCajaActivo = historialCaja;
+		}
+		
+		if(transaccionCuentaAporte.getEstado() == true && cuentaAporte.getEstadoCuenta().equals(EstadoCuentaAporte.ACTIVO) && transaccionCuentaAporte.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
+				System.out.println("Saldo antes de extornar " + cuentaAporte.getSaldo());
+				cuentaAporte.setSaldo(cuentaAporte.getSaldo().subtract(transaccionCuentaAporte.getMonto()));
+				transaccionCuentaAporte.setEstado(false);
+				System.out.println("Saldo depues de extornar " + cuentaAporte.getSaldo());
+		}else
+			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n o cuenta aporte no activa");
+	}
+
+	private void extornarTransaccionCompraVenta(BigInteger idTransaccion) throws RollbackFailureException{
+		TransaccionCompraVenta transaccionCompraVenta = transaccionCompraVentaDAO.find(idTransaccion);
+		if (transaccionCompraVenta.getTipoTransaccion().equals(Tipotransaccioncompraventa.COMPRA))
+			extornarTransaccionCompra(transaccionCompraVenta);
+		else 
+			extornarTransaccionVenta(transaccionCompraVenta);
+	}
+
+	private void extornarTransaccionCompra(TransaccionCompraVenta transaccionCompraVenta) throws RollbackFailureException{
+		System.out.println("Esto es compra");
+		HistorialCaja historialCajaActivo = new HistorialCaja();
+		for (HistorialCaja historialCaja : getCaja().getHistorialCajas()) {
+			historialCajaActivo = historialCaja;
+		}
+		
+		if(transaccionCompraVenta.getEstado() == true && transaccionCompraVenta.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
+			actualizarSaldoCaja(transaccionCompraVenta.getMontoRecibido().negate(), transaccionCompraVenta.getMonedaRecibida().getIdMoneda());
+			actualizarSaldoCaja(transaccionCompraVenta.getMontoEntregado(), transaccionCompraVenta.getMonedaEntregada().getIdMoneda());
+			transaccionCompraVenta.setEstado(false);
+		}else
+			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n no activa");
+	}
+
+	private void extornarTransaccionVenta(TransaccionCompraVenta transaccionCompraVenta) {
+		System.out.println("Esto es venta");
+		
+	}
+
+	private void extornarTransferenciaBancaria(BigInteger idTransaccion) {
+		TransferenciaBancaria transferenciaBancaria = transferenciaBancariaDAO.find(idTransaccion);
+		System.out.println("Transferencia Extornado");
+	}
+
 	@Override
 	@AllowedTo(Permission.ABIERTO)
 	public BigInteger crearTransaccionBovedaCaja(BigInteger idBoveda,Set<GenericDetalle> detalleTransaccion)throws RollbackFailureException {
@@ -1194,7 +1302,4 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		cuentaBancariaService.cancelarCuentaBancaria(idCuentaBancaria);
 		return idTransaccion;
 	}
-
-	
-	
 }

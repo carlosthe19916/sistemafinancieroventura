@@ -1,7 +1,7 @@
 define(['../../module'], function (controllers) {
     'use strict';
-    controllers.controller("BuscarTransaccionHistorialController", ["$scope", "$state", "ngProgress","focus", "CajaSessionService",
-        function($scope, $state, ngProgress,focus, CajaSessionService) {
+    controllers.controller("BuscarTransaccionHistorialController", ["$scope", "$state", "$modal","ngProgress","focus", "CajaSessionService",
+        function($scope, $state,$modal, ngProgress,focus, CajaSessionService) {
 
             $scope.focusElements = {
                 filterText: 'focusFilterText'
@@ -15,7 +15,7 @@ define(['../../module'], function (controllers) {
 
             $scope.nuevo = function(){
                 $state.transitionTo("app.socio.crearCuentaBancaria");
-            }
+            };
 
             $scope.historialList = [];
             $scope.historialListFilter = [];
@@ -106,13 +106,20 @@ define(['../../module'], function (controllers) {
                     {field:"tipoTransaccion", displayName:'TIPO TRANS.', width:90},
                     {field:"numeroOperacion", displayName:'Nº OP.', width:60},
                     {field:"moneda", displayName:'MONEDA'},
-                    {field:"monto", displayName:'MONTO', width:120},
+                    {field:"monto", displayName:'MONTO', width:100},
                     {field:"fecha | date : 'dd/MM/yyyy'", displayName:'FECHA', width:80},
                     {field:"hora | date : 'HH:mm:ss'", displayName:'HORA', width:70},
-                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">EXTORNADO</span></div>', width:70},
-                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="voucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="extornar(row.entity)"><span class="glyphicon glyphicon-remove"></span>Extornar</button></div>', width:150}
+                    {displayName: 'ESTADO', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><span ng-show="row.entity.estado">ACTIVO</span><span ng-hide="row.entity.estado">EXTORNADO</span></div>', width:90},
+                    {displayName: 'Edit', cellTemplate: '<div ng-class="col.colIndex()" class="ngCellText ng-scope col6 colt6" style="text-align: center;"><button type="button" class="btn btn-info btn-xs" ng-click="voucher(row.entity)"><span class="glyphicon glyphicon-share"></span>Voucher</button>&nbsp;<button type="button" class="btn btn-danger btn-xs" ng-click="extornar(row.entity)" ng-disabled="getDisabledStateExtornar(row.entity)"><span class="glyphicon glyphicon-remove"></span>Extornar</button></div>', width:150}
                 ]
             };
+            
+            $scope.getDisabledStateExtornar = function(transaccion){
+                if(transaccion.tipoCuenta == "PLAZO_FIJO" || transaccion.estado == !true)
+                    return true;
+                return false;
+            };
+            
             $scope.updateGridLayout = function(){
                 gridLayoutPlugin.updateGridLayout();
             };
@@ -131,7 +138,28 @@ define(['../../module'], function (controllers) {
             };
             
             $scope.extornar = function(transaccion){
-                $state.transitionTo("app.socio.editarCuentaBancaria", { id: transaccion.id});
+            	var modalInstance = $modal.open({
+                    templateUrl: 'views/cajero/util/confirmPopUp.html',
+                    controller: "ConfirmPopUpController"
+                });
+                modalInstance.result.then(function (result) {
+                	CajaSessionService.extornarTransaccion(transaccion.idTransaccion).then(
+                			function(data){
+                				$scope.getPagedDataInitial();
+                				//alert("OK");
+                				$scope.alerts = [{ type: "success", msg: "Extornación Éxitosa..."}];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
+                				//$scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
+                                //$scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
+                            }
+                            ,function error(error){
+                                $scope.alerts = [{ type: "danger", msg: error.data.message + "."}];
+                                $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
+                            }
+                    );
+                }, function () {
+                	//no
+                });
             };
         }]);
 });

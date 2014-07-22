@@ -14,6 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -67,6 +68,27 @@ public class TransaccionBancariaSessionRESTService {
 		}
 		return builder.build();
 	}	
+	
+	@RolesAllowed("CAJERO")
+	@POST
+	@Path("{idTransaccion}/extornar")
+	@Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+	public Response extornarTransaccion(@PathParam("idTransaccion") BigInteger idTransaccion) {
+		Response.ResponseBuilder builder = null;
+		try {			
+			cajaSessionService.extornarTransaccion(idTransaccion);
+			JsonObject model = Json.createObjectBuilder().add("message", "Transacci&oacute;n Extornada").add("idTransaccion", idTransaccion).build();	
+			builder = Response.status(Response.Status.OK).entity(model);
+		}  catch (RollbackFailureException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();		
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(model);
+		} catch (EJBException e) {
+			JsonObject model = Json.createObjectBuilder().add("message", e.getMessage()).build();		
+			builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model);
+		}
+		return builder.build();
+	}
 
 	@PUT
 	@Consumes({ "application/xml", "application/json" })

@@ -16,7 +16,6 @@ import org.ventura.sistemafinanciero.entity.HistorialCaja;
 import org.ventura.sistemafinanciero.entity.HistorialTransaccionCaja;
 import org.ventura.sistemafinanciero.entity.Moneda;
 import org.ventura.sistemafinanciero.entity.PendienteCaja;
-import org.ventura.sistemafinanciero.entity.TransaccionBovedaCaja;
 import org.ventura.sistemafinanciero.entity.TransaccionBovedaCajaView;
 import org.ventura.sistemafinanciero.entity.TransaccionCajaCaja;
 import org.ventura.sistemafinanciero.entity.dto.GenericDetalle;
@@ -61,4 +60,6 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	public BigInteger[] crearCuentaBancariaPlazoFijoConDeposito(String codigo, BigInteger idMoneda, TipoPersona tipoPersona, BigInteger idPersona, int cantRetirantes, BigDecimal monto, int periodo, BigDecimal tasaInteres, List<BigInteger> titulares, List<Beneficiario> beneficiarios) throws RollbackFailureException;
 	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger id) throws RollbackFailureException;
 	public BigInteger cancelarSocioConRetiro(BigInteger idSocio) throws RollbackFailureException;
+	
+	public void extornarTransaccion(BigInteger idTransaccion)throws RollbackFailureException;
 }

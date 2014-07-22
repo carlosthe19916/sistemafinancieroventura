@@ -40,6 +40,8 @@ public class HistorialTransaccionCaja implements Serializable {
 	private String monto;
 
 	private String tipoTransaccion;
+	
+	private String tipoCuenta;
 
 	private int estado;
 
@@ -117,6 +119,16 @@ public class HistorialTransaccionCaja implements Serializable {
 
 	public void setTipoTransaccion(String tipoTransaccion) {
 		this.tipoTransaccion = tipoTransaccion;
+	}
+	
+	@XmlElement
+	@Column(name = "TIPO_CUENTA", columnDefinition = "nvarchar2")
+	public String getTipoCuenta() {
+		return tipoCuenta;
+	}
+
+	public void setTipoCuenta(String tipoCuenta) {
+		this.tipoCuenta = tipoCuenta;
 	}
 
 	@XmlElement
