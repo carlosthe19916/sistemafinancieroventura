@@ -560,7 +560,6 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	@AllowedTo(Permission.ABIERTO)
 	public void extornarTransaccion(BigInteger idTransaccion) throws RollbackFailureException {
 		HistorialTransaccionCaja transaccion = historialTransaccionCajaDAO.find(idTransaccion);
-		System.out.println("Tipo Cuenta " + transaccion.getTipoCuenta());
 		if (transaccion.getTipoCuenta().equalsIgnoreCase("AHORRO") || transaccion.getTipoCuenta().equalsIgnoreCase("CORRIENTE"))
 			extornarTransaccionBancaria(transaccion.getIdTransaccion());
 		else if (transaccion.getTipoCuenta().equalsIgnoreCase("APORTE"))
@@ -583,6 +582,7 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	}
 
 	private void extornarCuentaBancariaDeposito(TransaccionBancaria transaccionBancaria) throws RollbackFailureException {
+		//condicionar si la caja tiene saldo para devolver
 		CuentaBancaria cuentaBancaria = cuentaBancariaDAO.find(transaccionBancaria.getCuentaBancaria().getIdCuentaBancaria());
 		HistorialCaja historialCajaActivo = new HistorialCaja();
 		for (HistorialCaja historialCaja : getCaja().getHistorialCajas()) {
@@ -591,8 +591,23 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		
 		if(transaccionBancaria.getEstado() == true && cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO) && transaccionBancaria.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
 			if (cuentaBancaria.getSaldo().compareTo(transaccionBancaria.getMonto()) != -1) {
-				cuentaBancaria.setSaldo(cuentaBancaria.getSaldo().subtract(transaccionBancaria.getMonto()));
-				transaccionBancaria.setEstado(false);
+				Caja caja = this.getCaja();
+				BigDecimal saldoActualBovedaCaja = new BigDecimal(0.00);
+				Set<BovedaCaja> bovedasCajas = caja.getBovedaCajas();
+				for (BovedaCaja bovedaCaja : bovedasCajas) {
+					Moneda monedaBoveda = bovedaCaja.getBoveda().getMoneda();
+					if(transaccionBancaria.getMoneda().equals(monedaBoveda)){
+						saldoActualBovedaCaja = bovedaCaja.getSaldo();
+						break;
+					}				
+				}
+				
+				if (saldoActualBovedaCaja.compareTo(transaccionBancaria.getMonto()) != -1) {
+					cuentaBancaria.setSaldo(cuentaBancaria.getSaldo().abs().subtract(transaccionBancaria.getMonto().abs()));
+					actualizarSaldoCaja(transaccionBancaria.getMonto().abs().negate(), transaccionBancaria.getMoneda().getIdMoneda());
+					transaccionBancaria.setEstado(false);
+				} else 
+					throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Saldo insuficiente en caja");
 			}else
 				throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: La cuenta bancaria no tiene suficiente dinero");
 		}else
@@ -607,8 +622,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		}
 		
 		if(transaccionBancaria.getEstado() == true && cuentaBancaria.getEstado().equals(EstadoCuentaBancaria.ACTIVO) && transaccionBancaria.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
-				cuentaBancaria.setSaldo(cuentaBancaria.getSaldo().subtract(transaccionBancaria.getMonto()));
-				transaccionBancaria.setEstado(false);
+			cuentaBancaria.setSaldo(cuentaBancaria.getSaldo().subtract(transaccionBancaria.getMonto()));
+			transaccionBancaria.setEstado(false);
+			actualizarSaldoCaja(transaccionBancaria.getMonto().abs(), transaccionBancaria.getMoneda().getIdMoneda());
 		}else
 			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n o cuenta bancaria no activa");
 	}
@@ -622,45 +638,59 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		}
 		
 		if(transaccionCuentaAporte.getEstado() == true && cuentaAporte.getEstadoCuenta().equals(EstadoCuentaAporte.ACTIVO) && transaccionCuentaAporte.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
-				System.out.println("Saldo antes de extornar " + cuentaAporte.getSaldo());
+			Caja caja = this.getCaja();
+			BigDecimal saldoActualBovedaCaja = new BigDecimal(0.00);
+			Set<BovedaCaja> bovedasCajas = caja.getBovedaCajas();
+			for (BovedaCaja bovedaCaja : bovedasCajas) {
+				Moneda monedaBoveda = bovedaCaja.getBoveda().getMoneda();
+				if(cuentaAporte.getMoneda().equals(monedaBoveda)){
+					saldoActualBovedaCaja = bovedaCaja.getSaldo();
+					break;
+				}				
+			}
+			
+			if (saldoActualBovedaCaja.compareTo(transaccionCuentaAporte.getMonto()) != -1) {
 				cuentaAporte.setSaldo(cuentaAporte.getSaldo().subtract(transaccionCuentaAporte.getMonto()));
 				transaccionCuentaAporte.setEstado(false);
-				System.out.println("Saldo depues de extornar " + cuentaAporte.getSaldo());
+				actualizarSaldoCaja(transaccionCuentaAporte.getMonto().abs().negate(), cuentaAporte.getMoneda().getIdMoneda());
+			} else 
+				throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Saldo insuficiente en caja");	
 		}else
 			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n o cuenta aporte no activa");
 	}
 
 	private void extornarTransaccionCompraVenta(BigInteger idTransaccion) throws RollbackFailureException{
 		TransaccionCompraVenta transaccionCompraVenta = transaccionCompraVentaDAO.find(idTransaccion);
-		if (transaccionCompraVenta.getTipoTransaccion().equals(Tipotransaccioncompraventa.COMPRA))
-			extornarTransaccionCompra(transaccionCompraVenta);
-		else 
-			extornarTransaccionVenta(transaccionCompraVenta);
-	}
-
-	private void extornarTransaccionCompra(TransaccionCompraVenta transaccionCompraVenta) throws RollbackFailureException{
-		System.out.println("Esto es compra");
 		HistorialCaja historialCajaActivo = new HistorialCaja();
 		for (HistorialCaja historialCaja : getCaja().getHistorialCajas()) {
 			historialCajaActivo = historialCaja;
 		}
 		
 		if(transaccionCompraVenta.getEstado() == true && transaccionCompraVenta.getHistorialCaja().getIdHistorialCaja() == historialCajaActivo.getIdHistorialCaja()){
-			actualizarSaldoCaja(transaccionCompraVenta.getMontoRecibido().negate(), transaccionCompraVenta.getMonedaRecibida().getIdMoneda());
-			actualizarSaldoCaja(transaccionCompraVenta.getMontoEntregado(), transaccionCompraVenta.getMonedaEntregada().getIdMoneda());
-			transaccionCompraVenta.setEstado(false);
+			Caja caja = this.getCaja();
+			BigDecimal saldoActualBovedaCaja = new BigDecimal(0.00);
+			Set<BovedaCaja> bovedasCajas = caja.getBovedaCajas();
+			for (BovedaCaja bovedaCaja : bovedasCajas) {
+				Moneda monedaBoveda = bovedaCaja.getBoveda().getMoneda();
+				if(transaccionCompraVenta.getMonedaRecibida().equals(monedaBoveda)){
+					saldoActualBovedaCaja = bovedaCaja.getSaldo();
+					break;
+				}				
+			}
+			
+			if (saldoActualBovedaCaja.compareTo(transaccionCompraVenta.getMontoRecibido()) != -1) {
+				actualizarSaldoCaja(transaccionCompraVenta.getMontoRecibido().abs().negate(), transaccionCompraVenta.getMonedaRecibida().getIdMoneda());
+				actualizarSaldoCaja(transaccionCompraVenta.getMontoEntregado().abs(), transaccionCompraVenta.getMonedaEntregada().getIdMoneda());
+				transaccionCompraVenta.setEstado(false);
+			} else 
+				throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Saldo insuficiente en caja");
 		}else
 			throw new RollbackFailureException("Error al Extornar Transacci&oacute;n: Transacci&oacute;n no activa");
 	}
 
-	private void extornarTransaccionVenta(TransaccionCompraVenta transaccionCompraVenta) {
-		System.out.println("Esto es venta");
-		
-	}
-
-	private void extornarTransferenciaBancaria(BigInteger idTransaccion) {
+	private void extornarTransferenciaBancaria(BigInteger idTransaccion) throws RollbackFailureException {
 		TransferenciaBancaria transferenciaBancaria = transferenciaBancariaDAO.find(idTransaccion);
-		System.out.println("Transferencia Extornado");
+		throw new RollbackFailureException("Todavia no es posible extornar las transferencias");
 	}
 
 	@Override
@@ -1239,6 +1269,9 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 		transaccionCompraVenta.setCliente(referencia);
 		transaccionCompraVenta.setTipoCambio(tasaCambio);
 		transaccionCompraVenta.setTipoTransaccion(tipoTransaccion);
+		
+		actualizarSaldoCaja(montoEntregado.abs().negate(), monedaEntregada.getIdMoneda());
+		actualizarSaldoCaja(montoRecibido.abs(), monedaRecibida.getIdMoneda());
 		
 		transaccionCompraVentaDAO.create(transaccionCompraVenta);
 		
