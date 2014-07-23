@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
-  <display-name>Sistema Financiero</display-name>
-  <welcome-file-list>
-    <welcome-file>/index.caja.html</welcome-file>
-    <welcome-file>/index.jefecaja.html</welcome-file>
-  </welcome-file-list>
-  <security-constraint>
-    <display-name>Solo el usuario caja puede tener acceso a esta página</display-name>
-    <web-resource-collection>
-      <web-resource-name>CAJA</web-resource-name>
-      <description></description>
-      <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <description>Tiene acceso a todo el sistema</description>
-      <role-name>CAJERO</role-name>
-    </auth-constraint>
-  </security-constraint>
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>bootstrap</web-resource-name>
-      <description>bootstrap</description>
-      <url-pattern>/bower_components/bootstrap/*</url-pattern>
-      <url-pattern>/favicon.ico</url-pattern>
-    </web-resource-collection>
-  </security-constraint>
-  <security-role>
-    <description>Acesso a caja</description>
-    <role-name>CAJERO</role-name>
-  </security-role>
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <realm-name>file</realm-name>
-    <form-login-config>
-      <form-login-page>/login.html</form-login-page>
-      <form-error-page>/login.html?error=true</form-error-page>
-    </form-login-config>
-  </login-config>
-  <error-page>
-    <error-code>404</error-code>
-    <location>/404.html</location>
-  </error-page>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<display-name>Sistema Financiero</display-name>
+	<welcome-file-list>
+		<welcome-file>/index.caja.html</welcome-file>
+		<welcome-file>/index.jefecaja.html</welcome-file>
+	</welcome-file-list>
+	<security-constraint>
+		<display-name>Solo el usuario caja puede tener acceso a esta página</display-name>
+		<web-resource-collection>
+			<web-resource-name>CAJA</web-resource-name>
+			<description></description>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Tiene acceso a todo el sistema</description>
+			<role-name>CAJERO</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>bootstrap</web-resource-name>
+			<description>bootstrap</description>
+			<url-pattern>/bower_components/bootstrap/*</url-pattern>
+			<url-pattern>/favicon.ico</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	<security-role>
+		<description>Acesso a caja</description>
+		<role-name>CAJERO</role-name>
+	</security-role>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>file</realm-name>
+		<form-login-config>
+			<form-login-page>/login.html</form-login-page>
+			<form-error-page>/login.html?error=true</form-error-page>
+		</form-login-config>
+	</login-config>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
+	
 </web-app>

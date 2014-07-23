@@ -26,8 +26,8 @@ define(['../../module'], function (controllers) {
             };
             $scope.totalServerItems = 0;
             $scope.pagingOptions = {
-                pageSizes: [10, 20, 40],
-                pageSize: 10,
+                pageSizes: [20, 50, 100],
+                pageSize: 20,
                 currentPage: 1
             };
             $scope.setPagingData = function(data, page, pageSize){
@@ -46,16 +46,18 @@ define(['../../module'], function (controllers) {
                 });
             };
             $scope.getPagedDataInitial();
-            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-                var data;
-                if (searchText) {
-                    var ft = searchText.toLowerCase();
-                    data = $scope.historialList.filter(function(item) {
-                        return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+            $scope.getPagedDataSearched = function () {
+                if ($scope.filterOptions.filterText) {
+                    var ft = $scope.filterOptions.filterText.toUpperCase();
+                    CajaSessionService.findByFilterTextView(ft).then(function (data){
+                        $scope.transaccionesList = data;
+                        $scope.setPagingData($scope.transaccionesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
-                    $scope.setPagingData(data,page,pageSize);
+                    CajaSessionService.count().then(function(data){
+                        $scope.totalServerItems = data;
+                    });
                 } else {
-                    $scope.setPagingData($scope.historialList,page,pageSize);
+                    $scope.getPagedDataInitial();
                 }
                 $scope.setInitialFocus();
             };
@@ -85,11 +87,6 @@ define(['../../module'], function (controllers) {
                     }
                 },true);
 
-            $scope.$watch('filterOptions', function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-                }
-            }, true);
 
             var gridLayoutPlugin = new ngGridLayoutPlugin();
             $scope.gridOptions = {
@@ -146,11 +143,8 @@ define(['../../module'], function (controllers) {
                 	CajaSessionService.extornarTransaccion(transaccion.idTransaccion).then(
                 			function(data){
                 				$scope.getPagedDataInitial();
-                				//alert("OK");
                 				$scope.alerts = [{ type: "success", msg: "Extornación Éxitosa..."}];
                                 $scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
-                				//$scope.alerts = [{ type: "danger", msg: "Error: " + error.data.message + "."}];
-                                //$scope.closeAlert = function(index) {$scope.alerts.splice(index, 1);}
                             }
                             ,function error(error){
                                 $scope.alerts = [{ type: "danger", msg: error.data.message + "."}];

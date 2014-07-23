@@ -61,5 +61,6 @@ public interface CajaSessionService extends AbstractService<Caja> {
 	public BigInteger cancelarCuentaBancariaConRetiro(BigInteger id) throws RollbackFailureException;
 	public BigInteger cancelarSocioConRetiro(BigInteger idSocio) throws RollbackFailureException;
 	
-	public void extornarTransaccion(BigInteger idTransaccion)throws RollbackFailureException;
+	public void extornarTransaccion(BigInteger idTransaccion) throws RollbackFailureException;
+	public List<HistorialTransaccionCaja> findAllView(String filterText) throws RollbackFailureException;
 }
