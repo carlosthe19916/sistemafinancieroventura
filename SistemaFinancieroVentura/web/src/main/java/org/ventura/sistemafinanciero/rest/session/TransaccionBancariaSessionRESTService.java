@@ -98,27 +98,6 @@ public class TransaccionBancariaSessionRESTService {
 		}
 		return builder.build();
 	}
-	
-	@GET
-	@Path("/view")
-	@Produces({ "application/xml", "application/json" })
-	public Response findAllViewByFilterText(@QueryParam("filterText") String filterText) {
-		List<HistorialTransaccionCaja> list = null;
-		try {
-			list = cajaSessionService.findAllView(filterText);
-		} catch (RollbackFailureException e) {
-			e.printStackTrace();
-		}
-		return Response.status(Response.Status.OK).entity(list).build();				
-	}
-	
-	@GET
-	@Path("/view/count")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findByFilterText() {								
-		int size = cajaSessionService.count();
-		return Response.status(Response.Status.OK).entity(size).build();						
-	}
 
 	@PUT
 	@Consumes({ "application/xml", "application/json" })

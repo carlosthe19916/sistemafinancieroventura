@@ -90,6 +90,9 @@ define(['./module'], function (services) {
                 getHistorialTransaccion: function(){
                     return Restangular.all("caja/session/historialTransaccion").getList();
                 },
+                findByFilterTextView: function(filterText){
+                	return Restangular.all("caja/session/historialTransaccion/view").getList({"filterText":filterText},{});
+                },
                 getCountHistorialTransaccion: function(){
                     return Restangular.all("caja/session/historialTransaccion/count").getList();
                 },
@@ -98,13 +101,7 @@ define(['./module'], function (services) {
                 },
                 extornarTransaccion: function(idTransaccion){
                     return Restangular.all("caja/session/transaccionBancaria/"+idTransaccion+"/extornar").post();
-                },
-                findByFilterTextView: function(filterText){
-                	return Restangular.all("caja/session/transaccionBancaria/view").getList({"filterText":filterText},{});
-                },
-                count: function(){
-                    return Restangular.one("caja/session/transaccionBancaria/view/count").get();
-                },
+                }
             };
         }]);
 });

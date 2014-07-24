@@ -1339,7 +1339,6 @@ public class CajaSessionServiceBean extends AbstractServiceBean<Caja> implements
 	@Override
 	public List<HistorialTransaccionCaja> findAllView(String filterText) throws RollbackFailureException {
 		List<HistorialTransaccionCaja> list = null;
-		System.out.println(filterText);
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("filterText", '%' + filterText + '%');
 		list = historialTransaccionCajaDAO.findByNamedQuery(HistorialTransaccionCaja.findByTransaccion, parameters);

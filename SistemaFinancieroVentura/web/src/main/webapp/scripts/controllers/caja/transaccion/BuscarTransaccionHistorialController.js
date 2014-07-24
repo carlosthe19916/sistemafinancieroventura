@@ -53,7 +53,7 @@ define(['../../module'], function (controllers) {
                         $scope.transaccionesList = data;
                         $scope.setPagingData($scope.transaccionesList, $scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize);
                     });
-                    CajaSessionService.count().then(function(data){
+                    CajaSessionService.getCountHistorialTransaccion().then(function(data){
                         $scope.totalServerItems = data;
                     });
                 } else {
