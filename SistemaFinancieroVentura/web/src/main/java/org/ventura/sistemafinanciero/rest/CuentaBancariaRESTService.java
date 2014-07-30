@@ -446,7 +446,7 @@ public class CuentaBancariaRESTService {
 			return Response.status(Response.Status.NOT_FOUND).entity(model).build();
 		}			
 		if(socioNatural != null){			
-			titular = socioNatural.getApellidoPaterno()+" "+socioNatural.getApellidoMaterno()+","+socioNatural.getNombres();	
+			titular = socioNatural.getApellidoPaterno()+" "+socioNatural.getApellidoMaterno()+", "+socioNatural.getNombres();	
 		}
 		if(socioJuridico != null){			
 			titular = socioJuridico.getRazonSocial();	
@@ -558,7 +558,7 @@ public class CuentaBancariaRESTService {
 		    Paragraph paragraph5 = new Paragraph();		 
 		    paragraph5.setFont(font);
 		    Chunk tasa1 = new Chunk("TASA INTERES EFECTIVA:");
-		    Chunk tasa2 = new Chunk(cuentaBancaria.getTasaInteres().multiply(new BigDecimal(100)).toString());
+		    Chunk tasa2 = new Chunk(cuentaBancaria.getTasaInteres().multiply(new BigDecimal(100)).toString() + "%");
 		    Chunk plazo1 = new Chunk("PLAZO:");
 		    Chunk plazo2 = new Chunk(days.getDays()+" DIAS");		   
 		    paragraph5.add(tasa1);
